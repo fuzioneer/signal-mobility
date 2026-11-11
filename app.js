@@ -1,0 +1,589 @@
+/* Signal Mobility app: tests, scoring, routines, guided player, history, export. Data stays on this phone. */
+(function () {
+  "use strict";
+  var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
+  var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var isNum = function (x) { return typeof x === "number" && isFinite(x); };
+  var avg = function (a) { return a.reduce(function (s, x) { return s + x; }, 0) / a.length; };
+  var zc = function (z) { return "var(--z-" + z + ")"; };
+  var ICON = {
+    play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>',
+    pause: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4.5" height="16" rx="1.2"/><rect x="13.5" y="4" width="4.5" height="16" rx="1.2"/></svg>',
+    next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5l9 7-9 7z"/><path d="M19 5v14"/></svg>',
+    prev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5l-9 7 9 7z"/><path d="M5 5v14"/></svg>',
+    close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    cam: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h2l2-2h6l2 2h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="4"/></svg>',
+    chev: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>',
+    check: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>',
+    sound: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>',
+    mute: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 5M22 9l-5 5"/></svg>'
+  };
+
+  /* ---------- storage ---------- */
+  var KEY = "signal-mobility-v1";
+  function blank() { return { v: 1, settings: { age: 40, sex: "m", voice: true, beeps: true, prep: 5, theme: "auto" }, tests: [], sessions: [], routines: [] }; }
+  function load() {
+    try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; return b; } } catch (e) {}
+    return blank();
+  }
+  var S = load();
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Couldn't save. Storage may be full."); } }
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {});
+
+  /* ---------- dates ---------- */
+  function iso(d) { d = d || new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function parse(s) { var p = s.split("-"); return new Date(+p[0], p[1] - 1, +p[2]); }
+  function daysBetween(a, b) { return Math.round((parse(b) - parse(a)) / 864e5); }
+  function addDays(s, n) { var d = parse(s); d.setDate(d.getDate() + n); return iso(d); }
+  function nice(s) { return parse(s).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" }); }
+  function short(s) { return parse(s).toLocaleDateString("en-GB", { day: "numeric", month: "short" }); }
+  function mmss(sec) { sec = Math.max(0, Math.round(sec)); return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0"); }
+  function mins(sec) { return Math.max(1, Math.round(sec / 60)) + " min"; }
+
+  /* ---------- scoring (same maths as Body Signal) ---------- */
+  function pct(t, v) { if (!isNum(v)) return null; var x = (v - t.lo) / (t.hi - t.lo); return Math.max(0, Math.min(100, Math.round(x * 100))); }
+  function testPct(t, v) {
+    if (t.noScore) return null;
+    var ps = (t.sides ? [v[t.id + "_l"], v[t.id + "_r"]] : [v[t.id]]).map(function (x) { return pct(t, x); }).filter(isNum);
+    return ps.length ? Math.round(avg(ps)) : null;
+  }
+  function score(v) {
+    var zones = {}; v = v || {};
+    ZONES.forEach(function (z) { var ps = TESTS.filter(function (t) { return t.z === z[0]; }).map(function (t) { return testPct(t, v); }).filter(isNum); zones[z[0]] = ps.length ? Math.round(avg(ps)) : null; });
+    var zs = ZONES.map(function (z) { return zones[z[0]]; }).filter(isNum);
+    return { zones: zones, overall: zs.length ? Math.round(avg(zs)) : null, n: zs.length };
+  }
+  /* Latest value for every key across all tests (newest wins). */
+  function latest() {
+    var v = {}, when = {};
+    S.tests.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; }).forEach(function (t) { Object.keys(t.v).forEach(function (k) { if (isNum(t.v[k])) { v[k] = t.v[k]; when[k] = t.date; } }); });
+    return { v: v, when: when };
+  }
+  function lastTestDate() { return S.tests.reduce(function (m, t) { return !m || t.date > m ? t.date : m; }, null); }
+  function avgFor() {
+    if (S.settings.sex !== "m") return null;
+    var a = S.settings.age || 40; for (var i = 0; i < D.AVG_M.length; i++) if (a <= D.AVG_M[i][0]) return D.AVG_M[i][1]; return null;
+  }
+  function ageBand() { var a = S.settings.age || 40; return a <= 33 ? "up to 33" : a <= 45 ? "34 to 45" : a <= 55 ? "46 to 55" : "56 and over"; }
+  function avgZone(z) { var a = avgFor(); if (!a) return null; return a[ZONES.findIndex(function (x) { return x[0] === z; })]; }
+  function gaps(v) {
+    var out = [];
+    TESTS.forEach(function (t) { if (!t.sides || t.noScore) return; var l = pct(t, v[t.id + "_l"]), r = pct(t, v[t.id + "_r"]); if (isNum(l) && isNum(r) && Math.abs(l - r) >= 15) out.push({ t: t, side: l < r ? "left" : "right", d: Math.abs(l - r) }); });
+    return out.sort(function (a, b) { return b.d - a.d; });
+  }
+
+  /* ---------- sessions and streak ---------- */
+  function sessionDays() { var m = {}; S.sessions.forEach(function (s) { m[s.date] = (m[s.date] || 0) + (s.secs || 0); }); return m; }
+  function streak() {
+    var m = sessionDays(), d = iso(), n = 0;
+    if (!m[d]) d = addDays(d, -1);
+    while (m[d]) { n++; d = addDays(d, -1); }
+    return n;
+  }
+  function weekSecs() { var m = sessionDays(), t = 0; for (var i = 0; i < 7; i++) t += m[addDays(iso(), -i)] || 0; return t; }
+
+  /* ---------- routines ---------- */
+  function itemSecs(s) { return s.d * (s.s ? 2 : 1); }
+  function routineSecs(ids) { return ids.reduce(function (t, id) { return t + (BY[id] ? itemSecs(BY[id]) : 0); }, 0); }
+  function seededShuffle(arr, seed) { var a = arr.slice(), x = seed || 1; for (var i = a.length - 1; i > 0; i--) { x = (x * 9301 + 49297) % 233280; var j = Math.floor(x / 233280 * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function tightest() {
+    var sc = score(latest().v), zs = ZONES.map(function (z) { return z[0]; }).filter(function (z) { return isNum(sc.zones[z]); });
+    zs.sort(function (a, b) { var aa = avgZone(a), bb = avgZone(b); return (sc.zones[a] - (aa || 0)) - (sc.zones[b] - (bb || 0)); });
+    if (zs.length < 2) return ["hips", "overhead"];
+    return zs.slice(0, 2);
+  }
+  function dailyItems() {
+    var pick = tightest(), seed = Math.floor(Date.now() / 864e5);
+    var pool = seededShuffle(ST.filter(function (s) { return s.z.some(function (z) { return pick.indexOf(z) >= 0; }) && s.id !== "breath9090"; }), seed);
+    pool.sort(function (a, b) { return (a.z.indexOf(pick[0]) >= 0 ? 0 : 1) - (b.z.indexOf(pick[0]) >= 0 ? 0 : 1); });
+    var out = [], t = 0, used = {};
+    var a = pool.filter(function (s) { return s.z.indexOf(pick[0]) >= 0; }), b = pool.filter(function (s) { return s.z.indexOf(pick[0]) < 0; });
+    var mix = []; while (a.length || b.length) { if (a.length) mix.push(a.shift()); if (a.length) mix.push(a.shift()); if (b.length) mix.push(b.shift()); }
+    mix.forEach(function (s) { if (t < 540 && !used[s.id] && t + itemSecs(s) <= 620) { out.push(s.id); used[s.id] = 1; t += itemSecs(s); } });
+    out.push("breath9090");
+    return { items: out, zones: pick };
+  }
+  function presetItems(p) { if (p.auto) return dailyItems().items; return p.items; }
+  function allRoutines() {
+    return PRESETS.map(function (p) { return { id: p.id, n: p.n, sub: p.sub, items: presetItems(p), auto: p.auto }; })
+      .concat(S.routines.map(function (r) { return { id: r.id, n: r.n, sub: "Your routine", items: r.items, custom: true }; }));
+  }
+  function findRoutine(id) { return allRoutines().filter(function (r) { return r.id === id; })[0]; }
+
+  /* ---------- small UI helpers ---------- */
+  var toastT;
+  function toast(msg) { var t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove("on"); }, 2400); }
+  function fig(pose, opts) { return FIG.svg(pose, opts); }
+  var stops = [];
+  function stopAnims() { stops.forEach(function (f) { f(); }); stops = []; }
+  function animateIn(root) { $$("[data-anim]", root).forEach(function (el) { var s = el.getAttribute("data-anim").split(":"), src = s[0] === "t" ? TESTS.filter(function (t) { return t.id === s[1]; })[0] : BY[s[1]]; if (src) stops.push(FIG.animate(el, src.pose, src.pose2, 1500)); }); }
+  function ringSVG(p, size, stroke, col) {
+    var r = (size - stroke) / 2, c = 2 * Math.PI * r, f = isNum(p) ? c * (1 - p / 100) : c;
+    return '<svg viewBox="0 0 ' + size + " " + size + '"><circle cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" fill="none" stroke="var(--soft)" stroke-width="' + stroke + '"/>' +
+      '<circle cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" fill="none" stroke="' + (col || "var(--brand)") + '" stroke-width="' + stroke + '" stroke-linecap="round" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + f.toFixed(1) + '"/></svg>';
+  }
+
+  /* ---------- sheet ---------- */
+  var sheetClose = null;
+  function openSheet(html, onClose) {
+    var sh = $("#sheet"), sc = $("#scrim");
+    $("#sheet-body").innerHTML = html; sh.hidden = false; sc.hidden = false; sh.scrollTop = 0;
+    requestAnimationFrame(function () { sh.classList.add("on"); sc.classList.add("on"); });
+    sheetClose = onClose || null; animateIn(sh);
+  }
+  function closeSheet() {
+    var sh = $("#sheet"), sc = $("#scrim"); sh.classList.remove("on"); sc.classList.remove("on");
+    setTimeout(function () { sh.hidden = true; sc.hidden = true; $("#sheet-body").innerHTML = ""; }, 260);
+    if (sheetClose) { var f = sheetClose; sheetClose = null; f(); }
+  }
+  $("#scrim").addEventListener("click", closeSheet);
+
+  /* ---------- navigation ---------- */
+  var TAB = "home", TITLES = { home: "Today", test: "Mobility test", routines: "Routines", history: "History" };
+  function go(tab) {
+    TAB = tab; stopAnims();
+    $$("nav.tabs button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-tab") === tab); });
+    $$(".view").forEach(function (v) { v.classList.toggle("on", v.id === "v-" + tab); });
+    $("#title").textContent = TITLES[tab];
+    render(); window.scrollTo(0, 0);
+    try { sessionStorage.setItem("sm-tab", tab); } catch (e) {}
+  }
+  function render() { ({ home: renderHome, test: renderTest, routines: renderRoutines, history: renderHistory })[TAB](); }
+  $$("nav.tabs button").forEach(function (b) { b.addEventListener("click", function () { go(b.getAttribute("data-tab")); }); });
+
+  /* ---------- HOME ---------- */
+  function renderHome() {
+    var L = latest(), sc = score(L.v), last = lastTestDate(), av = avgFor(), d = dailyItems(), st = streak(), today = sessionDays()[iso()];
+    var h = "";
+    if (!last) {
+      h += '<div class="card nudge"><div class="grow"><h3>Start with a mobility test</h3><p class="muted" style="margin-top:4px">About 15 minutes. It scores six zones so the app can build your daily routine around what\'s tightest. Camera tracking works for 5 of the tests.</p><button class="btn primary" style="margin-top:12px" data-act="go-test">Take the test</button></div></div>';
+    } else if (daysBetween(last, iso()) >= 28) {
+      h += '<div class="card nudge"><div class="grow"><h3>Time to retest</h3><p>Your last test was ' + daysBetween(last, iso()) + ' days ago. Retesting every 4 weeks shows what\'s working.</p><button class="btn primary" style="margin-top:12px" data-act="go-test">Retest now</button></div></div>';
+    }
+    if (sc.n) {
+      var avO = av ? Math.round(avg(av)) : null, low = ZONES.filter(function (z) { return isNum(sc.zones[z[0]]); }).sort(function (a, b) { return sc.zones[a[0]] - sc.zones[b[0]]; })[0];
+      h += '<div class="card"><div class="hero"><div class="ring">' + ringSVG(sc.overall, 128, 12) + '<div class="lbl"><div><b>' + sc.overall + '</b><span>mobility</span></div></div></div><div class="sum"><b>' + (isNum(avO) ? (sc.overall >= avO ? (sc.overall - avO) + " above" : (avO - sc.overall) + " below") + " the average</b><p>Men " + ageBand() + " average " + avO + ".</p>" : "Overall score</b>") + (low ? "<p>Tightest zone: " + low[1] + ".</p>" : "") + '</div></div><div class="zbars">';
+      ZONES.forEach(function (z) {
+        var p = sc.zones[z[0]], a = avgZone(z[0]);
+        h += '<div class="zbar"><span>' + z[1] + '</span><div class="track">' + (isNum(p) ? '<div class="fill" style="width:' + p + "%;background:" + zc(z[0]) + '"></div>' : "") + (isNum(a) ? '<div class="avg" style="left:' + a + '%"></div>' : "") + "</div><b>" + (isNum(p) ? p : "–") + "</b></div>";
+      });
+      h += "</div>";
+      h += '<div class="legend">' + (av ? "<span><i></i>Average for men your age (GOWOD)</span>" : "") + '<span class="grow" style="text-align:right">Tested ' + short(last) + "</span></div></div>";
+    }
+    h += '<div class="sec"><h2>Your daily 10</h2><span class="small muted">' + (sc.n ? "Focus: " + d.zones.map(function (z) { return ZN[z]; }).join(" and ") : "Hips and overhead until you test") + "</span></div>";
+    h += '<div class="card"><div class="row" style="gap:6px;margin-bottom:12px">' + d.items.slice(0, 6).map(function (id) { return '<div class="thumb" style="width:calc((100% - 30px)/6);height:auto;aspect-ratio:1">' + fig(BY[id].pose, { stroke: 9 }) + "</div>"; }).join("") + "</div>";
+    h += '<p class="small muted" style="margin-bottom:12px">' + d.items.map(function (id) { return esc(BY[id].n); }).join(" · ") + "</p>";
+    h += '<button class="btn primary big block" data-act="play" data-id="daily">' + ICON.play.replace("<svg", '<svg width="20" height="20"') + (today ? " Go again" : " Start, " + mins(routineSecs(d.items))) + "</button></div>";
+    h += '<div class="stat3"><div><b>' + st + '</b><span>day streak</span></div><div><b>' + Math.round(weekSecs() / 60) + '</b><span>mins this week</span></div><div><b>' + S.sessions.length + "</b><span>sessions</span></div></div>";
+    var g = gaps(L.v);
+    if (g.length) {
+      h += '<div class="sec"><h2>Left and right gaps</h2></div><div class="card stack">';
+      g.slice(0, 3).forEach(function (x) { h += '<p><b>' + esc(x.t.n) + ":</b> your " + x.side + " side is " + x.d + " points tighter. Give it an extra set.</p>"; });
+      h += "</div>";
+    }
+    h += '<div class="sec"><h2>Quick picks</h2></div>';
+    ["warm", "cool", "desk"].forEach(function (id) { h += routineCard(findRoutine(id)); });
+    if (!isStandalone()) h += installCard();
+    $("#v-home").innerHTML = h;
+  }
+  function isStandalone() { return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; }
+  function installCard() {
+    return '<div class="card install"><h3>Add to your Home Screen</h3><p class="muted" style="margin-top:4px">It then opens full screen, works offline and iOS keeps your data safe.</p><ol><li>Tap the Share button in Safari</li><li>Choose <b>Add to Home Screen</b></li><li>Open Mobility from the new icon</li></ol></div>';
+  }
+  function routineCard(r) {
+    if (!r) return "";
+    var secs = routineSecs(r.items);
+    return '<div class="card rcard" data-act="routine" data-id="' + esc(r.id) + '"><div class="thumb">' + fig(BY[r.items[0]].pose, { stroke: 8 }) + '</div><div class="grow"><h3>' + esc(r.n) + "</h3><p>" + esc(r.sub) + " · " + r.items.length + " moves · " + mins(secs) + "</p></div>" + ICON.chev + "</div>";
+  }
+
+  /* ---------- TEST ---------- */
+  var draft = null;
+  function draftFor(date) { var t = S.tests.filter(function (x) { return x.date === date; })[0]; return { date: date, v: Object.assign({}, t ? t.v : {}) }; }
+  function fieldsFor(t) {
+    if (t.id === "squat") return [["squat_knee", "Knee angle °"], ["squat_shin", "Shin lean °"], ["squat_torso", "Torso lean °"]];
+    if (t.sides) return [[t.id + "_l", "Left " + t.u], [t.id + "_r", "Right " + t.u]];
+    return [[t.id, "Result " + t.u]];
+  }
+  function renderTest() {
+    if (!draft) draft = draftFor(iso());
+    var h = '<p class="muted">Warm up for 5 minutes first. Do each test once per side and enter your best. Tests marked with a camera can be measured with live tracking.</p>';
+    h += '<div class="card row"><label class="field" style="flex:1">Test date<input type="date" id="t-date" value="' + draft.date + '" max="' + iso() + '"></label><div class="grow" style="text-align:right"><span class="small muted">Score so far</span><div style="font-size:28px;font-weight:780" id="t-live">–</div></div></div>';
+    ZONES.concat([[null, "Squat check"]]).forEach(function (z) {
+      var ts = TESTS.filter(function (t) { return t.z === z[0]; }); if (!ts.length) return;
+      h += '<div class="sec"><h2>' + (z[0] ? '<span class="zdot" style="background:' + zc(z[0]) + '"></span>' : "") + z[1] + '</h2><span class="pctpill" data-zone="' + (z[0] || "") + '"></span></div>';
+      ts.forEach(function (t) {
+        h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + fig(t.pose, { stroke: 8 }) + '</div><div><h3>' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? "Not scored. A check of your squat position." : (t.sides ? "Both sides" : "One result") + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
+        h += '<details><summary>How to do it</summary><div class="how"><p>' + esc(t.how) + '</p><div class="fig" data-anim="t:' + t.id + '"></div></div></details>';
+        h += '<div class="inputs">' + fieldsFor(t).map(function (f) { return '<label class="field">' + f[1] + '<input type="number" inputmode="decimal" step="any" data-k="' + f[0] + '" value="' + (isNum(draft.v[f[0]]) ? draft.v[f[0]] : "") + '"></label>'; }).join("");
+        if (t.cam) h += '<button class="btn" data-act="cam" data-id="' + t.id + '" style="flex:none">' + ICON.cam.replace("<svg", '<svg width="20" height="20"') + " Camera</button>";
+        h += "</div></div>";
+      });
+    });
+    h += '<div class="savebar"><button class="btn primary big block" data-act="save-test">Save test</button></div>';
+    $("#v-test").innerHTML = h;
+    $$("#v-test details").forEach(function (d) { d.addEventListener("toggle", function () { if (d.open) animateIn(d); }); });
+    $("#t-date").addEventListener("change", function (e) { var keep = draft.v; draft = draftFor(e.target.value || iso()); if (!S.tests.some(function (x) { return x.date === draft.date; })) draft.v = keep; renderTest(); });
+    $$("#v-test input[data-k]").forEach(function (inp) { inp.addEventListener("input", function () { var x = parseFloat(inp.value); if (isNum(x)) draft.v[inp.getAttribute("data-k")] = x; else delete draft.v[inp.getAttribute("data-k")]; liveScore(); }); });
+    liveScore();
+  }
+  function liveScore() {
+    var sc = score(draft.v);
+    $("#t-live").textContent = isNum(sc.overall) ? sc.overall : "–";
+    $$("#v-test [data-zone]").forEach(function (el) { var z = el.getAttribute("data-zone"); el.textContent = z && isNum(sc.zones[z]) ? sc.zones[z] + "%" : ""; el.hidden = !el.textContent; });
+    TESTS.forEach(function (t) { var el = $('[data-tp="' + t.id + '"]'); if (el) { var p = testPct(t, draft.v); el.textContent = isNum(p) ? p + "%" : "not done"; } });
+  }
+  function saveTest() {
+    var keys = Object.keys(draft.v).filter(function (k) { return isNum(draft.v[k]); });
+    if (!keys.length) { toast("Enter at least one result first."); return; }
+    var v = {}; keys.forEach(function (k) { v[k] = draft.v[k]; });
+    S.tests = S.tests.filter(function (x) { return x.date !== draft.date; }); S.tests.push({ date: draft.date, v: v, t: Date.now() }); save();
+    var sc = score(v); toast("Saved. " + (isNum(sc.overall) ? "Score " + sc.overall + "." : ""));
+    draft = null; go("home");
+  }
+
+  /* ---------- ROUTINES ---------- */
+  var LIB_F = "all", building = null;
+  function renderRoutines() {
+    var h = '<div class="sec" style="margin-top:6px"><h2>Routines</h2><button class="btn ghost" data-act="build">+ Build your own</button></div>';
+    allRoutines().forEach(function (r) { h += routineCard(r); });
+    h += '<div class="sec"><h2>Stretch library</h2><span class="small muted">' + ST.length + " moves</span></div>";
+    var F = [["all", "All"]].concat(ZONES).concat([["warm", "Warm-up"], ["cool", "Cool-down"], ["back", "Back"], ["desk", "Desk"], ["sleep", "Sleep"]]);
+    h += '<div class="chips">' + F.map(function (f) { return '<button class="chip' + (LIB_F === f[0] ? " on" : "") + '" data-act="filter" data-id="' + f[0] + '">' + f[1] + "</button>"; }).join("") + "</div>";
+    var list = ST.filter(function (s) { return LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0; });
+    h += '<div class="lib' + (building ? " building" : "") + '">' + list.map(function (s) {
+      var sel = building && building.items.indexOf(s.id) >= 0;
+      return '<button class="lcard' + (sel ? " sel" : "") + '" data-act="stretch" data-id="' + s.id + '"><div class="fig">' + fig(s.pose, { stroke: 8 }) + '</div><span class="check">' + (sel ? building.items.indexOf(s.id) + 1 : "") + "</span><h3>" + esc(s.n) + "</h3><p>" + s.z.map(function (z) { return '<span class="zdot" style="background:' + zc(z) + '"></span>'; }).join("") + (s.reps || (s.d + "s" + (s.s ? " each side" : ""))) + "</p></button>";
+    }).join("") + "</div>";
+    if (building) h += '<div class="buildbar"><div class="grow"><b>' + building.items.length + ' selected</b><div class="small" style="opacity:.75">' + mins(routineSecs(building.items)) + '</div></div><button class="btn" data-act="build-cancel">Cancel</button><button class="btn primary" data-act="build-save"' + (building.items.length ? "" : " disabled") + ">Save</button></div>";
+    $("#v-routines").innerHTML = h;
+  }
+  function openRoutine(id) {
+    var r = findRoutine(id); if (!r) return;
+    var h = '<h2>' + esc(r.n) + '</h2><p class="muted" style="margin:4px 0 14px">' + esc(r.sub) + " · " + mins(routineSecs(r.items)) + "</p>";
+    h += '<button class="btn primary big block" data-act="play" data-id="' + esc(r.id) + '">' + ICON.play.replace("<svg", '<svg width="20" height="20"') + " Start</button>";
+    h += '<div class="card flush" style="margin-top:14px">' + r.items.map(function (sid, i) { var s = BY[sid]; return '<div class="hitem" data-act="stretch" data-id="' + sid + '" style="cursor:pointer"><div class="thumb" style="width:52px;height:52px">' + fig(s.pose, { stroke: 9 }) + '</div><div class="grow"><b>' + (i + 1) + ". " + esc(s.n) + '</b><div class="small muted">' + (s.reps || s.d + "s") + (s.s ? " each side" : "") + "</div></div></div>"; }).join("") + "</div>";
+    if (r.custom) h += '<div class="row" style="margin-top:8px"><button class="btn" data-act="edit-routine" data-id="' + esc(r.id) + '">Edit</button><button class="btn danger" data-act="del-routine" data-id="' + esc(r.id) + '">Delete</button></div>';
+    openSheet(h);
+  }
+  function openStretch(id) {
+    var s = BY[id];
+    var h = '<div class="bigfig" data-anim="s:' + id + '"></div><h2>' + esc(s.n) + '</h2><p style="margin:6px 0">' + s.z.map(function (z) { return '<span class="tag"><span class="zdot" style="background:' + zc(z) + '"></span>' + ZN[z] + "</span>"; }).join("") + s.tags.map(function (t) { return '<span class="tag">' + t + "</span>"; }).join("") + "</p>";
+    h += '<p class="muted" style="margin-bottom:6px">' + (s.reps ? esc(s.reps) + ", about " : "Hold ") + s.d + " seconds" + (s.s ? " each side" : "") + ".</p><p>" + esc(s.cues) + "</p>";
+    h += '<div class="row" style="margin-top:16px"><button class="btn primary grow" data-act="play-one" data-id="' + id + '">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + " Do it now</button></div>";
+    openSheet(h);
+  }
+
+  /* ---------- PLAYER ---------- */
+  var P = null, AC = null;
+  function beep(f, ms, vol) {
+    if (!S.settings.beeps) return;
+    try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === "suspended") AC.resume(); var o = AC.createOscillator(), g = AC.createGain(); o.frequency.value = f; o.type = "sine"; g.gain.setValueAtTime(vol || 0.25, AC.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + ms / 1000); o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime + ms / 1000 + 0.02); } catch (e) {}
+  }
+  function say(text) {
+    if (!S.settings.voice || !window.speechSynthesis) return;
+    try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(text); u.lang = "en-GB"; u.rate = 1.02; var vs = speechSynthesis.getVoices().filter(function (v) { return /en-GB/i.test(v.lang); }); if (vs.length) u.voice = vs[0]; speechSynthesis.speak(u); } catch (e) {}
+  }
+  function unlockAudio() { try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume(); if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); } } catch (e) {} }
+  var wake = null;
+  function wakeOn() { try { if (navigator.wakeLock) navigator.wakeLock.request("screen").then(function (w) { wake = w; }).catch(function () {}); } catch (e) {} }
+  function wakeOff() { try { if (wake) wake.release(); } catch (e) {} wake = null; }
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible" && (P || CAM.on)) wakeOn(); });
+
+  function steps(items) {
+    var out = [];
+    items.forEach(function (id) { var s = BY[id]; if (!s) return; if (s.s) { out.push({ s: s, side: "Left", first: true }); out.push({ s: s, side: "Right" }); } else out.push({ s: s, first: true }); });
+    return out;
+  }
+  function play(routine) {
+    unlockAudio();
+    P = { r: routine, st: steps(routine.items), i: 0, phase: "prep", left: S.settings.prep, total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
+    var el = $("#player"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn();
+    el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="p-close" aria-label="End session">' + ICON.close + '</button><h2>' + esc(routine.n) + '</h2><button class="icon-btn" data-act="p-voice" aria-label="Voice">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div><div class="pbar"><i id="p-bar"></i></div>' +
+      '<div class="player"><div class="pfig"><span class="side" id="p-side" hidden></span><div class="figwrap" id="p-fig"></div></div><div class="pname" id="p-name"></div><div class="pcue" id="p-cue"></div>' +
+      '<div class="phase" id="p-phase"></div><div class="clock"><div class="tring" id="p-ring"></div></div>' +
+      '<div class="ctrls"><button class="icon-btn" data-act="p-prev" aria-label="Previous">' + ICON.prev + '</button><button class="icon-btn play" data-act="p-pause" id="p-pp" aria-label="Pause">' + ICON.pause + '</button><button class="icon-btn" data-act="p-next" aria-label="Next">' + ICON.next + '</button></div><div class="upnext" id="p-up"></div></div>';
+    enterStep(); P.timer = setInterval(tick, 200);
+  }
+  function stepDur(st) { return st.s.d; }
+  function enterStep() {
+    var st = P.st[P.i]; if (!st) return finish();
+    P.phase = "prep"; P.left = st.first ? S.settings.prep : 3; P.dur = P.left; P.spoke = {};
+    if (P.stop) P.stop();
+    $("#p-fig").classList.toggle("flip", st.side === "Right");
+    P.stop = FIG.animate($("#p-fig"), st.s.pose, st.s.pose2, 1500, { stroke: 7 });
+    $("#p-name").textContent = st.s.n; $("#p-cue").textContent = st.s.cues;
+    var sd = $("#p-side"); sd.hidden = !st.side; sd.textContent = st.side ? st.side + " side" : "";
+    var nx = P.st[P.i + 1]; $("#p-up").textContent = nx ? "Up next: " + nx.s.n + (nx.side ? " (" + nx.side.toLowerCase() + ")" : "") : "Last one";
+    $("#p-bar").style.width = (P.i / P.st.length * 100) + "%";
+    say(st.first ? (P.i === 0 ? "" : "Next. ") + st.s.n + (st.side ? ". Left side first." : ".") + (st.s.reps ? " " + st.s.reps + "." : "") : "Switch to the right side.");
+    draw();
+  }
+  function tick() {
+    if (!P) return;
+    var now = performance.now(), dt = (now - P.last) / 1000; P.last = now;
+    if (P.paused) return;
+    var before = Math.ceil(P.left);
+    P.left -= dt; if (P.phase === "work") P.worked += dt;
+    var after = Math.ceil(P.left);
+    if (after !== before && after <= 3 && after > 0) beep(P.phase === "prep" ? 660 : 880, 120);
+    if (P.phase === "work" && P.dur >= 60 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; say("Halfway. Breathe and sink a little deeper."); }
+    if (P.left <= 0) {
+      if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); beep(990, 380, 0.3); }
+      else { beep(520, 300, 0.3); P.i++; return enterStep(); }
+    }
+    draw();
+  }
+  function draw() {
+    if (!P || !P.st[P.i]) return;
+    var p = P.dur ? Math.max(0, P.left) / P.dur * 100 : 0;
+    $("#p-ring").innerHTML = ringSVG(p, 112, 9, P.phase === "prep" ? "var(--amber)" : "var(--brand)") + "<b>" + Math.max(0, Math.ceil(P.left)) + "</b>";
+    var ph = $("#p-phase"); ph.textContent = P.paused ? "Paused" : P.phase === "prep" ? "Get ready" : "Hold"; ph.className = "phase" + (P.phase === "prep" ? " prep" : "");
+  }
+  function finish() {
+    var secs = Math.round(P.worked), r = P.r;
+    clearInterval(P.timer); if (P.stop) P.stop();
+    if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); }
+    say(secs >= 30 ? "Session complete. Nice work." : "");
+    $("#p-bar").style.width = "100%";
+    $(".player").innerHTML = '<div style="flex:1;display:grid;place-items:center;text-align:center"><div><div class="ring" style="margin:0 auto 16px">' + ringSVG(100, 128, 12) + '<div class="lbl"><div><b>' + streak() + '</b><span>day streak</span></div></div></div><h2>Done</h2><p class="muted" style="margin-top:6px">' + esc(r.n) + " · " + mmss(secs) + " of stretching</p></div></div>" +
+      '<button class="btn primary big block" data-act="p-close">Finish</button>';
+    P = null;
+  }
+  function closePlayer() {
+    if (P) { clearInterval(P.timer); if (P.stop) P.stop(); var secs = Math.round(P.worked); if (secs >= 60) { S.sessions.push({ date: iso(), t: Date.now(), id: P.r.id, n: P.r.n + " (part)", secs: secs, items: P.i }); save(); } P = null; }
+    try { speechSynthesis.cancel(); } catch (e) {}
+    wakeOff(); $("#player").hidden = true; $("#player").innerHTML = ""; document.body.style.overflow = ""; render();
+  }
+
+  /* ---------- CAMERA ---------- */
+  var CAM = { on: false };
+  var CAMHINT = {
+    shflex: "Stand side-on, whole body in view. Raise one straight arm overhead, hold 2 seconds, lower. Turn round for the other arm.",
+    slr: "Lie on your back side-on to the phone, whole body in view. Raise one straight leg as high as you can, hold, lower. Then the other leg.",
+    thomas: "Lie back on a bench edge, hug one knee to your chest and let the other leg hang. Side-on to the phone. Hold still for 2 seconds.",
+    ankle: "Half-kneel side-on to the phone. Drive the front knee forward over the toes with the heel down. Hold at your furthest point. Swap legs.",
+    squat: "Stand side-on, whole body in view, feet shoulder-width. Squat as deep as you can, pause 2 seconds at the bottom, stand up."
+  };
+  function camTest(id) { return TESTS.filter(function (t) { return t.id === id; })[0]; }
+  function openCam(id) {
+    var t = camTest(id);
+    CAM = { on: true, id: id, k: t.cam, t: t, facing: "environment", sess: null, stream: null, file: false, lastSay: 0 };
+    var el = $("#cam"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn(); unlockAudio();
+    el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="c-close" aria-label="Close">' + ICON.close + "</button><h2>" + esc(t.n) + '</h2><button class="icon-btn" data-act="c-voice" aria-label="Voice">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div>' +
+      '<div class="stage" id="c-stage"><video id="c-video" playsinline muted></video><canvas id="c-canvas"></canvas><div class="guide" id="c-guide"><div><div class="fig" data-anim="t:' + id + '"></div><p style="max-width:320px">' + esc(CAMHINT[t.cam]) + '</p><p class="small" style="opacity:.7;margin-top:10px">Prop the phone at hip height about 2 to 3 metres away. Good light, fitted clothes.</p></div></div><div class="status" id="c-status" hidden></div></div>' +
+      '<div class="readout" id="c-read"></div>' +
+      '<div class="camctl" id="c-ctl"><button class="btn primary" data-act="c-start">' + ICON.cam.replace("<svg", '<svg width="18" height="18"') + ' Start camera</button><label class="btn">Use a video<input type="file" accept="video/*" id="c-file" hidden></label></div>';
+    animateIn(el); readout();
+    $("#c-file").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (f) camFile(f); });
+  }
+  function status(msg) { var s = $("#c-status"); if (!s) return; s.hidden = !msg; s.textContent = msg || ""; }
+  function readout() {
+    var r = $("#c-read"); if (!r) return;
+    var b = CAM.sess ? CAM.sess.best : {}, k = CAM.k;
+    if (k === "squat") { var bb = bestSquat(); r.innerHTML = '<div class="wide"><span>Deepest squat</span><b>' + (bb ? POSE.label(k, bb) : "–") + "</b></div>"; return; }
+    r.innerHTML = ["l", "r"].map(function (sd) { return "<div><span>" + (sd === "l" ? "Left" : "Right") + " best</span><b>" + (b[sd] ? POSE.label(k, b[sd].v) : "–") + "</b></div>"; }).join("");
+  }
+  function bestSquat() { var b = CAM.sess ? CAM.sess.best : {}, o = null; ["l", "r"].forEach(function (sd) { if (b[sd] && (!o || b[sd].v.knee < o.knee)) o = b[sd].v; }); return o; }
+  function camControls(running) {
+    $("#c-ctl").innerHTML = running
+      ? '<button class="btn" data-act="c-flip">Flip camera</button><button class="btn" data-act="c-reset">Reset</button><button class="btn primary" data-act="c-use">Use results</button>'
+      : '<button class="btn primary" data-act="c-start">Start camera</button><label class="btn">Use a video<input type="file" accept="video/*" id="c-file" hidden></label>' + (CAM.sess && CAM.sess.frames ? '<button class="btn primary" data-act="c-use">Use results</button>' : "");
+    var f = $("#c-file"); if (f) f.addEventListener("change", function (e) { var x = e.target.files && e.target.files[0]; if (x) camFile(x); });
+  }
+  async function camStart() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { status("This browser can't open the camera. Open the app in Safari, or use a video instead."); return; }
+    status("Starting camera…");
+    try {
+      camStopStream();
+      CAM.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: CAM.facing, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+      var v = $("#c-video"); v.srcObject = CAM.stream; v.muted = true; await v.play(); CAM.file = false;
+      camRun();
+    } catch (e) { status(e && e.name === "NotAllowedError" ? "Camera access was blocked. Allow it in Settings > Safari > Camera, then try again." : "Couldn't start the camera (" + (e && e.message || e) + ")."); }
+  }
+  function camFile(f) {
+    camStopStream();
+    var v = $("#c-video"); v.srcObject = null; v.src = URL.createObjectURL(f); v.muted = true; v.playbackRate = 0.5; CAM.file = true;
+    v.onloadeddata = function () { v.play().then(camRun).catch(function () { status("Couldn't play that video."); }); };
+  }
+  async function camRun() {
+    $("#c-guide").hidden = true; status("Loading body tracking (first time takes a few seconds)…"); camControls(true);
+    try { await POSE.load(); } catch (e) { status("Couldn't load body tracking. Check your connection and try again."); camControls(false); return; }
+    status("Step into view, side-on to the phone.");
+    if (!CAM.sess) CAM.sess = new POSE.Session(CAM.k, $("#c-canvas"));
+    var v = $("#c-video"), cv = $("#c-canvas"), id = CAM.run = {}, lastFound = true;
+    while (CAM.on && CAM.run === id) {
+      if (v.readyState >= 2 && !v.paused) {
+        var w = v.videoWidth, h = v.videoHeight;
+        if (cv.width !== w) { cv.width = w; cv.height = h; }
+        var r;
+        try { r = await CAM.sess.frame(v, w, h, CAM.facing === "user" && !CAM.file); } catch (e) { r = null; }
+        if (r) {
+          if (r.found !== lastFound) { status(r.found ? "" : "Can't see you. Step back so your whole body is in view."); lastFound = r.found; }
+          r.events.forEach(function (ev) {
+            if (ev.type === "held" && performance.now() - CAM.lastSay > 2500) { CAM.lastSay = performance.now(); beep(880, 120); say(CAM.k === "squat" ? "Knee " + Math.round(ev.v.knee) + " degrees" : (ev.side === "l" ? "Left " : "Right ") + Math.round(ev.v) + " degrees"); }
+          });
+          readout();
+        }
+      }
+      if (CAM.file && v.ended) { status("Video finished. Tap Use results to keep the best readings."); camControls(false); break; }
+      await new Promise(function (res) { requestAnimationFrame(res); });
+    }
+  }
+  function camStopStream() { if (CAM.stream) { CAM.stream.getTracks().forEach(function (t) { t.stop(); }); CAM.stream = null; } CAM.run = null; }
+  function camUse() {
+    var b = CAM.sess ? CAM.sess.best : {}, t = CAM.t, got = 0;
+    if (!draft) draft = draftFor(iso());
+    if (CAM.k === "squat") { var q = bestSquat(); if (q) { draft.v.squat_knee = Math.round(q.knee); draft.v.squat_shin = Math.round(q.shin); draft.v.squat_torso = Math.round(q.torso); got = 1; } }
+    else ["l", "r"].forEach(function (sd) { if (b[sd]) { draft.v[t.id + "_" + sd] = Math.round(b[sd].v); got++; } });
+    var snaps = ["l", "r"].filter(function (sd) { return b[sd] && b[sd].img; }).map(function (sd) { return b[sd].img; });
+    closeCam();
+    if (!got) { toast("No readings captured yet."); return; }
+    toast("Added to your test. Tap Save test when you're done.");
+    if (TAB !== "test") go("test"); else renderTest();
+    if (snaps.length) openSheet("<h2>Best positions</h2><p class=\"muted\" style=\"margin:4px 0 12px\">Snapshots aren't stored. Screenshot them if you want to keep them.</p><div class=\"snaps\">" + snaps.map(function (s) { return '<img alt="Tracked position" src="' + s + '">'; }).join("") + "</div>");
+    var card = $('[data-test="' + t.id + '"]'); if (card) card.scrollIntoView({ block: "center" });
+  }
+  function closeCam() {
+    CAM.on = false; camStopStream(); var v = $("#c-video"); if (v) { v.pause(); if (v.src) URL.revokeObjectURL(v.src); }
+    try { speechSynthesis.cancel(); } catch (e) {}
+    if (!P) wakeOff(); stopAnims(); $("#cam").hidden = true; $("#cam").innerHTML = ""; document.body.style.overflow = "";
+  }
+
+  /* ---------- HISTORY ---------- */
+  function lineChart(pts) {
+    var W = 340, H = 150, pl = 28, pr = 10, pt = 12, pb = 24;
+    var x = function (i) { return pl + (pts.length < 2 ? (W - pl - pr) / 2 : i * (W - pl - pr) / (pts.length - 1)); }, y = function (v) { return pt + (100 - v) * (H - pt - pb) / 100; };
+    var s = '<svg class="chart" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Overall mobility score over time">';
+    [0, 50, 100].forEach(function (g) { s += '<line x1="' + pl + '" x2="' + (W - pr) + '" y1="' + y(g) + '" y2="' + y(g) + '" stroke="var(--line)"/><text x="' + (pl - 6) + '" y="' + (y(g) + 4) + '" text-anchor="end" font-size="10" fill="var(--muted)">' + g + "</text>"; });
+    var av = avgFor(); if (av) { var a = Math.round(avg(av)); s += '<line x1="' + pl + '" x2="' + (W - pr) + '" y1="' + y(a) + '" y2="' + y(a) + '" stroke="var(--ink)" stroke-opacity=".45" stroke-dasharray="4 4"/><text x="' + (pl + 4) + '" y="' + (y(a) + 13) + '" text-anchor="start" font-size="10" fill="var(--muted)">age average ' + a + "</text>"; }
+    if (pts.length > 1) s += '<path d="M' + pts.map(function (p, i) { return x(i).toFixed(1) + " " + y(p.s).toFixed(1); }).join(" L") + '" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linejoin="round"/>';
+    pts.forEach(function (p, i) { s += '<circle cx="' + x(i) + '" cy="' + y(p.s) + '" r="4" fill="var(--brand)"/>'; if (i === 0 || i === pts.length - 1 || pts.length <= 6) s += '<text x="' + x(i) + '" y="' + (H - 6) + '" text-anchor="' + (pts.length > 1 && i === pts.length - 1 ? "end" : pts.length > 1 && i === 0 ? "start" : "middle") + '" font-size="10" fill="var(--muted)">' + short(p.d) + "</text>"; });
+    return s + "</svg>";
+  }
+  function renderHistory() {
+    var tests = S.tests.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+    var pts = tests.slice().reverse().map(function (t) { return { d: t.date, s: score(t.v).overall }; }).filter(function (p) { return isNum(p.s); });
+    var h = '<div class="sec" style="margin-top:6px"><h2>Mobility score</h2></div><div class="card">' + (pts.length ? lineChart(pts) : '<div class="empty">Your score will chart here after your first test.</div>') + "</div>";
+    var m = sessionDays(), cells = "", start = addDays(iso(), -55), dow = (parse(start).getDay() + 6) % 7; start = addDays(start, -dow);
+    for (var i = 0; i < 56 + 7; i++) { var d = addDays(start, i); if (d > iso()) break; var v = m[d] || 0; cells += '<i title="' + d + '" class="' + (v >= 480 ? "l2" : v ? "l1" : "") + (d === iso() ? " today" : "") + '"></i>'; }
+    h += '<div class="sec"><h2>Stretching</h2><span class="small muted">' + streak() + " day streak</span></div><div class=\"card\"><div class=\"calwrap\"><div class=\"dl\"><span>M</span><span></span><span>W</span><span></span><span>F</span><span></span><span>S</span></div><div class=\"cal\">" + cells + '</div></div><div class="legend"><span>Last 8 weeks. Light = some stretching, dark = 8 minutes or more.</span></div></div>';
+    h += '<div class="sec"><h2>Tests</h2></div><div class="card flush">' + (tests.length ? tests.map(function (t) {
+      var sc = score(t.v);
+      return '<div class="hitem" data-act="test-detail" data-id="' + t.date + '" style="cursor:pointer"><span class="big">' + (isNum(sc.overall) ? sc.overall : "–") + '</span><div class="grow"><b>' + nice(t.date) + '</b><div class="small muted">' + sc.n + ' of 6 zones</div></div><div class="mini">' + ZONES.map(function (z) { var p = sc.zones[z[0]]; return '<i style="height:' + Math.max(3, (p || 0) / 100 * 26) + "px;background:" + (isNum(p) ? zc(z[0]) : "var(--line)") + '"></i>'; }).join("") + "</div>" + ICON.chev + "</div>";
+    }).join("") : '<div class="empty">No tests yet.</div>') + "</div>";
+    var ss = S.sessions.slice().sort(function (a, b) { return b.t - a.t; }).slice(0, 30);
+    h += '<div class="sec"><h2>Sessions</h2></div><div class="card flush">' + (ss.length ? ss.map(function (s) { return '<div class="hitem"><div class="grow"><b>' + esc(s.n) + '</b><div class="small muted">' + nice(s.date) + "</div></div><span class=\"num\">" + mmss(s.secs) + "</span></div>"; }).join("") : '<div class="empty">Finish a routine and it\'ll show here.</div>') + "</div>";
+    $("#v-history").innerHTML = h;
+  }
+  function testDetail(date) {
+    var t = S.tests.filter(function (x) { return x.date === date; })[0]; if (!t) return;
+    var sc = score(t.v), h = "<h2>" + nice(date) + '</h2><p class="muted" style="margin:4px 0 12px">Overall ' + (isNum(sc.overall) ? sc.overall : "–") + "</p>";
+    h += '<div class="zbars" style="margin-bottom:14px">' + ZONES.map(function (z) { var p = sc.zones[z[0]], a = avgZone(z[0]); return '<div class="zbar"><span>' + z[1] + '</span><div class="track">' + (isNum(p) ? '<div class="fill" style="width:' + p + "%;background:" + zc(z[0]) + '"></div>' : "") + (isNum(a) ? '<div class="avg" style="left:' + a + '%"></div>' : "") + "</div><b>" + (isNum(p) ? p : "–") + "</b></div>"; }).join("") + "</div>";
+    h += '<div class="card flush"><div class="kv" style="padding-top:12px">' + TESTS.map(function (x) { return fieldsFor(x).filter(function (f) { return isNum(t.v[f[0]]); }).map(function (f) { return "<span>" + esc(x.n) + (f[0] !== x.id ? " (" + f[1].split(" ")[0].toLowerCase() + ")" : "") + "</span><span class=\"num\">" + t.v[f[0]] + " " + x.u + "</span>"; }).join(""); }).join("") + "</div></div>";
+    h += '<div class="row" style="margin-top:8px"><button class="btn" data-act="edit-test" data-id="' + date + '">Edit</button><button class="btn danger" data-act="del-test" data-id="' + date + '">Delete</button></div>';
+    openSheet(h);
+  }
+
+  /* ---------- SETTINGS, EXPORT, IMPORT ---------- */
+  function exportObj() {
+    return { app: "signal-mobility", version: 1, exported: new Date().toISOString(), settings: S.settings, tests: S.tests, sessions: S.sessions, routines: S.routines,
+      bodySignal: { collection: "mobility", docs: S.tests.map(function (t) { return { id: "m-" + t.date, data: { date: t.date, v: t.v } }; }) } };
+  }
+  async function doExport() {
+    var json = JSON.stringify(exportObj(), null, 1), name = "signal-mobility-" + iso() + ".json";
+    try {
+      var file = new File([json], name, { type: "application/json" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "Signal Mobility backup" }); return; }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([json], { type: "application/json" })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
+  async function doCopy() {
+    var json = JSON.stringify(exportObj());
+    try { await navigator.clipboard.writeText(json); toast("Copied. Paste it into Body Signal or a note."); } catch (e) { toast("Couldn't copy on this device. Use Export file instead."); }
+  }
+  function doImport(text) {
+    var x; try { x = JSON.parse(text); } catch (e) { toast("That isn't a valid backup file."); return; }
+    if (!x || x.app !== "signal-mobility") { toast("That isn't a Signal Mobility backup."); return; }
+    var byDate = {}; S.tests.forEach(function (t) { byDate[t.date] = t; }); (x.tests || []).forEach(function (t) { if (t && t.date && t.v) byDate[t.date] = t; });
+    S.tests = Object.keys(byDate).map(function (k) { return byDate[k]; });
+    var seen = {}; S.sessions.concat(x.sessions || []).forEach(function (s) { if (s && s.t) seen[s.t + "|" + s.id] = s; }); S.sessions = Object.keys(seen).map(function (k) { return seen[k]; });
+    var rs = {}; S.routines.concat(x.routines || []).forEach(function (r) { if (r && r.id) rs[r.id] = r; }); S.routines = Object.keys(rs).map(function (k) { return rs[k]; });
+    if (x.settings) S.settings = Object.assign(S.settings, x.settings);
+    save(); applyTheme(); closeSheet(); render(); toast("Restored " + (x.tests || []).length + " tests and " + (x.sessions || []).length + " sessions.");
+  }
+  function openSettings() {
+    var s = S.settings;
+    var h = '<h2>Settings</h2><div class="card" style="margin-top:12px"><div class="row"><label class="field">Age<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="' + (s.age || "") + '"></label><label class="field">Sex<select id="s-sex"><option value="m"' + (s.sex === "m" ? " selected" : "") + '>Male</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">Female</option></select></label></div>" +
+      '<p class="small muted" style="margin-top:8px">Age and sex set the GOWOD average markers. GOWOD only publishes averages for men, so markers are hidden for women.</p></div>';
+    h += '<div class="card"><div class="row"><label class="field">Get-ready countdown<select id="s-prep">' + [3, 5, 8, 10, 15].map(function (n) { return '<option value="' + n + '"' + (s.prep === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label><label class="field">Theme<select id="s-theme">' + [["auto", "Match phone"], ["light", "Light"], ["dark", "Dark"]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
+      '<div class="row" style="margin-top:12px"><label class="row grow"><input type="checkbox" id="s-voice"' + (s.voice ? " checked" : "") + '> Voice coaching</label><label class="row grow"><input type="checkbox" id="s-beeps"' + (s.beeps ? " checked" : "") + "> Beeps</label></div></div>";
+    h += '<div class="card"><h3>Your data</h3><p class="small muted" style="margin:4px 0 12px">Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal\'s format.</p><div class="row"><button class="btn grow" data-act="export">Export file</button><button class="btn grow" data-act="copy">Copy</button></div><div class="row" style="margin-top:8px"><label class="btn grow">Restore from file<input type="file" accept="application/json,.json" id="s-import" hidden></label></div>' +
+      '<details style="margin-top:10px"><summary class="small" style="color:var(--brand);font-weight:600">Paste a backup instead</summary><textarea class="inp" id="s-paste" rows="4" style="margin-top:8px;font-size:13px"></textarea><button class="btn" style="margin-top:8px" data-act="paste-import">Restore pasted backup</button></details></div>';
+    h += '<div class="card"><button class="btn danger block" data-act="reset">Delete all data</button></div><p class="small muted" style="text-align:center">Signal Mobility 1.0 · body tracking by MediaPipe</p>';
+    openSheet(h, function () {});
+    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.prep = parseInt($("#s-prep").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; save(); applyTheme(); render(); };
+    ["#s-age", "#s-sex", "#s-prep", "#s-theme", "#s-voice", "#s-beeps"].forEach(function (id) { $(id).addEventListener("change", sync); });
+    $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
+  }
+  function applyTheme() { var t = S.settings.theme; if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(document.body).backgroundColor || "#0f6b5c"; }
+  $("#btn-settings").addEventListener("click", openSettings);
+
+  /* ---------- actions ---------- */
+  var confirmAt = {};
+  function twice(key, msg) { if (confirmAt[key] && Date.now() - confirmAt[key] < 3000) { confirmAt[key] = 0; return true; } confirmAt[key] = Date.now(); toast(msg); return false; }
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest("[data-act]"); if (!el) return;
+    var a = el.getAttribute("data-act"), id = el.getAttribute("data-id");
+    switch (a) {
+      case "go-test": go("test"); break;
+      case "routine": openRoutine(id); break;
+      case "play": { var r = findRoutine(id); if (!$("#sheet").hidden) closeSheet(); if (r) play(r); break; }
+      case "play-one": closeSheet(); play({ id: "single", n: BY[id].n, items: [id] }); break;
+      case "stretch":
+        if (building && el.classList.contains("lcard")) { var ix = building.items.indexOf(id); if (ix >= 0) building.items.splice(ix, 1); else building.items.push(id); renderRoutines(); }
+        else openStretch(id);
+        break;
+      case "filter": LIB_F = id; renderRoutines(); break;
+      case "build": building = { items: [] }; LIB_F = "all"; renderRoutines(); toast("Tap moves in the order you want them"); setTimeout(function () { var l = $(".lib"); if (l) l.scrollIntoView({ behavior: "smooth" }); }, 50); break;
+      case "build-cancel": building = null; renderRoutines(); break;
+      case "build-save": {
+        var nm = prompt("Name your routine", building.n || "My routine"); if (nm == null) break; nm = nm.trim() || "My routine";
+        if (building.id) S.routines = S.routines.map(function (r) { return r.id === building.id ? { id: r.id, n: nm, items: building.items } : r; });
+        else S.routines.push({ id: "u" + Date.now().toString(36), n: nm, items: building.items });
+        save(); building = null; renderRoutines(); window.scrollTo(0, 0); toast("Saved " + nm); break;
+      }
+      case "edit-routine": { var rr = S.routines.filter(function (r) { return r.id === id; })[0]; closeSheet(); if (rr) { building = { id: rr.id, n: rr.n, items: rr.items.slice() }; go("routines"); } break; }
+      case "del-routine": if (twice("dr" + id, "Tap Delete again to confirm")) { S.routines = S.routines.filter(function (r) { return r.id !== id; }); save(); closeSheet(); render(); } break;
+      case "save-test": saveTest(); break;
+      case "cam": openCam(id); break;
+      case "c-start": camStart(); break;
+      case "c-close": closeCam(); break;
+      case "c-flip": CAM.facing = CAM.facing === "user" ? "environment" : "user"; camStart(); break;
+      case "c-reset": if (CAM.sess) { CAM.sess.best = {}; readout(); } toast("Best readings cleared"); break;
+      case "c-use": camUse(); break;
+      case "c-voice": case "p-voice": S.settings.voice = !S.settings.voice; save(); el.innerHTML = S.settings.voice ? ICON.sound : ICON.mute; if (!S.settings.voice) try { speechSynthesis.cancel(); } catch (x) {} break;
+      case "p-close": closePlayer(); break;
+      case "p-pause": if (P) { P.paused = !P.paused; el.innerHTML = P.paused ? ICON.play : ICON.pause; if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); } break;
+      case "p-next": if (P) { P.i++; enterStep(); } break;
+      case "p-prev": if (P) { if (P.phase === "work" && P.left < P.dur - 3) { /* restart current */ } else P.i = Math.max(0, P.i - 1); enterStep(); } break;
+      case "test-detail": testDetail(id); break;
+      case "edit-test": closeSheet(); draft = draftFor(id); go("test"); break;
+      case "del-test": if (twice("dt" + id, "Tap Delete again to confirm")) { S.tests = S.tests.filter(function (t) { return t.date !== id; }); save(); closeSheet(); render(); } break;
+      case "export": doExport(); break;
+      case "copy": doCopy(); break;
+      case "paste-import": doImport($("#s-paste").value); break;
+      case "reset": if (twice("reset", "Tap again to delete everything on this phone")) { S = blank(); save(); closeSheet(); draft = null; go("home"); toast("All data deleted"); } break;
+    }
+  });
+
+  /* ---------- boot ---------- */
+  applyTheme();
+  var t0 = "home"; try { t0 = sessionStorage.getItem("sm-tab") || "home"; } catch (e) {}
+  go(t0);
+  if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(function () {});
+  if (window.speechSynthesis) speechSynthesis.getVoices();
+  window.SM = { state: function () { return S; }, score: score, dailyItems: dailyItems };
+})();

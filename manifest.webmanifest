@@ -1,0 +1,16 @@
+{
+  "name": "Signal Mobility",
+  "short_name": "Mobility",
+  "description": "Mobility testing with a live camera wireframe, and guided routines.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1412",
+  "theme_color": "#0f6b5c",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
