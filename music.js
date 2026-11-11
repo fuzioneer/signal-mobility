@@ -51,6 +51,7 @@
   }
   function tick() {
     if (!ctx || !style) return;
+    if (ctx.state !== "running") wake();
     var now = ctx.currentTime, ahead = now + 2;
     while (nextChord < ahead) {
       var len = style === "bowls" ? 20 : 14;
@@ -69,7 +70,7 @@
   function start(c, s, v) {
     if (!c || !s || s === "off") return stop();
     if (!ctx) build(c);
-    try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) {} /* keep playing with the ring/silent switch on */
+    wake();
     if (style === s && timer) { setVol(v); return; }
     if (style) hardStop();
     style = s; vol = v == null ? vol : v; chordIdx = Math.floor(Math.random() * 4);
@@ -78,6 +79,14 @@
     if (s === "ocean") waves();
     tick(); timer = setInterval(tick, 1000);
   }
+  /* iOS can leave a new context "suspended" or "interrupted" (e.g. right after the audio session changes). Keep nudging it until it runs. */
+  function wake() {
+    if (!ctx) return;
+    if (ctx.state !== "running") { try { ctx.resume().then(catchUp).catch(function () {}); } catch (e) {} }
+    if (!ctx.__watch) { ctx.__watch = true; ctx.addEventListener("statechange", function () { if (style && ctx.state !== "running" && ctx.state !== "closed") setTimeout(wake, 300); else catchUp(); }); }
+  }
+  /* If time stood still while suspended, make sure the next notes start now rather than in the past. */
+  function catchUp() { if (!ctx || !style) return; var t = ctx.currentTime; if (nextChord < t) nextChord = t + 0.05; if (nextBell < t) nextBell = t + 2; tick(); }
   function level() { return 1.5 * vol * vol + 0.1 * vol; }
   function hardStop() { clearInterval(timer); timer = null; live.forEach(function (o) { try { o.stop(); } catch (e) {} }); live = []; if (waveNode) { waveNode.stop(); waveNode = null; } }
   function stop(ms) {
