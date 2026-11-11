@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.8.0", APP_BUILD = "11 Nov 2026";
+  var APP_VERSION = "1.8.3", APP_BUILD = "11 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -305,6 +305,8 @@
     try {
       if (interrupt) speechSynthesis.cancel();
       var v = bestVoice(), parts = String(text).match(/[^.!?]+[.!?]*/g) || [text];
+      /* Duck the music straight away for roughly as long as this will take to say (about 2.6 words a second, plus a pause per sentence). */
+      if (window.MUSIC) MUSIC.duckFor(String(text).split(/\s+/).length / 2.6 * 1000 / (S.settings.voiceRate || 0.95) + parts.length * 350 + 600);
       parts.forEach(function (p) { p = p.trim(); if (!p) return; var u = new SpeechSynthesisUtterance(p); if (v) { u.voice = v; u.lang = v.lang; } else u.lang = "en-GB"; u.rate = S.settings.voiceRate || 0.95; u.pitch = 1; u.volume = 1; speechSynthesis.speak(u); });
     } catch (e) {}
   }
@@ -327,7 +329,7 @@
   function musicOn() { return S.settings.music && S.settings.music !== "off"; }
   function startMusic() { if (window.MUSIC && musicOn()) { unlockAudio(); MUSIC.start(AC, S.settings.music, S.settings.musicVol); if (P && P.paused) MUSIC.pause(300); } }
   function play(routine) {
-    unlockAudio(); startMusic();
+    unlockAudio(); /* music starts with the first hold, not during the get-ready countdown */
     P = { r: routine, st: steps(routine.items), i: 0, phase: "prep", left: restSecs(true), total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
     var el = $("#player"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn();
     el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="p-close" aria-label="End session">' + ICON.close + '</button><h2>' + esc(routine.n) + '</h2><button class="icon-btn" data-act="p-music" aria-label="Background music">' + (musicOn() ? ICON.music : ICON.musicOff) + '</button><button class="icon-btn" data-act="p-voice" aria-label="Voice">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div><div class="pbar"><i id="p-bar"></i></div>' +
@@ -345,9 +347,10 @@
   function listJoin(xs) { return xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " and " + xs[xs.length - 1]; }
   /* Time to reposition and grab kit between exercises, and a shorter pause to switch sides. Both set in Settings. */
   function restSecs(newExercise) { var s = S.settings; return newExercise ? (s.rest == null ? 10 : s.rest) : (s.sideRest == null ? 5 : s.sideRest); }
-  function enterStep() {
+  /* queue: true when we arrive here naturally at the end of a hold, so the "one" of the countdown is allowed to finish. */
+  function enterStep(queue) {
     var st = P.st[P.i]; if (!st) return finish();
-    P.phase = "prep"; P.left = restSecs(st.first); P.dur = P.left; P.spoke = {};
+    P.phase = "prep"; P.left = restSecs(st.first); P.dur = P.left; P.spoke = {}; if (window.MUSIC) MUSIC.setQuiet(true);
     if (P.stop) P.stop();
     $("#p-fig").classList.toggle("flip", st.side === "Right");
     P.stop = FIG.animate($("#p-fig"), st.s.pose, st.s.pose2, 1500, { stroke: 7 });
@@ -355,7 +358,7 @@
     var sd = $("#p-side"); sd.hidden = !st.side; sd.textContent = st.side ? st.side + " side" : "";
     var nx = P.st[P.i + 1]; $("#p-up").textContent = nx ? "Up next: " + nx.s.n + (nx.side ? " (" + nx.side.toLowerCase() + ")" : "") : "Last one";
     $("#p-bar").style.width = (P.i / P.st.length * 100) + "%";
-    say(st.first ? (P.i === 0 ? pick(["Let's start with ", "First up, ", "We'll begin with "]) : pick(["Next up, ", "Okay, next is ", "Moving on to ", "Right, now "])) + st.s.n + "." + (kit.length ? " You'll need " + listJoin(kit) + "." : "") + (st.side ? pick([" Left side first.", " We'll start on the left.", " Left side to begin."]) : "") + (st.s.reps ? " Aim for " + st.s.reps + "." : "") : pick(["Lovely. Switch to the right side.", "Nice. Now the right side.", "Good. Swap over to the right."]));
+    speak(st.first ? (P.i === 0 ? pick(["Let's start with ", "First up, ", "We'll begin with "]) : pick(["Next up, ", "Okay, next is ", "Moving on to ", "Right, now "])) + st.s.n + "." + (kit.length ? " You'll need " + listJoin(kit) + "." : "") + (st.side ? pick([" Left side first.", " We'll start on the left.", " Left side to begin."]) : "") + (st.s.reps ? " Aim for " + st.s.reps + "." : "") : pick(["Lovely. Switch to the right side.", "Nice. Now the right side.", "Good. Swap over to the right."]), !queue);
     draw();
   }
   function tick() {
@@ -367,13 +370,14 @@
     var after = Math.ceil(P.left);
     if (after !== before && P.phase === "work") {
       /* 10 seconds to go reminder, then a spoken 3, 2, 1 (beeps instead if the voice is off) */
-      if (after === 10 && P.dur > 15) say(pick(["Ten seconds to go.", "Ten seconds left.", "Last ten seconds. Stay with it."]));
-      if (after <= 3 && after > 0) { if (S.settings.voice) say(["", "One", "Two", "Three"][after]); else beep(880, 120); }
+      if (after === 10 && (P.dur >= 30 || (P.dur > 15 && P.dur < 24))) say(pick(["Ten seconds to go.", "Ten seconds left.", "Last ten seconds. Stay with it."]));
+      if (after <= 3 && after > 0) { if (S.settings.voice) speak(["", "One.", "Two.", "Three."][after], after === 3); else beep(880, 120); }
     } else if (after !== before && after <= 3 && after > 0) beep(660, 120);
-    if (P.phase === "work" && P.dur >= 60 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; say(pick(["Halfway there. Breathe out, and sink a little deeper.", "That's halfway. Keep breathing slowly.", "Halfway. Relax your shoulders, and let it go a bit further."])); }
+    /* Halfway call on every hold of 24 seconds or more (shorter holds just get the countdown). */
+    if (P.phase === "work" && P.dur >= 24 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; var reps = !!P.st[P.i].s.reps; speak(reps ? pick(["Halfway there. Keep it smooth.", "That's halfway. Nice and controlled.", "Halfway. Keep breathing."]) : pick(["Halfway there. Breathe out, and sink a little deeper.", "That's halfway. Keep breathing slowly.", "Halfway. Relax your shoulders, and let it go a bit further."]), true); }
     if (P.left <= 0) {
-      if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); beep(990, 380, 0.3); }
-      else { beep(520, 300, 0.3); P.i++; return enterStep(); }
+      if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); beep(990, 380, 0.3); if (window.MUSIC) { if (!MUSIC.playing()) startMusic(); MUSIC.setQuiet(false); } }
+      else { beep(520, 300, 0.3); P.i++; return enterStep(true); }
     }
     draw();
   }
@@ -397,7 +401,7 @@
   function closePlayer() {
     if (P) { clearInterval(P.timer); if (P.stop) P.stop(); var secs = Math.round(P.worked); if (secs >= 60) { S.sessions.push({ date: iso(), t: Date.now(), id: P.r.id, n: P.r.n + " (part)", secs: secs, items: P.i }); save(); } P = null; }
     try { speechSynthesis.cancel(); } catch (e) {}
-    if (window.MUSIC) MUSIC.stop(1500);
+    if (window.MUSIC) { MUSIC.stop(1500); MUSIC.setQuiet(false); }
     wakeOff(); $("#player").hidden = true; $("#player").innerHTML = ""; document.body.style.overflow = ""; render();
   }
 

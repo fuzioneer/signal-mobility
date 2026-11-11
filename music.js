@@ -111,10 +111,17 @@
   }
   function setVol(v) { vol = Math.max(0, Math.min(1, v)); if (ctx && style) { var t = ctx.currentTime; out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(level(), t + 0.4); } }
   /* Lower the music while the coach is speaking. Polls speechSynthesis because iOS doesn't reliably fire end events after cancel(). */
-  var ducked = false;
-  setInterval(function () {
-    if (!ctx || !style) return; var on = false; try { on = !!(window.speechSynthesis && (speechSynthesis.speaking || speechSynthesis.pending)); } catch (e) {}
-    if (on === ducked) return; ducked = on; var t = ctx.currentTime; duckG.gain.cancelScheduledValues(t); duckG.gain.setValueAtTime(duckG.gain.value, t); duckG.gain.linearRampToValueAtTime(on ? 0.35 : 1, t + (on ? 0.25 : 1.2));
-  }, 200);
-  window.MUSIC = { start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, playing: function () { return !!style; } };
+  /* Ducking. The music drops right down while the coach speaks (signalled by the app, with speechSynthesis polled as a backup)
+     and sits lower during the get-ready gaps between moves. */
+  var duckUntil = 0, quiet = false, lastTarget = 1;
+  function duckFor(ms) { duckUntil = Math.max(duckUntil, performance.now() + ms); apply(true); }
+  function setQuiet(on) { quiet = !!on; apply(); }
+  function apply(fast) {
+    if (!ctx || !duckG) return; var speaking = performance.now() < duckUntil;
+    try { speaking = speaking || !!(window.speechSynthesis && (speechSynthesis.speaking || speechSynthesis.pending)); } catch (e) {}
+    var target = speaking ? 0.12 : quiet ? 0.4 : 1; if (target === lastTarget) return; var down = target < lastTarget; lastTarget = target;
+    var t = ctx.currentTime; duckG.gain.cancelScheduledValues(t); duckG.gain.setValueAtTime(duckG.gain.value, t); duckG.gain.linearRampToValueAtTime(target, t + (down ? (fast ? 0.15 : 0.3) : 1.5));
+  }
+  setInterval(function () { if (ctx && style) apply(); }, 150);
+  window.MUSIC = { start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, duckFor: duckFor, setQuiet: setQuiet, playing: function () { return !!style; } };
 })();
