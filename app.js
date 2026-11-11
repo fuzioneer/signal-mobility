@@ -24,7 +24,7 @@
 
   /* ---------- storage ---------- */
   var KEY = "signal-mobility-v1";
-  function blank() { return { v: 1, settings: { age: 40, sex: "m", voice: true, beeps: true, prep: 5, theme: "auto" }, tests: [], sessions: [], routines: [] }; }
+  function blank() { return { v: 1, settings: { age: 40, sex: "m", height: 178, voice: true, beeps: true, prep: 5, theme: "auto" }, tests: [], sessions: [], routines: [] }; }
   function load() {
     try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; return b; } } catch (e) {}
     return blank();
@@ -209,7 +209,7 @@
   }
   function renderTest() {
     if (!draft) draft = draftFor(iso());
-    var h = '<p class="muted">Warm up for 5 minutes first. Do each test once per side and enter your best. Tests marked with a camera can be measured with live tracking.</p>';
+    var h = '<p class="muted">Warm up for 5 minutes first. Tap <b>Camera</b> on any test to measure it with live body tracking, or type a result in. Distances in cm are estimated from your height (' + (S.settings.height || 178) + ' cm, change it in Settings).</p>';
     h += '<div class="card row"><label class="field" style="flex:1">Test date<input type="date" id="t-date" value="' + draft.date + '" max="' + iso() + '"></label><div class="grow" style="text-align:right"><span class="small muted">Score so far</span><div style="font-size:28px;font-weight:780" id="t-live">–</div></div></div>';
     ZONES.concat([[null, "Squat check"]]).forEach(function (z) {
       var ts = TESTS.filter(function (t) { return t.z === z[0]; }); if (!ts.length) return;
@@ -373,7 +373,7 @@
     CAM = { on: true, id: id, k: t.cam, t: t, facing: "environment", sess: null, stream: null, file: false, lastSay: 0 };
     var el = $("#cam"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn(); unlockAudio();
     el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="c-close" aria-label="Close">' + ICON.close + "</button><h2>" + esc(t.n) + '</h2><button class="icon-btn" data-act="c-voice" aria-label="Voice">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div>' +
-      '<div class="stage" id="c-stage"><video id="c-video" playsinline muted></video><canvas id="c-canvas"></canvas><div class="guide" id="c-guide"><div><div class="fig" data-anim="t:' + id + '"></div><p style="max-width:320px">' + esc(CAMHINT[t.cam]) + '</p><p class="small" style="opacity:.7;margin-top:10px">Prop the phone at hip height about 2 to 3 metres away. Good light, fitted clothes.</p></div></div><div class="status" id="c-status" hidden></div></div>' +
+      '<div class="stage" id="c-stage"><video id="c-video" playsinline muted></video><canvas id="c-canvas"></canvas><div class="guide" id="c-guide"><div><div class="fig" data-anim="t:' + id + '"></div><p style="max-width:320px">' + esc(CAMHINT[t.cam] || t.how) + '</p><p class="small" style="opacity:.7;margin-top:10px">' + (t.cam === "er" || t.cam === "slr" ? "Prop the phone at floor level about 2 to 3 metres away." : "Prop the phone at hip height about 2 to 3 metres away.") + " Good light, fitted clothes." + (t.u === "cm" ? " The cm reading is an estimate scaled to your height (" + (S.settings.height || 178) + " cm)." : "") + '</p></div></div><div class="status" id="c-status" hidden></div></div>' +
       '<div class="readout" id="c-read"></div>' +
       '<div class="camctl" id="c-ctl"><button class="btn primary" data-act="c-start">' + ICON.cam.replace("<svg", '<svg width="18" height="18"') + ' Start camera</button><label class="btn">Use a video<input type="file" accept="video/*" id="c-file" hidden></label></div>';
     animateIn(el); readout();
@@ -384,7 +384,8 @@
     var r = $("#c-read"); if (!r) return;
     var b = CAM.sess ? CAM.sess.best : {}, k = CAM.k;
     if (k === "squat") { var bb = bestSquat(); r.innerHTML = '<div class="wide"><span>Deepest squat</span><b>' + (bb ? POSE.label(k, bb) : "–") + "</b></div>"; return; }
-    r.innerHTML = ["l", "r"].map(function (sd) { return "<div><span>" + (sd === "l" ? "Left" : "Right") + " best</span><b>" + (b[sd] ? POSE.label(k, b[sd].v) : "–") + "</b></div>"; }).join("");
+    if (!CAM.t.sides) { r.innerHTML = '<div class="wide"><span>Best</span><b style="font-size:26px">' + (b.c ? POSE.label(k, b.c.v, CAM.t.u) : "–") + "</b></div>"; return; }
+    r.innerHTML = ["l", "r"].map(function (sd) { return "<div><span>" + (sd === "l" ? "Left" : "Right") + " best</span><b>" + (b[sd] ? POSE.label(k, b[sd].v, CAM.t.u) : "–") + "</b></div>"; }).join("");
   }
   function bestSquat() { var b = CAM.sess ? CAM.sess.best : {}, o = null; ["l", "r"].forEach(function (sd) { if (b[sd] && (!o || b[sd].v.knee < o.knee)) o = b[sd].v; }); return o; }
   function camControls(running) {
@@ -412,7 +413,7 @@
     $("#c-guide").hidden = true; status("Loading body tracking (first time takes a few seconds)…"); camControls(true);
     try { await POSE.load(); } catch (e) { status("Couldn't load body tracking. Check your connection and try again."); camControls(false); return; }
     status("Step into view, side-on to the phone.");
-    if (!CAM.sess) CAM.sess = new POSE.Session(CAM.k, $("#c-canvas"));
+    if (!CAM.sess) CAM.sess = new POSE.Session(CAM.k, $("#c-canvas"), { dir: CAM.t.noScore || CAM.t.hi >= CAM.t.lo ? 1 : -1, unit: CAM.t.u, H: S.settings.height || 178 });
     var v = $("#c-video"), cv = $("#c-canvas"), id = CAM.run = {}, lastFound = true;
     while (CAM.on && CAM.run === id) {
       if (v.readyState >= 2 && !v.paused) {
@@ -422,8 +423,9 @@
         try { r = await CAM.sess.frame(v, w, h, CAM.facing === "user" && !CAM.file); } catch (e) { r = null; }
         if (r) {
           if (r.found !== lastFound) { status(r.found ? "" : "Can't see you. Step back so your whole body is in view."); lastFound = r.found; }
+          if (CAM.k === "trot" && r.found && (CAM.sess.st.n || 0) < 15) status("Face the camera and hold still…"); else if (CAM.k === "trot" && CAM.sess.st.n === 15) status("Now rotate each way and hold.");
           r.events.forEach(function (ev) {
-            if (ev.type === "held" && performance.now() - CAM.lastSay > 2500) { CAM.lastSay = performance.now(); beep(880, 120); say(CAM.k === "squat" ? "Knee " + Math.round(ev.v.knee) + " degrees" : (ev.side === "l" ? "Left " : "Right ") + Math.round(ev.v) + " degrees"); }
+            if (ev.type === "held" && performance.now() - CAM.lastSay > 2500) { CAM.lastSay = performance.now(); beep(880, 120); say(CAM.k === "squat" ? "Knee " + Math.round(ev.v.knee) + " degrees" : (ev.side === "l" ? "Left " : ev.side === "r" ? "Right " : "") + Math.round(ev.v) + (CAM.t.u === "cm" ? " centimetres" : " degrees")); }
           });
           readout();
         }
@@ -437,8 +439,9 @@
     var b = CAM.sess ? CAM.sess.best : {}, t = CAM.t, got = 0;
     if (!draft) draft = draftFor(iso());
     if (CAM.k === "squat") { var q = bestSquat(); if (q) { draft.v.squat_knee = Math.round(q.knee); draft.v.squat_shin = Math.round(q.shin); draft.v.squat_torso = Math.round(q.torso); got = 1; } }
+    else if (!t.sides) { if (b.c) { draft.v[t.id] = Math.round(b.c.v); got = 1; } }
     else ["l", "r"].forEach(function (sd) { if (b[sd]) { draft.v[t.id + "_" + sd] = Math.round(b[sd].v); got++; } });
-    var snaps = ["l", "r"].filter(function (sd) { return b[sd] && b[sd].img; }).map(function (sd) { return b[sd].img; });
+    var snaps = ["l", "r", "c"].filter(function (sd) { return b[sd] && b[sd].img; }).map(function (sd) { return b[sd].img; });
     closeCam();
     if (!got) { toast("No readings captured yet."); return; }
     toast("Added to your test. Tap Save test when you're done.");
@@ -516,16 +519,16 @@
   }
   function openSettings() {
     var s = S.settings;
-    var h = '<h2>Settings</h2><div class="card" style="margin-top:12px"><div class="row"><label class="field">Age<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="' + (s.age || "") + '"></label><label class="field">Sex<select id="s-sex"><option value="m"' + (s.sex === "m" ? " selected" : "") + '>Male</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">Female</option></select></label></div>" +
-      '<p class="small muted" style="margin-top:8px">Age and sex set the GOWOD average markers. GOWOD only publishes averages for men, so markers are hidden for women.</p></div>';
+    var h = '<h2>Settings</h2><div class="card" style="margin-top:12px"><div class="row"><label class="field">Age<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="' + (s.age || "") + '"></label><label class="field">Height (cm)<input type="number" inputmode="numeric" id="s-height" min="120" max="230" value="' + (s.height || 178) + '"></label><label class="field">Sex<select id="s-sex"><option value="m"' + (s.sex === "m" ? " selected" : "") + '>Male</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">Female</option></select></label></div>" +
+      '<p class="small muted" style="margin-top:8px">Age and sex set the GOWOD average markers (GOWOD only publishes averages for men). Height scales the camera\'s cm estimates.</p></div>';
     h += '<div class="card"><div class="row"><label class="field">Get-ready countdown<select id="s-prep">' + [3, 5, 8, 10, 15].map(function (n) { return '<option value="' + n + '"' + (s.prep === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label><label class="field">Theme<select id="s-theme">' + [["auto", "Match phone"], ["light", "Light"], ["dark", "Dark"]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
       '<div class="row" style="margin-top:12px"><label class="row grow"><input type="checkbox" id="s-voice"' + (s.voice ? " checked" : "") + '> Voice coaching</label><label class="row grow"><input type="checkbox" id="s-beeps"' + (s.beeps ? " checked" : "") + "> Beeps</label></div></div>";
     h += '<div class="card"><h3>Your data</h3><p class="small muted" style="margin:4px 0 12px">Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal\'s format.</p><div class="row"><button class="btn grow" data-act="export">Export file</button><button class="btn grow" data-act="copy">Copy</button></div><div class="row" style="margin-top:8px"><label class="btn grow">Restore from file<input type="file" accept="application/json,.json" id="s-import" hidden></label></div>' +
       '<details style="margin-top:10px"><summary class="small" style="color:var(--brand);font-weight:600">Paste a backup instead</summary><textarea class="inp" id="s-paste" rows="4" style="margin-top:8px;font-size:13px"></textarea><button class="btn" style="margin-top:8px" data-act="paste-import">Restore pasted backup</button></details></div>';
     h += '<div class="card"><button class="btn danger block" data-act="reset">Delete all data</button></div><p class="small muted" style="text-align:center">Signal Mobility 1.0 · body tracking by MediaPipe</p>';
     openSheet(h, function () {});
-    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.prep = parseInt($("#s-prep").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; save(); applyTheme(); render(); };
-    ["#s-age", "#s-sex", "#s-prep", "#s-theme", "#s-voice", "#s-beeps"].forEach(function (id) { $(id).addEventListener("change", sync); });
+    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.prep = parseInt($("#s-prep").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; save(); applyTheme(); render(); };
+    ["#s-age", "#s-height", "#s-sex", "#s-prep", "#s-theme", "#s-voice", "#s-beeps"].forEach(function (id) { $(id).addEventListener("change", sync); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
   }
   function applyTheme() { var t = S.settings.theme; if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(document.body).backgroundColor || "#0f6b5c"; }
