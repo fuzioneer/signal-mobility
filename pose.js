@@ -133,6 +133,17 @@
     this.k = k; this.canvas = canvas; this.ctx = canvas.getContext("2d"); this.best = {}; this.frames = 0; this.opts = opts || {}; this.hold = {}; this.st = {};
     this.dir = this.opts.dir || 1; this.H = this.opts.H || 178; this.thr = this.opts.unit === "cm" ? 2 : 4;
   }
+  /* Snapshot of the current frame with a caption banner (test, side, reading, date) burned in, for saving to Photos. */
+  Session.prototype.snap = function (sd, v) {
+    var c = this.canvas, cap = this.opts.caption ? this.opts.caption(sd, v) : "";
+    if (!cap) return c.toDataURL("image/jpeg", 0.8);
+    var o = document.createElement("canvas"); o.width = c.width; o.height = c.height; var x = o.getContext("2d");
+    x.drawImage(c, 0, 0); var fs = Math.max(18, Math.round(c.width / 26)), pad = Math.round(fs * 0.6), lines = cap.split("\n");
+    var bh = pad * 2 + lines.length * fs * 1.25; x.fillStyle = "rgba(0,0,0,.62)"; x.fillRect(0, c.height - bh, c.width, bh);
+    x.fillStyle = "#fff"; x.textBaseline = "top";
+    lines.forEach(function (l, i) { x.font = (i === 0 ? "700 " : "500 ") + (i === 0 ? fs : Math.round(fs * 0.8)) + "px -apple-system, Helvetica, Arial, sans-serif"; x.fillText(l, pad, c.height - bh + pad + i * fs * 1.25); });
+    return o.toDataURL("image/jpeg", 0.85);
+  };
   Session.prototype.frame = async function (src, w, h, mirror) {
     var pose = await load(), self = this;
     var r = await new Promise(function (res) { pose.onResults(res); pose.send({ image: src }).catch(function () { res(null); }); });
@@ -144,7 +155,7 @@
       var b = self.best[sd];
       if (better(self.k, v, b ? b.v : null, self.dir)) {
         var improved = !b || (self.k === "squat" ? b.v.knee - v.knee >= 3 : Math.abs(v - b.v) >= self.thr * 0.75);
-        self.best[sd] = { v: v, img: self.canvas.toDataURL("image/jpeg", 0.75) };
+        self.best[sd] = { v: v, img: self.snap(sd, v) };
         if (improved && b) events.push({ type: "best", side: sd, v: v });
       }
       var key = self.k === "squat" ? v.knee : v, hd = self.hold[sd];

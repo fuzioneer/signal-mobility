@@ -24,7 +24,7 @@
 
   /* ---------- storage ---------- */
   var KEY = "signal-mobility-v1";
-  function blank() { return { v: 1, settings: { age: 40, sex: "m", height: 178, voice: true, beeps: true, prep: 5, theme: "auto" }, tests: [], sessions: [], routines: [] }; }
+  function blank() { return { v: 1, settings: { age: 40, sex: "m", height: 178, voice: true, savePhotos: true, beeps: true, prep: 5, theme: "auto" }, tests: [], sessions: [], routines: [] }; }
   function load() {
     try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; return b; } } catch (e) {}
     return blank();
@@ -286,6 +286,11 @@
     if (!S.settings.voice || !window.speechSynthesis) return;
     try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(text); u.lang = "en-GB"; u.rate = 1.02; var vs = speechSynthesis.getVoices().filter(function (v) { return /en-GB/i.test(v.lang); }); if (vs.length) u.voice = vs[0]; speechSynthesis.speak(u); } catch (e) {}
   }
+  /* Queued speech for the camera coach: doesn't cut off what's already being said unless urgent. */
+  function sayQ(text, urgent) {
+    if (!S.settings.voice || !window.speechSynthesis || !text) return;
+    try { if (urgent) speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(text); u.lang = "en-GB"; u.rate = 1; var vs = speechSynthesis.getVoices().filter(function (v) { return /en-GB/i.test(v.lang); }); if (vs.length) u.voice = vs[0]; speechSynthesis.speak(u); } catch (e) {}
+  }
   function unlockAudio() { try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume(); if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); } } catch (e) {} }
   var wake = null;
   function wakeOn() { try { if (navigator.wakeLock) navigator.wakeLock.request("screen").then(function (w) { wake = w; }).catch(function () {}); } catch (e) {} }
@@ -367,10 +372,32 @@
     ankle: "Half-kneel side-on to the phone. Drive the front knee forward over the toes with the heel down. Hold at your furthest point. Swap legs.",
     squat: "Stand side-on, whole body in view, feet shoulder-width. Squat as deep as you can, pause 2 seconds at the bottom, stand up."
   };
+  var SETUP = {
+    er: "Put your phone on the floor, about two metres away, with the screen facing you. Lie down side-on to it.",
+    slr: "Put your phone on the floor, about two metres away, with the screen facing you. Lie down side-on to it.",
+    thomas: "Prop your phone at bench height, about two metres away, facing you. Get side-on to it.",
+    backscratch: "Prop your phone at chest height, about two metres away. Stand with your back to it.",
+    trot: "Prop your phone at chest height, about two metres away. Sit facing it.",
+    hipir: "Prop your phone at knee height, about two metres away. Sit facing it.",
+    pigeon: "Prop your phone at hip height, about two metres away. Sit facing it."
+  };
+  var NEXT = { shflex: "Now turn round and raise the other arm.", slr: "Now raise the other leg.", thomas: "Now swap legs.", ankle: "Now swap legs.", k2w: "Now swap legs.", er: "Now turn round and test the other arm.", backscratch: "Now swap hands.", trot: "Now rotate the other way.", hipir: "Hold that.", pigeon: "Now switch sides." };
+  function coachIntro(t) {
+    return (SETUP[t.cam] || "Prop your phone at hip height, about two metres away, with the screen facing you. Stand side-on to it.") + " " + (CAMHINT[t.cam] || t.how) + " I'll tell you when I can see you.";
+  }
+  function coachHeld(ev) {
+    var t = CAM.t, k = CAM.k, val = k === "squat" ? "Knee " + Math.round(ev.v.knee) + " degrees" + (ev.v.below ? ", hips below knees" : "") : (ev.side === "l" ? "Left, " : ev.side === "r" ? "Right, " : "") + Math.round(ev.v) + (t.u === "cm" ? " centimetres" : " degrees");
+    CAM.done[ev.side] = true;
+    var next;
+    if (k === "squat" || !t.sides) next = "Got it. Go again to beat it, or tap Use results.";
+    else if (CAM.done.l && CAM.done.r) next = "Both sides done. Go again to beat them, or tap Use results.";
+    else next = NEXT[k] || "Now the other side.";
+    sayQ(val + ". " + next, true);
+  }
   function camTest(id) { return TESTS.filter(function (t) { return t.id === id; })[0]; }
   function openCam(id) {
     var t = camTest(id);
-    CAM = { on: true, id: id, k: t.cam, t: t, facing: "environment", sess: null, stream: null, file: false, lastSay: 0 };
+    CAM = { on: true, id: id, k: t.cam, t: t, facing: "user", sess: null, stream: null, file: false, lastSay: 0, seen: false, lostAt: 0, lostSaid: 0, done: {}, trotCued: false };
     var el = $("#cam"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn(); unlockAudio();
     el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="c-close" aria-label="Close">' + ICON.close + "</button><h2>" + esc(t.n) + '</h2><button class="icon-btn" data-act="c-voice" aria-label="Voice">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div>' +
       '<div class="stage" id="c-stage"><video id="c-video" playsinline muted></video><canvas id="c-canvas"></canvas><div class="guide" id="c-guide"><div><div class="fig" data-anim="t:' + id + '"></div><p style="max-width:320px">' + esc(CAMHINT[t.cam] || t.how) + '</p><p class="small" style="opacity:.7;margin-top:10px">' + (t.cam === "er" || t.cam === "slr" ? "Prop the phone at floor level about 2 to 3 metres away." : "Prop the phone at hip height about 2 to 3 metres away.") + " Good light, fitted clothes." + (t.u === "cm" ? " The cm reading is an estimate scaled to your height (" + (S.settings.height || 178) + " cm)." : "") + '</p></div></div><div class="status" id="c-status" hidden></div></div>' +
@@ -396,6 +423,7 @@
   }
   async function camStart() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { status("This browser can't open the camera. Open the app in Safari, or use a video instead."); return; }
+    unlockAudio(); if (!CAM.introDone) { CAM.introDone = true; sayQ(coachIntro(CAM.t), true); }
     status("Starting camera…");
     try {
       camStopStream();
@@ -412,8 +440,9 @@
   async function camRun() {
     $("#c-guide").hidden = true; status("Loading body tracking (first time takes a few seconds)…"); camControls(true);
     try { await POSE.load(); } catch (e) { status("Couldn't load body tracking. Check your connection and try again."); camControls(false); return; }
-    status("Step into view, side-on to the phone.");
-    if (!CAM.sess) CAM.sess = new POSE.Session(CAM.k, $("#c-canvas"), { dir: CAM.t.noScore || CAM.t.hi >= CAM.t.lo ? 1 : -1, unit: CAM.t.u, H: S.settings.height || 178 });
+    status("Step into view so your whole body is on screen.");
+    if (!CAM.sess) CAM.sess = new POSE.Session(CAM.k, $("#c-canvas"), { dir: CAM.t.noScore || CAM.t.hi >= CAM.t.lo ? 1 : -1, unit: CAM.t.u, H: S.settings.height || 178,
+      caption: function (sd, v) { return CAM.t.n + (sd === "l" ? ", left" : sd === "r" ? ", right" : "") + ": " + POSE.label(CAM.k, v, CAM.t.u) + "\nSignal Mobility · " + nice(iso()); } });
     var v = $("#c-video"), cv = $("#c-canvas"), id = CAM.run = {}, lastFound = true;
     while (CAM.on && CAM.run === id) {
       if (v.readyState >= 2 && !v.paused) {
@@ -422,10 +451,15 @@
         var r;
         try { r = await CAM.sess.frame(v, w, h, CAM.facing === "user" && !CAM.file); } catch (e) { r = null; }
         if (r) {
-          if (r.found !== lastFound) { status(r.found ? "" : "Can't see you. Step back so your whole body is in view."); lastFound = r.found; }
-          if (CAM.k === "trot" && r.found && (CAM.sess.st.n || 0) < 15) status("Face the camera and hold still…"); else if (CAM.k === "trot" && CAM.sess.st.n === 15) status("Now rotate each way and hold.");
+          var now = performance.now();
+          if (r.found !== lastFound) { status(r.found ? "" : "Can't see you. Step back so your whole body is in view."); lastFound = r.found; if (!r.found) CAM.lostAt = now; }
+          if (r.found && !CAM.seen) { CAM.seen = true; sayQ(CAM.k === "trot" ? "Got you. Face the camera and hold still." : "Got you. Go when you're ready, and hold your best position for two seconds."); }
+          if (!r.found && CAM.seen && now - CAM.lostAt > 2500 && now - CAM.lostSaid > 8000) { CAM.lostSaid = now; sayQ("I can't see all of you. Step back a little.", true); }
+          if (CAM.k === "trot" && r.found && (CAM.sess.st.n || 0) < 15) status("Face the camera and hold still…");
+          else if (CAM.k === "trot" && CAM.sess.st.n >= 15 && !CAM.trotCued) { CAM.trotCued = true; status("Now rotate each way and hold."); beep(990, 200); sayQ("Now rotate as far as you can, and hold.", true); }
           r.events.forEach(function (ev) {
-            if (ev.type === "held" && performance.now() - CAM.lastSay > 2500) { CAM.lastSay = performance.now(); beep(880, 120); say(CAM.k === "squat" ? "Knee " + Math.round(ev.v.knee) + " degrees" : (ev.side === "l" ? "Left " : ev.side === "r" ? "Right " : "") + Math.round(ev.v) + (CAM.t.u === "cm" ? " centimetres" : " degrees")); }
+            if (ev.type === "held" && performance.now() - CAM.lastSay > 2500) { CAM.lastSay = performance.now(); beep(880, 120); coachHeld(ev); }
+            else if (ev.type === "best") beep(1180, 70, 0.15);
           });
           readout();
         }
@@ -441,13 +475,31 @@
     if (CAM.k === "squat") { var q = bestSquat(); if (q) { draft.v.squat_knee = Math.round(q.knee); draft.v.squat_shin = Math.round(q.shin); draft.v.squat_torso = Math.round(q.torso); got = 1; } }
     else if (!t.sides) { if (b.c) { draft.v[t.id] = Math.round(b.c.v); got = 1; } }
     else ["l", "r"].forEach(function (sd) { if (b[sd]) { draft.v[t.id + "_" + sd] = Math.round(b[sd].v); got++; } });
-    var snaps = ["l", "r", "c"].filter(function (sd) { return b[sd] && b[sd].img; }).map(function (sd) { return b[sd].img; });
+    var snaps = ["l", "r", "c"].filter(function (sd) { return b[sd] && b[sd].img; }).map(function (sd) { return { sd: sd, img: b[sd].img }; });
+    LASTSNAPS = snaps.map(function (s) { return { img: s.img, name: "mobility-" + t.id + (s.sd === "c" ? "" : "-" + (s.sd === "l" ? "left" : "right")) + "-" + iso() + ".jpg" }; });
+    /* Must run inside the tap so iOS allows the share sheet. */
+    var shared = got && S.settings.savePhotos && LASTSNAPS.length ? savePhotos(LASTSNAPS) : false;
     closeCam();
     if (!got) { toast("No readings captured yet."); return; }
     toast("Added to your test. Tap Save test when you're done.");
     if (TAB !== "test") go("test"); else renderTest();
-    if (snaps.length) openSheet("<h2>Best positions</h2><p class=\"muted\" style=\"margin:4px 0 12px\">Snapshots aren't stored. Screenshot them if you want to keep them.</p><div class=\"snaps\">" + snaps.map(function (s) { return '<img alt="Tracked position" src="' + s + '">'; }).join("") + "</div>");
+    if (snaps.length && !shared) openSheet("<h2>Best positions</h2><p class=\"muted\" style=\"margin:4px 0 12px\">Save them to Photos to keep a visual record.</p><div class=\"snaps\">" + snaps.map(function (s) { return '<img alt="Tracked position" src="' + s.img + '">'; }).join("") + '</div><button class="btn primary block" style="margin-top:12px" data-act="save-photos">Save to Photos</button>');
     var card = $('[data-test="' + t.id + '"]'); if (card) card.scrollIntoView({ block: "center" });
+  }
+  var LASTSNAPS = [];
+  function dataFile(u, name) { var b = atob(u.split(",")[1]), a = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return new File([a], name, { type: "image/jpeg" }); }
+  /* Opens the iOS share sheet with the captioned images; "Save Images" puts them in Photos. Returns true if the sheet was opened. */
+  function savePhotos(list) {
+    try {
+      var files = list.map(function (s) { return dataFile(s.img, s.name); });
+      if (navigator.canShare && navigator.canShare({ files: files })) {
+        navigator.share({ files: files }).then(function () { toast("Saved"); }).catch(function (e) { if (!e || e.name !== "AbortError") toast("Couldn't open the save sheet"); });
+        return true;
+      }
+      files.forEach(function (f) { var a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500); });
+      toast("Images downloaded");
+      return true;
+    } catch (e) { return false; }
   }
   function closeCam() {
     CAM.on = false; camStopStream(); var v = $("#c-video"); if (v) { v.pause(); if (v.src) URL.revokeObjectURL(v.src); }
@@ -522,13 +574,14 @@
     var h = '<h2>Settings</h2><div class="card" style="margin-top:12px"><div class="row"><label class="field">Age<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="' + (s.age || "") + '"></label><label class="field">Height (cm)<input type="number" inputmode="numeric" id="s-height" min="120" max="230" value="' + (s.height || 178) + '"></label><label class="field">Sex<select id="s-sex"><option value="m"' + (s.sex === "m" ? " selected" : "") + '>Male</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">Female</option></select></label></div>" +
       '<p class="small muted" style="margin-top:8px">Age and sex set the GOWOD average markers (GOWOD only publishes averages for men). Height scales the camera\'s cm estimates.</p></div>';
     h += '<div class="card"><div class="row"><label class="field">Get-ready countdown<select id="s-prep">' + [3, 5, 8, 10, 15].map(function (n) { return '<option value="' + n + '"' + (s.prep === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label><label class="field">Theme<select id="s-theme">' + [["auto", "Match phone"], ["light", "Light"], ["dark", "Dark"]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
-      '<div class="row" style="margin-top:12px"><label class="row grow"><input type="checkbox" id="s-voice"' + (s.voice ? " checked" : "") + '> Voice coaching</label><label class="row grow"><input type="checkbox" id="s-beeps"' + (s.beeps ? " checked" : "") + "> Beeps</label></div></div>";
+      '<div class="row" style="margin-top:12px"><label class="row grow"><input type="checkbox" id="s-voice"' + (s.voice ? " checked" : "") + '> Voice coaching</label><label class="row grow"><input type="checkbox" id="s-beeps"' + (s.beeps ? " checked" : "") + "> Beeps</label></div>" +
+      '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-photos"' + (s.savePhotos ? " checked" : "") + '> Save camera test images to Photos</label></div>';
     h += '<div class="card"><h3>Your data</h3><p class="small muted" style="margin:4px 0 12px">Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal\'s format.</p><div class="row"><button class="btn grow" data-act="export">Export file</button><button class="btn grow" data-act="copy">Copy</button></div><div class="row" style="margin-top:8px"><label class="btn grow">Restore from file<input type="file" accept="application/json,.json" id="s-import" hidden></label></div>' +
       '<details style="margin-top:10px"><summary class="small" style="color:var(--brand);font-weight:600">Paste a backup instead</summary><textarea class="inp" id="s-paste" rows="4" style="margin-top:8px;font-size:13px"></textarea><button class="btn" style="margin-top:8px" data-act="paste-import">Restore pasted backup</button></details></div>';
     h += '<div class="card"><button class="btn danger block" data-act="reset">Delete all data</button></div><p class="small muted" style="text-align:center">Signal Mobility 1.0 · body tracking by MediaPipe</p>';
     openSheet(h, function () {});
-    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.prep = parseInt($("#s-prep").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; save(); applyTheme(); render(); };
-    ["#s-age", "#s-height", "#s-sex", "#s-prep", "#s-theme", "#s-voice", "#s-beeps"].forEach(function (id) { $(id).addEventListener("change", sync); });
+    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.prep = parseInt($("#s-prep").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; save(); applyTheme(); render(); };
+    ["#s-age", "#s-height", "#s-sex", "#s-prep", "#s-theme", "#s-voice", "#s-beeps", "#s-photos"].forEach(function (id) { $(id).addEventListener("change", sync); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
   }
   function applyTheme() { var t = S.settings.theme; if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(document.body).backgroundColor || "#0f6b5c"; }
@@ -567,6 +620,7 @@
       case "c-flip": CAM.facing = CAM.facing === "user" ? "environment" : "user"; camStart(); break;
       case "c-reset": if (CAM.sess) { CAM.sess.best = {}; readout(); } toast("Best readings cleared"); break;
       case "c-use": camUse(); break;
+      case "save-photos": savePhotos(LASTSNAPS); break;
       case "c-voice": case "p-voice": S.settings.voice = !S.settings.voice; save(); el.innerHTML = S.settings.voice ? ICON.sound : ICON.mute; if (!S.settings.voice) try { speechSynthesis.cancel(); } catch (x) {} break;
       case "p-close": closePlayer(); break;
       case "p-pause": if (P) { P.paused = !P.paused; el.innerHTML = P.paused ? ICON.play : ICON.pause; if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); } break;
@@ -588,5 +642,5 @@
   go(t0);
   if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(function () {});
   if (window.speechSynthesis) speechSynthesis.getVoices();
-  window.SM = { state: function () { return S; }, score: score, dailyItems: dailyItems };
+  window.SM = { state: function () { return S; }, score: score, dailyItems: dailyItems, cam: function () { return CAM; } };
 })();
