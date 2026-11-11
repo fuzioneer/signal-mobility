@@ -1,6 +1,6 @@
 /* Signal Mobility service worker: app shell offline, pose model cached after first use. */
-const VER = "sm-1.5.0";
-const SHELL = ["./", "index.html", "styles.css", "app.js", "data.js", "figure.js", "pose.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
+const VER = "sm-1.6.0";
+const SHELL = ["./", "index.html", "styles.css", "app.js", "data.js", "figure.js", "pose.js", "music.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(VER).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VER && k !== "sm-cdn").map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener("fetch", e => {

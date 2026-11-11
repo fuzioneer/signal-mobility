@@ -218,3 +218,6 @@ nav.tabs button.on { color: var(--brand); }
 @media (min-width: 560px) { .lib { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 360px) { .hero { grid-template-columns: 104px 1fr; } .ring { width: 104px; height: 104px; } .zbar { grid-template-columns: 100px 1fr 32px; font-size: 13px; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+.mvol { display: flex; align-items: center; gap: 10px; justify-content: center; margin: 10px auto 0; color: var(--muted); max-width: 260px; }
+.mvol svg { width: 18px; height: 18px; }
+.mvol input { flex: 1; accent-color: var(--brand); }
