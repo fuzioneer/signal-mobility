@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.6.1", APP_BUILD = "11 Nov 2026";
+  var APP_VERSION = "1.8.0", APP_BUILD = "11 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -28,7 +28,7 @@
 
   /* ---------- storage ---------- */
   var KEY = "signal-mobility-v1";
-  function blank() { return { v: 1, settings: { age: 40, sex: "m", height: 178, voice: true, savePhotos: true, music: "pads", musicVol: 0.5, beeps: true, prep: 5, theme: "auto" }, tests: [], sessions: [], routines: [] }; }
+  function blank() { return { v: 1, settings: { age: 40, sex: "m", height: 178, voice: true, savePhotos: true, music: "pads", musicVol: 0.5, beeps: true, prep: 5, rest: 10, sideRest: 5, theme: "auto" }, tests: [], sessions: [], routines: [] }; }
   function load() {
     try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; return b; } } catch (e) {}
     return blank();
@@ -325,10 +325,10 @@
   }
   var MUSIC_STYLES = [["off", "Off"], ["pads", "Calm pads"], ["bowls", "Singing bowls"], ["ocean", "Ocean waves"]];
   function musicOn() { return S.settings.music && S.settings.music !== "off"; }
-  function startMusic() { if (window.MUSIC && musicOn()) { unlockAudio(); MUSIC.start(AC, S.settings.music, S.settings.musicVol); } }
+  function startMusic() { if (window.MUSIC && musicOn()) { unlockAudio(); MUSIC.start(AC, S.settings.music, S.settings.musicVol); if (P && P.paused) MUSIC.pause(300); } }
   function play(routine) {
     unlockAudio(); startMusic();
-    P = { r: routine, st: steps(routine.items), i: 0, phase: "prep", left: S.settings.prep, total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
+    P = { r: routine, st: steps(routine.items), i: 0, phase: "prep", left: restSecs(true), total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
     var el = $("#player"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn();
     el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="p-close" aria-label="End session">' + ICON.close + '</button><h2>' + esc(routine.n) + '</h2><button class="icon-btn" data-act="p-music" aria-label="Background music">' + (musicOn() ? ICON.music : ICON.musicOff) + '</button><button class="icon-btn" data-act="p-voice" aria-label="Voice">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div><div class="pbar"><i id="p-bar"></i></div>' +
       '<div class="player"><div class="pfig"><span class="side" id="p-side" hidden></span><div class="figwrap" id="p-fig"></div></div><div class="pname" id="p-name"></div><div class="pcue" id="p-cue"></div>' +
@@ -339,17 +339,23 @@
     enterStep(); P.timer = setInterval(tick, 200);
   }
   function stepDur(st) { return st.s.d; }
+  var KIT = [[/\bband\b/i, "a band"], [/roller/i, "a foam roller"], [/broomstick|\bstick\b|dowel|pvc/i, "a stick or dowel"], [/\bwall\b/i, "a wall"], [/bench|\bbox\b/i, "a bench or box"], [/doorway|door frame/i, "a doorway"], [/\brig\b/i, "something to hold"]];
+  var KIT_FIX = { passthru: ["a dowel or band"], legswing: ["a wall or rig to hold"], breath9090: ["a bench or sofa"] };
+  function kitFor(s) { if (KIT_FIX[s.id]) return KIT_FIX[s.id]; var txt = s.n + " " + s.cues, out = []; KIT.forEach(function (k) { if (k[0].test(txt) && out.indexOf(k[1]) < 0) out.push(k[1]); }); return out; }
+  function listJoin(xs) { return xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " and " + xs[xs.length - 1]; }
+  /* Time to reposition and grab kit between exercises, and a shorter pause to switch sides. Both set in Settings. */
+  function restSecs(newExercise) { var s = S.settings; return newExercise ? (s.rest == null ? 10 : s.rest) : (s.sideRest == null ? 5 : s.sideRest); }
   function enterStep() {
     var st = P.st[P.i]; if (!st) return finish();
-    P.phase = "prep"; P.left = st.first ? S.settings.prep : 3; P.dur = P.left; P.spoke = {};
+    P.phase = "prep"; P.left = restSecs(st.first); P.dur = P.left; P.spoke = {};
     if (P.stop) P.stop();
     $("#p-fig").classList.toggle("flip", st.side === "Right");
     P.stop = FIG.animate($("#p-fig"), st.s.pose, st.s.pose2, 1500, { stroke: 7 });
-    $("#p-name").textContent = st.s.n; $("#p-cue").textContent = st.s.cues;
+    var kit = kitFor(st.s); $("#p-name").textContent = st.s.n; $("#p-cue").textContent = (kit.length ? "You'll need " + listJoin(kit) + ". " : "") + st.s.cues;
     var sd = $("#p-side"); sd.hidden = !st.side; sd.textContent = st.side ? st.side + " side" : "";
     var nx = P.st[P.i + 1]; $("#p-up").textContent = nx ? "Up next: " + nx.s.n + (nx.side ? " (" + nx.side.toLowerCase() + ")" : "") : "Last one";
     $("#p-bar").style.width = (P.i / P.st.length * 100) + "%";
-    say(st.first ? (P.i === 0 ? pick(["Let's start with ", "First up, ", "We'll begin with "]) : pick(["Next up, ", "Okay, next is ", "Moving on to ", "Right, now "])) + st.s.n + "." + (st.side ? pick([" Left side first.", " We'll start on the left.", " Left side to begin."]) : "") + (st.s.reps ? " Aim for " + st.s.reps + "." : "") : pick(["Lovely. Switch to the right side.", "Nice. Now the right side.", "Good. Swap over to the right."]));
+    say(st.first ? (P.i === 0 ? pick(["Let's start with ", "First up, ", "We'll begin with "]) : pick(["Next up, ", "Okay, next is ", "Moving on to ", "Right, now "])) + st.s.n + "." + (kit.length ? " You'll need " + listJoin(kit) + "." : "") + (st.side ? pick([" Left side first.", " We'll start on the left.", " Left side to begin."]) : "") + (st.s.reps ? " Aim for " + st.s.reps + "." : "") : pick(["Lovely. Switch to the right side.", "Nice. Now the right side.", "Good. Swap over to the right."]));
     draw();
   }
   function tick() {
@@ -359,7 +365,11 @@
     var before = Math.ceil(P.left);
     P.left -= dt; if (P.phase === "work") P.worked += dt;
     var after = Math.ceil(P.left);
-    if (after !== before && after <= 3 && after > 0) beep(P.phase === "prep" ? 660 : 880, 120);
+    if (after !== before && P.phase === "work") {
+      /* 10 seconds to go reminder, then a spoken 3, 2, 1 (beeps instead if the voice is off) */
+      if (after === 10 && P.dur > 15) say(pick(["Ten seconds to go.", "Ten seconds left.", "Last ten seconds. Stay with it."]));
+      if (after <= 3 && after > 0) { if (S.settings.voice) say(["", "One", "Two", "Three"][after]); else beep(880, 120); }
+    } else if (after !== before && after <= 3 && after > 0) beep(660, 120);
     if (P.phase === "work" && P.dur >= 60 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; say(pick(["Halfway there. Breathe out, and sink a little deeper.", "That's halfway. Keep breathing slowly.", "Halfway. Relax your shoulders, and let it go a bit further."])); }
     if (P.left <= 0) {
       if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); beep(990, 380, 0.3); }
@@ -371,7 +381,7 @@
     if (!P || !P.st[P.i]) return;
     var p = P.dur ? Math.max(0, P.left) / P.dur * 100 : 0;
     $("#p-ring").innerHTML = ringSVG(p, 112, 9, P.phase === "prep" ? "var(--amber)" : "var(--brand)") + "<b>" + Math.max(0, Math.ceil(P.left)) + "</b>";
-    var ph = $("#p-phase"); ph.textContent = P.paused ? "Paused" : P.phase === "prep" ? "Get ready" : "Hold"; ph.className = "phase" + (P.phase === "prep" ? " prep" : "");
+    var ph = $("#p-phase"); ph.textContent = P.paused ? "Paused" : P.phase === "prep" ? (P.st[P.i].first ? "Get into position" : "Switch sides") : "Hold"; ph.className = "phase" + (P.phase === "prep" ? " prep" : "");
   }
   function finish() {
     var secs = Math.round(P.worked), r = P.r;
@@ -621,7 +631,7 @@
     var s = S.settings;
     var h = '<h2>Settings</h2><div class="card" style="margin-top:12px"><div class="row"><label class="field">Age<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="' + (s.age || "") + '"></label><label class="field">Height (cm)<input type="number" inputmode="numeric" id="s-height" min="120" max="230" value="' + (s.height || 178) + '"></label><label class="field">Sex<select id="s-sex"><option value="m"' + (s.sex === "m" ? " selected" : "") + '>Male</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">Female</option></select></label></div>" +
       '<p class="small muted" style="margin-top:8px">Age and sex set the GOWOD average markers (GOWOD only publishes averages for men). Height scales the camera\'s cm estimates.</p></div>';
-    h += '<div class="card"><div class="row"><label class="field">Get-ready countdown<select id="s-prep">' + [3, 5, 8, 10, 15].map(function (n) { return '<option value="' + n + '"' + (s.prep === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label><label class="field">Theme<select id="s-theme">' + [["auto", "Match phone"], ["light", "Light"], ["dark", "Dark"]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
+    h += '<div class="card"><div class="row"><label class="field">Time between exercises<select id="s-rest">' + [5, 10, 15, 20, 30, 45, 60].map(function (n) { return '<option value="' + n + '"' + ((s.rest == null ? 10 : s.rest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label><label class="field">Time to switch sides<select id="s-siderest">' + [3, 5, 10, 15].map(function (n) { return '<option value="' + n + '"' + ((s.sideRest == null ? 5 : s.sideRest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label></div><p class="small muted" style="margin-top:6px">Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.</p><div class="row" style="margin-top:10px"><label class="field">Theme<select id="s-theme">' + [["auto", "Match phone"], ["light", "Light"], ["dark", "Dark"]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
       '<div class="row" style="margin-top:12px"><label class="row grow"><input type="checkbox" id="s-voice"' + (s.voice ? " checked" : "") + '> Voice coaching</label><label class="row grow"><input type="checkbox" id="s-beeps"' + (s.beeps ? " checked" : "") + "> Beeps</label></div>" +
       '<div class="row" style="margin-top:12px"><label class="field" style="flex:2">Coach voice<select id="s-vname"><option value="">Best available</option>' + enVoices().sort(function (x, y) { return voiceScore(y) - voiceScore(x); }).map(function (v) { return '<option value="' + esc(v.name) + '"' + (s.voiceName === v.name ? " selected" : "") + ">" + esc(v.name) + " (" + esc(v.lang) + ")</option>"; }).join("") + '</select></label><label class="field">Speed<select id="s-vrate">' + [[0.85, "Slower"], [0.95, "Normal"], [1.05, "Quicker"]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.voiceRate || 0.95) === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label></div><button class="btn" style="margin-top:8px" data-act="voice-test">Hear the voice</button>' +
       '<p class="small muted" style="margin-top:8px">For the most natural voice, download one on your iPhone: open Settings, search for <b>Voices</b>, then go to English. Pick an <b>Enhanced</b> or <b>Premium</b> voice (Serena, Daniel or Arthur for British), then close and reopen this app and choose it here.</p>' +
@@ -631,8 +641,8 @@
       '<details style="margin-top:10px"><summary class="small" style="color:var(--brand);font-weight:600">Paste a backup instead</summary><textarea class="inp" id="s-paste" rows="4" style="margin-top:8px;font-size:13px"></textarea><button class="btn" style="margin-top:8px" data-act="paste-import">Restore pasted backup</button></details></div>';
     h += '<div class="card"><button class="btn danger block" data-act="reset">Delete all data</button></div><p class="small muted" style="text-align:center">Signal Mobility v' + APP_VERSION + ' (' + APP_BUILD + ') · body tracking by MediaPipe</p>';
     openSheet(h, function () { if (window.MUSIC && !P && MUSIC.playing()) MUSIC.stop(800); });
-    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.prep = parseInt($("#s-prep").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
-    ["#s-age", "#s-height", "#s-sex", "#s-prep", "#s-theme", "#s-voice", "#s-beeps", "#s-photos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
+    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
+    ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-theme", "#s-voice", "#s-beeps", "#s-photos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
   }
   function applyTheme() { var t = S.settings.theme; if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(document.body).backgroundColor || "#0f6b5c"; }
@@ -677,7 +687,7 @@
       case "voice-test": { unlockAudio(); var was = S.settings.voice; S.settings.voice = true; speak(pick(["Hi there. This is how I'll sound during your sessions. Let's get moving.", "Hello. I'll be your coach for mobility tests and stretching. Ready when you are."]), true); S.settings.voice = was; break; }
       case "c-voice": case "p-voice": S.settings.voice = !S.settings.voice; save(); el.innerHTML = S.settings.voice ? ICON.sound : ICON.mute; if (!S.settings.voice) try { speechSynthesis.cancel(); } catch (x) {} break;
       case "p-close": closePlayer(); break;
-      case "p-pause": if (P) { P.paused = !P.paused; el.innerHTML = P.paused ? ICON.play : ICON.pause; if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); } break;
+      case "p-pause": if (P) { P.paused = !P.paused; if (window.MUSIC) { if (P.paused) MUSIC.pause(1500); else MUSIC.resume(2000); } el.innerHTML = P.paused ? ICON.play : ICON.pause; if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); } break;
       case "p-next": if (P) { P.i++; enterStep(); } break;
       case "p-prev": if (P) { if (P.phase === "work" && P.left < P.dur - 3) { /* restart current */ } else P.i = Math.max(0, P.i - 1); enterStep(); } break;
       case "test-detail": testDetail(id); break;

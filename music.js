@@ -73,7 +73,7 @@
     wake();
     if (style === s && timer) { setVol(v); return; }
     if (style) hardStop();
-    style = s; vol = v == null ? vol : v; chordIdx = Math.floor(Math.random() * 4);
+    paused = false; style = s; vol = v == null ? vol : v; chordIdx = Math.floor(Math.random() * 4);
     nextChord = ctx.currentTime + 0.1; nextBell = ctx.currentTime + 3;
     out.gain.cancelScheduledValues(ctx.currentTime); out.gain.setValueAtTime(out.gain.value, ctx.currentTime); out.gain.linearRampToValueAtTime(level(), ctx.currentTime + 4);
     if (s === "ocean") waves();
@@ -93,9 +93,21 @@
     if (!ctx || !style) { style = null; return; }
     var t = ctx.currentTime, f = (ms == null ? 2500 : ms) / 1000;
     out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(0, t + f);
-    var was = style; style = null; clearInterval(timer); timer = null;
+    var was = style; style = null; paused = false; clearInterval(timer); timer = null;
     setTimeout(function () { if (!style) hardStop(); }, f * 1000 + 100);
     return was;
+  }
+  /* Pause: fade the music down to silence, then stop scheduling new notes. Resume: carry on and fade back up. */
+  var paused = false;
+  function pause(ms) {
+    if (!ctx || !style || paused) return; paused = true; var t = ctx.currentTime, f = (ms || 1500) / 1000;
+    out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(0, t + f);
+    clearInterval(timer); timer = null;
+  }
+  function resume(ms) {
+    if (!ctx || !style || !paused) return; paused = false; wake(); var t = ctx.currentTime, f = (ms || 2000) / 1000;
+    if (nextChord < t) nextChord = t + 0.05; if (nextBell < t) nextBell = t + 2; tick(); timer = setInterval(tick, 1000);
+    out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(level(), t + f);
   }
   function setVol(v) { vol = Math.max(0, Math.min(1, v)); if (ctx && style) { var t = ctx.currentTime; out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(level(), t + 0.4); } }
   /* Lower the music while the coach is speaking. Polls speechSynthesis because iOS doesn't reliably fire end events after cancel(). */
@@ -104,5 +116,5 @@
     if (!ctx || !style) return; var on = false; try { on = !!(window.speechSynthesis && (speechSynthesis.speaking || speechSynthesis.pending)); } catch (e) {}
     if (on === ducked) return; ducked = on; var t = ctx.currentTime; duckG.gain.cancelScheduledValues(t); duckG.gain.setValueAtTime(duckG.gain.value, t); duckG.gain.linearRampToValueAtTime(on ? 0.35 : 1, t + (on ? 0.25 : 1.2));
   }, 200);
-  window.MUSIC = { start: start, stop: stop, setVol: setVol, playing: function () { return !!style; } };
+  window.MUSIC = { start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, playing: function () { return !!style; } };
 })();
