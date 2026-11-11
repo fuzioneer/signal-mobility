@@ -16,3 +16,13 @@ A phone web app for GOWOD-style mobility testing (with live camera body tracking
 3. Open Mobility from the new icon. Allow camera access the first time you use a camera test.
 
 The first camera test downloads the tracking model (a few MB). After that it works offline.
+
+## Versions
+
+The version shows at the bottom of the Today screen and in Settings.
+
+- 1.5.0 (11 Nov 2026): more natural coach voice: picks the best voice on the phone, conversational phrasing with variety, voice and speed choice in Settings.
+- 1.4.0 (11 Nov 2026): version indicator added.
+- 1.3.0 (11 Nov 2026): selfie camera by default, spoken coaching during camera tests, captioned images saved to Photos.
+- 1.2.0 (11 Nov 2026): every test can be measured with the camera; height setting for cm estimates.
+- 1.0.0 (11 Nov 2026): first release.

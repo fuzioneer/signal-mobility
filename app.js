@@ -1,6 +1,8 @@
 /* Signal Mobility app: tests, scoring, routines, guided player, history, export. Data stays on this phone. */
 (function () {
   "use strict";
+  /* Bump on every release, and keep sw.js VER in step. */
+  var APP_VERSION = "1.5.0", APP_BUILD = "11 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -187,6 +189,7 @@
     h += '<div class="sec"><h2>Quick picks</h2></div>';
     ["warm", "cool", "desk"].forEach(function (id) { h += routineCard(findRoutine(id)); });
     if (!isStandalone()) h += installCard();
+    h += '<p class="small muted" style="text-align:center;margin-top:18px">Signal Mobility v' + APP_VERSION + " · " + APP_BUILD + "</p>";
     $("#v-home").innerHTML = h;
   }
   function isStandalone() { return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; }
@@ -282,15 +285,29 @@
     if (!S.settings.beeps) return;
     try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === "suspended") AC.resume(); var o = AC.createOscillator(), g = AC.createGain(); o.frequency.value = f; o.type = "sine"; g.gain.setValueAtTime(vol || 0.25, AC.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + ms / 1000); o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime + ms / 1000 + 0.02); } catch (e) {}
   }
-  function say(text) {
-    if (!S.settings.voice || !window.speechSynthesis) return;
-    try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(text); u.lang = "en-GB"; u.rate = 1.02; var vs = speechSynthesis.getVoices().filter(function (v) { return /en-GB/i.test(v.lang); }); if (vs.length) u.voice = vs[0]; speechSynthesis.speak(u); } catch (e) {}
+  /* ---------- voice: pick the most natural voice the phone has, speak conversationally ---------- */
+  var NOVELTY = /albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|junior|ralph|fred|kathy|grandma|grandpa|eddy|flo|reed|rocko|sandy|shelley|google/i;
+  var NICE = /serena|daniel|kate|arthur|martha|stephanie|jamie|oliver|malcolm|ava|zoe|evan|nathan|noelle|joelle|samantha|karen|moira|tessa|libby|sonia|ryan|thomas/i;
+  function enVoices() { try { return speechSynthesis.getVoices().filter(function (v) { return /^en[-_]/i.test(v.lang) && !NOVELTY.test(v.name); }); } catch (e) { return []; } }
+  function voiceScore(v) { var n = v.name + " " + (v.voiceURI || ""); return (/premium/i.test(n) ? 40 : /enhanced|neural|natural/i.test(n) ? 25 : 0) + (/en[-_]GB/i.test(v.lang) ? 8 : 0) + (NICE.test(n) ? 5 : 0) + (v.localService ? 1 : 0); }
+  function bestVoice() {
+    var vs = enVoices(); if (!vs.length) return null;
+    if (S.settings.voiceName) { var m = vs.filter(function (v) { return v.name === S.settings.voiceName; })[0]; if (m) return m; }
+    return vs.slice().sort(function (x, y) { return voiceScore(y) - voiceScore(x); })[0];
   }
-  /* Queued speech for the camera coach: doesn't cut off what's already being said unless urgent. */
-  function sayQ(text, urgent) {
+  if (window.speechSynthesis) { try { speechSynthesis.onvoiceschanged = function () {}; } catch (e) {} }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  /* Speaks sentence by sentence so there are natural breaths between them. */
+  function speak(text, interrupt) {
     if (!S.settings.voice || !window.speechSynthesis || !text) return;
-    try { if (urgent) speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(text); u.lang = "en-GB"; u.rate = 1; var vs = speechSynthesis.getVoices().filter(function (v) { return /en-GB/i.test(v.lang); }); if (vs.length) u.voice = vs[0]; speechSynthesis.speak(u); } catch (e) {}
+    try {
+      if (interrupt) speechSynthesis.cancel();
+      var v = bestVoice(), parts = String(text).match(/[^.!?]+[.!?]*/g) || [text];
+      parts.forEach(function (p) { p = p.trim(); if (!p) return; var u = new SpeechSynthesisUtterance(p); if (v) { u.voice = v; u.lang = v.lang; } else u.lang = "en-GB"; u.rate = S.settings.voiceRate || 0.95; u.pitch = 1; u.volume = 1; speechSynthesis.speak(u); });
+    } catch (e) {}
   }
+  function say(text) { speak(text, true); }
+  function sayQ(text, urgent) { speak(text, urgent); }
   function unlockAudio() { try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume(); if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); } } catch (e) {} }
   var wake = null;
   function wakeOn() { try { if (navigator.wakeLock) navigator.wakeLock.request("screen").then(function (w) { wake = w; }).catch(function () {}); } catch (e) {} }
@@ -323,7 +340,7 @@
     var sd = $("#p-side"); sd.hidden = !st.side; sd.textContent = st.side ? st.side + " side" : "";
     var nx = P.st[P.i + 1]; $("#p-up").textContent = nx ? "Up next: " + nx.s.n + (nx.side ? " (" + nx.side.toLowerCase() + ")" : "") : "Last one";
     $("#p-bar").style.width = (P.i / P.st.length * 100) + "%";
-    say(st.first ? (P.i === 0 ? "" : "Next. ") + st.s.n + (st.side ? ". Left side first." : ".") + (st.s.reps ? " " + st.s.reps + "." : "") : "Switch to the right side.");
+    say(st.first ? (P.i === 0 ? pick(["Let's start with ", "First up, ", "We'll begin with "]) : pick(["Next up, ", "Okay, next is ", "Moving on to ", "Right, now "])) + st.s.n + "." + (st.side ? pick([" Left side first.", " We'll start on the left.", " Left side to begin."]) : "") + (st.s.reps ? " Aim for " + st.s.reps + "." : "") : pick(["Lovely. Switch to the right side.", "Nice. Now the right side.", "Good. Swap over to the right."]));
     draw();
   }
   function tick() {
@@ -334,7 +351,7 @@
     P.left -= dt; if (P.phase === "work") P.worked += dt;
     var after = Math.ceil(P.left);
     if (after !== before && after <= 3 && after > 0) beep(P.phase === "prep" ? 660 : 880, 120);
-    if (P.phase === "work" && P.dur >= 60 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; say("Halfway. Breathe and sink a little deeper."); }
+    if (P.phase === "work" && P.dur >= 60 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; say(pick(["Halfway there. Breathe out, and sink a little deeper.", "That's halfway. Keep breathing slowly.", "Halfway. Relax your shoulders, and let it go a bit further."])); }
     if (P.left <= 0) {
       if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); beep(990, 380, 0.3); }
       else { beep(520, 300, 0.3); P.i++; return enterStep(); }
@@ -351,7 +368,7 @@
     var secs = Math.round(P.worked), r = P.r;
     clearInterval(P.timer); if (P.stop) P.stop();
     if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); }
-    say(secs >= 30 ? "Session complete. Nice work." : "");
+    say(secs >= 30 ? pick(["And that's it. Great session.", "All done. Nice work today.", "That's the session finished. Well done."]) : "");
     $("#p-bar").style.width = "100%";
     $(".player").innerHTML = '<div style="flex:1;display:grid;place-items:center;text-align:center"><div><div class="ring" style="margin:0 auto 16px">' + ringSVG(100, 128, 12) + '<div class="lbl"><div><b>' + streak() + '</b><span>day streak</span></div></div></div><h2>Done</h2><p class="muted" style="margin-top:6px">' + esc(r.n) + " · " + mmss(secs) + " of stretching</p></div></div>" +
       '<button class="btn primary big block" data-act="p-close">Finish</button>';
@@ -381,18 +398,38 @@
     hipir: "Prop your phone at knee height, about two metres away. Sit facing it.",
     pigeon: "Prop your phone at hip height, about two metres away. Sit facing it."
   };
-  var NEXT = { shflex: "Now turn round and raise the other arm.", slr: "Now raise the other leg.", thomas: "Now swap legs.", ankle: "Now swap legs.", k2w: "Now swap legs.", er: "Now turn round and test the other arm.", backscratch: "Now swap hands.", trot: "Now rotate the other way.", hipir: "Hold that.", pigeon: "Now switch sides." };
+  var NEXT = { shflex: "Then turn round, and lift the other arm.", slr: "Then lift the other leg.", thomas: "Then swap legs over.", ankle: "Then swap legs over.", k2w: "Then swap legs over.", er: "Then turn round, and do the other arm.", backscratch: "Then swap hands over.", trot: "Now turn the other way.", hipir: "Keep holding that.", pigeon: "Then switch sides." };
+  /* What the coach says, written to be heard rather than read. */
+  var SPOKEN = {
+    shflex: "Keep your ribs down, and lift one straight arm up overhead as far as it'll go. Hold it there for a couple of seconds, then we'll do the other side.",
+    wallflex: "Back flat against the wall, heels, bum and head touching. Lift both arms overhead with your thumbs together, and reach back towards the wall. Hold it for a couple of seconds.",
+    backscratch: "Reach one hand over your shoulder, and the other up behind your back, so your fingers point at each other. Hold it for a couple of seconds.",
+    er: "Put your arm out to the side at shoulder height, with your elbow bent and your hand pointing at the ceiling. Then let your hand fall back towards the floor, keeping your shoulder down. Hold it at the bottom.",
+    trot: "Hold a stick across your shoulders. First, face me and keep still for a moment, so I can learn your shoulder width.",
+    slr: "Keep both legs straight. Lift one leg as high as you can, without bending the knee, and hold it there for a couple of seconds.",
+    toetouch: "Feet together, knees straight. Reach down as far as you can, and hold it at the bottom.",
+    hipir: "Keep your knees still, and swing both feet outwards as far as they'll go. Hold it there for a couple of seconds.",
+    thomas: "Lie back on the edge of the bench. Hug one knee to your chest, and let the other leg hang down. Then just relax and hold still.",
+    pigeon: "Get into your ninety ninety position, with the front shin across your body. Lean forward with a long back, and let the front knee drop. Hold it there.",
+    ankle: "Keep your front heel down, and drive your knee forward over your toes as far as it'll go. Hold it at the furthest point.",
+    k2w: "Keep your front heel down, and push your knee forward past your toes as far as it'll go. Hold it at the furthest point.",
+    squat: "Feet about shoulder width apart. Squat down as deep as you can, chest up, heels down. Pause at the bottom for a couple of seconds."
+  };
   function coachIntro(t) {
-    return (SETUP[t.cam] || "Prop your phone at hip height, about two metres away, with the screen facing you. Stand side-on to it.") + " " + (CAMHINT[t.cam] || t.how) + " I'll tell you when I can see you.";
+    var setup = SETUP[t.cam] || "Prop your phone at hip height, about two metres away, with the screen facing you. Then stand side-on to it.";
+    return pick(["Okay, let's measure your " + t.n.toLowerCase() + ".", "Right, " + t.n.toLowerCase() + " next.", "Let's do your " + t.n.toLowerCase() + "."]) + " " + setup + " " + (SPOKEN[t.cam] || "") + " I'll let you know when I can see you.";
   }
   function coachHeld(ev) {
-    var t = CAM.t, k = CAM.k, val = k === "squat" ? "Knee " + Math.round(ev.v.knee) + " degrees" + (ev.v.below ? ", hips below knees" : "") : (ev.side === "l" ? "Left, " : ev.side === "r" ? "Right, " : "") + Math.round(ev.v) + (t.u === "cm" ? " centimetres" : " degrees");
+    var t = CAM.t, k = CAM.k, n = Math.round(k === "squat" ? ev.v.knee : ev.v), unit = t.u === "cm" ? (Math.abs(n) === 1 ? " centimetre" : " centimetres") : " degrees";
+    var num = (n < 0 ? "minus " + Math.abs(n) : String(n)) + unit;
+    var val = k === "squat" ? pick(["Nice and deep. ", "Good squat. ", "Got it. "]) + "Your knee angle is " + num + (ev.v.below ? ", with your hips below your knees." : ".")
+      : pick(["Great, hold it. ", "Lovely. ", "Nice one. ", "That's it. "]) + (ev.side === "l" ? "Left side, " : ev.side === "r" ? "Right side, " : "That's ") + num + ".";
     CAM.done[ev.side] = true;
     var next;
-    if (k === "squat" || !t.sides) next = "Got it. Go again to beat it, or tap Use results.";
-    else if (CAM.done.l && CAM.done.r) next = "Both sides done. Go again to beat them, or tap Use results.";
-    else next = NEXT[k] || "Now the other side.";
-    sayQ(val + ". " + next, true);
+    if (k === "squat" || !t.sides) next = pick(["Have another go if you think you can beat it, or tap Use results when you're happy.", "You can go again to beat that, or tap Use results."]);
+    else if (CAM.done.l && CAM.done.r) next = pick(["That's both sides done. Go again if you want to beat them, or tap Use results.", "Both sides recorded. Nice work. Tap Use results when you're happy."]);
+    else next = "Relax for a second. " + (NEXT[k] || "Now the other side.");
+    sayQ(val + " " + next, true);
   }
   function camTest(id) { return TESTS.filter(function (t) { return t.id === id; })[0]; }
   function openCam(id) {
@@ -453,10 +490,10 @@
         if (r) {
           var now = performance.now();
           if (r.found !== lastFound) { status(r.found ? "" : "Can't see you. Step back so your whole body is in view."); lastFound = r.found; if (!r.found) CAM.lostAt = now; }
-          if (r.found && !CAM.seen) { CAM.seen = true; sayQ(CAM.k === "trot" ? "Got you. Face the camera and hold still." : "Got you. Go when you're ready, and hold your best position for two seconds."); }
-          if (!r.found && CAM.seen && now - CAM.lostAt > 2500 && now - CAM.lostSaid > 8000) { CAM.lostSaid = now; sayQ("I can't see all of you. Step back a little.", true); }
+          if (r.found && !CAM.seen) { CAM.seen = true; sayQ(CAM.k === "trot" ? "I can see you. Face me, and keep still for a moment." : pick(["Okay, I can see you. Go whenever you're ready, and hold your best position for a couple of seconds.", "Great, I've got you. In your own time, move into it and hold at your best point."])); }
+          if (!r.found && CAM.seen && now - CAM.lostAt > 2500 && now - CAM.lostSaid > 8000) { CAM.lostSaid = now; sayQ(pick(["I've lost you a bit. Can you step back so I can see all of you?", "I can't quite see all of you. Take a step back.", "Move back a little, so your whole body's in the picture."]), true); }
           if (CAM.k === "trot" && r.found && (CAM.sess.st.n || 0) < 15) status("Face the camera and hold still…");
-          else if (CAM.k === "trot" && CAM.sess.st.n >= 15 && !CAM.trotCued) { CAM.trotCued = true; status("Now rotate each way and hold."); beep(990, 200); sayQ("Now rotate as far as you can, and hold.", true); }
+          else if (CAM.k === "trot" && CAM.sess.st.n >= 15 && !CAM.trotCued) { CAM.trotCued = true; status("Now rotate each way and hold."); beep(990, 200); sayQ("Perfect, got it. Now turn as far as you can to one side, keep your hips still, and hold it.", true); }
           r.events.forEach(function (ev) {
             if (ev.type === "held" && performance.now() - CAM.lastSay > 2500) { CAM.lastSay = performance.now(); beep(880, 120); coachHeld(ev); }
             else if (ev.type === "best") beep(1180, 70, 0.15);
@@ -575,13 +612,15 @@
       '<p class="small muted" style="margin-top:8px">Age and sex set the GOWOD average markers (GOWOD only publishes averages for men). Height scales the camera\'s cm estimates.</p></div>';
     h += '<div class="card"><div class="row"><label class="field">Get-ready countdown<select id="s-prep">' + [3, 5, 8, 10, 15].map(function (n) { return '<option value="' + n + '"' + (s.prep === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label><label class="field">Theme<select id="s-theme">' + [["auto", "Match phone"], ["light", "Light"], ["dark", "Dark"]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
       '<div class="row" style="margin-top:12px"><label class="row grow"><input type="checkbox" id="s-voice"' + (s.voice ? " checked" : "") + '> Voice coaching</label><label class="row grow"><input type="checkbox" id="s-beeps"' + (s.beeps ? " checked" : "") + "> Beeps</label></div>" +
+      '<div class="row" style="margin-top:12px"><label class="field" style="flex:2">Coach voice<select id="s-vname"><option value="">Best available</option>' + enVoices().sort(function (x, y) { return voiceScore(y) - voiceScore(x); }).map(function (v) { return '<option value="' + esc(v.name) + '"' + (s.voiceName === v.name ? " selected" : "") + ">" + esc(v.name) + " (" + esc(v.lang) + ")</option>"; }).join("") + '</select></label><label class="field">Speed<select id="s-vrate">' + [[0.85, "Slower"], [0.95, "Normal"], [1.05, "Quicker"]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.voiceRate || 0.95) === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label></div><button class="btn" style="margin-top:8px" data-act="voice-test">Hear the voice</button>' +
+      '<p class="small muted" style="margin-top:8px">For the most natural voice, download one on your iPhone: Settings, Accessibility, Spoken Content, Voices, English, then pick an <b>Enhanced</b> or <b>Premium</b> voice (Serena, Daniel or Arthur for British). Then choose it here.</p>' +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-photos"' + (s.savePhotos ? " checked" : "") + '> Save camera test images to Photos</label></div>';
     h += '<div class="card"><h3>Your data</h3><p class="small muted" style="margin:4px 0 12px">Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal\'s format.</p><div class="row"><button class="btn grow" data-act="export">Export file</button><button class="btn grow" data-act="copy">Copy</button></div><div class="row" style="margin-top:8px"><label class="btn grow">Restore from file<input type="file" accept="application/json,.json" id="s-import" hidden></label></div>' +
       '<details style="margin-top:10px"><summary class="small" style="color:var(--brand);font-weight:600">Paste a backup instead</summary><textarea class="inp" id="s-paste" rows="4" style="margin-top:8px;font-size:13px"></textarea><button class="btn" style="margin-top:8px" data-act="paste-import">Restore pasted backup</button></details></div>';
-    h += '<div class="card"><button class="btn danger block" data-act="reset">Delete all data</button></div><p class="small muted" style="text-align:center">Signal Mobility 1.0 · body tracking by MediaPipe</p>';
+    h += '<div class="card"><button class="btn danger block" data-act="reset">Delete all data</button></div><p class="small muted" style="text-align:center">Signal Mobility v' + APP_VERSION + ' (' + APP_BUILD + ') · body tracking by MediaPipe</p>';
     openSheet(h, function () {});
-    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.prep = parseInt($("#s-prep").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; save(); applyTheme(); render(); };
-    ["#s-age", "#s-height", "#s-sex", "#s-prep", "#s-theme", "#s-voice", "#s-beeps", "#s-photos"].forEach(function (id) { $(id).addEventListener("change", sync); });
+    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.prep = parseInt($("#s-prep").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
+    ["#s-age", "#s-height", "#s-sex", "#s-prep", "#s-theme", "#s-voice", "#s-beeps", "#s-photos", "#s-vname", "#s-vrate"].forEach(function (id) { $(id).addEventListener("change", sync); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
   }
   function applyTheme() { var t = S.settings.theme; if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(document.body).backgroundColor || "#0f6b5c"; }
@@ -621,6 +660,7 @@
       case "c-reset": if (CAM.sess) { CAM.sess.best = {}; readout(); } toast("Best readings cleared"); break;
       case "c-use": camUse(); break;
       case "save-photos": savePhotos(LASTSNAPS); break;
+      case "voice-test": { unlockAudio(); var was = S.settings.voice; S.settings.voice = true; speak(pick(["Hi there. This is how I'll sound during your sessions. Let's get moving.", "Hello. I'll be your coach for mobility tests and stretching. Ready when you are."]), true); S.settings.voice = was; break; }
       case "c-voice": case "p-voice": S.settings.voice = !S.settings.voice; save(); el.innerHTML = S.settings.voice ? ICON.sound : ICON.mute; if (!S.settings.voice) try { speechSynthesis.cancel(); } catch (x) {} break;
       case "p-close": closePlayer(); break;
       case "p-pause": if (P) { P.paused = !P.paused; el.innerHTML = P.paused ? ICON.play : ICON.pause; if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); } break;
