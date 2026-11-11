@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.8.3", APP_BUILD = "11 Nov 2026";
+  var APP_VERSION = "1.8.4", APP_BUILD = "11 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -300,17 +300,34 @@
   if (window.speechSynthesis) { try { speechSynthesis.onvoiceschanged = function () {}; } catch (e) {} }
   function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
   /* Speaks sentence by sentence so there are natural breaths between them. */
-  function speak(text, interrupt) {
-    if (!S.settings.voice || !window.speechSynthesis || !text) return;
+  /* Measured delay between asking the phone to speak and the voice actually starting (ms), used to time the countdown. */
+  var SPK = { lat: 300 };
+  function speak(text, interrupt, onStart) {
+    if (!S.settings.voice || !window.speechSynthesis || !text) return false;
     try {
       if (interrupt) speechSynthesis.cancel();
       var v = bestVoice(), parts = String(text).match(/[^.!?]+[.!?]*/g) || [text];
       /* Duck the music straight away for roughly as long as this will take to say (about 2.6 words a second, plus a pause per sentence). */
       if (window.MUSIC) MUSIC.duckFor(String(text).split(/\s+/).length / 2.6 * 1000 / (S.settings.voiceRate || 0.95) + parts.length * 350 + 600);
-      parts.forEach(function (p) { p = p.trim(); if (!p) return; var u = new SpeechSynthesisUtterance(p); if (v) { u.voice = v; u.lang = v.lang; } else u.lang = "en-GB"; u.rate = S.settings.voiceRate || 0.95; u.pitch = 1; u.volume = 1; speechSynthesis.speak(u); });
-    } catch (e) {}
+      var asked = performance.now(), first = true;
+      parts.forEach(function (p) { p = p.trim(); if (!p) return; var u = new SpeechSynthesisUtterance(p);
+        if (first) { first = false; u.onstart = function () { var t = performance.now(); if (!interrupt || t - asked < 2000) SPK.lat = Math.round(0.7 * SPK.lat + 0.3 * Math.min(1500, t - asked)); if (onStart) onStart(t); }; } if (v) { u.voice = v; u.lang = v.lang; } else u.lang = "en-GB"; u.rate = S.settings.voiceRate || 0.95; u.pitch = 1; u.volume = 1; speechSynthesis.speak(u); });
+      return true;
+    } catch (e) { return false; }
   }
   function say(text) { speak(text, true); }
+  /* Spoken 3, 2, 1 with even one-second gaps. "Three" is asked for early to allow for the voice's start-up delay;
+     "Two" and "One" are timed from when "Three" actually started, and the hold ends exactly 3 s after it. */
+  function cdClear() { if (P && P.cd) { P.cd.timers.forEach(clearTimeout); P.cd = null; } }
+  function cdStart() {
+    var cd = P.cd = { t0: null, timers: [] }, asked = performance.now();
+    var go = function (t) {
+      if (!P || P.cd !== cd || cd.t0 != null) return; cd.t0 = t;
+      [["Two", 1000], ["One", 2000]].forEach(function (n) { cd.timers.push(setTimeout(function () { if (P && P.cd === cd && !P.paused) speak(n[0], false); }, Math.max(0, n[1] - SPK.lat - (performance.now() - t)))); });
+    };
+    if (!speak("Three", true, go)) { P.cd = null; return; }
+    cd.timers.push(setTimeout(function () { go(asked + SPK.lat); }, Math.max(600, SPK.lat + 400))); /* fallback if the phone never reports the start */
+  }
   function sayQ(text, urgent) { speak(text, urgent); }
   /* Set the audio session before any AudioContext exists so music and beeps play with the silent switch on, and the context isn't interrupted by a later change. */
   try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) {}
@@ -350,7 +367,7 @@
   /* queue: true when we arrive here naturally at the end of a hold, so the "one" of the countdown is allowed to finish. */
   function enterStep(queue) {
     var st = P.st[P.i]; if (!st) return finish();
-    P.phase = "prep"; P.left = restSecs(st.first); P.dur = P.left; P.spoke = {}; if (window.MUSIC) MUSIC.setQuiet(true);
+    cdClear(); P.phase = "prep"; P.left = restSecs(st.first); P.dur = P.left; P.spoke = {}; if (window.MUSIC) MUSIC.setQuiet(true);
     if (P.stop) P.stop();
     $("#p-fig").classList.toggle("flip", st.side === "Right");
     P.stop = FIG.animate($("#p-fig"), st.s.pose, st.s.pose2, 1500, { stroke: 7 });
@@ -371,8 +388,12 @@
     if (after !== before && P.phase === "work") {
       /* 10 seconds to go reminder, then a spoken 3, 2, 1 (beeps instead if the voice is off) */
       if (after === 10 && (P.dur >= 30 || (P.dur > 15 && P.dur < 24))) say(pick(["Ten seconds to go.", "Ten seconds left.", "Last ten seconds. Stay with it."]));
-      if (after <= 3 && after > 0) { if (S.settings.voice) speak(["", "One.", "Two.", "Three."][after], after === 3); else beep(880, 120); }
+      if (after <= 3 && after > 0 && !(S.settings.voice && window.speechSynthesis)) beep(880, 120);
     } else if (after !== before && after <= 3 && after > 0) beep(660, 120);
+    if (P.phase === "work" && S.settings.voice && window.speechSynthesis && P.dur >= 5) {
+      if (!P.cd && P.left <= 3 + SPK.lat / 1000 && P.left > 1) cdStart();
+      if (P.cd && P.cd.t0 != null) P.left = Math.max(0, (P.cd.t0 + 3000 - now) / 1000);
+    }
     /* Halfway call on every hold of 24 seconds or more (shorter holds just get the countdown). */
     if (P.phase === "work" && P.dur >= 24 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; var reps = !!P.st[P.i].s.reps; speak(reps ? pick(["Halfway there. Keep it smooth.", "That's halfway. Nice and controlled.", "Halfway. Keep breathing."]) : pick(["Halfway there. Breathe out, and sink a little deeper.", "That's halfway. Keep breathing slowly.", "Halfway. Relax your shoulders, and let it go a bit further."]), true); }
     if (P.left <= 0) {
@@ -399,6 +420,7 @@
     P = null;
   }
   function closePlayer() {
+    cdClear();
     if (P) { clearInterval(P.timer); if (P.stop) P.stop(); var secs = Math.round(P.worked); if (secs >= 60) { S.sessions.push({ date: iso(), t: Date.now(), id: P.r.id, n: P.r.n + " (part)", secs: secs, items: P.i }); save(); } P = null; }
     try { speechSynthesis.cancel(); } catch (e) {}
     if (window.MUSIC) { MUSIC.stop(1500); MUSIC.setQuiet(false); }
@@ -691,7 +713,7 @@
       case "voice-test": { unlockAudio(); var was = S.settings.voice; S.settings.voice = true; speak(pick(["Hi there. This is how I'll sound during your sessions. Let's get moving.", "Hello. I'll be your coach for mobility tests and stretching. Ready when you are."]), true); S.settings.voice = was; break; }
       case "c-voice": case "p-voice": S.settings.voice = !S.settings.voice; save(); el.innerHTML = S.settings.voice ? ICON.sound : ICON.mute; if (!S.settings.voice) try { speechSynthesis.cancel(); } catch (x) {} break;
       case "p-close": closePlayer(); break;
-      case "p-pause": if (P) { P.paused = !P.paused; if (window.MUSIC) { if (P.paused) MUSIC.pause(1500); else MUSIC.resume(2000); } el.innerHTML = P.paused ? ICON.play : ICON.pause; if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); } break;
+      case "p-pause": if (P) { P.paused = !P.paused; if (P.paused) cdClear(); if (window.MUSIC) { if (P.paused) MUSIC.pause(1500); else MUSIC.resume(2000); } el.innerHTML = P.paused ? ICON.play : ICON.pause; if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); } break;
       case "p-next": if (P) { P.i++; enterStep(); } break;
       case "p-prev": if (P) { if (P.phase === "work" && P.left < P.dur - 3) { /* restart current */ } else P.i = Math.max(0, P.i - 1); enterStep(); } break;
       case "test-detail": testDetail(id); break;
