@@ -1,6 +1,6 @@
 # Signal Mobility
 
-A phone web app for GOWOD-style mobility testing (with live camera body tracking) and guided stretching routines. All data stays on the phone. Export a backup from Settings.
+A phone web app for mobility testing (with live camera body tracking) and guided stretching routines. All data stays on the phone. Export a backup from Settings.
 
 ## Put it online with GitHub Pages
 
@@ -27,6 +27,8 @@ The version shows at the bottom of the Today screen and in Settings.
 - 1.15.1 (12 Nov 2026): fixed background music staying almost silent on iPhone (the phone could report the coach as still speaking, keeping the music ducked); music status now shows in the diagnostics log.
 - 1.15.2 (12 Nov 2026): if the phone's audio clock freezes (seen in Firefox on iPhone), the music switches to a pre-rendered seamless loop played as a normal audio file.
 - 1.15.3 (12 Nov 2026): background music restarts automatically if the phone pauses it when the coach speaks (or on the next tap if the phone blocks the restart).
+- 1.15.4 (12 Nov 2026): removed third-party brand references; average markers now labelled "typical score".
+- 1.15.5 (12 Nov 2026): on iPhone and iPad the background music now always plays as a pre-rendered loop started from the Play tap (the coach's voice was freezing the generated music); pausing mutes it.
 - 1.12.1 (12 Nov 2026): tap a stretch or test photo to view it full screen (pinch to zoom, tap to close).
 - 1.12.0 (12 Nov 2026): "Save all photos for offline" (Settings and a one-time prompt on Today) downloads every stretch photo to the phone so routines work with bad or no signal.
 - 1.11.0 (12 Nov 2026): photos for every stretch and test (generated with Higgsfield), shown on cards, stretch details, test how-tos and in the routine player with a "Show movement" toggle; photos cache for offline use; option in Settings to go back to stick figures.

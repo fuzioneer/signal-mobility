@@ -2,7 +2,7 @@
 (function () {
   var mk = FIG.mk;
   var ZONES = [["shoulders", "Shoulders"], ["overhead", "Overhead"], ["thorax", "Thorax"], ["postchain", "Posterior chain"], ["hips", "Hips"], ["ankles", "Ankles"]];
-  /* GOWOD published averages for men, by age band, in zone order. */
+  /* Typical scores for men, by age band, in zone order. */
   var AVG_M = [[33, [71, 66, 67, 47, 51, 80]], [45, [66, 62, 61, 44, 47, 81]], [55, [64, 61, 60, 41, 46, 80]], [200, [59, 57, 60, 38, 43, 74]]];
 
   /* Tests. lo = 0%, hi = 100%. cam = live camera measurement key. Ids match Body Signal so exports import cleanly. */

@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.15.3", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.15.5", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -214,7 +214,7 @@
         h += '<div class="zbar"><span>' + z[1] + '</span><div class="track">' + (isNum(p) ? '<div class="fill" style="width:' + p + "%;background:" + zc(z[0]) + '"></div>' : "") + (isNum(a) ? '<div class="avg" style="left:' + a + '%"></div>' : "") + "</div><b>" + (isNum(p) ? p : "–") + "</b></div>";
       });
       h += "</div>";
-      h += '<div class="legend">' + (av ? "<span><i></i>Average for men your age (GOWOD)</span>" : "") + '<span class="grow" style="text-align:right">Tested ' + short(last) + "</span></div></div>";
+      h += '<div class="legend">' + (av ? "<span><i></i>Typical score for men your age</span>" : "") + '<span class="grow" style="text-align:right">Tested ' + short(last) + "</span></div></div>";
     }
     h += '<div class="sec"><h2>Your daily 10</h2><span class="small muted">' + (sc.n ? "Focus: " + d.zones.map(function (z) { return ZN[z]; }).join(" and ") : "Hips and overhead until you test") + "</span></div>";
     h += '<div class="card"><div class="row" style="gap:6px;margin-bottom:12px">' + d.items.slice(0, 6).map(function (id) { return '<div class="thumb" style="width:calc((100% - 30px)/6);height:auto;aspect-ratio:1">' + art(id, BY[id].pose, { stroke: 9 }) + "</div>"; }).join("") + "</div>";
@@ -414,7 +414,7 @@
   function sayQ(text, urgent) { speak(text, urgent); }
   /* Set the audio session before any AudioContext exists so music and beeps play with the silent switch on, and the context isn't interrupted by a later change. */
   try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) {}
-  function unlockAudio() { try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state !== "running") AC.resume(); if (window.MUSIC && musicOn()) MUSIC.prime(); if (window.speechSynthesis && !unlockAudio.spoke) { unlockAudio.spoke = true; var u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); } } catch (e) {} }
+  function unlockAudio() { try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state !== "running") AC.resume(); if (window.speechSynthesis && !unlockAudio.spoke) { unlockAudio.spoke = true; var u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); } } catch (e) {} }
   var wake = null;
   function wakeOn() { try { if (navigator.wakeLock) navigator.wakeLock.request("screen").then(function (w) { wake = w; }).catch(function () {}); } catch (e) {} }
   function wakeOff() { try { if (wake) wake.release(); } catch (e) {} wake = null; }
@@ -427,14 +427,14 @@
   }
   var MUSIC_STYLES = [["off", "Off"], ["pads", "Calm pads"], ["bowls", "Singing bowls"], ["ocean", "Ocean waves"]];
   function musicOn() { return S.settings.music && S.settings.music !== "off"; }
-  if (window.MUSIC) MUSIC.log = function (m) { diag(m); };
+  if (window.MUSIC) { MUSIC.log = function (m) { diag(m); }; setTimeout(function () { if (musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); }, 2500); }
   function startMusic() {
-    if (!window.MUSIC || !musicOn()) return; unlockAudio(); MUSIC.start(AC, S.settings.music, S.settings.musicVol); if (P && P.paused) MUSIC.pause(300);
+    if (!window.MUSIC || !musicOn()) return; unlockAudio(); MUSIC.arm(S.settings.music, S.settings.musicVol); MUSIC.start(AC, S.settings.music, S.settings.musicVol); if (P && P.paused) MUSIC.pause(300);
     diag("music start " + S.settings.music + " vol " + S.settings.musicVol + ", audio " + (AC ? AC.state : "none"));
     setTimeout(function () { if (MUSIC.playing()) diag("music after 4s " + JSON.stringify(MUSIC.status())); }, 4000);
   }
   function play(routine) {
-    unlockAudio(); cdLoad(cdMode()); /* music starts with the first hold, not during the get-ready countdown */
+    unlockAudio(); if (window.MUSIC && musicOn()) MUSIC.arm(S.settings.music, S.settings.musicVol); cdLoad(cdMode()); /* music starts with the first hold, not during the get-ready countdown */
     P = { r: routine, st: steps(routine.items), i: 0, phase: "prep", left: restSecs(true), total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
     var el = $("#player"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn();
     el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="p-close" aria-label="End session">' + ICON.close + '</button><h2>' + esc(routine.n) + '</h2><button class="icon-btn" data-act="p-music" aria-label="Background music">' + (musicOn() ? ICON.music : ICON.musicOff) + '</button><button class="icon-btn" data-act="p-voice" aria-label="Voice">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div><div class="pbar"><i id="p-bar"></i></div>' +
@@ -753,7 +753,7 @@
   function openSettings() {
     var s = S.settings;
     var h = '<h2>Settings</h2><div class="card" style="margin-top:12px"><div class="row"><label class="field">Age<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="' + (s.age || "") + '"></label><label class="field">Height (cm)<input type="number" inputmode="numeric" id="s-height" min="120" max="230" value="' + (s.height || 178) + '"></label><label class="field">Sex<select id="s-sex"><option value="m"' + (s.sex === "m" ? " selected" : "") + '>Male</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">Female</option></select></label></div>" +
-      '<p class="small muted" style="margin-top:8px">Age and sex set the GOWOD average markers (GOWOD only publishes averages for men). Height scales the camera\'s cm estimates.</p></div>';
+      '<p class="small muted" style="margin-top:8px">Age and sex set the typical-score markers (currently available for men only). Height scales the camera\'s cm estimates.</p></div>';
     h += '<div class="card"><div class="row"><label class="field">Time between exercises<select id="s-rest">' + [5, 10, 15, 20, 30, 45, 60].map(function (n) { return '<option value="' + n + '"' + ((s.rest == null ? 10 : s.rest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label><label class="field">Time to switch sides<select id="s-siderest">' + [3, 5, 10, 15].map(function (n) { return '<option value="' + n + '"' + ((s.sideRest == null ? 5 : s.sideRest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label></div><div class="row" style="margin-top:10px"><label class="field">Final 3, 2, 1 countdown<select id="s-cd">' + [["m", "Voice (male, British)"], ["f", "Voice (female, American)"], ["beeps", "Beeps"], ["off", "Off"]].map(function (o) { return '<option value="' + o[0] + '"' + (cdMode() === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><button class="btn" style="align-self:flex-end" data-act="cd-test">Hear it</button></div><p class="small muted" style="margin-top:6px">Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.</p><div class="row" style="margin-top:10px"><label class="field">Theme<select id="s-theme">' + [["auto", "Match phone"], ["light", "Light"], ["dark", "Dark"]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
       '<div class="row" style="margin-top:12px"><label class="row grow"><input type="checkbox" id="s-voice"' + (s.voice ? " checked" : "") + '> Voice coaching</label><label class="row grow"><input type="checkbox" id="s-beeps"' + (s.beeps ? " checked" : "") + "> Beeps</label></div>" +
       '<div class="row" style="margin-top:12px"><label class="field" style="flex:2">Coach voice<select id="s-vname"><option value="">Best available</option>' + enVoices().sort(function (x, y) { return voiceScore(y) - voiceScore(x); }).map(function (v) { return '<option value="' + esc(v.name) + '"' + (s.voiceName === v.name ? " selected" : "") + ">" + esc(v.name) + " (" + esc(v.lang) + ")</option>"; }).join("") + '</select></label><label class="field">Speed<select id="s-vrate">' + [[0.85, "Slower"], [0.95, "Normal"], [1.05, "Quicker"]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.voiceRate || 0.95) === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label></div><button class="btn" style="margin-top:8px" data-act="voice-test">Hear the voice</button>' +
@@ -768,7 +768,7 @@
     h += '<div class="card"><button class="btn danger block" data-act="reset">Delete all data</button></div><p class="small muted" style="text-align:center">Signal Mobility v' + APP_VERSION + ' (' + APP_BUILD + ') · body tracking by MediaPipe</p>';
     openSheet(h, function () { if (window.MUSIC && !P && MUSIC.playing()) MUSIC.stop(800); });
     offlineUI();
-    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
+    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
     ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
   }

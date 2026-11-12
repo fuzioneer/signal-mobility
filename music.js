@@ -75,7 +75,8 @@
   /* ---- iPhone fallback ----
      On some iPhones (seen in Firefox on iOS) the Web Audio clock freezes while still reporting "running", so nothing plays.
      If that happens we render a 48-second seamless loop of the same music offline and play it through a normal audio element. */
-  var mode = "wa", useEl = false, lastT = -1, stuck = 0, el = null, elUrl = {}, elWant = null;
+  var isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  var mode = "wa", useEl = isIOS, lastT = -1, stuck = 0, el = null, elUrl = {}, elWant = null;
   function log(msg) { try { if (window.MUSIC && MUSIC.log) MUSIC.log(msg); } catch (e) {} }
   function watch() {
     var t = ctx.currentTime;
@@ -84,34 +85,52 @@
     if (stuck >= 4) { log("music: clock still frozen, switching to audio-file playback"); useEl = true; toEl(); }
   }
   function silentWav() { return "data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA"; }
-  /* Call from a tap so iOS lets us start the element later without one. */
-  function prime() {
-    try { if (!el) { el = new Audio(); el.setAttribute("playsinline", ""); el.loop = true; el.preload = "auto"; }
-      if (el.paused && !el.__primed) { el.src = silentWav(); var p = el.play(); el.__primed = true; if (p && p.then) p.then(function () { if (!elWant) el.pause(); }).catch(function () {}); } } catch (e) {}
+  /* On iPhone and iPad the coach's voice freezes the Web Audio clock, so there the music always plays as a pre-rendered loop
+     through an ordinary audio element. iOS only lets that element start from a tap, so arm() starts it (muted) from the Play or
+     Preview tap, and the music is then just unmuted when the first hold begins. Pausing mutes it rather than stopping it. */
+  function ensureEl() { if (!el) { el = new Audio(); el.setAttribute("playsinline", ""); el.loop = true; el.preload = "auto"; } return el; }
+  function key(s, v) { return s + ":" + Math.round(v * 20); }
+  var rendering = {};
+  function getUrl(s, v, cb) {
+    var k = key(s, v); if (elUrl[k]) return cb(elUrl[k]);
+    (rendering[k] = rendering[k] || []).push(cb); if (rendering[k].length > 1) return;
+    renderLoop(s, v, function (url) { elUrl[k] = url; var q = rendering[k]; delete rendering[k]; q.forEach(function (f) { f(url); }); });
+  }
+  function preload(s, v) { if (useEl && s && s !== "off") getUrl(s, v == null ? vol : v, function () {}); }
+  function playEl(why) { try { var p = el.play(); if (p && p.catch) p.catch(function (e) { if (e && e.name === "AbortError") return; log("music: " + why + " blocked (" + (e && e.name) + ")"); hookTap(); }); } catch (e) {} }
+  function arm(s, v) {
+    if (!useEl || !s || s === "off") return; ensureEl(); v = v == null ? vol : v;
+    var url = elUrl[key(s, v)];
+    if (url) { if (el.src !== url) el.src = url; el.muted = true; if (el.paused) playEl("arming"); el.__armed = true; }
+    else { if (el.paused) { el.src = silentWav(); el.muted = true; playEl("arming"); } getUrl(s, v, function () {}); }
   }
   function toEl() {
     mode = "el"; clearInterval(timer); timer = null; live.forEach(function (o) { try { o.stop(); } catch (e) {} }); live = []; if (waveNode) { waveNode.stop(); waveNode = null; }
     elPlay(style, vol);
   }
   function elPlay(s, v) {
-    elWant = s; if (!el) prime();
-    var key = s + ":" + Math.round(v * 20);
-    var go = function (url) { if (elWant !== s || paused) return; try { el.src = url; el.loop = true; el.volume = 1; var p = el.play(); if (p && p.catch) p.catch(function (e) { log("music: audio file blocked (" + (e && e.name) + ")"); }); log("music: playing audio file"); } catch (e) { log("music: audio file error " + e.message); } };
-    if (elUrl[key]) return go(elUrl[key]);
-    renderLoop(s, v, function (url) { elUrl[key] = url; go(url); });
+    elWant = s; ensureEl();
+    getUrl(s, v, function (url) {
+      if (elWant !== s) return;
+      if (el.src !== url) { el.src = url; el.loop = true; }
+      el.muted = !!paused; if (el.paused) playEl("starting music"); log("music: playing audio file");
+    });
   }
-  /* iOS pauses the audio file when the coach speaks and doesn't restart it. Every second, if the music should be playing but the
-     file is paused, start it again. If the phone refuses (no recent tap), try again on the next tap anywhere. */
-  var elKick = 0, tapHook = false;
+  var tapHook = false;
+  function hookTap() {
+    if (tapHook) return; tapHook = true; log("music: will resume on next tap");
+    var h = function () { tapHook = false; document.removeEventListener("touchend", h, true); document.removeEventListener("click", h, true); if (mode === "el" && elWant && el && el.paused) try { el.play().catch(function () {}); } catch (e) {} };
+    document.addEventListener("touchend", h, true); document.addEventListener("click", h, true);
+  }
+  /* If iOS stops the element (for example while the coach speaks), start it again once the voice has finished. */
+  var elKick = 0;
   setInterval(function () {
-    if (mode !== "el" || !elWant || paused || !el || !el.paused || !el.src || el.src.indexOf("blob:") !== 0) return;
+    if (mode !== "el" || !elWant || !el || !el.paused || !el.src || el.src.indexOf("blob:") !== 0) return;
     try { if (window.speechSynthesis && speechSynthesis.speaking && performance.now() < duckUntil + 6000) return; } catch (e) {}
-    elKick++; if (elKick <= 3 || elKick % 10 === 0) log("music: audio file was paused by the phone, restarting");
-    try { var p = el.play(); if (p && p.catch) p.catch(function () { if (!tapHook) { tapHook = true; log("music: restart blocked, will resume on next tap");
-      var h = function () { tapHook = false; document.removeEventListener("touchend", h, true); document.removeEventListener("click", h, true); if (mode === "el" && elWant && !paused) try { el.play().catch(function () {}); } catch (e) {} };
-      document.addEventListener("touchend", h, true); document.addEventListener("click", h, true); } }); } catch (e) {}
+    elKick++; if (elKick <= 3 || elKick % 10 === 0) log("music: audio file was stopped by the phone, restarting");
+    playEl("restart");
   }, 1000);
-  function elStop() { elWant = null; try { if (el) el.pause(); } catch (e) {} }
+  function elStop() { elWant = null; try { if (el) { el.muted = true; el.pause(); } } catch (e) {} }
   function renderLoop(s, v, cb) {
     var OC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if (!OC) { log("music: no offline audio"); return; }
     var SR = 22050, L = 48, X = 6, oc = new OC(2, SR * (L + X), SR);
@@ -140,7 +159,7 @@
     wake();
     if (style === s && (timer || (mode === "el" && elWant === s && !paused))) { setVol(v); return; }
     if (style) hardStop();
-    if (useEl) { paused = false; style = s; vol = v == null ? vol : v; mode = "el"; prime(); elPlay(s, vol); return; }
+    if (useEl) { if (!ctx) ctx = c; paused = false; style = s; vol = v == null ? vol : v; mode = "el"; elPlay(s, vol); return; }
     mode = "wa"; stuck = 0; lastT = -1;
     paused = false; style = s; vol = v == null ? vol : v; chordIdx = Math.floor(Math.random() * 4);
     nextChord = ctx.currentTime + 0.1; nextBell = ctx.currentTime + 3;
@@ -169,12 +188,12 @@
   /* Pause: fade the music down to silence, then stop scheduling new notes. Resume: carry on and fade back up. */
   var paused = false;
   function pause(ms) {
-    if (!ctx || !style || paused) return; paused = true; if (mode === "el") { try { el.pause(); } catch (e) {} return; } var t = ctx.currentTime, f = (ms || 1500) / 1000;
+    if (!ctx || !style || paused) return; paused = true; if (mode === "el") { try { el.muted = true; } catch (e) {} return; } var t = ctx.currentTime, f = (ms || 1500) / 1000;
     out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(0, t + f);
     clearInterval(timer); timer = null;
   }
   function resume(ms) {
-    if (!ctx || !style || !paused) return; paused = false; if (mode === "el") { if (el && elWant) { try { el.play().catch(function () {}); } catch (e) {} } else elPlay(style, vol); return; } wake(); var t = ctx.currentTime, f = (ms || 2000) / 1000;
+    if (!ctx || !style || !paused) return; paused = false; if (mode === "el") { if (el && elWant) { el.muted = false; if (el.paused) playEl("resume"); } else elPlay(style, vol); return; } wake(); var t = ctx.currentTime, f = (ms || 2000) / 1000;
     if (nextChord < t) nextChord = t + 0.05; if (nextBell < t) nextBell = t + 2; tick(); timer = setInterval(tick, 1000);
     out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(level(), t + f);
   }
@@ -194,6 +213,6 @@
     var t = ctx.currentTime; duckG.gain.cancelScheduledValues(t); duckG.gain.setValueAtTime(duckG.gain.value, t); duckG.gain.linearRampToValueAtTime(target, t + (down ? (fast ? 0.15 : 0.3) : 1.5));
   }
   setInterval(function () { if (ctx && style) apply(); }, 150);
-  function status() { return ctx ? { mode: mode, file: el && mode === "el" ? (el.paused ? "paused" : "playing") + " " + Math.round(el.duration || 0) + "s" : undefined, state: ctx.state, t: +ctx.currentTime.toFixed(1), out: +out.gain.value.toFixed(2), duck: +duckG.gain.value.toFixed(2), style: style, paused: paused, notes: live.length } : { state: "none" }; }
-  window.MUSIC = { prime: prime, status: status, start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, duckFor: duckFor, setQuiet: setQuiet, playing: function () { return !!style; } };
+  function status() { return ctx ? { mode: mode, file: el && mode === "el" ? (el.paused ? "paused" : el.muted ? "muted" : "playing") + " " + Math.round(el.duration || 0) + "s" : undefined, state: ctx.state, t: +ctx.currentTime.toFixed(1), out: +out.gain.value.toFixed(2), duck: +duckG.gain.value.toFixed(2), style: style, paused: paused, notes: live.length } : { state: "none" }; }
+  window.MUSIC = { arm: arm, preload: preload, ios: isIOS, status: status, start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, duckFor: duckFor, setQuiet: setQuiet, playing: function () { return !!style; } };
 })();
