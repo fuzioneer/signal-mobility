@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.18.1", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.19.0", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -642,7 +642,7 @@
   function finish() {
     var secs = Math.round(P.worked), r = P.r;
     clearInterval(P.timer); if (P.stop) P.stop();
-    if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); }
+    if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); stravaLog(r.n, secs, r.items); }
     if (window.MUSIC) setTimeout(function () { if (!P) MUSIC.stop(6000); }, 4000);
     say(secs >= 30 ? pick([(T("And that's it. Great session.")), (T("All done. Nice work today.")), (T("That's the session finished. Well done."))]) : "");
     $("#p-bar").style.width = "100%";
@@ -652,7 +652,7 @@
   }
   function closePlayer() {
     cdClear();
-    if (P) { clearInterval(P.timer); if (P.stop) P.stop(); var secs = Math.round(P.worked); if (secs >= 60) { S.sessions.push({ date: iso(), t: Date.now(), id: P.r.id, n: P.r.n + " (part)", secs: secs, items: P.i }); save(); } P = null; }
+    if (P) { clearInterval(P.timer); if (P.stop) P.stop(); var secs = Math.round(P.worked); if (secs >= 60) { S.sessions.push({ date: iso(), t: Date.now(), id: P.r.id, n: P.r.n + " (part)", secs: secs, items: P.i }); save(); stravaLog(P.r.n, secs, P.r.items.slice(0, P.i + 1)); } P = null; }
     try { speechSynthesis.cancel(); } catch (e) {}
     if (window.MUSIC) { MUSIC.stop(1500); MUSIC.setQuiet(false); }
     wakeOff(); $("#player").hidden = true; $("#player").innerHTML = ""; document.body.style.overflow = ""; render();
@@ -884,6 +884,38 @@
     if (x.settings) S.settings = Object.assign(S.settings, x.settings);
     save(); applyTheme(); closeSheet(); render(); toast((T("Restored") + " ") + (x.tests || []).length + (" " + T("tests and") + " ") + (x.sessions || []).length + " sessions.");
   }
+  /* ---------- Strava ---------- */
+  function stravaLog(name, secs, ids) {
+    if (!window.STRAVA || !STRAVA.connected() || !STRAVA.get().auto) return;
+    var moves = (ids || []).map(function (id) { return BY[id] ? BY[id].n : null; }).filter(Boolean);
+    STRAVA.logSession({ name: name, secs: secs, startLocal: STRAVA.localISO(Date.now() - secs * 1000),
+      description: "Signal Mobility · " + moves.length + " " + T("moves") + (moves.length ? "\n" + moves.join(", ") : "") })
+      .then(function (n) { if (n) toast(T("Logged to Strava")); })
+      .catch(function () { toast(T("Couldn't reach Strava. It'll be sent next time you're online.")); });
+  }
+  function stravaCard() {
+    if (!window.STRAVA) return "";
+    var v = STRAVA.get(), host = location.hostname || "your-site.github.io";
+    var h = '<div class="card"><h3>Strava</h3><p class="small muted" style="margin:4px 0 10px">' + esc(TF("Log your mobility sessions to Strava. You need your own free Strava API app: create one at strava.com/settings/api, set its Authorization Callback Domain to {host}, then copy its Client ID and Client Secret here. They stay on this phone.", { host: host })) + "</p>";
+    h += '<div class="row"><label class="field">' + T("Client ID") + '<input id="sv-id" inputmode="numeric" autocomplete="off" value="' + esc(v.id) + '"></label><label class="field">' + T("Client Secret") + '<input id="sv-secret" type="password" autocomplete="off" value="' + esc(v.secret) + '"></label></div>';
+    if (v.connected) {
+      h += '<p style="margin-top:10px"><b>' + esc(TF("Connected as {name}", { name: v.athlete || "Strava" })) + "</b>" + (v.queued ? ' <span class="small muted">· ' + esc(TF("{n} waiting to send", { n: v.queued })) + "</span>" : "") + "</p>";
+      h += '<label class="row" style="margin-top:8px"><input type="checkbox" id="sv-auto"' + (v.auto ? " checked" : "") + "> " + T("Log every finished session automatically") + "</label>";
+      h += '<div class="row" style="margin-top:10px"><label class="field">' + T("Strava activity type") + '<select id="sv-type">' + [["Yoga", T("Yoga")], ["Workout", T("Workout")], ["Pilates", T("Pilates")]].map(function (o) { return '<option value="' + o[0] + '"' + (v.type === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>";
+      h += '<div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap"><button class="btn" data-act="strava-last">' + T("Send last session") + '</button><button class="btn danger" data-act="strava-off">' + T("Disconnect") + "</button></div>";
+      if (v.last) h += '<p class="small muted" style="margin-top:8px">' + esc(TF("Last logged: {name}", { name: v.last.name })) + "</p>";
+    } else {
+      h += '<button class="btn primary" style="margin-top:10px" data-act="strava-connect">' + T("Connect Strava") + "</button>";
+      h += '<details style="margin-top:10px"' + (v.pendingCode ? " open" : "") + '><summary class="small" style="color:var(--brand);font-weight:600">' + T("Have a code from Strava?") + '</summary><div class="row" style="margin-top:8px"><input class="inp" id="sv-code" style="flex:1" value="' + esc(v.pendingCode) + '" placeholder="' + T("Paste the code") + '"><button class="btn" data-act="strava-code">' + T("Use code") + "</button></div></details>";
+    }
+    return h + "</div>";
+  }
+  function stravaWire() {
+    if (!window.STRAVA || !$("#sv-id")) return;
+    var upd = function () { STRAVA.setConfig({ id: $("#sv-id").value, secret: $("#sv-secret").value, auto: $("#sv-auto") ? $("#sv-auto").checked : undefined, type: $("#sv-type") ? $("#sv-type").value : undefined }); };
+    ["#sv-id", "#sv-secret", "#sv-auto", "#sv-type"].forEach(function (id) { var e = $(id); if (e) e.addEventListener("change", upd); });
+  }
+  function stravaRefresh() { var c = $("#strava-slot"); if (c) { c.innerHTML = stravaCard(); stravaWire(); } }
   function openSettings() {
     var s = S.settings;
     var h = ('<h2>' + T("Settings") + '</h2>') + '<div class="card" style="margin-top:12px"><label class="field">' + T("Language") + '<select id="s-lang">' + I18N.LANGS.map(function (o) { return '<option value="' + o[0] + '"' + (I18N.lang === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><p class="small muted" style="margin-top:6px">' + T("Changes the app, the coach's voice and all stretch instructions. The app restarts to apply it.") + '</p></div>' + ('<div class="card" style="margin-top:12px"><div class="row"><label class="field">' + T("Age") + '<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="') + (s.age || "") + '"></label><label class="field">' + T("Height (cm)") + '<input type="number" inputmode="numeric" id="s-height" min="120" max="230" value="' + (s.height || 178) + ('"></label><label class="field">' + T("Sex") + '<select id="s-sex"><option value="m"') + (s.sex === "m" ? " selected" : "") + '>' + T("Male") + '</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">" + T("Female") + "</option></select></label></div>" +
@@ -897,6 +929,7 @@
       ('<div class="row" style="margin-top:14px"><label class="field" style="flex:2">' + T("Routine background music") + '<select id="s-music">') + MUSIC_STYLES.map(function (o) { return '<option value="' + o[0] + '"' + ((s.music || "pads") === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><label class="field">' + T("Music volume") + '<input type="range" id="s-mvol" min="0" max="1" step="0.05" value="' + (s.musicVol == null ? 0.5 : s.musicVol) + ('" style="min-height:46px;padding:0;accent-color:var(--brand)"></label></div><button class="btn" style="margin-top:8px" data-act="music-preview">' + T("Preview music") + '</button><p class="small muted" style="margin-top:6px">' + T("Gentle music generated on your phone. It drops down whenever the coach speaks.") + '</p>') +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-showphotos"' + (s.photos !== false ? " checked" : "") + '> ' + T("Show stretch photos (instead of stick figures)") + '</label>' +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-photos"' + (s.savePhotos ? " checked" : "") + '> ' + T("Save camera test images to Photos") + '</label></div>';
+    h += '<div id="strava-slot">' + stravaCard() + "</div>";
     h += ('<div class="card"><h3>' + T("Your data") + '</h3><p class="small muted" style="margin:4px 0 12px">' + T("Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal's format.") + '</p><div class="row"><button class="btn grow" data-act="export">' + T("Export file") + '</button><button class="btn grow" data-act="copy">' + T("Copy") + '</button></div><div class="row" style="margin-top:8px"><label class="btn grow">' + T("Restore from file") + '<input type="file" accept="application/json,.json" id="s-import" hidden></label></div>') +
       ('<details style="margin-top:10px"><summary class="small" style="color:var(--brand);font-weight:600">' + T("Paste a backup instead") + '</summary><textarea class="inp" id="s-paste" rows="4" style="margin-top:8px;font-size:13px"></textarea><button class="btn" style="margin-top:8px" data-act="paste-import">' + T("Restore pasted backup") + '</button></details></div>');
     h += ('<div class="card"><h3>' + T("Offline photos") + '</h3><p class="small muted" style="margin:4px 0 10px" id="off-status">' + T("Checking…") + '</p><button class="btn primary block" id="off-btn" data-act="off-save">' + T("Save all photos for offline") + '</button><p class="small muted" style="margin-top:8px">' + T("About 50 to 80 MB. Best done on Wi-Fi. After that, photos load instantly even with no signal.") + '</p></div>');
@@ -906,6 +939,7 @@
     offlineUI();
     var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
     ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-sport", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
+    stravaWire();
     $("#s-lang").addEventListener("change", function (e) { S.settings.lang = e.target.value; save(); setTimeout(function () { location.reload(); }, 150); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
   }
@@ -968,6 +1002,12 @@
         var y2 = window.scrollY; renderRoutines(); window.scrollTo(0, y2); break; }
       case "mg-clear": MG_SEL = []; MG_LAST = null; renderRoutines(); break;
       case "settings-open": openSettings(); break;
+      case "strava-connect": if (!$("#sv-id").value.trim() || !$("#sv-secret").value.trim()) { toast(T("Enter your Strava Client ID and Client Secret first.")); break; } STRAVA.setConfig({ id: $("#sv-id").value, secret: $("#sv-secret").value }); location.href = STRAVA.authorizeUrl(); break;
+      case "strava-code": { STRAVA.setConfig({ id: $("#sv-id").value, secret: $("#sv-secret").value }); var cv = ($("#sv-code").value || "").replace(/^.*[?&]code=([^&]+).*$/, "$1"); if (!cv) break; STRAVA.useCode(cv).then(function () { toast(T("Connected to Strava")); stravaRefresh(); }).catch(function (e) { diag("strava: " + e.message); toast(TF("Couldn't connect to Strava ({error})", { error: e.message })); }); break; }
+      case "strava-off": STRAVA.disconnect(); stravaRefresh(); toast(T("Disconnected from Strava")); break;
+      case "strava-last": { var ls = S.sessions[S.sessions.length - 1]; if (!ls) { toast(T("Nothing logged yet.")); break; }
+        STRAVA.logSession({ name: ls.n, secs: ls.secs, startLocal: STRAVA.localISO((ls.t || Date.now()) - ls.secs * 1000), description: "Signal Mobility · " + ls.items + " " + T("moves") })
+          .then(function () { toast(T("Logged to Strava")); stravaRefresh(); }).catch(function (e) { diag("strava: " + e.message); toast(TF("Couldn't log to Strava ({error})", { error: e.message })); stravaRefresh(); }); break; }
       case "build-save": {
         var nm = prompt((T("Name your routine")), building.n || (T("My routine"))); if (nm == null) break; nm = nm.trim() || (T("My routine"));
         if (building.id) S.routines = S.routines.map(function (r) { return r.id === building.id ? { id: r.id, n: nm, items: building.items } : r; });
@@ -1049,6 +1089,15 @@
   applyTheme();
   var t0 = "home"; try { t0 = sessionStorage.getItem("sm-tab") || "home"; } catch (e) {}
   go(t0);
+  if (window.STRAVA) {
+    STRAVA.onLog(diag);
+    STRAVA.handleRedirect().then(function (res) {
+      if (!res) return STRAVA.flush();
+      if (res.status === "connected") { toast(T("Connected to Strava")); return STRAVA.flush(); }
+      if (res.status === "code-only") openSheet('<h2>Strava</h2><div class="card" style="margin-top:12px"><p>' + T("Strava approved the connection, but it came back to a browser window rather than the app. Copy this code, then open the app and paste it in Settings > Strava.") + '</p><input class="inp" readonly style="width:100%;margin-top:10px" value="' + esc(res.code) + '" onclick="this.select()"></div>');
+    }).catch(function (e) { diag("strava: " + e.message); toast(TF("Couldn't connect to Strava ({error})", { error: e.message })); });
+    window.addEventListener("online", function () { STRAVA.flush().catch(function () {}); });
+  }
   if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(function () {});
   if (window.speechSynthesis) speechSynthesis.getVoices();
   window.SM = { state: function () { return S; }, score: score, dailyItems: dailyItems, cam: function () { return CAM; } };
