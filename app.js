@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.10.1", APP_BUILD = "11 Nov 2026";
+  var APP_VERSION = "1.10.2", APP_BUILD = "11 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -36,6 +36,12 @@
   var S = load();
   function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Couldn't save. Storage may be full."); } }
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {});
+
+  /* ---------- diagnostics: keep the last few errors and countdown events so problems on the phone can be reported ---------- */
+  var DIAG = []; try { DIAG = JSON.parse(localStorage.getItem("sm-diag") || "[]"); } catch (e) {}
+  function diag(msg) { try { var d = new Date(); DIAG.push(d.toTimeString().slice(0, 8) + " " + msg); DIAG = DIAG.slice(-25); localStorage.setItem("sm-diag", JSON.stringify(DIAG)); } catch (e) {} }
+  window.addEventListener("error", function (e) { diag("ERROR " + (e.message || e) + " @" + (e.lineno || "?")); });
+  window.addEventListener("unhandledrejection", function (e) { diag("REJECT " + (e.reason && (e.reason.message || e.reason))); });
 
   /* ---------- dates ---------- */
   function iso(d) { d = d || new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
@@ -331,7 +337,9 @@
   function tone(t, f, dur, vol) { var o = AC.createOscillator(), g = AC.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + dur + 0.05); return o; }
   function cdClear() { if (P && P.cd) { P.cd.nodes.forEach(function (n) { try { n.stop(); } catch (e) {} }); (P.cd.timers || []).forEach(clearTimeout); clearTimeout(P.cd.check); P.cd = null; } }
   function cdStart() {
-    var mode = cdMode(); if (mode === "off" || !AC) return;
+    var mode = cdMode(); if (mode === "off") return;
+    if (!AC) { try { unlockAudio(); } catch (e) {} }
+    if (!AC) { diag("no audio context, using voice"); return cdSpeech(); }
     if (AC.state !== "running") try { AC.resume(); } catch (e) {}
     if (!CDBUF[mode] && (mode === "f" || mode === "m")) cdLoad(mode);
     var lead = 0.06, T = AC.currentTime + lead, cd = P.cd = { t0: performance.now() + lead * 1000, nodes: [] }, bufs = CDBUF[mode];
@@ -346,6 +354,7 @@
     cd.check = setTimeout(function () {
       if (!P || P.cd !== cd) return;
       if (AC.state !== "running" || AC.currentTime < T + 0.15) {
+        diag("audio stalled (" + AC.state + "), using voice");
         cd.nodes.forEach(function (n) { try { n.stop(); } catch (e) {} });
         P.cd = null; cdSpeech();
       }
@@ -424,13 +433,16 @@
       if (after === 10 && (P.dur >= 30 || (P.dur > 15 && P.dur < 24))) say("10 seconds.");
     } else if (after !== before && after <= 3 && after > 0) beep(660, 120);
     if (P.phase === "work" && P.dur >= 5 && cdMode() !== "off") {
-      if (!P.cd && P.left <= 3.02 && P.left > 1) cdStart();
+      if (!P.cd && P.left <= 3.02 && P.left > 1) {
+        try { cdStart(); diag("countdown: " + (P.cd ? (P.cd.timers ? "voice" : "clips") : "skipped") + ", audio " + (AC ? AC.state : "none") + ", clips " + (CDBUF[cdMode()] ? "ready" : "not loaded")); }
+        catch (err) { diag("countdown failed: " + (err && err.message || err)); if (P) { if (P.cd) (P.cd.nodes || []).forEach(function (n) { try { n.stop(); } catch (x) {} }); P.cd = null; try { cdSpeech(); } catch (x) { diag("voice countdown failed: " + x.message); } } }
+      }
       if (P.cd && P.cd.t0 != null) P.left = Math.max(0, (P.cd.t0 + 3000 - now) / 1000); /* screen follows the countdown */
     }
     /* Halfway call on every hold of 24 seconds or more (shorter holds just get the countdown). */
     if (P.phase === "work" && P.dur >= 24 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; var reps = !!P.st[P.i].s.reps; speak(reps ? pick(["Halfway there. Keep it smooth.", "That's halfway. Nice and controlled.", "Halfway. Keep breathing."]) : pick(["Halfway there. Breathe out, and sink a little deeper.", "That's halfway. Keep breathing slowly.", "Halfway. Relax your shoulders, and let it go a bit further."]), true); }
     if (P.left <= 0) {
-      if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); beep(990, 380, 0.3); if (window.MUSIC) { if (!MUSIC.playing()) startMusic(); MUSIC.setQuiet(false); } }
+      if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); diag("hold " + P.st[P.i].s.id + " " + P.dur + "s, countdown " + cdMode()); beep(990, 380, 0.3); if (window.MUSIC) { if (!MUSIC.playing()) startMusic(); MUSIC.setQuiet(false); } }
       else { if (!P.cd) beep(520, 300, 0.3); P.i++; return enterStep(true); }
     }
     draw();
@@ -698,6 +710,7 @@
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-photos"' + (s.savePhotos ? " checked" : "") + '> Save camera test images to Photos</label></div>';
     h += '<div class="card"><h3>Your data</h3><p class="small muted" style="margin:4px 0 12px">Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal\'s format.</p><div class="row"><button class="btn grow" data-act="export">Export file</button><button class="btn grow" data-act="copy">Copy</button></div><div class="row" style="margin-top:8px"><label class="btn grow">Restore from file<input type="file" accept="application/json,.json" id="s-import" hidden></label></div>' +
       '<details style="margin-top:10px"><summary class="small" style="color:var(--brand);font-weight:600">Paste a backup instead</summary><textarea class="inp" id="s-paste" rows="4" style="margin-top:8px;font-size:13px"></textarea><button class="btn" style="margin-top:8px" data-act="paste-import">Restore pasted backup</button></details></div>';
+    h += '<details class="card"><summary class="small" style="color:var(--brand);font-weight:600">Diagnostics</summary><pre class="small" id="s-diag" style="white-space:pre-wrap;margin:8px 0 0;font-size:11px">' + esc(DIAG.slice(-12).join("\n") || "Nothing logged yet.") + '</pre><button class="btn" style="margin-top:8px" data-act="diag-copy">Copy</button></details>';
     h += '<div class="card"><button class="btn danger block" data-act="reset">Delete all data</button></div><p class="small muted" style="text-align:center">Signal Mobility v' + APP_VERSION + ' (' + APP_BUILD + ') · body tracking by MediaPipe</p>';
     openSheet(h, function () { if (window.MUSIC && !P && MUSIC.playing()) MUSIC.stop(800); });
     var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
@@ -741,6 +754,7 @@
       case "c-reset": if (CAM.sess) { CAM.sess.best = {}; readout(); } toast("Best readings cleared"); break;
       case "c-use": camUse(); break;
       case "save-photos": savePhotos(LASTSNAPS); break;
+      case "diag-copy": try { navigator.clipboard.writeText("v" + APP_VERSION + " " + navigator.userAgent + "\n" + DIAG.join("\n")).then(function () { toast("Copied"); }); } catch (e) {} break;
       case "cd-test": { unlockAudio(); var m0 = cdMode(); cdLoad(m0).then(function () { var fake = P; P = { cd: null }; cdStart(); P = fake; }); break; }
       case "p-music": if (musicOn()) { S.settings.lastMusic = S.settings.music; S.settings.music = "off"; MUSIC.stop(1200); } else { S.settings.music = S.settings.lastMusic || "pads"; startMusic(); } save(); el.innerHTML = musicOn() ? ICON.music : ICON.musicOff; break;
       case "music-preview": if (MUSIC.playing() && !P) { MUSIC.stop(800); el.textContent = "Preview music"; } else if (musicOn()) { startMusic(); el.textContent = "Stop preview"; } else toast("Pick a music style first"); break;
