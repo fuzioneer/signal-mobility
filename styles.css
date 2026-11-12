@@ -305,3 +305,16 @@ nav.tabs button.on { color: var(--brand); }
 .eqchip { display: inline-flex; align-items: center; gap: 6px; }
 .eqchip .eqi { flex: 0 0 18px; }
 .eqchip:not(.on) .eqi { opacity: .75; }
+
+/* Accessibility: text size (zooms the content, not the fixed bars) and coach captions */
+:root { --ts: 1; }
+main, #sheet-body { zoom: var(--ts); }
+.bigtext .pname, .bigtext .pcue, .bigtext .upnext, .bigtext .phase, .bigtext .padj, .bigtext .fbbox, .bigtext .camtxt, .bigtext #c-msg { zoom: var(--ts); }
+.bigtext .tabs button { font-size: calc(11px * var(--ts)); }
+.caption { position: fixed; left: 12px; right: 12px; top: calc(env(safe-area-inset-top, 0px) + 72px); z-index: 120; max-width: 560px; margin: 0 auto;
+  background: rgba(10, 20, 18, .88); color: #fff; border-radius: 14px; padding: 10px 14px; font-size: calc(16px * var(--ts)); line-height: 1.35; text-align: center;
+  opacity: 0; transform: translateY(-6px); transition: opacity .25s, transform .25s; pointer-events: none; }
+.caption.on { opacity: 1; transform: none; }
+.mg:focus-visible { outline: none; stroke: var(--ink); stroke-width: 2.5; }
+.eqhead { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.eqcount { font-size: 13px; font-weight: 700; color: var(--brand); background: var(--brand-soft); border-radius: 999px; padding: 3px 10px; white-space: nowrap; }

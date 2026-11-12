@@ -507,7 +507,24 @@ I18N.add("fr", {
 "it hurt last time": "ça a fait mal la dernière fois",
 "needs {kit}": "il faut {kit}",
 "{a} skipped ({why})": "{a} passé ({why})",
-"{a} swapped for {b} ({why})": "{a} remplacé par {b} ({why})"
+"{a} swapped for {b} ({why})": "{a} remplacé par {b} ({why})",
+"front": "face",
+"back": "dos",
+"{n} seconds left": "{n} secondes restantes",
+"Resume": "Reprendre",
+"Adjust this move": "Ajuster cet exercice",
+"Add 15 seconds": "Ajouter 15 secondes",
+"Accessibility": "Accessibilité",
+"Text size": "Taille du texte",
+"Standard": "Standard",
+"Large": "Grande",
+"Extra large": "Très grande",
+"Largest": "La plus grande",
+"Match iPhone text size": "Comme l'iPhone",
+"Show captions of what the coach says": "Afficher les sous-titres de ce que dit le coach",
+"Captions on. You'll see what the coach says here.": "Sous-titres activés. Vous verrez ici ce que dit le coach.",
+"{n} of {total} selected": "{n} sur {total} sélectionnés",
+"Off, all moves shown": "Désactivé, tout est affiché"
 }, {
 "zone": {
 "shoulders": "Épaules",

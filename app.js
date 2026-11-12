@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.21.3", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.22.1", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -319,7 +319,7 @@
       var shapes = "", labels = "";
       MSH[key].forEach(function (m) {
         var src = shapeD(fem && m[0] === "ch" && key === "front" ? "M98,60 L82,58 Q70,62 70,75 Q75,88 88,88 Q97,87 99,78 Z" : m[1], fem), d = src + (m[4] ? "" : " " + mirrorD(src));
-        shapes += '<path class="mg' + (sel(m[0]) ? " on" : "") + '" data-act="mg" data-id="' + m[0] + '" d="' + d + '"><title>' + esc(mname[m[0]]) + "</title></path>";
+        shapes += '<path class="mg' + (sel(m[0]) ? " on" : "") + '" data-act="mg" data-id="' + m[0] + '" d="' + d + '" role="button" tabindex="0" aria-pressed="' + sel(m[0]) + '" aria-label="' + esc(mname[m[0]] + ", " + (key === "front" ? T("front") : T("back"))) + '"><title>' + esc(mname[m[0]]) + "</title></path>";
         if (sel(m[0])) labels += '<text class="mlbl" x="' + (m[3] ? 100 : shapeX(m[2][0], m[2][1], fem)) + '" y="' + m[2][1] + '">' + esc(mname[m[0]].split((" " + T("and") + " "))[0]) + "</text>";
       });
       var spine = key === "back" ? '<line class="spine" x1="100" y1="44" x2="100" y2="134"/>' : '<line class="spine" x1="100" y1="84" x2="100" y2="134"/>';
@@ -471,9 +471,24 @@
   /* Speaks sentence by sentence so there are natural breaths between them. */
   /* Measured delay between asking the phone to speak and the voice actually starting (ms), used to time the countdown. */
   var SPK = { lat: 300 };
+  /* ---------- Accessibility: captions of what the coach says, and text size ---------- */
+  var CAPT = null;
+  function caption(text, ms) {
+    if (S.settings.captions === false || !text) return; var c = $("#caption"); if (!c) return;
+    c.textContent = text; c.hidden = false; c.classList.add("on"); clearTimeout(CAPT);
+    CAPT = setTimeout(function () { c.classList.remove("on"); setTimeout(function () { if (!c.classList.contains("on")) c.hidden = true; }, 300); }, ms);
+  }
+  function textScale() {
+    var t = S.settings.textSize || "std";
+    if (t === "phone") { try { var pr = document.createElement("span"); pr.style.font = "-apple-system-body"; pr.style.position = "absolute"; pr.style.visibility = "hidden"; pr.textContent = "x"; document.body.appendChild(pr); var px = parseFloat(getComputedStyle(pr).fontSize); pr.remove(); if (px > 0) return Math.max(1, Math.min(1.6, px / 17)); } catch (e) {} return 1; }
+    return { std: 1, l: 1.15, xl: 1.3, xxl: 1.45 }[t] || 1;
+  }
+  function applyTextSize() { document.documentElement.style.setProperty("--ts", textScale()); document.documentElement.classList.toggle("bigtext", textScale() > 1.01); }
+  applyTextSize();
   var SPEAK_AT = 0;
   function speak(text, interrupt, onStart) {
     SPEAK_AT = performance.now();
+    if (text) caption(String(text), Math.max(2500, String(text).split(/\s+/).length / 2.6 * 1000 / (S.settings.voiceRate || 0.95) + 1800));
     if (!S.settings.voice || !window.speechSynthesis || !text) return false;
     try {
       if (interrupt) speechSynthesis.cancel();
@@ -578,8 +593,8 @@
     P = { r: routine, st: steps(ad.items), moves: ad.items.slice(), i: 0, phase: "prep", left: restSecs(true), total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
     var el = $("#player"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn();
     el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="p-close" aria-label="' + T("End session") + '">' + ICON.close + '</button><h2>' + esc(routine.n) + '</h2><button class="icon-btn" data-act="p-music" aria-label="' + T("Background music") + '">' + (musicOn() ? ICON.music : ICON.musicOff) + '</button><button class="icon-btn" data-act="p-voice" aria-label="' + T("Voice") + '">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div><div class="pbar"><i id="p-bar"></i></div>' +
-      ('<div class="player"><div class="pfig"><span class="side" id="p-side" hidden></span><div class="figwrap" id="p-fig"></div><button class="chip figbtn" id="p-figbtn" data-act="p-fig" hidden>' + T("Show movement") + '</button></div><div class="pname" id="p-name"></div><div class="pcue" id="p-cue"></div><div class="padj" id="p-adj"><button class="chip" data-act="p-easier" id="p-easier">' + T("Easier") + '</button><button class="chip" data-act="p-more">+15s</button><button class="chip" data-act="p-harder" id="p-harder">' + T("Harder") + '</button></div>') +
-      '<div class="phase" id="p-phase"></div><div class="clock"><div class="tring" id="p-ring"></div></div>' +
+      ('<div class="player"><div class="pfig"><span class="side" id="p-side" hidden></span><div class="figwrap" id="p-fig"></div><button class="chip figbtn" id="p-figbtn" data-act="p-fig" hidden>' + T("Show movement") + '</button></div><div class="pname" id="p-name" aria-live="polite"></div><div class="pcue" id="p-cue"></div><div class="padj" id="p-adj" role="group" aria-label="' + T("Adjust this move") + '"><button class="chip" data-act="p-easier" id="p-easier">' + T("Easier") + '</button><button class="chip" data-act="p-more" aria-label="' + T("Add 15 seconds") + '">+15s</button><button class="chip" data-act="p-harder" id="p-harder">' + T("Harder") + '</button></div>') +
+      '<div class="phase" id="p-phase"></div><div class="clock"><div class="tring" id="p-ring" role="timer" aria-live="off"></div></div>' +
       '<div class="ctrls"><button class="icon-btn" data-act="p-prev" aria-label="' + T("Previous") + '">' + ICON.prev + '</button><button class="icon-btn play" data-act="p-pause" id="p-pp" aria-label="' + T("Pause") + '">' + ICON.pause + '</button><button class="icon-btn" data-act="p-next" aria-label="' + T("Next") + '">' + ICON.next + '</button></div><div class="upnext" id="p-up"></div><label class="mvol"><span aria-hidden="true">' + ICON.music + '</span><input type="range" id="p-mvol" min="0" max="1" step="0.05" value="' + S.settings.musicVol + '" aria-label="' + T("Music volume") + '"></label></div>';
     $("#p-mvol").addEventListener("input", function (e) { S.settings.musicVol = parseFloat(e.target.value); if (window.MUSIC) MUSIC.setVol(S.settings.musicVol); });
     $("#p-mvol").addEventListener("change", save);
@@ -677,7 +692,7 @@
     toast(TF("Swapped for {name}", { name: BY[alt].n })); enterStep();
   }
   function addTime(sec) { if (!P || !P.st[P.i]) return; if (P.cd) { cdClear(); P.cd = null; } P.left += sec; P.dur += sec; P.spoke.half = P.left <= P.dur / 2 ? 1 : P.spoke.half; draw(); msUpdate(); }
-  function togglePause() { if (!P) return; P.paused = !P.paused; if (P.paused) cdClear(); if (window.MUSIC) { if (P.paused) MUSIC.pause(1500); else MUSIC.resume(2000); } var b = $("#p-pp"); if (b) b.innerHTML = P.paused ? ICON.play : ICON.pause; if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); msUpdate(); }
+  function togglePause() { if (!P) return; P.paused = !P.paused; if (P.paused) cdClear(); if (window.MUSIC) { if (P.paused) MUSIC.pause(1500); else MUSIC.resume(2000); } var b = $("#p-pp"); if (b) { b.innerHTML = P.paused ? ICON.play : ICON.pause; b.setAttribute("aria-label", P.paused ? T("Resume") : T("Pause")); } if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); msUpdate(); }
   /* Lock-screen and Control Centre: current move, time left, and pause, skip and +15s controls. */
   function msUpdate() {
     if (!("mediaSession" in navigator)) return; var ms = navigator.mediaSession;
@@ -729,7 +744,8 @@
   function draw() {
     if (!P || !P.st[P.i]) return;
     var p = P.dur ? Math.max(0, P.left) / P.dur * 100 : 0;
-    $("#p-ring").innerHTML = ringSVG(p, 112, 9, P.phase === "prep" ? "var(--amber)" : "var(--brand)") + "<b>" + Math.max(0, Math.ceil(P.left)) + "</b>";
+    $("#p-ring").innerHTML = ringSVG(p, 112, 9, P.phase === "prep" ? "var(--amber)" : "var(--brand)") + '<b aria-hidden="true">' + Math.max(0, Math.ceil(P.left)) + "</b>";
+    $("#p-ring").setAttribute("aria-label", TF("{n} seconds left", { n: Math.max(0, Math.ceil(P.left)) }));
     var ph = $("#p-phase"); ph.textContent = P.paused ? (T("Paused")) : P.phase === "prep" ? (P.st[P.i].first ? (T("Get into position")) : (T("Switch sides"))) : (T("Hold")); ph.className = "phase" + (P.phase === "prep" ? " prep" : "");
   }
   function finish() {
@@ -1029,9 +1045,10 @@
   }
   function eqCard() {
     var have = S.settings.eq || EQ.map(function (e) { return e[0]; });
-    return '<div class="card"><h3>' + T("My equipment") + '</h3><label class="remcheck" style="margin-top:8px"><input type="checkbox" id="eq-on"' + (S.settings.eqOn ? " checked" : "") + "> " + T("Only use moves I have the kit for") + '</label><p class="small muted" style="margin:6px 0 8px">' + T("Moves that need something you don't have are swapped for an alternative or skipped. Turn it off to see everything, for example when you're at the gym.") + '</p><div class="chips daychips">' +
+    return '<div class="card"><div class="eqhead"><h3>' + T("My equipment") + '</h3><span class="eqcount" id="eq-count">' + eqCountText(have) + '</span></div><label class="remcheck" style="margin-top:8px"><input type="checkbox" id="eq-on"' + (S.settings.eqOn ? " checked" : "") + "> " + T("Only use moves I have the kit for") + '</label><p class="small muted" style="margin:6px 0 8px">' + T("Moves that need something you don't have are swapped for an alternative or skipped. Turn it off to see everything, for example when you're at the gym.") + '</p><div class="chips daychips">' +
       EQ.map(function (e) { return '<button class="chip eqchip' + (have.indexOf(e[0]) >= 0 ? " on" : "") + '" data-act="eq-item" data-id="' + e[0] + '">' + eqIcon(e[0]) + "<span>" + esc(e[1]) + "</span></button>"; }).join("") + "</div></div>";
   }
+  function eqCountText(have) { return S.settings.eqOn ? esc(TF("{n} of {total} selected", { n: have.length, total: EQ.length })) : esc(T("Off, all moves shown")); }
   function paCard() {
     var f = fb(), hurt = Object.keys(f.hurt).filter(function (id) { return BY[id]; });
     var h = '<div class="card"><h3>' + T("Personal adjustments") + '</h3><p class="small muted" style="margin:6px 0 8px">' + T("Set by your feedback after each session.") + "</p>";
@@ -1111,6 +1128,9 @@
       ('<div class="row" style="margin-top:14px"><label class="field" style="flex:2">' + T("Routine background music") + '<select id="s-music">') + MUSIC_STYLES.map(function (o) { return '<option value="' + o[0] + '"' + ((s.music || "pads") === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><label class="field">' + T("Music volume") + '<input type="range" id="s-mvol" min="0" max="1" step="0.05" value="' + (s.musicVol == null ? 0.5 : s.musicVol) + ('" style="min-height:46px;padding:0;accent-color:var(--brand)"></label></div><button class="btn" style="margin-top:8px" data-act="music-preview">' + T("Preview music") + '</button><p class="small muted" style="margin-top:6px">' + T("Gentle music generated on your phone. It drops down whenever the coach speaks.") + '</p>') +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-showphotos"' + (s.photos !== false ? " checked" : "") + '> ' + T("Show stretch photos (instead of stick figures)") + '</label>' +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-photos"' + (s.savePhotos ? " checked" : "") + '> ' + T("Save camera test images to Photos") + '</label></div>';
+    h += '<div class="card"><h3>' + T("Accessibility") + '</h3><div class="row" style="margin-top:8px"><label class="field">' + T("Text size") + '<select id="s-text">' +
+      [["std", T("Standard")], ["l", T("Large")], ["xl", T("Extra large")], ["xxl", T("Largest")], ["phone", T("Match iPhone text size")]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.textSize || "std") === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") +
+      '</select></label></div><label class="remcheck" style="margin-top:12px"><input type="checkbox" id="s-capt"' + (s.captions === false ? "" : " checked") + "> " + T("Show captions of what the coach says") + "</label></div>";
     h += eqCard() + '<div id="pa-slot">' + paCard() + "</div>";
     h += '<div id="rem-slot">' + remCard() + "</div>";
     h += '<div id="strava-slot">' + stravaCard() + "</div>";
@@ -1124,7 +1144,9 @@
     var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
     ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-sport", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
     stravaWire(); remWire();
-    $("#eq-on").addEventListener("change", function (e) { S.settings.eqOn = e.target.checked; if (!S.settings.eq) S.settings.eq = EQ.map(function (x) { return x[0]; }); save(); render(); });
+    $("#s-text").addEventListener("change", function (e) { S.settings.textSize = e.target.value; save(); applyTextSize(); });
+    $("#s-capt").addEventListener("change", function (e) { S.settings.captions = e.target.checked; save(); if (e.target.checked) caption(T("Captions on. You'll see what the coach says here."), 3000); });
+    $("#eq-on").addEventListener("change", function (e) { S.settings.eqOn = e.target.checked; if (!S.settings.eq) S.settings.eq = EQ.map(function (x) { return x[0]; }); save(); var ec = $("#eq-count"); if (ec) ec.innerHTML = eqCountText(S.settings.eq); render(); });
     $("#s-lang").addEventListener("change", function (e) { S.settings.lang = e.target.value; save(); setTimeout(function () { location.reload(); }, 150); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
   }
@@ -1155,6 +1177,7 @@
     });
     lb.addEventListener("click", function (e) { if (swiped) { swiped = false; e.stopImmediatePropagation(); } }, true);
   })();
+  document.addEventListener("keydown", function (e) { var t = e.target; if ((e.key === "Enter" || e.key === " ") && t && t.getAttribute && t.getAttribute("role") === "button" && t.tagName !== "BUTTON") { e.preventDefault(); t.dispatchEvent(new MouseEvent("click", { bubbles: true })); } });
   document.addEventListener("keydown", function (e) { if ($("#lightbox").hidden) return; if (e.key === "ArrowLeft") lbStep(-1); if (e.key === "ArrowRight") lbStep(1); });
   $("#lightbox").addEventListener("click", closeLightbox);
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("#lightbox").hidden) closeLightbox(); });
@@ -1234,7 +1257,7 @@
         if (hh[id]) toast(altOf(id, "easy") ? TF("Next time {a} will be swapped for {b}.", { a: BY[id].n, b: BY[altOf(id, "easy")].n }) : TF("Next time {a} will be skipped.", { a: BY[id].n })); break; }
       case "fb-unhurt": { delete fb().hurt[id]; save(); var pa = $("#pa-slot"); if (pa) pa.innerHTML = paCard(); break; }
       case "fb-reset": { fb().scale = 1; save(); var pb = $("#pa-slot"); if (pb) pb.innerHTML = paCard(); toast(T("Holds reset to standard")); break; }
-      case "eq-item": { var have = S.settings.eq || EQ.map(function (e) { return e[0]; }), ei = have.indexOf(id); if (ei >= 0) have.splice(ei, 1); else have.push(id); S.settings.eq = have; save(); el.classList.toggle("on", ei < 0); render(); break; }
+      case "eq-item": { var have = S.settings.eq || EQ.map(function (e) { return e[0]; }), ei = have.indexOf(id); if (ei >= 0) have.splice(ei, 1); else have.push(id); S.settings.eq = have; save(); el.classList.toggle("on", ei < 0); var ec = $("#eq-count"); if (ec) ec.innerHTML = eqCountText(have); render(); break; }
       case "p-next": if (P) { P.i++; enterStep(); } break;
       case "p-prev": if (P) { if (P.phase === "work" && P.left < P.dur - 3) { /* restart current */ } else P.i = Math.max(0, P.i - 1); enterStep(); } break;
       case "test-detail": testDetail(id); break;
