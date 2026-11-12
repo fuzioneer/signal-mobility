@@ -68,3 +68,27 @@ window.PHOTOS = {
  "t_squat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_103431_450504b0-18a5-455f-802d-174ce6ae8946.png",
  "t_pigeon": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_103112_14f806fa-7fa4-4808-8f49-057e334fcc8b.png"
 };
+/* Second position for two-position moves; the app slowly cross-fades between the two. */
+window.PHOTOS2 = {
+ "bander": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133149_a3acf7ed-9df3-44d0-bbf9-82e500b887f2.png",
+ "wallslide": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133228_c0daf518-f981-4812-bdc8-2544f6814724.png",
+ "tspineroll": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133305_1ea8b9a7-83b0-4cc7-95cc-d87ac07c11a8.png",
+ "passthru": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133343_94331964-a22d-402d-8aba-6a3c553f2945.png",
+ "openbook": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133432_ed48ab88-7717-4a32-8f07-090841e653c6.png",
+ "catcow": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133515_5bfba67a-2e9a-44ed-a606-ee779f4f7718.png",
+ "quadrot": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133546_c5637526-90ae-4a7d-9701-9d36f30558eb.png",
+ "elephant": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133628_5c4b4ca4-dfe2-40b5-9bc6-a03a46e1fa07.png",
+ "hamfloss": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133715_ee0c35c9-61bd-4c57-8dd7-e8d3550408bd.png",
+ "ninety": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133759_a73b1a95-ad08-494e-9766-de8748557cac.png",
+ "bridge": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133916_15ca92b3-f391-431b-a20f-12c375ba9ab2.png",
+ "anklerock": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133954_c3038a9f-3c0a-49c5-8661-d44066cbdcbe.png",
+ "deadbug": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134140_9daab185-1361-4021-bb1a-da4d956202f7.png",
+ "legswing": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134250_f7ad9128-f563-4870-8bd0-051ef937503f.png",
+ "hipcircle": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134329_cef9ef86-8aa1-4590-b9f7-08d9fff51539.png",
+ "lungetwist": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134418_9ca14f8e-e73a-43a8-b5ca-218a74f6a986.png",
+ "askip": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134514_a6672e0c-c2a7-4353-bd01-4e2537f76bba.png",
+ "pogo": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134603_12001295-a3f8-43fc-a5f8-f11dc7746eb1.png",
+ "wgs": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134644_06ce0f64-8f2a-421a-8d0e-f3044d544b56.png",
+ "kneehug": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134749_56f1e77a-3a1d-4700-a5f9-a293cefc29b9.png",
+ "wipers": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134820_829572a3-2e74-4e2a-975c-28dbf9b73046.png"
+};

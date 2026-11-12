@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.13.0", APP_BUILD = "11 Nov 2026";
+  var APP_VERSION = "1.14.0", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -129,6 +129,12 @@
   function fig(pose, opts) { return FIG.svg(pose, opts); }
   /* Photo of a stretch (id) or test ("t_" + id) when one exists and photos are switched on, otherwise the stick figure. */
   function photoUrl(key) { return S.settings.photos !== false && window.PHOTOS && PHOTOS[key] || null; }
+  /* Big photo: if the move has a second position, both photos are stacked and slowly cross-fade between the two. */
+  function photo2Url(key) { return S.settings.photos !== false && window.PHOTOS2 && PHOTOS2[key] || null; }
+  function bigPhoto(key, cls, alt) {
+    var a = photoUrl(key), b = photo2Url(key); if (!a) return "";
+    return '<div class="xfade' + (b ? " two" : "") + '"><img class="photo ' + cls + '" alt="' + esc(alt || "") + '" src="' + esc(a) + '">' + (b ? '<img class="photo ' + cls + ' second" alt="' + esc(alt || "") + ' (second position)" src="' + esc(b) + '">' : "") + "</div>";
+  }
   function art(key, pose, opts) { var u = photoUrl(key); return u ? '<img class="photo" loading="lazy" decoding="async" alt="" src="' + esc(u) + '">' : fig(pose, opts); }
   var stops = [];
   function stopAnims() { stops.forEach(function (f) { f(); }); stops = []; }
@@ -207,7 +213,6 @@
     }
     h += '<div class="sec"><h2>Quick picks</h2></div>';
     ["warm", "cool", "desk"].forEach(function (id) { h += routineCard(findRoutine(id)); });
-    if (window.PHOTOS && S.settings.photos !== false) h += '<div class="card nudge" id="off-banner" hidden><div class="grow"><h3>Save photos for offline</h3><p>Download all the stretch photos to this phone (about 50 to 80 MB) so routines work with bad or no signal. Best on Wi-Fi.</p><div class="row" style="margin-top:10px"><button class="btn primary" data-act="off-save">Save now</button><button class="btn ghost" data-act="off-dismiss">Not now</button></div></div></div>';
     if (!isStandalone()) h += installCard();
     h += '<p class="small muted" style="text-align:center;margin-top:18px">Signal Mobility v' + APP_VERSION + " · " + APP_BUILD + "</p>";
     $("#v-home").innerHTML = h; offlineUI();
@@ -294,7 +299,7 @@
   function openStretch(id) {
     var s = BY[id];
     var pu = photoUrl(id);
-    var h = (pu ? '<div class="bigfig photo-wrap"><img class="photo" alt="' + esc(s.n) + '" src="' + esc(pu) + '"></div><details class="small" style="margin:-6px 0 12px"><summary style="color:var(--brand);font-weight:600">Show the movement</summary><div class="bigfig" data-anim="s:' + id + '" style="margin-top:8px"></div></details>' : '<div class="bigfig" data-anim="s:' + id + '"></div>') + '<h2>' + esc(s.n) + '</h2><p style="margin:6px 0">' + s.z.map(function (z) { return '<span class="tag"><span class="zdot" style="background:' + zc(z) + '"></span>' + ZN[z] + "</span>"; }).join("") + s.tags.map(function (t) { return '<span class="tag">' + t + "</span>"; }).join("") + "</p>";
+    var h = (pu ? '<div class="bigfig photo-wrap">' + bigPhoto(id, "", s.n) + '</div><details class="small" style="margin:-6px 0 12px"><summary style="color:var(--brand);font-weight:600">Show the movement</summary><div class="bigfig" data-anim="s:' + id + '" style="margin-top:8px"></div></details>' : '<div class="bigfig" data-anim="s:' + id + '"></div>') + '<h2>' + esc(s.n) + '</h2><p style="margin:6px 0">' + s.z.map(function (z) { return '<span class="tag"><span class="zdot" style="background:' + zc(z) + '"></span>' + ZN[z] + "</span>"; }).join("") + s.tags.map(function (t) { return '<span class="tag">' + t + "</span>"; }).join("") + "</p>";
     h += '<p class="muted" style="margin-bottom:6px">' + (s.reps ? esc(s.reps) + ", about " : "Hold ") + s.d + " seconds" + (s.s ? " each side" : "") + ".</p><p>" + esc(s.cues) + "</p>";
     h += '<div class="row" style="margin-top:16px"><button class="btn primary grow" data-act="play-one" data-id="' + id + '">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + " Do it now</button></div>";
     openSheet(h);
@@ -432,7 +437,7 @@
     if (P.stop) P.stop(); P.stop = null;
     var has = photoUrl(st.s.id), pu = P.figMode ? null : has, w = $("#p-fig");
     w.classList.toggle("flip", st.side === "Right" && !pu);
-    if (pu) w.innerHTML = '<img class="photo pphoto" alt="' + esc(st.s.n) + '" src="' + esc(pu) + '">';
+    if (pu) w.innerHTML = bigPhoto(st.s.id, "pphoto", st.s.n);
     else P.stop = FIG.animate(w, st.s.pose, st.s.pose2, 1500, { stroke: 7 });
     var b = $("#p-figbtn"); b.hidden = !has; b.textContent = P.figMode ? "Show photo" : "Show movement";
   }
@@ -758,7 +763,8 @@
   $("#lightbox").addEventListener("click", closeLightbox);
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("#lightbox").hidden) closeLightbox(); });
   document.addEventListener("click", function (e) {
-    var big = e.target.closest(".photo-wrap img, img.pphoto, img.howphoto, .snaps img");
+    var big = e.target.closest(".photo-wrap img, img.pphoto, img.howphoto, .snaps img, .xfade");
+    if (big && big.classList.contains("xfade")) { var imgs = big.querySelectorAll("img"); big = imgs.length > 1 && parseFloat(getComputedStyle(imgs[1]).opacity) > 0.5 ? imgs[1] : imgs[0]; }
     if (big && !e.target.closest("[data-act]")) { e.preventDefault(); openLightbox(big.currentSrc || big.src, big.getAttribute("alt")); return; }
     var el = e.target.closest("[data-act]"); if (!el) return;
     var a = el.getAttribute("data-act"), id = el.getAttribute("data-id");
@@ -816,13 +822,13 @@
 
   /* ---------- offline photos: save every stretch photo into the app's photo cache so routines work with no signal ---------- */
   var OFF = { busy: false, done: 0, total: 0 };
-  function photoList() { var seen = {}, out = []; Object.keys(window.PHOTOS || {}).forEach(function (k) { var u = PHOTOS[k]; if (!seen[u]) { seen[u] = 1; out.push(u); } }); return out; }
+  function photoList() { var seen = {}, out = []; [window.PHOTOS || {}, window.PHOTOS2 || {}].forEach(function (m) { Object.keys(m).forEach(function (k) { var u = m[k]; if (!seen[u]) { seen[u] = 1; out.push(u); } }); }); return out; }
   function offlineCount() {
     if (!window.caches) return Promise.resolve(0);
     return caches.open("sm-photos").then(function (c) { return Promise.all(photoList().map(function (u) { return c.match(u).then(function (r) { return r ? 1 : 0; }); })); }).then(function (xs) { return xs.reduce(function (s, x) { return s + x; }, 0); }).catch(function () { return 0; });
   }
   function offlineUI() {
-    var t = photoList().length, el = $("#off-status"), b = $("#off-btn"), bn = $("#off-banner");
+    var t = photoList().length, el = $("#off-status"), b = $("#off-btn"), bn = null;
     offlineCount().then(function (n) {
       OFF.done = n; OFF.total = t;
       if (el) el.textContent = OFF.busy ? "Saving… " + n + " of " + t : n >= t ? "All " + t + " photos saved on this phone. Routines work with no signal." : n + " of " + t + " photos saved on this phone.";
