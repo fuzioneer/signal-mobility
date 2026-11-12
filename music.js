@@ -100,6 +100,17 @@
     if (elUrl[key]) return go(elUrl[key]);
     renderLoop(s, v, function (url) { elUrl[key] = url; go(url); });
   }
+  /* iOS pauses the audio file when the coach speaks and doesn't restart it. Every second, if the music should be playing but the
+     file is paused, start it again. If the phone refuses (no recent tap), try again on the next tap anywhere. */
+  var elKick = 0, tapHook = false;
+  setInterval(function () {
+    if (mode !== "el" || !elWant || paused || !el || !el.paused || !el.src || el.src.indexOf("blob:") !== 0) return;
+    try { if (window.speechSynthesis && speechSynthesis.speaking && performance.now() < duckUntil + 6000) return; } catch (e) {}
+    elKick++; if (elKick <= 3 || elKick % 10 === 0) log("music: audio file was paused by the phone, restarting");
+    try { var p = el.play(); if (p && p.catch) p.catch(function () { if (!tapHook) { tapHook = true; log("music: restart blocked, will resume on next tap");
+      var h = function () { tapHook = false; document.removeEventListener("touchend", h, true); document.removeEventListener("click", h, true); if (mode === "el" && elWant && !paused) try { el.play().catch(function () {}); } catch (e) {} };
+      document.addEventListener("touchend", h, true); document.addEventListener("click", h, true); } }); } catch (e) {}
+  }, 1000);
   function elStop() { elWant = null; try { if (el) el.pause(); } catch (e) {} }
   function renderLoop(s, v, cb) {
     var OC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if (!OC) { log("music: no offline audio"); return; }
