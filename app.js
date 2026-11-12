@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.8.4", APP_BUILD = "11 Nov 2026";
+  var APP_VERSION = "1.9.0", APP_BUILD = "11 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -316,17 +316,30 @@
     } catch (e) { return false; }
   }
   function say(text) { speak(text, true); }
-  /* Spoken 3, 2, 1 with even one-second gaps. "Three" is asked for early to allow for the voice's start-up delay;
-     "Two" and "One" are timed from when "Three" actually started, and the hold ends exactly 3 s after it. */
-  function cdClear() { if (P && P.cd) { P.cd.timers.forEach(clearTimeout); P.cd = null; } }
+  /* 3, 2, 1 countdown played from short recorded clips through Web Audio, scheduled on the audio clock so the gaps are exactly one second.
+     (The phone's speech engine starts after an unpredictable delay, which made spoken numbers uneven.) Clips: Piper TTS British voices. */
+  var CDBUF = {}, CDLOAD = {};
+  function cdMode() { var m = S.settings.countdown; return m == null ? "f" : m; }
+  function cdLoad(v) {
+    if (v !== "f" && v !== "m") return Promise.resolve(null);
+    if (CDBUF[v]) return Promise.resolve(CDBUF[v]); if (CDLOAD[v]) return CDLOAD[v];
+    unlockAudio();
+    CDLOAD[v] = Promise.all([3, 2, 1].map(function (n) { return fetch("audio/cd-" + v + "-" + n + ".wav").then(function (r) { if (!r.ok) throw 0; return r.arrayBuffer(); }).then(function (b) { return new Promise(function (res, rej) { AC.decodeAudioData(b, res, rej); }); }); }))
+      .then(function (bs) { CDBUF[v] = bs; return bs; }).catch(function () { CDLOAD[v] = null; return null; });
+    return CDLOAD[v];
+  }
+  function tone(t, f, dur, vol) { var o = AC.createOscillator(), g = AC.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + dur + 0.05); return o; }
+  function cdClear() { if (P && P.cd) { P.cd.nodes.forEach(function (n) { try { n.stop(); } catch (e) {} }); P.cd = null; } }
   function cdStart() {
-    var cd = P.cd = { t0: null, timers: [] }, asked = performance.now();
-    var go = function (t) {
-      if (!P || P.cd !== cd || cd.t0 != null) return; cd.t0 = t;
-      [["Two", 1000], ["One", 2000]].forEach(function (n) { cd.timers.push(setTimeout(function () { if (P && P.cd === cd && !P.paused) speak(n[0], false); }, Math.max(0, n[1] - SPK.lat - (performance.now() - t)))); });
-    };
-    if (!speak("Three", true, go)) { P.cd = null; return; }
-    cd.timers.push(setTimeout(function () { go(asked + SPK.lat); }, Math.max(600, SPK.lat + 400))); /* fallback if the phone never reports the start */
+    var mode = cdMode(); if (mode === "off" || !AC) return;
+    if (AC.state !== "running") try { AC.resume(); } catch (e) {}
+    var lead = 0.06, T = AC.currentTime + lead, cd = P.cd = { t0: performance.now() + lead * 1000, nodes: [] }, bufs = CDBUF[mode];
+    for (var i = 0; i < 3; i++) {
+      if (bufs) { var src = AC.createBufferSource(), g = AC.createGain(); src.buffer = bufs[i]; g.gain.value = 1; src.connect(g); g.connect(AC.destination); src.start(T + i); cd.nodes.push(src); }
+      else cd.nodes.push(tone(T + i, 880, 0.15, 0.25));
+    }
+    cd.nodes.push(tone(T + 3, 660, 0.5, 0.22), tone(T + 3, 990, 0.6, 0.12)); /* soft "done" chime exactly on zero */
+    if (window.MUSIC) MUSIC.duckFor(3600);
   }
   function sayQ(text, urgent) { speak(text, urgent); }
   /* Set the audio session before any AudioContext exists so music and beeps play with the silent switch on, and the context isn't interrupted by a later change. */
@@ -346,7 +359,7 @@
   function musicOn() { return S.settings.music && S.settings.music !== "off"; }
   function startMusic() { if (window.MUSIC && musicOn()) { unlockAudio(); MUSIC.start(AC, S.settings.music, S.settings.musicVol); if (P && P.paused) MUSIC.pause(300); } }
   function play(routine) {
-    unlockAudio(); /* music starts with the first hold, not during the get-ready countdown */
+    unlockAudio(); cdLoad(cdMode()); /* music starts with the first hold, not during the get-ready countdown */
     P = { r: routine, st: steps(routine.items), i: 0, phase: "prep", left: restSecs(true), total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
     var el = $("#player"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn();
     el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="p-close" aria-label="End session">' + ICON.close + '</button><h2>' + esc(routine.n) + '</h2><button class="icon-btn" data-act="p-music" aria-label="Background music">' + (musicOn() ? ICON.music : ICON.musicOff) + '</button><button class="icon-btn" data-act="p-voice" aria-label="Voice">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div><div class="pbar"><i id="p-bar"></i></div>' +
@@ -388,17 +401,16 @@
     if (after !== before && P.phase === "work") {
       /* 10 seconds to go reminder, then a spoken 3, 2, 1 (beeps instead if the voice is off) */
       if (after === 10 && (P.dur >= 30 || (P.dur > 15 && P.dur < 24))) say(pick(["Ten seconds to go.", "Ten seconds left.", "Last ten seconds. Stay with it."]));
-      if (after <= 3 && after > 0 && !(S.settings.voice && window.speechSynthesis)) beep(880, 120);
     } else if (after !== before && after <= 3 && after > 0) beep(660, 120);
-    if (P.phase === "work" && S.settings.voice && window.speechSynthesis && P.dur >= 5) {
-      if (!P.cd && P.left <= 3 + SPK.lat / 1000 && P.left > 1) cdStart();
-      if (P.cd && P.cd.t0 != null) P.left = Math.max(0, (P.cd.t0 + 3000 - now) / 1000);
+    if (P.phase === "work" && P.dur >= 5 && cdMode() !== "off") {
+      if (!P.cd && P.left <= 3.02 && P.left > 1) cdStart();
+      if (P.cd) P.left = Math.max(0, (P.cd.t0 + 3000 - now) / 1000); /* screen follows the audio clock */
     }
     /* Halfway call on every hold of 24 seconds or more (shorter holds just get the countdown). */
     if (P.phase === "work" && P.dur >= 24 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; var reps = !!P.st[P.i].s.reps; speak(reps ? pick(["Halfway there. Keep it smooth.", "That's halfway. Nice and controlled.", "Halfway. Keep breathing."]) : pick(["Halfway there. Breathe out, and sink a little deeper.", "That's halfway. Keep breathing slowly.", "Halfway. Relax your shoulders, and let it go a bit further."]), true); }
     if (P.left <= 0) {
       if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); beep(990, 380, 0.3); if (window.MUSIC) { if (!MUSIC.playing()) startMusic(); MUSIC.setQuiet(false); } }
-      else { beep(520, 300, 0.3); P.i++; return enterStep(true); }
+      else { if (!P.cd) beep(520, 300, 0.3); P.i++; return enterStep(true); }
     }
     draw();
   }
@@ -657,7 +669,7 @@
     var s = S.settings;
     var h = '<h2>Settings</h2><div class="card" style="margin-top:12px"><div class="row"><label class="field">Age<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="' + (s.age || "") + '"></label><label class="field">Height (cm)<input type="number" inputmode="numeric" id="s-height" min="120" max="230" value="' + (s.height || 178) + '"></label><label class="field">Sex<select id="s-sex"><option value="m"' + (s.sex === "m" ? " selected" : "") + '>Male</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">Female</option></select></label></div>" +
       '<p class="small muted" style="margin-top:8px">Age and sex set the GOWOD average markers (GOWOD only publishes averages for men). Height scales the camera\'s cm estimates.</p></div>';
-    h += '<div class="card"><div class="row"><label class="field">Time between exercises<select id="s-rest">' + [5, 10, 15, 20, 30, 45, 60].map(function (n) { return '<option value="' + n + '"' + ((s.rest == null ? 10 : s.rest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label><label class="field">Time to switch sides<select id="s-siderest">' + [3, 5, 10, 15].map(function (n) { return '<option value="' + n + '"' + ((s.sideRest == null ? 5 : s.sideRest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label></div><p class="small muted" style="margin-top:6px">Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.</p><div class="row" style="margin-top:10px"><label class="field">Theme<select id="s-theme">' + [["auto", "Match phone"], ["light", "Light"], ["dark", "Dark"]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
+    h += '<div class="card"><div class="row"><label class="field">Time between exercises<select id="s-rest">' + [5, 10, 15, 20, 30, 45, 60].map(function (n) { return '<option value="' + n + '"' + ((s.rest == null ? 10 : s.rest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label><label class="field">Time to switch sides<select id="s-siderest">' + [3, 5, 10, 15].map(function (n) { return '<option value="' + n + '"' + ((s.sideRest == null ? 5 : s.sideRest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label></div><div class="row" style="margin-top:10px"><label class="field">Final 3, 2, 1 countdown<select id="s-cd">' + [["f", "Voice (female)"], ["m", "Voice (male)"], ["beeps", "Beeps"], ["off", "Off"]].map(function (o) { return '<option value="' + o[0] + '"' + (cdMode() === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><button class="btn" style="align-self:flex-end" data-act="cd-test">Hear it</button></div><p class="small muted" style="margin-top:6px">Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.</p><div class="row" style="margin-top:10px"><label class="field">Theme<select id="s-theme">' + [["auto", "Match phone"], ["light", "Light"], ["dark", "Dark"]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
       '<div class="row" style="margin-top:12px"><label class="row grow"><input type="checkbox" id="s-voice"' + (s.voice ? " checked" : "") + '> Voice coaching</label><label class="row grow"><input type="checkbox" id="s-beeps"' + (s.beeps ? " checked" : "") + "> Beeps</label></div>" +
       '<div class="row" style="margin-top:12px"><label class="field" style="flex:2">Coach voice<select id="s-vname"><option value="">Best available</option>' + enVoices().sort(function (x, y) { return voiceScore(y) - voiceScore(x); }).map(function (v) { return '<option value="' + esc(v.name) + '"' + (s.voiceName === v.name ? " selected" : "") + ">" + esc(v.name) + " (" + esc(v.lang) + ")</option>"; }).join("") + '</select></label><label class="field">Speed<select id="s-vrate">' + [[0.85, "Slower"], [0.95, "Normal"], [1.05, "Quicker"]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.voiceRate || 0.95) === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label></div><button class="btn" style="margin-top:8px" data-act="voice-test">Hear the voice</button>' +
       '<p class="small muted" style="margin-top:8px">For the most natural voice, download one on your iPhone: open Settings, search for <b>Voices</b>, then go to English. Pick an <b>Enhanced</b> or <b>Premium</b> voice (Serena, Daniel or Arthur for British), then close and reopen this app and choose it here.</p>' +
@@ -667,8 +679,8 @@
       '<details style="margin-top:10px"><summary class="small" style="color:var(--brand);font-weight:600">Paste a backup instead</summary><textarea class="inp" id="s-paste" rows="4" style="margin-top:8px;font-size:13px"></textarea><button class="btn" style="margin-top:8px" data-act="paste-import">Restore pasted backup</button></details></div>';
     h += '<div class="card"><button class="btn danger block" data-act="reset">Delete all data</button></div><p class="small muted" style="text-align:center">Signal Mobility v' + APP_VERSION + ' (' + APP_BUILD + ') · body tracking by MediaPipe</p>';
     openSheet(h, function () { if (window.MUSIC && !P && MUSIC.playing()) MUSIC.stop(800); });
-    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
-    ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-theme", "#s-voice", "#s-beeps", "#s-photos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
+    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
+    ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-voice", "#s-beeps", "#s-photos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
   }
   function applyTheme() { var t = S.settings.theme; if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(document.body).backgroundColor || "#0f6b5c"; }
@@ -708,6 +720,7 @@
       case "c-reset": if (CAM.sess) { CAM.sess.best = {}; readout(); } toast("Best readings cleared"); break;
       case "c-use": camUse(); break;
       case "save-photos": savePhotos(LASTSNAPS); break;
+      case "cd-test": { unlockAudio(); var m0 = cdMode(); cdLoad(m0).then(function () { var fake = P; P = { cd: null }; cdStart(); P = fake; }); break; }
       case "p-music": if (musicOn()) { S.settings.lastMusic = S.settings.music; S.settings.music = "off"; MUSIC.stop(1200); } else { S.settings.music = S.settings.lastMusic || "pads"; startMusic(); } save(); el.innerHTML = musicOn() ? ICON.music : ICON.musicOff; break;
       case "music-preview": if (MUSIC.playing() && !P) { MUSIC.stop(800); el.textContent = "Preview music"; } else if (musicOn()) { startMusic(); el.textContent = "Stop preview"; } else toast("Pick a music style first"); break;
       case "voice-test": { unlockAudio(); var was = S.settings.voice; S.settings.voice = true; speak(pick(["Hi there. This is how I'll sound during your sessions. Let's get moving.", "Hello. I'll be your coach for mobility tests and stretching. Ready when you are."]), true); S.settings.voice = was; break; }

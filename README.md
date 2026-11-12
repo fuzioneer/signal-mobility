@@ -21,6 +21,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.9.0 (11 Nov 2026): 3, 2, 1 now plays recorded number clips on the audio clock for exact one-second gaps, with a soft chime on zero. Choose female voice, male voice, beeps or off in Settings.
 - 1.8.4 (11 Nov 2026): 3, 2, 1 timed from when the voice actually starts, so the gaps are even and the hold ends exactly on time.
 - 1.8.3 (11 Nov 2026): halfway call on every hold of 24 seconds or more (was only 60-second holds).
 - 1.8.2 (11 Nov 2026): 3, 2, 1 countdown no longer runs numbers together or cuts off "one".
@@ -35,3 +36,7 @@ The version shows at the bottom of the Today screen and in Settings.
 - 1.3.0 (11 Nov 2026): selfie camera by default, spoken coaching during camera tests, captioned images saved to Photos.
 - 1.2.0 (11 Nov 2026): every test can be measured with the camera; height setting for cm estimates.
 - 1.0.0 (11 Nov 2026): first release.
+
+## Credits
+
+Countdown clips generated with Piper TTS (rhasspy/piper) using the British "Southern English Female" voice (trained on OpenSLR 83, CC BY-SA 4.0) and "Alan" voice (Mycroft mimic3).
