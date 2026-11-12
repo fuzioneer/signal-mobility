@@ -168,6 +168,28 @@
     { id: "legswing", n: "Leg swings", z: ["hips", "postchain"], tags: ["warm"], d: 40, s: true, reps: "15 swings",
       cues: "Hold a rig or wall for balance. Swing one straight leg forward and back, gradually higher. Then do side to side.",
       pose: mk("stand", { nl: [320, 320, 0], na: [20, 20] }), pose2: mk("stand", { nl: [225, 225, 0], na: [20, 20] }) },
+    /* Bed-friendly hip moves (all done lying or kneeling on a mattress) */
+    { id: "kneehug", n: "Knee hugs", z: ["hips", "postchain"], tags: ["bed", "sleep", "back"], d: 45, reps: "Slow rocks",
+      cues: "Lie on your back and hug both knees into your chest. Rock gently side to side and in small circles to ease out your lower back and hips.",
+      pose: mk("supine", { nl: [122, 300, 0], fl: [122, 300, 0], na: [50, 20], fa: [50, 20] }), pose2: mk("supine", { nl: [100, 315, 0], fl: [100, 315, 0], na: [40, 10], fa: [40, 10] }) },
+    { id: "wipers", n: "Windscreen wipers", z: ["hips"], tags: ["bed", "warm"], d: 45, reps: "10 each way",
+      cues: "On your back, knees bent and feet wider than your hips. Let both knees drop slowly to one side, then the other. Shoulders stay down.",
+      pose: mk("supine", { nl: [55, 300, 0], fl: [55, 300, 0], na: [270, 270], fa: [270, 270] }), pose2: mk("supine", { nl: [22, 320, 0], fl: [70, 290, 0], na: [270, 270], fa: [270, 270] }) },
+    { id: "happybaby", n: "Happy baby", z: ["hips"], tags: ["bed", "sleep", "cool"], d: 60,
+      cues: "On your back, bring your knees wide towards your armpits with your shins pointing up. Hold the outsides of your feet and gently pull down. Rock side to side if it feels good.",
+      pose: mk("supine", { nl: [125, 85, 0], fl: [125, 85, 0], na: [66, 66], fa: [66, 66] }) },
+    { id: "butterfly", n: "Reclined butterfly", z: ["hips"], tags: ["bed", "sleep", "cool"], d: 60,
+      cues: "Lie on your back, put the soles of your feet together and let your knees fall open. Rest your hands on your belly and let gravity do the work. Pillows under the knees if it's too strong.",
+      pose: mk("supine", { nl: [35, 315, 0], fl: [70, 290, 0], na: [25, 345], fa: [25, 345] }) },
+    { id: "edgeflexor", n: "Bed-edge hip flexor stretch", z: ["hips"], tags: ["bed", "cool"], d: 60, s: true,
+      cues: "Lie on your back with your bum at the edge of the bed. Hug one knee to your chest and let the other leg hang off the edge, relaxed. Feel the stretch across the front of the hanging hip.",
+      pose: { hip: [118, 118], t: 180, nk: 180, na: [50, 20], fa: [50, 20], fl: [122, 300, 0], nl: [255, 272, 0], prop: [{ t: "box", x: 10, y: 124, w: 108 }] } },
+    { id: "sidequad", n: "Side-lying quad stretch", z: ["hips"], tags: ["bed", "cool"], d: 45, s: true,
+      cues: "Lie on your side, head on your arm. Bend the top knee and hold that ankle behind you, pulling your heel towards your bum. Push the hip forward slightly.",
+      pose: { hip: [110, 180], t: 180, nk: 180, na: [358, 0], fa: [180, 150], nl: [345, 165, 120], fl: [0, 0, 90] } },
+    { id: "hamtowel", n: "Lying hamstring stretch", z: ["postchain", "hips"], tags: ["bed", "sleep", "cool"], d: 60, s: true,
+      cues: "On your back, loop a towel or belt around one foot. Lift the straight leg until you feel the back of the thigh, and hold. Other leg flat, lower back relaxed.",
+      pose: mk("supine", { nl: [75, 75, 350], na: [60, 70] }) },
     { id: "foldfwd", n: "Standing forward fold", z: ["postchain"], tags: ["desk", "cool"], d: 45,
       cues: "Feet hip-width, soft knees. Hinge and let your upper body hang, holding opposite elbows. Shake your head gently to release the neck.",
       pose: mk("stand", { t: 285, nk: 275, na: [270, 20], fa: [270, 20] }) }
@@ -182,6 +204,7 @@
     { id: "squat", n: "Squat and clean prep", sub: "Hips and ankles", items: ["anklerock", "heelsup", "ninety", "frog", "kneelhf", "deepsquat"] },
     { id: "back", n: "Back care", sub: "Gentle, for a cranky lower back", items: ["catcow", "birddog", "deadbug", "bridge", "kneelhf", "childreach", "breath9090"] },
     { id: "desk", n: "Desk break", sub: "5 minutes, no kit", items: ["doorway", "crossbody", "kneelhf", "foldfwd", "stickrot"] },
+    { id: "bedhips", n: "Tight hips, in bed", sub: "All lying down, on any mattress", items: ["kneehug", "wipers", "fig4", "happybaby", "butterfly", "edgeflexor", "sidequad", "hamtowel", "supinetwist", "bridge"] },
     { id: "sleep", n: "Bedtime wind-down", sub: "Slow and calming, about 10 minutes", items: ["childreach", "supinetwist", "fig4", "bandham", "breath9090"] }
   ];
   window.SMDATA = { ZONES: ZONES, AVG_M: AVG_M, TESTS: TESTS, STRETCH: S, BY: BY, PRESETS: PRESETS };

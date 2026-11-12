@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.9.0", APP_BUILD = "11 Nov 2026";
+  var APP_VERSION = "1.10.1", APP_BUILD = "11 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -255,7 +255,7 @@
     var h = '<div class="sec" style="margin-top:6px"><h2>Routines</h2><button class="btn ghost" data-act="build">+ Build your own</button></div>';
     allRoutines().forEach(function (r) { h += routineCard(r); });
     h += '<div class="sec"><h2>Stretch library</h2><span class="small muted">' + ST.length + " moves</span></div>";
-    var F = [["all", "All"]].concat(ZONES).concat([["warm", "Warm-up"], ["cool", "Cool-down"], ["back", "Back"], ["desk", "Desk"], ["sleep", "Sleep"]]);
+    var F = [["all", "All"]].concat(ZONES).concat([["warm", "Warm-up"], ["cool", "Cool-down"], ["back", "Back"], ["desk", "Desk"], ["bed", "On a bed"], ["sleep", "Sleep"]]);
     h += '<div class="chips">' + F.map(function (f) { return '<button class="chip' + (LIB_F === f[0] ? " on" : "") + '" data-act="filter" data-id="' + f[0] + '">' + f[1] + "</button>"; }).join("") + "</div>";
     var list = ST.filter(function (s) { return LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0; });
     h += '<div class="lib' + (building ? " building" : "") + '">' + list.map(function (s) {
@@ -329,10 +329,11 @@
     return CDLOAD[v];
   }
   function tone(t, f, dur, vol) { var o = AC.createOscillator(), g = AC.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + dur + 0.05); return o; }
-  function cdClear() { if (P && P.cd) { P.cd.nodes.forEach(function (n) { try { n.stop(); } catch (e) {} }); P.cd = null; } }
+  function cdClear() { if (P && P.cd) { P.cd.nodes.forEach(function (n) { try { n.stop(); } catch (e) {} }); (P.cd.timers || []).forEach(clearTimeout); clearTimeout(P.cd.check); P.cd = null; } }
   function cdStart() {
     var mode = cdMode(); if (mode === "off" || !AC) return;
     if (AC.state !== "running") try { AC.resume(); } catch (e) {}
+    if (!CDBUF[mode] && (mode === "f" || mode === "m")) cdLoad(mode);
     var lead = 0.06, T = AC.currentTime + lead, cd = P.cd = { t0: performance.now() + lead * 1000, nodes: [] }, bufs = CDBUF[mode];
     for (var i = 0; i < 3; i++) {
       if (bufs) { var src = AC.createBufferSource(), g = AC.createGain(); src.buffer = bufs[i]; g.gain.value = 1; src.connect(g); g.connect(AC.destination); src.start(T + i); cd.nodes.push(src); }
@@ -340,6 +341,26 @@
     }
     cd.nodes.push(tone(T + 3, 660, 0.5, 0.22), tone(T + 3, 990, 0.6, 0.12)); /* soft "done" chime exactly on zero */
     if (window.MUSIC) MUSIC.duckFor(3600);
+    /* Safety net: if the audio clock isn't actually moving (iOS can leave it suspended or "interrupted",
+       e.g. after the speech engine has just spoken), drop the scheduled clips and count down with the voice instead. */
+    cd.check = setTimeout(function () {
+      if (!P || P.cd !== cd) return;
+      if (AC.state !== "running" || AC.currentTime < T + 0.15) {
+        cd.nodes.forEach(function (n) { try { n.stop(); } catch (e) {} });
+        P.cd = null; cdSpeech();
+      }
+    }, 400);
+  }
+  /* Fallback countdown with the phone's voice, timed from when "Three" is actually heard. */
+  function cdSpeech() {
+    if (!S.settings.voice || !window.speechSynthesis) { P.cd = { t0: performance.now(), nodes: [], timers: [] }; return; }
+    var cd = P.cd = { t0: null, nodes: [], timers: [] }, asked = performance.now();
+    var go = function (t) {
+      if (!P || P.cd !== cd || cd.t0 != null) return; cd.t0 = t;
+      [["Two", 1000], ["One", 2000]].forEach(function (n) { cd.timers.push(setTimeout(function () { if (P && P.cd === cd && !P.paused) speak(n[0], false); }, Math.max(0, n[1] - SPK.lat - (performance.now() - t)))); });
+    };
+    speak("Three", true, go);
+    cd.timers.push(setTimeout(function () { go(asked + SPK.lat); }, Math.max(600, SPK.lat + 400)));
   }
   function sayQ(text, urgent) { speak(text, urgent); }
   /* Set the audio session before any AudioContext exists so music and beeps play with the silent switch on, and the context isn't interrupted by a later change. */
@@ -371,8 +392,8 @@
     enterStep(); P.timer = setInterval(tick, 200);
   }
   function stepDur(st) { return st.s.d; }
-  var KIT = [[/\bband\b/i, "a band"], [/roller/i, "a foam roller"], [/broomstick|\bstick\b|dowel|pvc/i, "a stick or dowel"], [/\bwall\b/i, "a wall"], [/bench|\bbox\b/i, "a bench or box"], [/doorway|door frame/i, "a doorway"], [/\brig\b/i, "something to hold"]];
-  var KIT_FIX = { passthru: ["a dowel or band"], legswing: ["a wall or rig to hold"], breath9090: ["a bench or sofa"] };
+  var KIT = [[/\bband\b/i, "a band"], [/roller/i, "a foam roller"], [/broomstick|\bstick\b|dowel|pvc/i, "a stick or dowel"], [/\bwall\b/i, "a wall"], [/bench|\bbox\b/i, "a bench or box"], [/doorway|door frame/i, "a doorway"], [/\brig\b/i, "something to hold"], [/towel|belt/i, "a towel or belt"], [/pillow/i, "a pillow or two"]];
+  var KIT_FIX = { butterfly: ["a pillow or two, if you like"], edgeflexor: ["the edge of the bed"], passthru: ["a dowel or band"], legswing: ["a wall or rig to hold"], breath9090: ["a bench or sofa"] };
   function kitFor(s) { if (KIT_FIX[s.id]) return KIT_FIX[s.id]; var txt = s.n + " " + s.cues, out = []; KIT.forEach(function (k) { if (k[0].test(txt) && out.indexOf(k[1]) < 0) out.push(k[1]); }); return out; }
   function listJoin(xs) { return xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " and " + xs[xs.length - 1]; }
   /* Time to reposition and grab kit between exercises, and a shorter pause to switch sides. Both set in Settings. */
@@ -400,11 +421,11 @@
     var after = Math.ceil(P.left);
     if (after !== before && P.phase === "work") {
       /* 10 seconds to go reminder, then a spoken 3, 2, 1 (beeps instead if the voice is off) */
-      if (after === 10 && (P.dur >= 30 || (P.dur > 15 && P.dur < 24))) say(pick(["Ten seconds to go.", "Ten seconds left.", "Last ten seconds. Stay with it."]));
+      if (after === 10 && (P.dur >= 30 || (P.dur > 15 && P.dur < 24))) say("10 seconds.");
     } else if (after !== before && after <= 3 && after > 0) beep(660, 120);
     if (P.phase === "work" && P.dur >= 5 && cdMode() !== "off") {
       if (!P.cd && P.left <= 3.02 && P.left > 1) cdStart();
-      if (P.cd) P.left = Math.max(0, (P.cd.t0 + 3000 - now) / 1000); /* screen follows the audio clock */
+      if (P.cd && P.cd.t0 != null) P.left = Math.max(0, (P.cd.t0 + 3000 - now) / 1000); /* screen follows the countdown */
     }
     /* Halfway call on every hold of 24 seconds or more (shorter holds just get the countdown). */
     if (P.phase === "work" && P.dur >= 24 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; var reps = !!P.st[P.i].s.reps; speak(reps ? pick(["Halfway there. Keep it smooth.", "That's halfway. Nice and controlled.", "Halfway. Keep breathing."]) : pick(["Halfway there. Breathe out, and sink a little deeper.", "That's halfway. Keep breathing slowly.", "Halfway. Relax your shoulders, and let it go a bit further."]), true); }
@@ -740,6 +761,7 @@
   });
 
   /* ---------- boot ---------- */
+  document.addEventListener("touchend", function once() { document.removeEventListener("touchend", once); try { unlockAudio(); cdLoad(cdMode()); } catch (e) {} }, { passive: true });
   applyTheme();
   var t0 = "home"; try { t0 = sessionStorage.getItem("sm-tab") || "home"; } catch (e) {}
   go(t0);
