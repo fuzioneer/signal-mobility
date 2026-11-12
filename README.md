@@ -21,6 +21,9 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.13.0 (12 Nov 2026): new "Before a run" and "After a run" routines with 7 new moves (hip circles, lunge with twist, A-skips, pogo hops, world's greatest stretch, standing quad, standing side bend) and a Running filter; equipment wording made generic (anything sturdy, a towel instead of a band, and so on).
+- 1.12.1 (12 Nov 2026): tap a stretch or test photo to view it full screen (pinch to zoom, tap to close).
+- 1.12.0 (12 Nov 2026): "Save all photos for offline" (Settings and a one-time prompt on Today) downloads every stretch photo to the phone so routines work with bad or no signal.
 - 1.11.0 (12 Nov 2026): photos for every stretch and test (generated with Higgsfield), shown on cards, stretch details, test how-tos and in the routine player with a "Show movement" toggle; photos cache for offline use; option in Settings to go back to stick figures.
 - 1.10.5 (12 Nov 2026): Done button pinned to the top of Settings and every pop-up; swipe the top bar down to close.
 - 1.10.4 (12 Nov 2026): female countdown voice replaced (the old one was garbled); male British voice is now the default; ignore opaque browser script errors in Diagnostics.

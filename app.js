@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.11.0", APP_BUILD = "11 Nov 2026";
+  var APP_VERSION = "1.13.0", APP_BUILD = "11 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -207,9 +207,10 @@
     }
     h += '<div class="sec"><h2>Quick picks</h2></div>';
     ["warm", "cool", "desk"].forEach(function (id) { h += routineCard(findRoutine(id)); });
+    if (window.PHOTOS && S.settings.photos !== false) h += '<div class="card nudge" id="off-banner" hidden><div class="grow"><h3>Save photos for offline</h3><p>Download all the stretch photos to this phone (about 50 to 80 MB) so routines work with bad or no signal. Best on Wi-Fi.</p><div class="row" style="margin-top:10px"><button class="btn primary" data-act="off-save">Save now</button><button class="btn ghost" data-act="off-dismiss">Not now</button></div></div></div>';
     if (!isStandalone()) h += installCard();
     h += '<p class="small muted" style="text-align:center;margin-top:18px">Signal Mobility v' + APP_VERSION + " · " + APP_BUILD + "</p>";
-    $("#v-home").innerHTML = h;
+    $("#v-home").innerHTML = h; offlineUI();
   }
   function isStandalone() { return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; }
   function installCard() {
@@ -272,7 +273,7 @@
     var h = '<div class="sec" style="margin-top:6px"><h2>Routines</h2><button class="btn ghost" data-act="build">+ Build your own</button></div>';
     allRoutines().forEach(function (r) { h += routineCard(r); });
     h += '<div class="sec"><h2>Stretch library</h2><span class="small muted">' + ST.length + " moves</span></div>";
-    var F = [["all", "All"]].concat(ZONES).concat([["warm", "Warm-up"], ["cool", "Cool-down"], ["back", "Back"], ["desk", "Desk"], ["bed", "On a bed"], ["sleep", "Sleep"]]);
+    var F = [["all", "All"]].concat(ZONES).concat([["warm", "Warm-up"], ["cool", "Cool-down"], ["back", "Back"], ["run", "Running"], ["desk", "Desk"], ["bed", "On a bed"], ["sleep", "Sleep"]]);
     h += '<div class="chips">' + F.map(function (f) { return '<button class="chip' + (LIB_F === f[0] ? " on" : "") + '" data-act="filter" data-id="' + f[0] + '">' + f[1] + "</button>"; }).join("") + "</div>";
     var list = ST.filter(function (s) { return LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0; });
     h += '<div class="lib' + (building ? " building" : "") + '">' + list.map(function (s) {
@@ -419,8 +420,8 @@
     enterStep(); P.timer = setInterval(tick, 200);
   }
   function stepDur(st) { return st.s.d; }
-  var KIT = [[/\bband\b/i, "a band"], [/roller/i, "a foam roller"], [/broomstick|\bstick\b|dowel|pvc/i, "a stick or dowel"], [/\bwall\b/i, "a wall"], [/bench|\bbox\b/i, "a bench or box"], [/doorway|door frame/i, "a doorway"], [/\brig\b/i, "something to hold"], [/towel|belt/i, "a towel or belt"], [/pillow/i, "a pillow or two"]];
-  var KIT_FIX = { butterfly: ["a pillow or two, if you like"], edgeflexor: ["the edge of the bed"], passthru: ["a dowel or band"], legswing: ["a wall or rig to hold"], breath9090: ["a bench or sofa"] };
+  var KIT = [[/\bband\b/i, "a band, towel or belt"], [/roller/i, "a foam roller or rolled towel"], [/broomstick/i, "a broomstick or towel"], [/\bwall\b|fence/i, "a wall"], [/bench|sofa/i, "a bench, sofa or bed"], [/door frame/i, "a door frame or wall edge"], [/stair|step or sturdy box/i, "a stair or step"], [/towel|belt/i, "a towel or belt"], [/pillow/i, "a pillow or two"], [/something sturdy|chair back/i, "something sturdy to hold"]];
+  var KIT_FIX = { butterfly: ["a pillow or two, if you like"], edgeflexor: ["the edge of the bed"], passthru: ["a broomstick, towel or band"], legswing: ["something sturdy to hold"], breath9090: ["a sofa, bed or chair"], hipcircle: ["something to hold, if you like"], standquad: ["something to hold, if you like"], bander: ["a band or towel"], ohshold: ["a broomstick or towel"], stickrot: [], deepsquat: [], heelsup: ["something thin under your heels"], anklerock: ["a wall"], couch: ["a wall or sofa"], latbench: ["a bench, sofa, bed or chair"], hamtowel: ["a towel or belt"], bandham: ["a band, towel or belt"], tspineroll: ["a foam roller or rolled towel"] };
   function kitFor(s) { if (KIT_FIX[s.id]) return KIT_FIX[s.id]; var txt = s.n + " " + s.cues, out = []; KIT.forEach(function (k) { if (k[0].test(txt) && out.indexOf(k[1]) < 0) out.push(k[1]); }); return out; }
   function listJoin(xs) { return xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " and " + xs[xs.length - 1]; }
   /* Time to reposition and grab kit between exercises, and a shorter pause to switch sides. Both set in Settings. */
@@ -736,9 +737,11 @@
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-photos"' + (s.savePhotos ? " checked" : "") + '> Save camera test images to Photos</label></div>';
     h += '<div class="card"><h3>Your data</h3><p class="small muted" style="margin:4px 0 12px">Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal\'s format.</p><div class="row"><button class="btn grow" data-act="export">Export file</button><button class="btn grow" data-act="copy">Copy</button></div><div class="row" style="margin-top:8px"><label class="btn grow">Restore from file<input type="file" accept="application/json,.json" id="s-import" hidden></label></div>' +
       '<details style="margin-top:10px"><summary class="small" style="color:var(--brand);font-weight:600">Paste a backup instead</summary><textarea class="inp" id="s-paste" rows="4" style="margin-top:8px;font-size:13px"></textarea><button class="btn" style="margin-top:8px" data-act="paste-import">Restore pasted backup</button></details></div>';
+    h += '<div class="card"><h3>Offline photos</h3><p class="small muted" style="margin:4px 0 10px" id="off-status">Checking…</p><button class="btn primary block" id="off-btn" data-act="off-save">Save all photos for offline</button><p class="small muted" style="margin-top:8px">About 50 to 80 MB. Best done on Wi-Fi. After that, photos load instantly even with no signal.</p></div>';
     h += '<details class="card"><summary class="small" style="color:var(--brand);font-weight:600">Diagnostics</summary><pre class="small" id="s-diag" style="white-space:pre-wrap;margin:8px 0 0;font-size:11px">' + esc(DIAG.slice(-12).join("\n") || "Nothing logged yet.") + '</pre><button class="btn" style="margin-top:8px" data-act="diag-copy">Copy</button></details>';
     h += '<div class="card"><button class="btn danger block" data-act="reset">Delete all data</button></div><p class="small muted" style="text-align:center">Signal Mobility v' + APP_VERSION + ' (' + APP_BUILD + ') · body tracking by MediaPipe</p>';
     openSheet(h, function () { if (window.MUSIC && !P && MUSIC.playing()) MUSIC.stop(800); });
+    offlineUI();
     var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
     ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
@@ -749,7 +752,14 @@
   /* ---------- actions ---------- */
   var confirmAt = {};
   function twice(key, msg) { if (confirmAt[key] && Date.now() - confirmAt[key] < 3000) { confirmAt[key] = 0; return true; } confirmAt[key] = Date.now(); toast(msg); return false; }
+  /* Tap a large photo to see it full screen; tap anywhere (or the cross) to close. */
+  function openLightbox(src, cap) { var lb = $("#lightbox"); $("#lb-img").src = src; $("#lb-cap").textContent = cap || ""; lb.hidden = false; }
+  function closeLightbox() { var lb = $("#lightbox"); lb.hidden = true; $("#lb-img").removeAttribute("src"); }
+  $("#lightbox").addEventListener("click", closeLightbox);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("#lightbox").hidden) closeLightbox(); });
   document.addEventListener("click", function (e) {
+    var big = e.target.closest(".photo-wrap img, img.pphoto, img.howphoto, .snaps img");
+    if (big && !e.target.closest("[data-act]")) { e.preventDefault(); openLightbox(big.currentSrc || big.src, big.getAttribute("alt")); return; }
     var el = e.target.closest("[data-act]"); if (!el) return;
     var a = el.getAttribute("data-act"), id = el.getAttribute("data-id");
     switch (a) {
@@ -780,6 +790,8 @@
       case "c-reset": if (CAM.sess) { CAM.sess.best = {}; readout(); } toast("Best readings cleared"); break;
       case "c-use": camUse(); break;
       case "save-photos": savePhotos(LASTSNAPS); break;
+      case "off-save": saveOffline(); break;
+      case "off-dismiss": S.settings.offDismiss = true; save(); offlineUI(); break;
       case "p-fig": if (P && P.st[P.i]) { P.figMode = !P.figMode; showFig(P.st[P.i]); } break;
       case "sheet-close": closeSheet(); break;
       case "diag-copy": try { navigator.clipboard.writeText("v" + APP_VERSION + " " + navigator.userAgent + "\n" + DIAG.join("\n")).then(function () { toast("Copied"); }); } catch (e) {} break;
@@ -801,6 +813,41 @@
       case "reset": if (twice("reset", "Tap again to delete everything on this phone")) { S = blank(); save(); closeSheet(); draft = null; go("home"); toast("All data deleted"); } break;
     }
   });
+
+  /* ---------- offline photos: save every stretch photo into the app's photo cache so routines work with no signal ---------- */
+  var OFF = { busy: false, done: 0, total: 0 };
+  function photoList() { var seen = {}, out = []; Object.keys(window.PHOTOS || {}).forEach(function (k) { var u = PHOTOS[k]; if (!seen[u]) { seen[u] = 1; out.push(u); } }); return out; }
+  function offlineCount() {
+    if (!window.caches) return Promise.resolve(0);
+    return caches.open("sm-photos").then(function (c) { return Promise.all(photoList().map(function (u) { return c.match(u).then(function (r) { return r ? 1 : 0; }); })); }).then(function (xs) { return xs.reduce(function (s, x) { return s + x; }, 0); }).catch(function () { return 0; });
+  }
+  function offlineUI() {
+    var t = photoList().length, el = $("#off-status"), b = $("#off-btn"), bn = $("#off-banner");
+    offlineCount().then(function (n) {
+      OFF.done = n; OFF.total = t;
+      if (el) el.textContent = OFF.busy ? "Saving… " + n + " of " + t : n >= t ? "All " + t + " photos saved on this phone. Routines work with no signal." : n + " of " + t + " photos saved on this phone.";
+      if (b) { b.disabled = OFF.busy || n >= t; b.textContent = n >= t ? "All saved" : OFF.busy ? "Saving…" : "Save all photos for offline"; }
+      if (bn) bn.hidden = n >= t || !!S.settings.offDismiss;
+    });
+  }
+  async function saveOffline() {
+    if (OFF.busy || !window.caches) { if (!window.caches) toast("This browser can't store photos offline."); return; }
+    OFF.busy = true; offlineUI();
+    var c = await caches.open("sm-photos"), list = photoList(), fails = 0;
+    for (var i = 0; i < list.length; i++) {
+      var u = list[i];
+      try {
+        if (!(await c.match(u))) {
+          var r; try { r = await fetch(u, { mode: "cors" }); if (!r.ok) throw 0; } catch (e) { r = await fetch(u, { mode: "no-cors" }); }
+          await c.put(u, r);
+        }
+      } catch (e) { fails++; }
+      if (i % 3 === 2) offlineUI();
+    }
+    OFF.busy = false; offlineUI();
+    toast(fails ? fails + " photos couldn't be saved. Try again on Wi-Fi." : "All photos saved for offline use");
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {});
+  }
 
   /* ---------- boot ---------- */
   document.addEventListener("touchend", function once() { document.removeEventListener("touchend", once); try { unlockAudio(); cdLoad(cdMode()); } catch (e) {} }, { passive: true });
