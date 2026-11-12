@@ -21,6 +21,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.11.0 (12 Nov 2026): photos for every stretch and test (generated with Higgsfield), shown on cards, stretch details, test how-tos and in the routine player with a "Show movement" toggle; photos cache for offline use; option in Settings to go back to stick figures.
 - 1.10.5 (12 Nov 2026): Done button pinned to the top of Settings and every pop-up; swipe the top bar down to close.
 - 1.10.4 (12 Nov 2026): female countdown voice replaced (the old one was garbled); male British voice is now the default; ignore opaque browser script errors in Diagnostics.
 - 1.10.3 (12 Nov 2026): countdown voice clips embedded in the app (clips.js) so they no longer depend on the audio folder loading; load errors logged in Diagnostics.

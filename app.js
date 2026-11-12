@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.10.5", APP_BUILD = "11 Nov 2026";
+  var APP_VERSION = "1.11.0", APP_BUILD = "11 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -127,6 +127,9 @@
   var toastT;
   function toast(msg) { var t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove("on"); }, 2400); }
   function fig(pose, opts) { return FIG.svg(pose, opts); }
+  /* Photo of a stretch (id) or test ("t_" + id) when one exists and photos are switched on, otherwise the stick figure. */
+  function photoUrl(key) { return S.settings.photos !== false && window.PHOTOS && PHOTOS[key] || null; }
+  function art(key, pose, opts) { var u = photoUrl(key); return u ? '<img class="photo" loading="lazy" decoding="async" alt="" src="' + esc(u) + '">' : fig(pose, opts); }
   var stops = [];
   function stopAnims() { stops.forEach(function (f) { f(); }); stops = []; }
   function animateIn(root) { $$("[data-anim]", root).forEach(function (el) { var s = el.getAttribute("data-anim").split(":"), src = s[0] === "t" ? TESTS.filter(function (t) { return t.id === s[1]; })[0] : BY[s[1]]; if (src) stops.push(FIG.animate(el, src.pose, src.pose2, 1500)); }); }
@@ -192,7 +195,7 @@
       h += '<div class="legend">' + (av ? "<span><i></i>Average for men your age (GOWOD)</span>" : "") + '<span class="grow" style="text-align:right">Tested ' + short(last) + "</span></div></div>";
     }
     h += '<div class="sec"><h2>Your daily 10</h2><span class="small muted">' + (sc.n ? "Focus: " + d.zones.map(function (z) { return ZN[z]; }).join(" and ") : "Hips and overhead until you test") + "</span></div>";
-    h += '<div class="card"><div class="row" style="gap:6px;margin-bottom:12px">' + d.items.slice(0, 6).map(function (id) { return '<div class="thumb" style="width:calc((100% - 30px)/6);height:auto;aspect-ratio:1">' + fig(BY[id].pose, { stroke: 9 }) + "</div>"; }).join("") + "</div>";
+    h += '<div class="card"><div class="row" style="gap:6px;margin-bottom:12px">' + d.items.slice(0, 6).map(function (id) { return '<div class="thumb" style="width:calc((100% - 30px)/6);height:auto;aspect-ratio:1">' + art(id, BY[id].pose, { stroke: 9 }) + "</div>"; }).join("") + "</div>";
     h += '<p class="small muted" style="margin-bottom:12px">' + d.items.map(function (id) { return esc(BY[id].n); }).join(" · ") + "</p>";
     h += '<button class="btn primary big block" data-act="play" data-id="daily">' + ICON.play.replace("<svg", '<svg width="20" height="20"') + (today ? " Go again" : " Start, " + mins(routineSecs(d.items))) + "</button></div>";
     h += '<div class="stat3"><div><b>' + st + '</b><span>day streak</span></div><div><b>' + Math.round(weekSecs() / 60) + '</b><span>mins this week</span></div><div><b>' + S.sessions.length + "</b><span>sessions</span></div></div>";
@@ -215,7 +218,7 @@
   function routineCard(r) {
     if (!r) return "";
     var secs = routineSecs(r.items);
-    return '<div class="card rcard" data-act="routine" data-id="' + esc(r.id) + '"><div class="thumb">' + fig(BY[r.items[0]].pose, { stroke: 8 }) + '</div><div class="grow"><h3>' + esc(r.n) + "</h3><p>" + esc(r.sub) + " · " + r.items.length + " moves · " + mins(secs) + "</p></div>" + ICON.chev + "</div>";
+    return '<div class="card rcard" data-act="routine" data-id="' + esc(r.id) + '"><div class="thumb">' + art(r.items[0], BY[r.items[0]].pose, { stroke: 8 }) + '</div><div class="grow"><h3>' + esc(r.n) + "</h3><p>" + esc(r.sub) + " · " + r.items.length + " moves · " + mins(secs) + "</p></div>" + ICON.chev + "</div>";
   }
 
   /* ---------- TEST ---------- */
@@ -234,8 +237,8 @@
       var ts = TESTS.filter(function (t) { return t.z === z[0]; }); if (!ts.length) return;
       h += '<div class="sec"><h2>' + (z[0] ? '<span class="zdot" style="background:' + zc(z[0]) + '"></span>' : "") + z[1] + '</h2><span class="pctpill" data-zone="' + (z[0] || "") + '"></span></div>';
       ts.forEach(function (t) {
-        h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + fig(t.pose, { stroke: 8 }) + '</div><div><h3>' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? "Not scored. A check of your squat position." : (t.sides ? "Both sides" : "One result") + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
-        h += '<details><summary>How to do it</summary><div class="how"><p>' + esc(t.how) + '</p><div class="fig" data-anim="t:' + t.id + '"></div></div></details>';
+        h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + art("t_" + t.id, t.pose, { stroke: 8 }) + '</div><div><h3>' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? "Not scored. A check of your squat position." : (t.sides ? "Both sides" : "One result") + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
+        h += '<details><summary>How to do it</summary><div class="how"><p>' + esc(t.how) + '</p><div class="fig" data-anim="t:' + t.id + '"></div>' + (photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(t.n) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
         h += '<div class="inputs">' + fieldsFor(t).map(function (f) { return '<label class="field">' + f[1] + '<input type="number" inputmode="decimal" step="any" data-k="' + f[0] + '" value="' + (isNum(draft.v[f[0]]) ? draft.v[f[0]] : "") + '"></label>'; }).join("");
         if (t.cam) h += '<button class="btn" data-act="cam" data-id="' + t.id + '" style="flex:none">' + ICON.cam.replace("<svg", '<svg width="20" height="20"') + " Camera</button>";
         h += "</div></div>";
@@ -274,7 +277,7 @@
     var list = ST.filter(function (s) { return LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0; });
     h += '<div class="lib' + (building ? " building" : "") + '">' + list.map(function (s) {
       var sel = building && building.items.indexOf(s.id) >= 0;
-      return '<button class="lcard' + (sel ? " sel" : "") + '" data-act="stretch" data-id="' + s.id + '"><div class="fig">' + fig(s.pose, { stroke: 8 }) + '</div><span class="check">' + (sel ? building.items.indexOf(s.id) + 1 : "") + "</span><h3>" + esc(s.n) + "</h3><p>" + s.z.map(function (z) { return '<span class="zdot" style="background:' + zc(z) + '"></span>'; }).join("") + (s.reps || (s.d + "s" + (s.s ? " each side" : ""))) + "</p></button>";
+      return '<button class="lcard' + (sel ? " sel" : "") + '" data-act="stretch" data-id="' + s.id + '"><div class="fig">' + art(s.id, s.pose, { stroke: 8 }) + '</div><span class="check">' + (sel ? building.items.indexOf(s.id) + 1 : "") + "</span><h3>" + esc(s.n) + "</h3><p>" + s.z.map(function (z) { return '<span class="zdot" style="background:' + zc(z) + '"></span>'; }).join("") + (s.reps || (s.d + "s" + (s.s ? " each side" : ""))) + "</p></button>";
     }).join("") + "</div>";
     if (building) h += '<div class="buildbar"><div class="grow"><b>' + building.items.length + ' selected</b><div class="small" style="opacity:.75">' + mins(routineSecs(building.items)) + '</div></div><button class="btn" data-act="build-cancel">Cancel</button><button class="btn primary" data-act="build-save"' + (building.items.length ? "" : " disabled") + ">Save</button></div>";
     $("#v-routines").innerHTML = h;
@@ -283,13 +286,14 @@
     var r = findRoutine(id); if (!r) return;
     var h = '<h2>' + esc(r.n) + '</h2><p class="muted" style="margin:4px 0 14px">' + esc(r.sub) + " · " + mins(routineSecs(r.items)) + "</p>";
     h += '<button class="btn primary big block" data-act="play" data-id="' + esc(r.id) + '">' + ICON.play.replace("<svg", '<svg width="20" height="20"') + " Start</button>";
-    h += '<div class="card flush" style="margin-top:14px">' + r.items.map(function (sid, i) { var s = BY[sid]; return '<div class="hitem" data-act="stretch" data-id="' + sid + '" style="cursor:pointer"><div class="thumb" style="width:52px;height:52px">' + fig(s.pose, { stroke: 9 }) + '</div><div class="grow"><b>' + (i + 1) + ". " + esc(s.n) + '</b><div class="small muted">' + (s.reps || s.d + "s") + (s.s ? " each side" : "") + "</div></div></div>"; }).join("") + "</div>";
+    h += '<div class="card flush" style="margin-top:14px">' + r.items.map(function (sid, i) { var s = BY[sid]; return '<div class="hitem" data-act="stretch" data-id="' + sid + '" style="cursor:pointer"><div class="thumb" style="width:52px;height:52px">' + art(sid, s.pose, { stroke: 9 }) + '</div><div class="grow"><b>' + (i + 1) + ". " + esc(s.n) + '</b><div class="small muted">' + (s.reps || s.d + "s") + (s.s ? " each side" : "") + "</div></div></div>"; }).join("") + "</div>";
     if (r.custom) h += '<div class="row" style="margin-top:8px"><button class="btn" data-act="edit-routine" data-id="' + esc(r.id) + '">Edit</button><button class="btn danger" data-act="del-routine" data-id="' + esc(r.id) + '">Delete</button></div>';
     openSheet(h);
   }
   function openStretch(id) {
     var s = BY[id];
-    var h = '<div class="bigfig" data-anim="s:' + id + '"></div><h2>' + esc(s.n) + '</h2><p style="margin:6px 0">' + s.z.map(function (z) { return '<span class="tag"><span class="zdot" style="background:' + zc(z) + '"></span>' + ZN[z] + "</span>"; }).join("") + s.tags.map(function (t) { return '<span class="tag">' + t + "</span>"; }).join("") + "</p>";
+    var pu = photoUrl(id);
+    var h = (pu ? '<div class="bigfig photo-wrap"><img class="photo" alt="' + esc(s.n) + '" src="' + esc(pu) + '"></div><details class="small" style="margin:-6px 0 12px"><summary style="color:var(--brand);font-weight:600">Show the movement</summary><div class="bigfig" data-anim="s:' + id + '" style="margin-top:8px"></div></details>' : '<div class="bigfig" data-anim="s:' + id + '"></div>') + '<h2>' + esc(s.n) + '</h2><p style="margin:6px 0">' + s.z.map(function (z) { return '<span class="tag"><span class="zdot" style="background:' + zc(z) + '"></span>' + ZN[z] + "</span>"; }).join("") + s.tags.map(function (t) { return '<span class="tag">' + t + "</span>"; }).join("") + "</p>";
     h += '<p class="muted" style="margin-bottom:6px">' + (s.reps ? esc(s.reps) + ", about " : "Hold ") + s.d + " seconds" + (s.s ? " each side" : "") + ".</p><p>" + esc(s.cues) + "</p>";
     h += '<div class="row" style="margin-top:16px"><button class="btn primary grow" data-act="play-one" data-id="' + id + '">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + " Do it now</button></div>";
     openSheet(h);
@@ -407,7 +411,7 @@
     P = { r: routine, st: steps(routine.items), i: 0, phase: "prep", left: restSecs(true), total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
     var el = $("#player"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn();
     el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="p-close" aria-label="End session">' + ICON.close + '</button><h2>' + esc(routine.n) + '</h2><button class="icon-btn" data-act="p-music" aria-label="Background music">' + (musicOn() ? ICON.music : ICON.musicOff) + '</button><button class="icon-btn" data-act="p-voice" aria-label="Voice">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div><div class="pbar"><i id="p-bar"></i></div>' +
-      '<div class="player"><div class="pfig"><span class="side" id="p-side" hidden></span><div class="figwrap" id="p-fig"></div></div><div class="pname" id="p-name"></div><div class="pcue" id="p-cue"></div>' +
+      '<div class="player"><div class="pfig"><span class="side" id="p-side" hidden></span><div class="figwrap" id="p-fig"></div><button class="chip figbtn" id="p-figbtn" data-act="p-fig" hidden>Show movement</button></div><div class="pname" id="p-name"></div><div class="pcue" id="p-cue"></div>' +
       '<div class="phase" id="p-phase"></div><div class="clock"><div class="tring" id="p-ring"></div></div>' +
       '<div class="ctrls"><button class="icon-btn" data-act="p-prev" aria-label="Previous">' + ICON.prev + '</button><button class="icon-btn play" data-act="p-pause" id="p-pp" aria-label="Pause">' + ICON.pause + '</button><button class="icon-btn" data-act="p-next" aria-label="Next">' + ICON.next + '</button></div><div class="upnext" id="p-up"></div><label class="mvol"><span aria-hidden="true">' + ICON.music + '</span><input type="range" id="p-mvol" min="0" max="1" step="0.05" value="' + S.settings.musicVol + '" aria-label="Music volume"></label></div>';
     $("#p-mvol").addEventListener("input", function (e) { S.settings.musicVol = parseFloat(e.target.value); if (window.MUSIC) MUSIC.setVol(S.settings.musicVol); });
@@ -422,12 +426,19 @@
   /* Time to reposition and grab kit between exercises, and a shorter pause to switch sides. Both set in Settings. */
   function restSecs(newExercise) { var s = S.settings; return newExercise ? (s.rest == null ? 10 : s.rest) : (s.sideRest == null ? 5 : s.sideRest); }
   /* queue: true when we arrive here naturally at the end of a hold, so the "one" of the countdown is allowed to finish. */
+  /* Player picture: the stretch photo, or the animated figure if there's no photo or "Show movement" is on. */
+  function showFig(st) {
+    if (P.stop) P.stop(); P.stop = null;
+    var has = photoUrl(st.s.id), pu = P.figMode ? null : has, w = $("#p-fig");
+    w.classList.toggle("flip", st.side === "Right" && !pu);
+    if (pu) w.innerHTML = '<img class="photo pphoto" alt="' + esc(st.s.n) + '" src="' + esc(pu) + '">';
+    else P.stop = FIG.animate(w, st.s.pose, st.s.pose2, 1500, { stroke: 7 });
+    var b = $("#p-figbtn"); b.hidden = !has; b.textContent = P.figMode ? "Show photo" : "Show movement";
+  }
   function enterStep(queue) {
     var st = P.st[P.i]; if (!st) return finish();
     cdClear(); P.phase = "prep"; P.left = restSecs(st.first); P.dur = P.left; P.spoke = {}; if (window.MUSIC) MUSIC.setQuiet(true);
-    if (P.stop) P.stop();
-    $("#p-fig").classList.toggle("flip", st.side === "Right");
-    P.stop = FIG.animate($("#p-fig"), st.s.pose, st.s.pose2, 1500, { stroke: 7 });
+    showFig(st);
     var kit = kitFor(st.s); $("#p-name").textContent = st.s.n; $("#p-cue").textContent = (kit.length ? "You'll need " + listJoin(kit) + ". " : "") + st.s.cues;
     var sd = $("#p-side"); sd.hidden = !st.side; sd.textContent = st.side ? st.side + " side" : "";
     var nx = P.st[P.i + 1]; $("#p-up").textContent = nx ? "Up next: " + nx.s.n + (nx.side ? " (" + nx.side.toLowerCase() + ")" : "") : "Last one";
@@ -721,14 +732,15 @@
       '<div class="row" style="margin-top:12px"><label class="field" style="flex:2">Coach voice<select id="s-vname"><option value="">Best available</option>' + enVoices().sort(function (x, y) { return voiceScore(y) - voiceScore(x); }).map(function (v) { return '<option value="' + esc(v.name) + '"' + (s.voiceName === v.name ? " selected" : "") + ">" + esc(v.name) + " (" + esc(v.lang) + ")</option>"; }).join("") + '</select></label><label class="field">Speed<select id="s-vrate">' + [[0.85, "Slower"], [0.95, "Normal"], [1.05, "Quicker"]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.voiceRate || 0.95) === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label></div><button class="btn" style="margin-top:8px" data-act="voice-test">Hear the voice</button>' +
       '<p class="small muted" style="margin-top:8px">For the most natural voice, download one on your iPhone: open Settings, search for <b>Voices</b>, then go to English. Pick an <b>Enhanced</b> or <b>Premium</b> voice (Serena, Daniel or Arthur for British), then close and reopen this app and choose it here.</p>' +
       '<div class="row" style="margin-top:14px"><label class="field" style="flex:2">Routine background music<select id="s-music">' + MUSIC_STYLES.map(function (o) { return '<option value="' + o[0] + '"' + ((s.music || "pads") === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><label class="field">Music volume<input type="range" id="s-mvol" min="0" max="1" step="0.05" value="' + (s.musicVol == null ? 0.5 : s.musicVol) + '" style="min-height:46px;padding:0;accent-color:var(--brand)"></label></div><button class="btn" style="margin-top:8px" data-act="music-preview">Preview music</button><p class="small muted" style="margin-top:6px">Gentle music generated on your phone. It drops down whenever the coach speaks.</p>' +
+      '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-showphotos"' + (s.photos !== false ? " checked" : "") + '> Show stretch photos (instead of stick figures)</label>' +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-photos"' + (s.savePhotos ? " checked" : "") + '> Save camera test images to Photos</label></div>';
     h += '<div class="card"><h3>Your data</h3><p class="small muted" style="margin:4px 0 12px">Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal\'s format.</p><div class="row"><button class="btn grow" data-act="export">Export file</button><button class="btn grow" data-act="copy">Copy</button></div><div class="row" style="margin-top:8px"><label class="btn grow">Restore from file<input type="file" accept="application/json,.json" id="s-import" hidden></label></div>' +
       '<details style="margin-top:10px"><summary class="small" style="color:var(--brand);font-weight:600">Paste a backup instead</summary><textarea class="inp" id="s-paste" rows="4" style="margin-top:8px;font-size:13px"></textarea><button class="btn" style="margin-top:8px" data-act="paste-import">Restore pasted backup</button></details></div>';
     h += '<details class="card"><summary class="small" style="color:var(--brand);font-weight:600">Diagnostics</summary><pre class="small" id="s-diag" style="white-space:pre-wrap;margin:8px 0 0;font-size:11px">' + esc(DIAG.slice(-12).join("\n") || "Nothing logged yet.") + '</pre><button class="btn" style="margin-top:8px" data-act="diag-copy">Copy</button></details>';
     h += '<div class="card"><button class="btn danger block" data-act="reset">Delete all data</button></div><p class="small muted" style="text-align:center">Signal Mobility v' + APP_VERSION + ' (' + APP_BUILD + ') · body tracking by MediaPipe</p>';
     openSheet(h, function () { if (window.MUSIC && !P && MUSIC.playing()) MUSIC.stop(800); });
-    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
-    ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-voice", "#s-beeps", "#s-photos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
+    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
+    ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
   }
   function applyTheme() { var t = S.settings.theme; if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(document.body).backgroundColor || "#0f6b5c"; }
@@ -768,6 +780,7 @@
       case "c-reset": if (CAM.sess) { CAM.sess.best = {}; readout(); } toast("Best readings cleared"); break;
       case "c-use": camUse(); break;
       case "save-photos": savePhotos(LASTSNAPS); break;
+      case "p-fig": if (P && P.st[P.i]) { P.figMode = !P.figMode; showFig(P.st[P.i]); } break;
       case "sheet-close": closeSheet(); break;
       case "diag-copy": try { navigator.clipboard.writeText("v" + APP_VERSION + " " + navigator.userAgent + "\n" + DIAG.join("\n")).then(function () { toast("Copied"); }); } catch (e) {} break;
       case "cd-test": { unlockAudio(); var m0 = cdMode(); cdLoad(m0).then(function () { var fake = P; P = { cd: null }; cdStart(); P = fake; }); break; }
