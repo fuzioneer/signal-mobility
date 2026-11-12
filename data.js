@@ -242,6 +242,9 @@
     { id: "hyroxpost", n: "Hyrox recovery", sub: "After a race or hard session: calves, quads, hips, lats and grip", tag: "hyrox", items: ["calfwall", "soleus", "couch", "pigeon", "hamtowel", "latbench", "doorway", "wrists", "childreach", "breath9090"] },
     { id: "golfpre", n: "Golf warm-up", sub: "On the tee or range, all standing, about 8 minutes", tag: "golf", items: ["clubhinge", "legswing", "hipcircle", "clubrot", "crossbody", "crossover", "wrists"] },
     { id: "golfmob", n: "Golf mobility", sub: "At home, for a bigger, freer turn", tag: "golf", items: ["openbook", "quadrot", "thread", "ninety", "kneelhf", "fig4", "sleeper", "supinetwist", "wrists"] },
+    { id: "preride", n: "Before a ride", sub: "Wake up hips, hamstrings and back, about 8 minutes", tag: "cycle", items: ["catcow", "legswing", "hipcircle", "lungetwist", "wgs", "bridge", "anklerock"] },
+    { id: "postride", n: "After a ride", sub: "Open the hips and chest after time in the saddle", tag: "cycle", items: ["kneelhf", "couch", "standquad", "hamtowel", "pigeon", "fig4", "calfwall", "doorway", "childreach"] },
+    { id: "rideposture", n: "Cyclist's posture", sub: "Undo the hunch: chest, upper back and neck", tag: "cycle", items: ["doorway", "tspineroll", "openbook", "thread", "wallslide", "catcow", "breath9090"] },
     { id: "bedhips", n: "Tight hips, in bed", sub: "All lying down, on any mattress", items: ["kneehug", "wipers", "fig4", "happybaby", "butterfly", "edgeflexor", "sidequad", "hamtowel", "supinetwist", "bridge"] },
     { id: "sleep", n: "Bedtime wind-down", sub: "Slow and calming, about 10 minutes", items: ["childreach", "supinetwist", "fig4", "bandham", "breath9090"] }
   ];
@@ -264,7 +267,7 @@
     { id: "running", n: "Running", picks: ["prerun", "postrun", "bedhips"], top: ["calfwall", "soleus", "kneelhf", "pigeon", "hamtowel", "standquad", "fig4", "legswing"] },
     { id: "golf", n: "Golf", picks: ["golfpre", "golfmob", "desk"], top: ["clubrot", "clubhinge", "openbook", "ninety", "thread", "wrists", "kneelhf", "sleeper"] },
     { id: "lifting", n: "Weightlifting / strength", picks: ["squat", "overhead", "cool"], top: ["ohshold", "anklerock", "heelsup", "latbench", "frog", "couch", "tspineroll", "passthru"] },
-    { id: "cycling", n: "Cycling", picks: ["postrun", "back", "desk"], top: ["kneelhf", "couch", "hamtowel", "pigeon", "standquad", "catcow", "doorway", "tspineroll"] },
+    { id: "cycling", n: "Cycling", picks: ["preride", "postride", "rideposture"], top: ["kneelhf", "couch", "hamtowel", "pigeon", "standquad", "catcow", "doorway", "tspineroll"] },
     { id: "office", n: "Desk job / general fitness", picks: ["desk", "back", "sleep"], top: ["doorway", "kneelhf", "catcow", "tspineroll", "childreach", "fig4", "crossbody", "foldfwd"] }
   ];
 

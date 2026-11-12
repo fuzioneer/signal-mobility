@@ -33,6 +33,7 @@ The version shows at the bottom of the Today screen and in Settings.
 - 1.15.7 (12 Nov 2026): on iPhone the music now pauses itself just before the coach speaks and returns when the coach finishes (iOS was cutting the coach off when it paused the music itself).
 - 1.16.0 (12 Nov 2026): new Hyrox warm-up, Hyrox recovery, Golf warm-up and Golf mobility routines; new moves (club hip hinge, club shoulder turns, wrist and forearm stretch) with photos; Hyrox and Golf filters.
 - 1.17.0 (12 Nov 2026): favourite sport setting (CrossFit, Hyrox, running, golf, lifting, cycling, desk/general) sets the top stretches and routines on Today; Build your own now has a front and back body map to pick muscle groups, filtering the moves to match.
+- 1.17.1 (12 Nov 2026): new Before a ride, After a ride and Cyclist's posture routines with a Cycling filter; they are now the top routines when Cycling is your sport.
 - 1.12.1 (12 Nov 2026): tap a stretch or test photo to view it full screen (pinch to zoom, tap to close).
 - 1.12.0 (12 Nov 2026): "Save all photos for offline" (Settings and a one-time prompt on Today) downloads every stretch photo to the phone so routines work with bad or no signal.
 - 1.11.0 (12 Nov 2026): photos for every stretch and test (generated with Higgsfield), shown on cards, stretch details, test how-tos and in the routine player with a "Show movement" toggle; photos cache for offline use; option in Settings to go back to stick figures.

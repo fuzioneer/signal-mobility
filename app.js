@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.17.0", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.17.1", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -328,7 +328,7 @@
     var h = '<div class="sec" style="margin-top:6px"><h2>Routines</h2><button class="btn ghost" data-act="build">+ Build your own</button></div>';
     allRoutines().forEach(function (r) { h += routineCard(r); });
     h += '<div class="sec"><h2>Stretch library</h2><span class="small muted">' + ST.length + " moves</span></div>";
-    var F = [["all", "All"]].concat(ZONES).concat([["warm", "Warm-up"], ["cool", "Cool-down"], ["back", "Back"], ["run", "Running"], ["hyrox", "Hyrox"], ["golf", "Golf"], ["desk", "Desk"], ["bed", "On a bed"], ["sleep", "Sleep"]]);
+    var F = [["all", "All"]].concat(ZONES).concat([["warm", "Warm-up"], ["cool", "Cool-down"], ["back", "Back"], ["run", "Running"], ["hyrox", "Hyrox"], ["golf", "Golf"], ["cycle", "Cycling"], ["desk", "Desk"], ["bed", "On a bed"], ["sleep", "Sleep"]]);
     h += '<div class="chips">' + F.map(function (f) { return '<button class="chip' + (LIB_F === f[0] ? " on" : "") + '" data-act="filter" data-id="' + f[0] + '">' + f[1] + "</button>"; }).join("") + "</div>";
     if (building) h += bodyMap();
     var list = ST.filter(function (s) { return (LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0) && (!building || !MG_SEL.length || MG_SEL.some(function (m) { return s.m.indexOf(m) >= 0; })); });
