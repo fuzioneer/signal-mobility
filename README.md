@@ -34,6 +34,11 @@ The version shows at the bottom of the Today screen and in Settings.
 - 1.16.0 (12 Nov 2026): new Hyrox warm-up, Hyrox recovery, Golf warm-up and Golf mobility routines; new moves (club hip hinge, club shoulder turns, wrist and forearm stretch) with photos; Hyrox and Golf filters.
 - 1.17.0 (12 Nov 2026): favourite sport setting (CrossFit, Hyrox, running, golf, lifting, cycling, desk/general) sets the top stretches and routines on Today; Build your own now has a front and back body map to pick muscle groups, filtering the moves to match.
 - 1.17.1 (12 Nov 2026): new Before a ride, After a ride and Cyclist's posture routines with a Cycling filter; they are now the top routines when Cycling is your sport.
+- 1.17.2 (12 Nov 2026): more realistic body map (body outline and muscle shapes where they sit); tapping a muscle labels it on the figure and shows its name, what it is and how many moves stretch it.
+- 1.17.3 (12 Nov 2026): body map shows a male or female figure to match the sex set in Settings.
+- 1.17.4 (12 Nov 2026): body map proportions refined: slimmer male figure, narrower female hips, larger heads.
+- 1.17.5 (12 Nov 2026): body map calves moved lower down the leg and ankles slimmed.
+- 1.17.6 (12 Nov 2026): body map muscle groups (posterior chain, anterior chain, hips, shoulder girdle, upper body, lower body) select all their muscles in one tap.
 - 1.12.1 (12 Nov 2026): tap a stretch or test photo to view it full screen (pinch to zoom, tap to close).
 - 1.12.0 (12 Nov 2026): "Save all photos for offline" (Settings and a one-time prompt on Today) downloads every stretch photo to the phone so routines work with bad or no signal.
 - 1.11.0 (12 Nov 2026): photos for every stretch and test (generated with Higgsfield), shown on cards, stretch details, test how-tos and in the routine player with a "Show movement" toggle; photos cache for offline use; option in Settings to go back to stick figures.

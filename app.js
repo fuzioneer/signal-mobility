@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.17.1", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.17.6", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -246,25 +246,93 @@
 
   /* ---------- body map for Build your own: tap muscle groups to filter the library ---------- */
   var MG_SEL = [];
+  var MG_LAST = null;
+  /* Groups select several muscles at once. */
+  var MGROUPS = [["post", "Posterior chain", ["lb", "gl", "ham", "calf"]], ["ant", "Anterior chain", ["ch", "core", "hf", "quad"]], ["hips", "Hips", ["hf", "gl", "add"]],
+    ["shg", "Shoulder girdle", ["sh", "ch", "ub", "lat"]], ["upper", "Upper body", ["sh", "ch", "ub", "lat", "fa"]], ["lower", "Lower body", ["hf", "quad", "add", "gl", "ham", "calf"]]];
+  function groupOn(g) { return g[2].every(function (m) { return MG_SEL.indexOf(m) >= 0; }); }
+  var MDESC = { sh: "Deltoids, the caps of the shoulders", ch: "Pecs, across the front of the chest", ub: "Traps and rhomboids, between the shoulder blades",
+    lat: "Latissimus dorsi, the wings down the sides of the back", lb: "Erector spinae, either side of the lower spine", core: "Abs and obliques",
+    fa: "Wrist flexors and extensors along the forearm", hf: "Iliopsoas and rectus femoris, at the front of the hip", quad: "Quadriceps, the front of the thigh",
+    add: "Adductors, the inside of the thigh", gl: "Gluteus maximus and medius, plus the outer hip and IT band", ham: "The back of the thigh, hip to knee",
+    calf: "Gastrocnemius, soleus and Achilles" };
+  /* Smooth outline through points (Catmull-Rom to Bezier). */
+  function smoothPath(pts) {
+    var d = "M" + pts[0][0] + "," + pts[0][1];
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      d += " C" + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + "," + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) + " " + (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + "," + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) + " " + p2[0] + "," + p2[1];
+    }
+    return d + " Z";
+  }
+  function mirrorD(d) { return d.replace(/(-?[\d.]+),(-?[\d.]+)/g, function (m, x, y) { return (200 - +x) + "," + y; }); }
+  /* Figure shapes: the same muscle map is reshaped per sex. Factors scale distance from the midline at each height. */
+  var MALE_F = [[0, 0.9], [300, 0.9]], FEM_F = [[0, 0.8], [80, 0.8], [112, 0.75], [138, 0.9], [162, 0.93], [200, 0.9], [240, 0.87], [300, 0.87]];
+  function shapeX(x, y, fem) {
+    var T = fem ? FEM_F : MALE_F, f = 1;
+    if (x <= 63 && y > 52 && y < 182) f = fem ? 0.84 : 0.9;
+    else for (var i = 0; i < T.length - 1; i++) { var a = T[i], b = T[i + 1]; if (y >= a[0] && y <= b[0]) { f = a[1] + (b[1] - a[1]) * (y - a[0]) / (b[0] - a[0]); break; } }
+    return +(100 + (x - 100) * f).toFixed(1);
+  }
+  function shapeD(d, fem) { return d.replace(/(-?[\d.]+),(-?[\d.]+)/g, function (m, x, y) { return shapeX(+x, +y, fem) + "," + y; }); }
+  function isFem() { return S.settings.sex === "f"; }
+  var BODY_PTS = [[92, 34], [91, 44], [80, 47], [69, 50], [60, 56], [56, 68], [53, 90], [49, 110], [45, 134], [43, 154], [40, 166], [44, 176], [49, 168], [51, 154], [56, 130], [60, 112],
+      [63, 92], [66, 80], [70, 96], [72, 114], [68, 136], [66, 160], [68, 190], [72, 212], [70, 234], [74, 254], [79.5, 270], [76, 281], [91, 284], [89, 270], [90, 252], [92, 232], [93, 212], [95, 182], [100, 160]];
+  function bodyD(fem) {
+    var L = BODY_PTS.map(function (p) { return [shapeX(p[0], p[1], fem), p[1]]; });
+    var R = L.slice(0, -1).reverse().map(function (p) { return [+(200 - p[0]).toFixed(1), p[1]]; });
+    return smoothPath(L.concat(R));
+  }
+  var BODY_D_OLD = (function () {
+    var L = [[92, 34], [91, 44], [80, 47], [69, 50], [60, 56], [56, 68], [53, 90], [49, 110], [45, 134], [43, 154], [40, 166], [44, 176], [49, 168], [51, 154], [56, 130], [60, 112],
+      [63, 92], [66, 80], [70, 96], [72, 114], [68, 136], [66, 160], [68, 190], [72, 212], [70, 234], [74, 254], [79.5, 270], [76, 281], [91, 284], [89, 270], [90, 252], [92, 232], [93, 212], [95, 182], [100, 160]];
+    var R = L.slice(0, -1).reverse().map(function (p) { return [200 - p[0], p[1]]; });
+    return smoothPath(L.concat(R));
+  })();
+  /* Muscle shapes drawn on the left side of the figure and mirrored. */
+  var MSH = {
+    front: [["sh", "M70,50 Q58,52 56,64 Q57,74 62,79 Q66,68 73,58 Z", [60, 66]],
+      ["ch", "M98,53 L77,53 Q67,59 66,71 Q74,82 90,81 Q98,79 99,70 Z", [84, 68]],
+      ["core", "M88,86 L98,86 L98,96 L88,96 Z M88,98 L98,98 L98,108 L88,108 Z M88,110 L98,110 L98,120 L88,120 Z M89,122 L98,122 L98,134 L90,134 Z M72,86 Q80,84 86,88 L86,128 Q79,130 73,118 Z", [100, 112], true],
+      ["fa", "M51,112 Q46,126 45,140 Q46,150 48,155 Q52,148 54,136 Q57,122 59,112 Z", [44, 132]],
+      ["hf", "M87,137 Q80,140 81,151 Q87,158 94,158 Q96,148 94,140 Z", [86, 150]],
+      ["quad", "M71,158 Q68,182 72,206 Q80,214 88,210 Q93,190 90,166 Q84,156 77,153 Z", [80, 186]],
+      ["add", "M93,160 Q90,176 92,198 Q96,192 98,173 L99,162 Z", [100, 182], true]],
+    back: [["sh", "M70,50 Q58,52 56,64 Q57,74 62,79 Q66,68 73,58 Z", [60, 66]],
+      ["ub", "M100,38 L89,46 L73,52 Q84,60 92,74 L100,92 L108,74 Q116,60 127,52 L111,46 Z", [100, 62], true, true],
+      ["lat", "M72,64 Q66,78 70,96 Q78,111 91,118 L95,104 Q88,86 80,64 Z", [78, 92]],
+      ["lb", "M92,98 L97,98 L97,132 L89,132 Q88,116 92,98 Z", [100, 120], true],
+      ["gl", "M99,135 L81,135 Q71,141 70,154 Q76,168 92,166 Q99,162 99,154 Z", [86, 152]],
+      ["ham", "M72,168 Q70,190 76,208 L84,212 Q92,200 94,176 Q87,168 79,166 Z", [83, 190]],
+      ["calf", "M75,224 Q70,238 74,252 Q79,262 84,256 Q90,244 90,232 Q86,222 79,221 Z", [82, 240]]]
+  };
   function bodyMap() {
-    var on = function (id) { return MG_SEL.indexOf(id) >= 0 ? " on" : ""; };
-    var g = function (id, shape) { return shape.replace(/<(ellipse|rect)/g, '<$1 class="mg' + on(id) + '" data-act="mg" data-id="' + id + '"'); };
-    var both = function (id, a) { return g(id, a + a.replace(/\bcx="([\d.]+)"/g, function (m, v) { return 'cx="' + (200 - +v) + '"'; })); };
-    var base = '<g class="body"><circle cx="100" cy="24" r="15"/><line x1="100" y1="36" x2="100" y2="50" stroke-width="12"/>' +
-      '<path d="M64,48 C80,42 120,42 136,48 C140,80 132,100 130,128 L132,152 L68,152 L70,128 C68,100 60,80 64,48 Z"/>' +
-      '<line x1="63" y1="54" x2="51" y2="108" stroke-width="16"/><line x1="51" y1="108" x2="45" y2="160" stroke-width="13"/><circle cx="44" cy="168" r="6"/>' +
-      '<line x1="137" y1="54" x2="149" y2="108" stroke-width="16"/><line x1="149" y1="108" x2="155" y2="160" stroke-width="13"/><circle cx="156" cy="168" r="6"/>' +
-      '<line x1="86" y1="150" x2="84" y2="212" stroke-width="24"/><line x1="84" y1="212" x2="86" y2="268" stroke-width="17"/><ellipse cx="86" cy="276" rx="9" ry="5"/>' +
-      '<line x1="114" y1="150" x2="116" y2="212" stroke-width="24"/><line x1="116" y1="212" x2="114" y2="268" stroke-width="17"/><ellipse cx="114" cy="276" rx="9" ry="5"/></g>';
-    var front = base + both("sh", '<ellipse cx="65" cy="57" rx="10" ry="9"/>') + both("ch", '<ellipse cx="86" cy="68" rx="14" ry="10"/>') +
-      g("core", '<rect x="86" y="84" width="28" height="46" rx="10"/>') + both("fa", '<ellipse cx="48" cy="134" rx="6" ry="19"/>') +
-      both("hf", '<ellipse cx="88" cy="146" rx="9" ry="6"/>') + both("quad", '<ellipse cx="84" cy="184" rx="10" ry="24"/>') + both("add", '<ellipse cx="95.5" cy="172" rx="3.5" ry="16"/>');
-    var back = base + both("sh", '<ellipse cx="65" cy="57" rx="10" ry="9"/>') + g("ub", '<ellipse cx="100" cy="66" rx="22" ry="13"/>') +
-      both("lat", '<ellipse cx="81" cy="94" rx="9" ry="18"/>') + g("lb", '<rect x="89" y="106" width="22" height="24" rx="8"/>') +
-      both("gl", '<ellipse cx="88" cy="146" rx="13" ry="11"/>') + both("ham", '<ellipse cx="85" cy="188" rx="10" ry="23"/>') + both("calf", '<ellipse cx="85" cy="236" rx="8" ry="17"/>');
-    var svg = function (inner, lbl) { return '<figure><svg viewBox="30 0 140 290" role="group" aria-label="' + lbl + ' view of the body">' + inner + "</svg><figcaption>" + lbl + "</figcaption></figure>"; };
-    return '<div class="card bodymap"><h3>Which muscles?</h3><p class="small muted">Tap one or more areas to see moves that stretch them.</p><div class="bm-figs">' + svg(front, "Front") + svg(back, "Back") + "</div>" +
-      '<div class="chips">' + MUSCLES.map(function (m) { return '<button class="chip' + on(m[0]) + '" data-act="mg" data-id="' + m[0] + '">' + m[1] + "</button>"; }).join("") +
+    var sel = function (id) { return MG_SEL.indexOf(id) >= 0; };
+    var mname = {}; MUSCLES.forEach(function (m) { mname[m[0]] = m[1]; });
+    var fem = isFem();
+    var view = function (key, lbl) {
+      var shapes = "", labels = "";
+      MSH[key].forEach(function (m) {
+        var src = shapeD(fem && m[0] === "ch" && key === "front" ? "M98,60 L82,58 Q70,62 70,75 Q75,88 88,88 Q97,87 99,78 Z" : m[1], fem), d = src + (m[4] ? "" : " " + mirrorD(src));
+        shapes += '<path class="mg' + (sel(m[0]) ? " on" : "") + '" data-act="mg" data-id="' + m[0] + '" d="' + d + '"><title>' + esc(mname[m[0]]) + "</title></path>";
+        if (sel(m[0])) labels += '<text class="mlbl" x="' + (m[3] ? 100 : shapeX(m[2][0], m[2][1], fem)) + '" y="' + m[2][1] + '">' + esc(mname[m[0]].split(" and ")[0]) + "</text>";
+      });
+      var spine = key === "back" ? '<line class="spine" x1="100" y1="44" x2="100" y2="134"/>' : '<line class="spine" x1="100" y1="84" x2="100" y2="134"/>';
+      return '<figure><svg viewBox="22 -4 156 294" role="group" aria-label="' + lbl + ' view of the body"><path class="skin" d="' + bodyD(fem) + '"/>' + (fem ? '<ellipse class="skin" cx="100" cy="4" rx="8.5" ry="6.5"/>' : "") + '<ellipse class="skin" cx="100" cy="20" rx="' + (fem ? 14.5 : 15.5) + '" ry="18"/>' + spine + shapes + labels + "</svg><figcaption>" + lbl + "</figcaption></figure>";
+    };
+    var info = "", lastG = MG_LAST && MG_LAST.indexOf("g:") === 0 ? MGROUPS.filter(function (g) { return "g:" + g[0] === MG_LAST; })[0] : null;
+    if (lastG && groupOn(lastG)) {
+      var gn = ST.filter(function (s) { return lastG[2].some(function (m) { return s.m.indexOf(m) >= 0; }); }).length;
+      var names = lastG[2].map(function (m) { return mname[m].split(" and ")[0].toLowerCase(); }); names[0] = names[0].charAt(0).toUpperCase() + names[0].slice(1);
+      info = '<div class="mginfo"><b>' + esc(lastG[1]) + "</b><span>" + esc(names.slice(0, -1).join(", ") + " and " + names[names.length - 1]) + " · " + gn + " moves</span></div>";
+    } else if (MG_LAST && sel(MG_LAST)) {
+      var n = ST.filter(function (s) { return s.m.indexOf(MG_LAST) >= 0; }).length;
+      info = '<div class="mginfo"><b>' + esc(mname[MG_LAST]) + "</b><span>" + esc(MDESC[MG_LAST]) + " · " + n + " moves</span></div>";
+    } else if (MG_SEL.length) info = '<div class="mginfo"><b>Selected</b><span>' + MG_SEL.map(function (m) { return esc(mname[m]); }).join(", ") + "</span></div>";
+    else info = '<div class="mginfo muted"><span>Tap a muscle on the body to select it.</span></div>';
+    return '<div class="card bodymap"><h3>Which muscles?</h3><p class="small muted">Tap one or more muscles to see moves that stretch them.</p><div class="bm-figs">' + view("front", "Front") + view("back", "Back") + "</div>" + info +
+      '<p class="small muted bm-lbl">Muscle groups</p><div class="chips">' + MGROUPS.map(function (g) { return '<button class="chip' + (groupOn(g) ? " on" : "") + '" data-act="mgg" data-id="' + g[0] + '">' + g[1] + "</button>"; }).join("") + "</div>" +
+      '<p class="small muted bm-lbl">Muscles</p><div class="chips">' + MUSCLES.map(function (m) { return '<button class="chip' + (sel(m[0]) ? " on" : "") + '" data-act="mg" data-id="' + m[0] + '">' + m[1] + "</button>"; }).join("") +
       (MG_SEL.length ? '<button class="chip clear" data-act="mg-clear">Clear</button>' : "") + "</div></div>";
   }
   function isStandalone() { return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; }
@@ -868,8 +936,12 @@
       case "filter": LIB_F = id; renderRoutines(); break;
       case "build": building = { items: [] }; LIB_F = "all"; MG_SEL = []; renderRoutines(); toast("Pick muscle areas, then tap moves in order"); setTimeout(function () { var l = $(".bodymap") || $(".lib"); if (l) l.scrollIntoView({ behavior: "smooth" }); }, 50); break;
       case "build-cancel": building = null; MG_SEL = []; renderRoutines(); break;
-      case "mg": { var mi = MG_SEL.indexOf(id); if (mi >= 0) MG_SEL.splice(mi, 1); else MG_SEL.push(id); var y = window.scrollY; renderRoutines(); window.scrollTo(0, y); break; }
-      case "mg-clear": MG_SEL = []; renderRoutines(); break;
+      case "mg": { var mi = MG_SEL.indexOf(id); if (mi >= 0) { MG_SEL.splice(mi, 1); if (MG_LAST === id) MG_LAST = MG_SEL[MG_SEL.length - 1] || null; } else { MG_SEL.push(id); MG_LAST = id; } var y = window.scrollY; renderRoutines(); window.scrollTo(0, y); break; }
+      case "mgg": { var gg = MGROUPS.filter(function (g) { return g[0] === id; })[0]; if (!gg) break;
+        if (groupOn(gg)) { MG_SEL = MG_SEL.filter(function (m) { return gg[2].indexOf(m) < 0; }); MG_LAST = MG_SEL[MG_SEL.length - 1] || null; }
+        else { gg[2].forEach(function (m) { if (MG_SEL.indexOf(m) < 0) MG_SEL.push(m); }); MG_LAST = "g:" + id; }
+        var y2 = window.scrollY; renderRoutines(); window.scrollTo(0, y2); break; }
+      case "mg-clear": MG_SEL = []; MG_LAST = null; renderRoutines(); break;
       case "settings-open": openSettings(); break;
       case "build-save": {
         var nm = prompt("Name your routine", building.n || "My routine"); if (nm == null) break; nm = nm.trim() || "My routine";
