@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.10.3", APP_BUILD = "11 Nov 2026";
+  var APP_VERSION = "1.10.5", APP_BUILD = "11 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -40,7 +40,7 @@
   /* ---------- diagnostics: keep the last few errors and countdown events so problems on the phone can be reported ---------- */
   var DIAG = []; try { DIAG = JSON.parse(localStorage.getItem("sm-diag") || "[]"); } catch (e) {}
   function diag(msg) { try { var d = new Date(); DIAG.push(d.toTimeString().slice(0, 8) + " " + msg); DIAG = DIAG.slice(-25); localStorage.setItem("sm-diag", JSON.stringify(DIAG)); } catch (e) {} }
-  window.addEventListener("error", function (e) { diag("ERROR " + (e.message || e) + " @" + (e.lineno || "?")); });
+  window.addEventListener("error", function (e) { if (/^Script error\.?$/.test(e.message || "")) return; /* opaque errors from the browser's own injected scripts (e.g. Firefox on iOS) */ diag("ERROR " + (e.message || e) + " @" + (e.filename || "").split("/").pop() + ":" + (e.lineno || "?")); });
   window.addEventListener("unhandledrejection", function (e) { diag("REJECT " + (e.reason && (e.reason.message || e.reason))); });
 
   /* ---------- dates ---------- */
@@ -150,6 +150,14 @@
     if (sheetClose) { var f = sheetClose; sheetClose = null; f(); }
   }
   $("#scrim").addEventListener("click", closeSheet);
+  /* Swipe the sheet's top bar down to close it; Escape closes it too. */
+  (function () {
+    var bar = $("#sheet-bar"), sh = $("#sheet"), y0 = null, dy = 0;
+    bar.addEventListener("touchstart", function (e) { y0 = e.touches[0].clientY; dy = 0; sh.style.transition = "none"; }, { passive: true });
+    bar.addEventListener("touchmove", function (e) { if (y0 == null) return; dy = Math.max(0, e.touches[0].clientY - y0); sh.style.transform = "translateY(" + dy + "px)"; }, { passive: true });
+    bar.addEventListener("touchend", function () { sh.style.transition = ""; sh.style.transform = ""; if (dy > 70) closeSheet(); y0 = null; });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("#sheet").hidden) closeSheet(); });
+  })();
 
   /* ---------- navigation ---------- */
   var TAB = "home", TITLES = { home: "Today", test: "Mobility test", routines: "Routines", history: "History" };
@@ -325,7 +333,7 @@
   /* 3, 2, 1 countdown played from short recorded clips through Web Audio, scheduled on the audio clock so the gaps are exactly one second.
      (The phone's speech engine starts after an unpredictable delay, which made spoken numbers uneven.) Clips: Piper TTS British voices. */
   var CDBUF = {}, CDLOAD = {};
-  function cdMode() { var m = S.settings.countdown; return m == null ? "f" : m; }
+  function cdMode() { var m = S.settings.countdown; return m == null ? "m" : m; }
   function b64buf(s) { var b = atob(s), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u.buffer; }
   /* Works with both the promise and the older callback form of decodeAudioData (Safari). */
   function decode(buf) { return new Promise(function (res, rej) { try { var p = AC.decodeAudioData(buf, res, rej); if (p && p.then) p.then(res, rej); } catch (e) { rej(e); } }); }
@@ -708,7 +716,7 @@
     var s = S.settings;
     var h = '<h2>Settings</h2><div class="card" style="margin-top:12px"><div class="row"><label class="field">Age<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="' + (s.age || "") + '"></label><label class="field">Height (cm)<input type="number" inputmode="numeric" id="s-height" min="120" max="230" value="' + (s.height || 178) + '"></label><label class="field">Sex<select id="s-sex"><option value="m"' + (s.sex === "m" ? " selected" : "") + '>Male</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">Female</option></select></label></div>" +
       '<p class="small muted" style="margin-top:8px">Age and sex set the GOWOD average markers (GOWOD only publishes averages for men). Height scales the camera\'s cm estimates.</p></div>';
-    h += '<div class="card"><div class="row"><label class="field">Time between exercises<select id="s-rest">' + [5, 10, 15, 20, 30, 45, 60].map(function (n) { return '<option value="' + n + '"' + ((s.rest == null ? 10 : s.rest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label><label class="field">Time to switch sides<select id="s-siderest">' + [3, 5, 10, 15].map(function (n) { return '<option value="' + n + '"' + ((s.sideRest == null ? 5 : s.sideRest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label></div><div class="row" style="margin-top:10px"><label class="field">Final 3, 2, 1 countdown<select id="s-cd">' + [["f", "Voice (female)"], ["m", "Voice (male)"], ["beeps", "Beeps"], ["off", "Off"]].map(function (o) { return '<option value="' + o[0] + '"' + (cdMode() === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><button class="btn" style="align-self:flex-end" data-act="cd-test">Hear it</button></div><p class="small muted" style="margin-top:6px">Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.</p><div class="row" style="margin-top:10px"><label class="field">Theme<select id="s-theme">' + [["auto", "Match phone"], ["light", "Light"], ["dark", "Dark"]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
+    h += '<div class="card"><div class="row"><label class="field">Time between exercises<select id="s-rest">' + [5, 10, 15, 20, 30, 45, 60].map(function (n) { return '<option value="' + n + '"' + ((s.rest == null ? 10 : s.rest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label><label class="field">Time to switch sides<select id="s-siderest">' + [3, 5, 10, 15].map(function (n) { return '<option value="' + n + '"' + ((s.sideRest == null ? 5 : s.sideRest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label></div><div class="row" style="margin-top:10px"><label class="field">Final 3, 2, 1 countdown<select id="s-cd">' + [["m", "Voice (male, British)"], ["f", "Voice (female, American)"], ["beeps", "Beeps"], ["off", "Off"]].map(function (o) { return '<option value="' + o[0] + '"' + (cdMode() === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><button class="btn" style="align-self:flex-end" data-act="cd-test">Hear it</button></div><p class="small muted" style="margin-top:6px">Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.</p><div class="row" style="margin-top:10px"><label class="field">Theme<select id="s-theme">' + [["auto", "Match phone"], ["light", "Light"], ["dark", "Dark"]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
       '<div class="row" style="margin-top:12px"><label class="row grow"><input type="checkbox" id="s-voice"' + (s.voice ? " checked" : "") + '> Voice coaching</label><label class="row grow"><input type="checkbox" id="s-beeps"' + (s.beeps ? " checked" : "") + "> Beeps</label></div>" +
       '<div class="row" style="margin-top:12px"><label class="field" style="flex:2">Coach voice<select id="s-vname"><option value="">Best available</option>' + enVoices().sort(function (x, y) { return voiceScore(y) - voiceScore(x); }).map(function (v) { return '<option value="' + esc(v.name) + '"' + (s.voiceName === v.name ? " selected" : "") + ">" + esc(v.name) + " (" + esc(v.lang) + ")</option>"; }).join("") + '</select></label><label class="field">Speed<select id="s-vrate">' + [[0.85, "Slower"], [0.95, "Normal"], [1.05, "Quicker"]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.voiceRate || 0.95) === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label></div><button class="btn" style="margin-top:8px" data-act="voice-test">Hear the voice</button>' +
       '<p class="small muted" style="margin-top:8px">For the most natural voice, download one on your iPhone: open Settings, search for <b>Voices</b>, then go to English. Pick an <b>Enhanced</b> or <b>Premium</b> voice (Serena, Daniel or Arthur for British), then close and reopen this app and choose it here.</p>' +
@@ -760,6 +768,7 @@
       case "c-reset": if (CAM.sess) { CAM.sess.best = {}; readout(); } toast("Best readings cleared"); break;
       case "c-use": camUse(); break;
       case "save-photos": savePhotos(LASTSNAPS); break;
+      case "sheet-close": closeSheet(); break;
       case "diag-copy": try { navigator.clipboard.writeText("v" + APP_VERSION + " " + navigator.userAgent + "\n" + DIAG.join("\n")).then(function () { toast("Copied"); }); } catch (e) {} break;
       case "cd-test": { unlockAudio(); var m0 = cdMode(); cdLoad(m0).then(function () { var fake = P; P = { cd: null }; cdStart(); P = fake; }); break; }
       case "p-music": if (musicOn()) { S.settings.lastMusic = S.settings.music; S.settings.music = "off"; MUSIC.stop(1200); } else { S.settings.music = S.settings.lastMusic || "pads"; startMusic(); } save(); el.innerHTML = musicOn() ? ICON.music : ICON.musicOff; break;

@@ -21,6 +21,8 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.10.5 (12 Nov 2026): Done button pinned to the top of Settings and every pop-up; swipe the top bar down to close.
+- 1.10.4 (12 Nov 2026): female countdown voice replaced (the old one was garbled); male British voice is now the default; ignore opaque browser script errors in Diagnostics.
 - 1.10.3 (12 Nov 2026): countdown voice clips embedded in the app (clips.js) so they no longer depend on the audio folder loading; load errors logged in Diagnostics.
 - 1.10.2 (12 Nov 2026): countdown falls back to the voice on any audio error; Diagnostics panel in Settings logs countdown events and errors.
 - 1.10.1 (12 Nov 2026): countdown falls back to the phone's voice if the audio clock is stalled (fixes silent 3, 2, 1 on iPhone); clips preload on first tap; "10 seconds" call simplified.
@@ -43,4 +45,4 @@ The version shows at the bottom of the Today screen and in Settings.
 
 ## Credits
 
-Countdown clips generated with Piper TTS (rhasspy/piper) using the British "Southern English Female" voice (trained on OpenSLR 83, CC BY-SA 4.0) and "Alan" voice (Mycroft mimic3).
+Countdown clips generated with Piper TTS (rhasspy/piper) using the "Alan" (British male) and "Amy" (American female) voices from Mycroft mimic3.
