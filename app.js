@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.19.0", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.19.1", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -901,7 +901,7 @@
     if (v.connected) {
       h += '<p style="margin-top:10px"><b>' + esc(TF("Connected as {name}", { name: v.athlete || "Strava" })) + "</b>" + (v.queued ? ' <span class="small muted">· ' + esc(TF("{n} waiting to send", { n: v.queued })) + "</span>" : "") + "</p>";
       h += '<label class="row" style="margin-top:8px"><input type="checkbox" id="sv-auto"' + (v.auto ? " checked" : "") + "> " + T("Log every finished session automatically") + "</label>";
-      h += '<div class="row" style="margin-top:10px"><label class="field">' + T("Strava activity type") + '<select id="sv-type">' + [["Yoga", T("Yoga")], ["Workout", T("Workout")], ["Pilates", T("Pilates")]].map(function (o) { return '<option value="' + o[0] + '"' + (v.type === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>";
+      h += '<div class="row" style="margin-top:10px"><label class="field">' + T("Strava activity type") + '<select id="sv-type">' + [["Mobility", T("Mobility")], ["Yoga", T("Yoga")], ["Workout", T("Workout")], ["Pilates", T("Pilates")]].map(function (o) { return '<option value="' + o[0] + '"' + (v.type === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" + (v.type === "Mobility" ? '<p class="small muted" style="margin-top:6px">' + T("Strava has no Mobility type yet, so these log as a Workout titled \"Mobility: routine name\".") + "</p>" : "");
       h += '<div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap"><button class="btn" data-act="strava-last">' + T("Send last session") + '</button><button class="btn danger" data-act="strava-off">' + T("Disconnect") + "</button></div>";
       if (v.last) h += '<p class="small muted" style="margin-top:8px">' + esc(TF("Last logged: {name}", { name: v.last.name })) + "</p>";
     } else {
@@ -913,7 +913,8 @@
   function stravaWire() {
     if (!window.STRAVA || !$("#sv-id")) return;
     var upd = function () { STRAVA.setConfig({ id: $("#sv-id").value, secret: $("#sv-secret").value, auto: $("#sv-auto") ? $("#sv-auto").checked : undefined, type: $("#sv-type") ? $("#sv-type").value : undefined }); };
-    ["#sv-id", "#sv-secret", "#sv-auto", "#sv-type"].forEach(function (id) { var e = $(id); if (e) e.addEventListener("change", upd); });
+    ["#sv-id", "#sv-secret", "#sv-auto"].forEach(function (id) { var e = $(id); if (e) e.addEventListener("change", upd); });
+    if ($("#sv-type")) $("#sv-type").addEventListener("change", function () { upd(); stravaRefresh(); });
   }
   function stravaRefresh() { var c = $("#strava-slot"); if (c) { c.innerHTML = stravaCard(); stravaWire(); } }
   function openSettings() {

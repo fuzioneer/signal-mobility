@@ -41,7 +41,9 @@
   }
   function upload(a) {
     return token().then(function (t) {
-      var body = new URLSearchParams({ name: a.name, sport_type: st.type || "Yoga", start_date_local: a.startLocal, elapsed_time: String(Math.max(60, Math.round(a.secs))), description: a.description || "" });
+      /* Strava has no Mobility sport type, so Mobility logs as a Workout with "Mobility" in the title. */
+      var type = st.type || "Mobility", mob = type === "Mobility", label = window.T ? T("Mobility") : "Mobility";
+      var body = new URLSearchParams({ name: mob && a.name.indexOf(label) !== 0 ? label + ": " + a.name : a.name, sport_type: mob ? "Workout" : type, start_date_local: a.startLocal, elapsed_time: String(Math.max(60, Math.round(a.secs))), description: a.description || "" });
       return fetch(API + "/api/v3/activities", { method: "POST", headers: { Authorization: "Bearer " + t, "Content-Type": "application/x-www-form-urlencoded" }, body: body.toString() });
     }).then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error((j && j.message) || ("HTTP " + r.status)); return j.id; }); });
   }
@@ -62,7 +64,7 @@
   }
   function localISO(ms) { var d = new Date(ms), p = function (n) { return (n < 10 ? "0" : "") + n; }; return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + "T" + p(d.getHours()) + ":" + p(d.getMinutes()) + ":" + p(d.getSeconds()); }
   window.STRAVA = {
-    get: function () { return { id: st.id || "", secret: st.secret || "", auto: st.auto !== false, type: st.type || "Yoga", connected: connected(), athlete: st.athlete || "", queued: (st.queue || []).length, last: st.last || null, pendingCode: st.pendingCode || "" }; },
+    get: function () { return { id: st.id || "", secret: st.secret || "", auto: st.auto !== false, type: st.type || "Mobility", connected: connected(), athlete: st.athlete || "", queued: (st.queue || []).length, last: st.last || null, pendingCode: st.pendingCode || "" }; },
     setConfig: function (c) { ["id", "secret", "auto", "type"].forEach(function (k) { if (c[k] !== undefined) st[k] = typeof c[k] === "string" ? c[k].trim() : c[k]; }); save(); },
     configured: configured, connected: connected, authorizeUrl: authorizeUrl, redirectUri: redirectUri, handleRedirect: handleRedirect,
     useCode: function (code) { st.pendingCode = ""; save(); return exchange(String(code).trim()); },

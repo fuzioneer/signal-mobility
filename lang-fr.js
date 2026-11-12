@@ -439,7 +439,9 @@ I18N.add("fr", {
 "Couldn't connect to Strava ({error})": "Impossible de se connecter à Strava ({error})",
 "Disconnected from Strava": "Déconnecté de Strava",
 "Couldn't log to Strava ({error})": "Impossible d'enregistrer sur Strava ({error})",
-"Strava approved the connection, but it came back to a browser window rather than the app. Copy this code, then open the app and paste it in Settings > Strava.": "Strava a approuvé la connexion, mais elle est revenue dans une fenêtre du navigateur au lieu de l'appli. Copiez ce code, ouvrez l'appli et collez-le dans Réglages > Strava."
+"Strava approved the connection, but it came back to a browser window rather than the app. Copy this code, then open the app and paste it in Settings > Strava.": "Strava a approuvé la connexion, mais elle est revenue dans une fenêtre du navigateur au lieu de l'appli. Copiez ce code, ouvrez l'appli et collez-le dans Réglages > Strava.",
+"Mobility": "Mobilité",
+"Strava has no Mobility type yet, so these log as a Workout titled \"Mobility: routine name\".": "Strava n'a pas encore de type Mobilité : elles sont enregistrées en Entraînement avec le titre « Mobilité : nom de la routine »."
 }, {
 "zone": {
 "shoulders": "Épaules",
