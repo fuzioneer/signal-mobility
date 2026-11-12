@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.15.5", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.15.6", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -350,7 +350,9 @@
       /* Duck the music straight away for roughly as long as this will take to say (about 2.6 words a second, plus a pause per sentence). */
       if (window.MUSIC) MUSIC.duckFor(String(text).split(/\s+/).length / 2.6 * 1000 / (S.settings.voiceRate || 0.95) + parts.length * 350 + 600);
       var asked = performance.now(), first = true;
-      parts.forEach(function (p) { p = p.trim(); if (!p) return; var u = new SpeechSynthesisUtterance(p);
+      parts = parts.map(function (p) { return p.trim(); }).filter(Boolean);
+      parts.forEach(function (p, pi) { var u = new SpeechSynthesisUtterance(p);
+        if (pi === parts.length - 1 && window.MUSIC) u.onend = u.onerror = function () { MUSIC.speechEnd(); };
         if (first) { first = false; u.onstart = function () { var t = performance.now(); if (!interrupt || t - asked < 2000) SPK.lat = Math.round(0.7 * SPK.lat + 0.3 * Math.min(1500, t - asked)); if (onStart) onStart(t); }; } if (v) { u.voice = v; u.lang = v.lang; } else u.lang = "en-GB"; u.rate = S.settings.voiceRate || 0.95; u.pitch = 1; u.volume = 1; speechSynthesis.speak(u); });
       return true;
     } catch (e) { return false; }
