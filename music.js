@@ -51,8 +51,13 @@
   }
   function tick() {
     if (!ctx || !style) return;
+    if (mode === "el") return;
     if (ctx.state !== "running") wake();
-    var now = ctx.currentTime, ahead = now + 2;
+    else watch();
+    if (mode === "el") return;
+    schedule(ctx.currentTime + 2);
+  }
+  function schedule(ahead) {
     while (nextChord < ahead) {
       var len = style === "bowls" ? 20 : 14;
       if (style === "bowls") drone(nextChord, len + 4);
@@ -66,13 +71,66 @@
     }
     if (live.length > 600) live = live.slice(-300);
   }
+
+  /* ---- iPhone fallback ----
+     On some iPhones (seen in Firefox on iOS) the Web Audio clock freezes while still reporting "running", so nothing plays.
+     If that happens we render a 48-second seamless loop of the same music offline and play it through a normal audio element. */
+  var mode = "wa", useEl = false, lastT = -1, stuck = 0, el = null, elUrl = {}, elWant = null;
+  function log(msg) { try { if (window.MUSIC && MUSIC.log) MUSIC.log(msg); } catch (e) {} }
+  function watch() {
+    var t = ctx.currentTime;
+    if (t === lastT) stuck++; else { stuck = 0; lastT = t; return; }
+    if (stuck === 2) { log("music: audio clock frozen at " + t.toFixed(1) + "s, nudging"); try { ctx.suspend().then(function () { return ctx.resume(); }).catch(function () {}); } catch (e) {} }
+    if (stuck >= 4) { log("music: clock still frozen, switching to audio-file playback"); useEl = true; toEl(); }
+  }
+  function silentWav() { return "data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA"; }
+  /* Call from a tap so iOS lets us start the element later without one. */
+  function prime() {
+    try { if (!el) { el = new Audio(); el.setAttribute("playsinline", ""); el.loop = true; el.preload = "auto"; }
+      if (el.paused && !el.__primed) { el.src = silentWav(); var p = el.play(); el.__primed = true; if (p && p.then) p.then(function () { if (!elWant) el.pause(); }).catch(function () {}); } } catch (e) {}
+  }
+  function toEl() {
+    mode = "el"; clearInterval(timer); timer = null; live.forEach(function (o) { try { o.stop(); } catch (e) {} }); live = []; if (waveNode) { waveNode.stop(); waveNode = null; }
+    elPlay(style, vol);
+  }
+  function elPlay(s, v) {
+    elWant = s; if (!el) prime();
+    var key = s + ":" + Math.round(v * 20);
+    var go = function (url) { if (elWant !== s || paused) return; try { el.src = url; el.loop = true; el.volume = 1; var p = el.play(); if (p && p.catch) p.catch(function (e) { log("music: audio file blocked (" + (e && e.name) + ")"); }); log("music: playing audio file"); } catch (e) { log("music: audio file error " + e.message); } };
+    if (elUrl[key]) return go(elUrl[key]);
+    renderLoop(s, v, function (url) { elUrl[key] = url; go(url); });
+  }
+  function elStop() { elWant = null; try { if (el) el.pause(); } catch (e) {} }
+  function renderLoop(s, v, cb) {
+    var OC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if (!OC) { log("music: no offline audio"); return; }
+    var SR = 22050, L = 48, X = 6, oc = new OC(2, SR * (L + X), SR);
+    var saved = [ctx, out, duckG, verb, dry, noiseBuf, waveNode, live, style, nextChord, nextBell, chordIdx, vol];
+    try {
+      noiseBuf = null; waveNode = null; live = []; build(oc); vol = v; out.gain.value = level() * 0.85; style = s; chordIdx = 0; nextChord = 0.05; nextBell = 2;
+      if (s === "ocean") waves(); schedule(L + X);
+    } catch (e) { log("music: render setup failed " + e.message); }
+    ctx = saved[0]; out = saved[1]; duckG = saved[2]; verb = saved[3]; dry = saved[4]; noiseBuf = saved[5]; waveNode = saved[6]; live = saved[7]; style = saved[8]; nextChord = saved[9]; nextBell = saved[10]; chordIdx = saved[11]; vol = saved[12];
+    var done = function (buf) {
+      var n = SR * L, xs = SR * X, chans = [buf.getChannelData(0), buf.getChannelData(1)];
+      /* Fold the last few seconds over the start so the loop has no seam, and fade the opening in from the tail. */
+      var mix = chans.map(function (d) { var o = new Float32Array(n); for (var i = 0; i < n; i++) { o[i] = d[i]; if (i < xs) { var a = i / xs; o[i] = d[i] * a + d[n + i] * (1 - a); } } return o; });
+      var bytes = new DataView(new ArrayBuffer(44 + n * 4)), w = function (o, str) { for (var i = 0; i < str.length; i++) bytes.setUint8(o + i, str.charCodeAt(i)); };
+      w(0, "RIFF"); bytes.setUint32(4, 36 + n * 4, true); w(8, "WAVEfmt "); bytes.setUint32(16, 16, true); bytes.setUint16(20, 1, true); bytes.setUint16(22, 2, true);
+      bytes.setUint32(24, SR, true); bytes.setUint32(28, SR * 4, true); bytes.setUint16(32, 4, true); bytes.setUint16(34, 16, true); w(36, "data"); bytes.setUint32(40, n * 4, true);
+      for (var i = 0, p = 44; i < n; i++) for (var c = 0; c < 2; c++, p += 2) { var x = Math.max(-1, Math.min(1, mix[c][i])); bytes.setInt16(p, x < 0 ? x * 0x8000 : x * 0x7fff, true); }
+      cb(URL.createObjectURL(new Blob([bytes], { type: "audio/wav" })));
+    };
+    try { var pr = oc.startRendering(); if (pr && pr.then) pr.then(done).catch(function (e) { log("music: render failed " + e); }); else oc.oncomplete = function (e) { done(e.renderedBuffer); }; } catch (e) { log("music: render failed " + e.message); }
+  }
   function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
   function start(c, s, v) {
     if (!c || !s || s === "off") return stop();
     if (!ctx) build(c);
     wake();
-    if (style === s && timer) { setVol(v); return; }
+    if (style === s && (timer || (mode === "el" && elWant === s && !paused))) { setVol(v); return; }
     if (style) hardStop();
+    if (useEl) { paused = false; style = s; vol = v == null ? vol : v; mode = "el"; prime(); elPlay(s, vol); return; }
+    mode = "wa"; stuck = 0; lastT = -1;
     paused = false; style = s; vol = v == null ? vol : v; chordIdx = Math.floor(Math.random() * 4);
     nextChord = ctx.currentTime + 0.1; nextBell = ctx.currentTime + 3;
     out.gain.cancelScheduledValues(ctx.currentTime); out.gain.setValueAtTime(out.gain.value, ctx.currentTime); out.gain.linearRampToValueAtTime(level(), ctx.currentTime + 4);
@@ -88,28 +146,28 @@
   /* If time stood still while suspended, make sure the next notes start now rather than in the past. */
   function catchUp() { if (!ctx || !style) return; var t = ctx.currentTime; if (nextChord < t) nextChord = t + 0.05; if (nextBell < t) nextBell = t + 2; tick(); }
   function level() { return 1.5 * vol * vol + 0.1 * vol; }
-  function hardStop() { clearInterval(timer); timer = null; live.forEach(function (o) { try { o.stop(); } catch (e) {} }); live = []; if (waveNode) { waveNode.stop(); waveNode = null; } }
+  function hardStop() { elStop(); clearInterval(timer); timer = null; live.forEach(function (o) { try { o.stop(); } catch (e) {} }); live = []; if (waveNode) { waveNode.stop(); waveNode = null; } }
   function stop(ms) {
     if (!ctx || !style) { style = null; return; }
     var t = ctx.currentTime, f = (ms == null ? 2500 : ms) / 1000;
     out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(0, t + f);
-    var was = style; style = null; paused = false; clearInterval(timer); timer = null;
+    var was = style; style = null; paused = false; clearInterval(timer); timer = null; if (mode === "el") elStop();
     setTimeout(function () { if (!style) hardStop(); }, f * 1000 + 100);
     return was;
   }
   /* Pause: fade the music down to silence, then stop scheduling new notes. Resume: carry on and fade back up. */
   var paused = false;
   function pause(ms) {
-    if (!ctx || !style || paused) return; paused = true; var t = ctx.currentTime, f = (ms || 1500) / 1000;
+    if (!ctx || !style || paused) return; paused = true; if (mode === "el") { try { el.pause(); } catch (e) {} return; } var t = ctx.currentTime, f = (ms || 1500) / 1000;
     out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(0, t + f);
     clearInterval(timer); timer = null;
   }
   function resume(ms) {
-    if (!ctx || !style || !paused) return; paused = false; wake(); var t = ctx.currentTime, f = (ms || 2000) / 1000;
+    if (!ctx || !style || !paused) return; paused = false; if (mode === "el") { if (el && elWant) { try { el.play().catch(function () {}); } catch (e) {} } else elPlay(style, vol); return; } wake(); var t = ctx.currentTime, f = (ms || 2000) / 1000;
     if (nextChord < t) nextChord = t + 0.05; if (nextBell < t) nextBell = t + 2; tick(); timer = setInterval(tick, 1000);
     out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(level(), t + f);
   }
-  function setVol(v) { vol = Math.max(0, Math.min(1, v)); if (ctx && style) { var t = ctx.currentTime; out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(level(), t + 0.4); } }
+  function setVol(v) { var before = vol; vol = Math.max(0, Math.min(1, v)); if (mode === "el" && style && !paused && Math.abs(before - vol) > 0.1) { elPlay(style, vol); return; } if (ctx && style) { var t = ctx.currentTime; out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(level(), t + 0.4); } }
   /* Lower the music while the coach is speaking. Polls speechSynthesis because iOS doesn't reliably fire end events after cancel(). */
   /* Ducking. The music drops right down while the coach speaks (signalled by the app, with speechSynthesis polled as a backup)
      and sits lower during the get-ready gaps between moves. */
@@ -125,6 +183,6 @@
     var t = ctx.currentTime; duckG.gain.cancelScheduledValues(t); duckG.gain.setValueAtTime(duckG.gain.value, t); duckG.gain.linearRampToValueAtTime(target, t + (down ? (fast ? 0.15 : 0.3) : 1.5));
   }
   setInterval(function () { if (ctx && style) apply(); }, 150);
-  function status() { return ctx ? { state: ctx.state, t: +ctx.currentTime.toFixed(1), out: +out.gain.value.toFixed(2), duck: +duckG.gain.value.toFixed(2), style: style, paused: paused, notes: live.length } : { state: "none" }; }
-  window.MUSIC = { status: status, start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, duckFor: duckFor, setQuiet: setQuiet, playing: function () { return !!style; } };
+  function status() { return ctx ? { mode: mode, file: el && mode === "el" ? (el.paused ? "paused" : "playing") + " " + Math.round(el.duration || 0) + "s" : undefined, state: ctx.state, t: +ctx.currentTime.toFixed(1), out: +out.gain.value.toFixed(2), duck: +duckG.gain.value.toFixed(2), style: style, paused: paused, notes: live.length } : { state: "none" }; }
+  window.MUSIC = { prime: prime, status: status, start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, duckFor: duckFor, setQuiet: setQuiet, playing: function () { return !!style; } };
 })();
