@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.14.0", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.15.0", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -129,12 +129,28 @@
   function fig(pose, opts) { return FIG.svg(pose, opts); }
   /* Photo of a stretch (id) or test ("t_" + id) when one exists and photos are switched on, otherwise the stick figure. */
   function photoUrl(key) { return S.settings.photos !== false && window.PHOTOS && PHOTOS[key] || null; }
-  /* Big photo: if the move has a second position, both photos are stacked and slowly cross-fade between the two. */
-  function photo2Url(key) { return S.settings.photos !== false && window.PHOTOS2 && PHOTOS2[key] || null; }
-  function bigPhoto(key, cls, alt) {
-    var a = photoUrl(key), b = photo2Url(key); if (!a) return "";
-    return '<div class="xfade' + (b ? " two" : "") + '"><img class="photo ' + cls + '" alt="' + esc(alt || "") + '" src="' + esc(a) + '">' + (b ? '<img class="photo ' + cls + ' second" alt="' + esc(alt || "") + ' (second position)" src="' + esc(b) + '">' : "") + "</div>";
+  /* Every photo of a move in order: start positions first, then the main photo, the second position and any later positions. */
+  function photoSet(key) {
+    if (S.settings.photos === false || !window.PHOTOS || !PHOTOS[key]) return [];
+    var x = (window.PHOTOEXTRA || {})[key] || {}, out = (x.pre || []).slice();
+    out.push(PHOTOS[key]); if (window.PHOTOS2 && PHOTOS2[key]) out.push(PHOTOS2[key]);
+    return out.concat(x.post || []);
   }
+  /* Big photo: moves with more than one position stack their photos and slowly cross-fade from one to the next. */
+  function bigPhoto(key, cls, alt) {
+    var set = photoSet(key); if (!set.length) return "";
+    return '<div class="xfade' + (set.length > 1 ? " multi" : "") + '" data-key="' + esc(key) + '">' + set.map(function (u, i) {
+      return '<img class="photo ' + cls + (i === 0 ? " on" : "") + '" data-i="' + i + '" alt="' + esc(alt || "") + (set.length > 1 ? " (position " + (i + 1) + " of " + set.length + ")" : "") + '" src="' + esc(u) + '">';
+    }).join("") + "</div>";
+  }
+  var reduceMotion = false; try { reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+  setInterval(function () {
+    if (reduceMotion || document.hidden) return;
+    document.querySelectorAll(".xfade.multi").forEach(function (w) {
+      var imgs = w.querySelectorAll("img"), cur = w.querySelector("img.on"), i = cur ? +cur.getAttribute("data-i") : 0;
+      if (cur) cur.classList.remove("on"); imgs[(i + 1) % imgs.length].classList.add("on");
+    });
+  }, 4500);
   function art(key, pose, opts) { var u = photoUrl(key); return u ? '<img class="photo" loading="lazy" decoding="async" alt="" src="' + esc(u) + '">' : fig(pose, opts); }
   var stops = [];
   function stopAnims() { stops.forEach(function (f) { f(); }); stops = []; }
@@ -757,14 +773,36 @@
   /* ---------- actions ---------- */
   var confirmAt = {};
   function twice(key, msg) { if (confirmAt[key] && Date.now() - confirmAt[key] < 3000) { confirmAt[key] = 0; return true; } confirmAt[key] = Date.now(); toast(msg); return false; }
-  /* Tap a large photo to see it full screen; tap anywhere (or the cross) to close. */
-  function openLightbox(src, cap) { var lb = $("#lightbox"); $("#lb-img").src = src; $("#lb-cap").textContent = cap || ""; lb.hidden = false; }
-  function closeLightbox() { var lb = $("#lightbox"); lb.hidden = true; $("#lb-img").removeAttribute("src"); }
+  /* Tap a large photo to see it full screen; tap anywhere (or the cross) to close. Moves with several photos get arrows and swipe. */
+  var lbList = [], lbIdx = 0, lbCap = "";
+  function lbShow() {
+    var n = lbList.length; $("#lb-img").src = lbList[lbIdx];
+    $("#lb-cap").textContent = lbCap + (n > 1 ? "  (" + (lbIdx + 1) + " of " + n + ")" : "");
+    $("#lb-prev").hidden = $("#lb-next").hidden = n < 2;
+  }
+  function lbStep(d) { if (lbList.length < 2) return; lbIdx = (lbIdx + d + lbList.length) % lbList.length; lbShow(); }
+  function openLightbox(src, cap, list, idx) { lbList = list && list.length ? list : [src]; lbIdx = idx || 0; lbCap = cap || ""; lbShow(); $("#lightbox").hidden = false; }
+  function closeLightbox() { var lb = $("#lightbox"); lb.hidden = true; $("#lb-img").removeAttribute("src"); lbList = []; }
+  $("#lb-prev").addEventListener("click", function (e) { e.stopPropagation(); lbStep(-1); });
+  $("#lb-next").addEventListener("click", function (e) { e.stopPropagation(); lbStep(1); });
+  (function () {
+    var x0 = null, y0 = 0, swiped = false, lb = $("#lightbox");
+    lb.addEventListener("touchstart", function (e) { swiped = false; x0 = e.touches.length === 1 ? e.touches[0].clientX : null; y0 = e.touches.length === 1 ? e.touches[0].clientY : 0; }, { passive: true });
+    lb.addEventListener("touchend", function (e) {
+      if (x0 == null || lbList.length < 2) return; var t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { swiped = true; lbStep(dx < 0 ? 1 : -1); }
+    });
+    lb.addEventListener("click", function (e) { if (swiped) { swiped = false; e.stopImmediatePropagation(); } }, true);
+  })();
+  document.addEventListener("keydown", function (e) { if ($("#lightbox").hidden) return; if (e.key === "ArrowLeft") lbStep(-1); if (e.key === "ArrowRight") lbStep(1); });
   $("#lightbox").addEventListener("click", closeLightbox);
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("#lightbox").hidden) closeLightbox(); });
   document.addEventListener("click", function (e) {
-    var big = e.target.closest(".photo-wrap img, img.pphoto, img.howphoto, .snaps img, .xfade");
-    if (big && big.classList.contains("xfade")) { var imgs = big.querySelectorAll("img"); big = imgs.length > 1 && parseFloat(getComputedStyle(imgs[1]).opacity) > 0.5 ? imgs[1] : imgs[0]; }
+    var big = e.target.closest(".xfade") || e.target.closest(".photo-wrap img, img.pphoto, img.howphoto, .snaps img");
+    if (big && big.classList.contains("xfade") && !e.target.closest("[data-act]")) {
+      e.preventDefault(); var all = [].slice.call(big.querySelectorAll("img")), on = big.querySelector("img.on") || all[0];
+      openLightbox(on.src, (on.getAttribute("alt") || "").replace(/ \(position.*\)$/, ""), all.map(function (im) { return im.src; }), all.indexOf(on)); return;
+    }
     if (big && !e.target.closest("[data-act]")) { e.preventDefault(); openLightbox(big.currentSrc || big.src, big.getAttribute("alt")); return; }
     var el = e.target.closest("[data-act]"); if (!el) return;
     var a = el.getAttribute("data-act"), id = el.getAttribute("data-id");
@@ -822,7 +860,8 @@
 
   /* ---------- offline photos: save every stretch photo into the app's photo cache so routines work with no signal ---------- */
   var OFF = { busy: false, done: 0, total: 0 };
-  function photoList() { var seen = {}, out = []; [window.PHOTOS || {}, window.PHOTOS2 || {}].forEach(function (m) { Object.keys(m).forEach(function (k) { var u = m[k]; if (!seen[u]) { seen[u] = 1; out.push(u); } }); }); return out; }
+  function photoList() { var seen = {}, out = []; var ex = window.PHOTOEXTRA || {}, xm = {}; Object.keys(ex).forEach(function (k) { (ex[k].pre || []).concat(ex[k].post || []).forEach(function (u, i) { xm[k + "#" + i] = u; }); });
+    [window.PHOTOS || {}, window.PHOTOS2 || {}, xm].forEach(function (m) { Object.keys(m).forEach(function (k) { var u = m[k]; if (!seen[u]) { seen[u] = 1; out.push(u); } }); }); return out; }
   function offlineCount() {
     if (!window.caches) return Promise.resolve(0);
     return caches.open("sm-photos").then(function (c) { return Promise.all(photoList().map(function (u) { return c.match(u).then(function (r) { return r ? 1 : 0; }); })); }).then(function (xs) { return xs.reduce(function (s, x) { return s + x; }, 0); }).catch(function () { return 0; });

@@ -92,3 +92,43 @@ window.PHOTOS2 = {
  "kneehug": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134749_56f1e77a-3a1d-4700-a5f9-a293cefc29b9.png",
  "wipers": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134820_829572a3-2e74-4e2a-975c-28dbf9b73046.png"
 };
+/* Extra positions: pre = shown before the main photo (start positions), post = after the second position. */
+window.PHOTOEXTRA = {
+ "downdog": {
+  "pre": [],
+  "post": [
+   "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_135943_8c8fedeb-f166-4421-a7b7-09af0c3e6ad0.png",
+   "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_140109_f301da88-bf6a-4511-a3d9-736714b785f3.png"
+  ]
+ },
+ "ohshold": {
+  "pre": [
+   "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_140243_dd393c42-e83d-49c7-ad94-ac66197c8498.png"
+  ],
+  "post": []
+ },
+ "birddog": {
+  "pre": [
+   "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_140315_ad4ac63c-dadb-469f-aa39-197b12bbb8d2.png"
+  ],
+  "post": []
+ },
+ "cossack": {
+  "pre": [],
+  "post": [
+   "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_140343_63f1b3c7-4e09-4dde-ba99-2e6c09ca7aa9.png"
+  ]
+ },
+ "stickrot": {
+  "pre": [
+   "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_140428_fadb5f2e-9abb-4309-948b-fe6fa2e6fdae.png"
+  ],
+  "post": []
+ },
+ "thread": {
+  "pre": [
+   "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_140515_38324da9-abd9-4c34-ab0f-49c1fd77adb5.png"
+  ],
+  "post": []
+ }
+};
