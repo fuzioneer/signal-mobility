@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.21.0", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.21.3", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -471,7 +471,9 @@
   /* Speaks sentence by sentence so there are natural breaths between them. */
   /* Measured delay between asking the phone to speak and the voice actually starting (ms), used to time the countdown. */
   var SPK = { lat: 300 };
+  var SPEAK_AT = 0;
   function speak(text, interrupt, onStart) {
+    SPEAK_AT = performance.now();
     if (!S.settings.voice || !window.speechSynthesis || !text) return false;
     try {
       if (interrupt) speechSynthesis.cancel();
@@ -592,6 +594,19 @@
   function kitFor(s) { return kitEn(s).map(function (k) { return T(k); }); }
   /* Equipment: each piece of kit can be covered by any of these. Things marked "if you like" or easily found aren't required. */
   var EQ = [["band", T("Resistance band")], ["roller", T("Foam roller")], ["stick", T("Broomstick or dowel")], ["towel", T("Towel or belt")], ["wall", T("A clear wall")], ["furniture", T("Bench, sofa, bed or chair")], ["door", T("Door frame")], ["step", T("Step or stair")], ["pillow", T("Pillow or cushion")]];
+  /* Small line icons for each piece of kit (24x24, drawn in the text colour). */
+  var EQICON = {
+    band: '<ellipse cx="12" cy="12" rx="9" ry="5"/><ellipse cx="12" cy="12" rx="6" ry="2.6"/>',
+    roller: '<ellipse cx="6" cy="12" rx="3" ry="5"/><path d="M6 7h12M6 17h12"/><ellipse cx="18" cy="12" rx="3" ry="5"/>',
+    stick: '<path d="M4 20L20 4"/><circle cx="4" cy="20" r="1.2"/><circle cx="20" cy="4" r="1.2"/>',
+    towel: '<path d="M5 4h12v14H5z"/><path d="M17 4c2 0 2.5 1.5 2.5 3v13H8c-1.7 0-3-1-3-2"/><path d="M5 14h12"/>',
+    wall: '<path d="M3 5h18v14H3z"/><path d="M3 9.7h18M3 14.3h18M9 5v4.7M15 5v4.7M6 9.7v4.6M12 9.7v4.6M18 9.7v4.6M9 14.3V19M15 14.3V19"/>',
+    furniture: '<path d="M5 11V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/><path d="M3 11a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v5H3z"/><path d="M5 16v3M19 16v3"/>',
+    door: '<path d="M6 21V4h12v17"/><path d="M4 21h16"/><circle cx="15" cy="13" r="0.9"/>',
+    step: '<path d="M3 20h6v-5h6v-5h6"/><path d="M3 20h18"/>',
+    pillow: '<path d="M4 8c0-2 1-3 3-3h10c2 0 3 1 3 3v8c0 2-1 3-3 3H7c-2 0-3-1-3-3z"/><path d="M8 9c2 1 6 1 8 0"/>'
+  };
+  function eqIcon(k) { return '<svg class="eqi" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (EQICON[k] || "") + "</svg>"; }
   var EQREQ = { "a band, towel or belt": ["band", "towel"], "a foam roller or rolled towel": ["roller", "towel"], "a broomstick or towel": ["stick", "towel"], "a wall": ["wall"], "a bench, sofa or bed": ["furniture"],
     "a door frame or wall edge": ["door", "wall"], "a stair or step": ["step"], "a towel or belt": ["towel"], "a pillow or two": ["pillow", "furniture"], "something sturdy to hold": ["wall", "door", "furniture"],
     "the edge of the bed": ["furniture"], "a broomstick, towel or band": ["stick", "towel", "band"], "a sofa, bed or chair": ["furniture"], "a band or towel": ["band", "towel"], "a wall or sofa": ["wall", "furniture"], "a bench, sofa, bed or chair": ["furniture"] };
@@ -678,7 +693,10 @@
   }
   function msHandlers(on) {
     if (!("mediaSession" in navigator)) return; var ms = navigator.mediaSession, set = function (a, f) { try { ms.setActionHandler(a, on ? f : null); } catch (e) {} };
-    set("play", function () { if (P && P.paused) togglePause(); }); set("pause", function () { if (P && !P.paused) togglePause(); });
+    /* iOS sends a "pause" here when the coach's voice interrupts the audio, which isn't the user asking to pause. Ignore pauses around speech. */
+    var speaking = function () { var sp = false; try { sp = speechSynthesis.speaking || speechSynthesis.pending; } catch (e) {} return sp || performance.now() - SPEAK_AT < 4000; };
+    set("play", function () { diag("lock screen: play"); if (P && P.paused) togglePause(); });
+    set("pause", function () { if (speaking()) { diag("lock screen: pause ignored (coach speaking)"); return; } diag("lock screen: pause"); if (P && !P.paused) togglePause(); });
     set("nexttrack", function () { if (P) { P.i++; enterStep(); } }); set("previoustrack", function () { if (P) { P.i = Math.max(0, P.i - 1); enterStep(); } });
     set("seekforward", function () { addTime(15); });
   }
@@ -1012,7 +1030,7 @@
   function eqCard() {
     var have = S.settings.eq || EQ.map(function (e) { return e[0]; });
     return '<div class="card"><h3>' + T("My equipment") + '</h3><label class="remcheck" style="margin-top:8px"><input type="checkbox" id="eq-on"' + (S.settings.eqOn ? " checked" : "") + "> " + T("Only use moves I have the kit for") + '</label><p class="small muted" style="margin:6px 0 8px">' + T("Moves that need something you don't have are swapped for an alternative or skipped. Turn it off to see everything, for example when you're at the gym.") + '</p><div class="chips daychips">' +
-      EQ.map(function (e) { return '<button class="chip' + (have.indexOf(e[0]) >= 0 ? " on" : "") + '" data-act="eq-item" data-id="' + e[0] + '">' + esc(e[1]) + "</button>"; }).join("") + "</div></div>";
+      EQ.map(function (e) { return '<button class="chip eqchip' + (have.indexOf(e[0]) >= 0 ? " on" : "") + '" data-act="eq-item" data-id="' + e[0] + '">' + eqIcon(e[0]) + "<span>" + esc(e[1]) + "</span></button>"; }).join("") + "</div></div>";
   }
   function paCard() {
     var f = fb(), hurt = Object.keys(f.hurt).filter(function (id) { return BY[id]; });

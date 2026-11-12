@@ -46,6 +46,9 @@ The version shows at the bottom of the Today screen and in Settings.
 - 1.19.1 (12 Nov 2026): Mobility added as a Strava activity type (now the default). Strava has no Mobility sport type, so it logs as a Workout titled "Mobility: routine name".
 - 1.20.0 (12 Nov 2026): mobility reminders in Settings: time, how often (every day, weekdays, weekends, Mon/Wed/Fri or chosen days), which routine and alert lead time. Reminder by Calendar alert (repeating event, works with the app closed), a card on Today when it's time, and a notification when the app is open or in the background. Reminder links open the app on that routine.
 - 1.21.0 (12 Nov 2026): lock-screen and Control Centre controls during routines (move, phase, time left, pause, skip, back, +15s); Easier, Harder and +15s buttons in the player; after-session feedback (too easy, about right, too much) adjusts hold times, and moves that hurt are swapped for easier ones or skipped next time; My equipment setting swaps or skips moves you don't have the kit for, with notes on each routine. Personal adjustments can be reviewed and reset in Settings.
+- 1.21.1 (12 Nov 2026): fixed routines pausing at the halfway call on iPhone (iOS reported the coach's voice as a lock-screen pause).
+- 1.21.2 (12 Nov 2026): small icons for each item in My equipment.
+- 1.21.3 (12 Nov 2026): Today's streak, minutes and sessions numbers centred in their boxes.
 - 1.12.1 (12 Nov 2026): tap a stretch or test photo to view it full screen (pinch to zoom, tap to close).
 - 1.12.0 (12 Nov 2026): "Save all photos for offline" (Settings and a one-time prompt on Today) downloads every stretch photo to the phone so routines work with bad or no signal.
 - 1.11.0 (12 Nov 2026): photos for every stretch and test (generated with Higgsfield), shown on cards, stretch details, test how-tos and in the routine player with a "Show movement" toggle; photos cache for offline use; option in Settings to go back to stick figures.
