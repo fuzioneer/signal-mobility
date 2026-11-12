@@ -244,3 +244,23 @@ nav.tabs button.on { color: var(--brand); }
 .lightbox .lb-nav[hidden] { display: none; }
 .lightbox .lb-prev { left: 10px; }
 .lightbox .lb-next { right: 10px; }
+
+/* Top picks row on Today */
+.picks { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 8px; margin: 0 -2px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+.pick { display: flex; flex-direction: column; align-self: flex-start; flex: 0 0 92px; scroll-snap-align: start; background: none; border: 0; padding: 0; text-align: left; color: var(--ink); cursor: pointer; font: inherit; }
+.pick .thumb { width: 92px; height: 92px; }
+.pick .thumb img.photo { width: 100%; height: 100%; object-fit: cover; }
+.pick span { display: block; font-size: 12px; font-weight: 600; line-height: 1.25; margin-top: 6px; }
+.btn.small { padding: 6px 10px; min-height: 0; font-size: 13px; }
+/* Body map in Build your own */
+.bodymap h3 { margin-bottom: 2px; }
+.bm-figs { display: flex; justify-content: center; gap: 8px; margin: 8px 0 4px; }
+.bm-figs figure { margin: 0; flex: 1; max-width: 170px; text-align: center; }
+.bm-figs svg { width: 100%; height: auto; display: block; }
+.bm-figs figcaption { font-size: 12px; color: var(--muted); font-weight: 600; }
+.bodymap .body circle, .bodymap .body path, .bodymap .body ellipse { fill: var(--soft); stroke: var(--line); stroke-width: 1.5; }
+.bodymap .body line { stroke: var(--soft); stroke-linecap: round; }
+.mg { fill: #e7b8a6; fill-opacity: .55; stroke: #c98b74; stroke-width: 1; cursor: pointer; transition: fill .15s, fill-opacity .15s; }
+.mg.on { fill: var(--brand); fill-opacity: .95; stroke: var(--brand); }
+.bodymap .chips { margin-top: 8px; }
+.chip.clear { border-style: dashed; }

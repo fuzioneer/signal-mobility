@@ -245,7 +245,30 @@
     { id: "bedhips", n: "Tight hips, in bed", sub: "All lying down, on any mattress", items: ["kneehug", "wipers", "fig4", "happybaby", "butterfly", "edgeflexor", "sidequad", "hamtowel", "supinetwist", "bridge"] },
     { id: "sleep", n: "Bedtime wind-down", sub: "Slow and calming, about 10 minutes", items: ["childreach", "supinetwist", "fig4", "bandham", "breath9090"] }
   ];
+  /* Muscle groups each move stretches, used by the body map in Build your own. */
+  var MUSCLES = [["sh", "Shoulders"], ["ch", "Chest"], ["ub", "Upper back"], ["lat", "Lats"], ["lb", "Lower back"], ["core", "Core"], ["fa", "Forearms and wrists"],
+    ["hf", "Hip flexors"], ["quad", "Quads"], ["add", "Inner thighs"], ["gl", "Glutes and outer hip"], ["ham", "Hamstrings"], ["calf", "Calves and ankles"]];
+  var MUS = { sleeper: "sh", bander: "sh", doorway: "ch sh", crossbody: "sh ub", wallslide: "sh ub", latbench: "lat ub", childreach: "lat lb", tspineroll: "ub",
+    passthru: "sh ch", ohshold: "sh lat quad gl calf", openbook: "ub ch", catcow: "ub lb", thread: "ub sh", quadrot: "ub", stickrot: "ub core", elephant: "ham calf",
+    hamfloss: "ham", pike: "ham lb", pancake: "ham add", downdog: "ham calf lat", bandham: "ham", couch: "hf quad", kneelhf: "hf quad", ninety: "gl hf", pigeon: "gl",
+    frog: "add", deepsquat: "add gl calf", cossack: "add ham", bridge: "gl hf", fig4: "gl", anklerock: "calf", calfwall: "calf", soleus: "calf", heelsup: "quad calf",
+    deadbug: "core", birddog: "core lb gl", breath9090: "core lb", supinetwist: "lb gl ub", legswing: "ham hf", hipcircle: "gl hf add", lungetwist: "hf ub",
+    askip: "hf calf", pogo: "calf", wgs: "hf ham ub", standquad: "quad hf", crossover: "gl core", kneehug: "lb gl", wipers: "gl lb", happybaby: "add gl",
+    butterfly: "add", edgeflexor: "hf", sidequad: "quad hf", hamtowel: "ham", foldfwd: "ham lb", clubhinge: "ham lb", clubrot: "ub core", wrists: "fa" };
+  S.forEach(function (s) { s.m = (MUS[s.id] || "").split(" ").filter(Boolean); });
+
+  /* Favourite sport (Settings) picks the routines and moves shown as top picks on Today. */
+  var SPORTS = [
+    { id: "crossfit", n: "CrossFit / functional fitness", picks: ["warm", "cool", "overhead"], top: ["ohshold", "couch", "pigeon", "latbench", "anklerock", "deepsquat", "thread", "passthru"] },
+    { id: "hyrox", n: "Hyrox", picks: ["hyroxpre", "hyroxpost", "prerun"], top: ["couch", "calfwall", "wgs", "pigeon", "latbench", "hamtowel", "kneelhf", "wrists"] },
+    { id: "running", n: "Running", picks: ["prerun", "postrun", "bedhips"], top: ["calfwall", "soleus", "kneelhf", "pigeon", "hamtowel", "standquad", "fig4", "legswing"] },
+    { id: "golf", n: "Golf", picks: ["golfpre", "golfmob", "desk"], top: ["clubrot", "clubhinge", "openbook", "ninety", "thread", "wrists", "kneelhf", "sleeper"] },
+    { id: "lifting", n: "Weightlifting / strength", picks: ["squat", "overhead", "cool"], top: ["ohshold", "anklerock", "heelsup", "latbench", "frog", "couch", "tspineroll", "passthru"] },
+    { id: "cycling", n: "Cycling", picks: ["postrun", "back", "desk"], top: ["kneelhf", "couch", "hamtowel", "pigeon", "standquad", "catcow", "doorway", "tspineroll"] },
+    { id: "office", n: "Desk job / general fitness", picks: ["desk", "back", "sleep"], top: ["doorway", "kneelhf", "catcow", "tspineroll", "childreach", "fig4", "crossbody", "foldfwd"] }
+  ];
+
   /* Moves in a sport routine also show up under that sport's filter. */
   PRESETS.forEach(function (p) { if (p.tag) p.items.forEach(function (id) { var s = BY[id]; if (s && s.tags.indexOf(p.tag) < 0) s.tags.push(p.tag); }); });
-  window.SMDATA = { ZONES: ZONES, AVG_M: AVG_M, TESTS: TESTS, STRETCH: S, BY: BY, PRESETS: PRESETS };
+  window.SMDATA = { MUSCLES: MUSCLES, SPORTS: SPORTS, ZONES: ZONES, AVG_M: AVG_M, TESTS: TESTS, STRETCH: S, BY: BY, PRESETS: PRESETS };
 })();

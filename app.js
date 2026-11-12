@@ -2,8 +2,8 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.16.0", APP_BUILD = "12 Nov 2026";
-  var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
+  var APP_VERSION = "1.17.0", APP_BUILD = "12 Nov 2026";
+  var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -227,11 +227,45 @@
       g.slice(0, 3).forEach(function (x) { h += '<p><b>' + esc(x.t.n) + ":</b> your " + x.side + " side is " + x.d + " points tighter. Give it an extra set.</p>"; });
       h += "</div>";
     }
-    h += '<div class="sec"><h2>Quick picks</h2></div>';
-    ["warm", "cool", "desk"].forEach(function (id) { h += routineCard(findRoutine(id)); });
+    var sp = sportObj();
+    if (sp) {
+      h += '<div class="sec"><h2>Top stretches for ' + esc(sportShort(sp)) + '</h2><button class="btn ghost small" data-act="settings-open">Change</button></div>';
+      h += '<div class="picks">' + sp.top.filter(function (id) { return BY[id]; }).map(function (id) { return '<button class="pick" data-act="stretch" data-id="' + id + '"><div class="thumb">' + art(id, BY[id].pose, { stroke: 9 }) + "</div><span>" + esc(BY[id].n) + "</span></button>"; }).join("") + "</div>";
+      h += '<div class="sec"><h2>Top routines for ' + esc(sportShort(sp)) + "</h2></div>";
+      sp.picks.forEach(function (id) { var r = findRoutine(id); if (r) h += routineCard(r); });
+    } else {
+      h += '<div class="sec"><h2>Quick picks</h2><button class="btn ghost small" data-act="settings-open">Pick your sport</button></div>';
+      ["warm", "cool", "desk"].forEach(function (id) { h += routineCard(findRoutine(id)); });
+    }
     if (!isStandalone()) h += installCard();
     h += '<p class="small muted" style="text-align:center;margin-top:18px">Signal Mobility v' + APP_VERSION + " · " + APP_BUILD + "</p>";
     $("#v-home").innerHTML = h; offlineUI();
+  }
+  function sportObj() { var id = S.settings.sport; return id ? SPORTS.filter(function (x) { return x.id === id; })[0] || null : null; }
+  function sportShort(sp) { return { crossfit: "CrossFit", hyrox: "Hyrox", running: "running", golf: "golf", lifting: "lifting", cycling: "cycling", office: "everyday" }[sp.id] || sp.n; }
+
+  /* ---------- body map for Build your own: tap muscle groups to filter the library ---------- */
+  var MG_SEL = [];
+  function bodyMap() {
+    var on = function (id) { return MG_SEL.indexOf(id) >= 0 ? " on" : ""; };
+    var g = function (id, shape) { return shape.replace(/<(ellipse|rect)/g, '<$1 class="mg' + on(id) + '" data-act="mg" data-id="' + id + '"'); };
+    var both = function (id, a) { return g(id, a + a.replace(/\bcx="([\d.]+)"/g, function (m, v) { return 'cx="' + (200 - +v) + '"'; })); };
+    var base = '<g class="body"><circle cx="100" cy="24" r="15"/><line x1="100" y1="36" x2="100" y2="50" stroke-width="12"/>' +
+      '<path d="M64,48 C80,42 120,42 136,48 C140,80 132,100 130,128 L132,152 L68,152 L70,128 C68,100 60,80 64,48 Z"/>' +
+      '<line x1="63" y1="54" x2="51" y2="108" stroke-width="16"/><line x1="51" y1="108" x2="45" y2="160" stroke-width="13"/><circle cx="44" cy="168" r="6"/>' +
+      '<line x1="137" y1="54" x2="149" y2="108" stroke-width="16"/><line x1="149" y1="108" x2="155" y2="160" stroke-width="13"/><circle cx="156" cy="168" r="6"/>' +
+      '<line x1="86" y1="150" x2="84" y2="212" stroke-width="24"/><line x1="84" y1="212" x2="86" y2="268" stroke-width="17"/><ellipse cx="86" cy="276" rx="9" ry="5"/>' +
+      '<line x1="114" y1="150" x2="116" y2="212" stroke-width="24"/><line x1="116" y1="212" x2="114" y2="268" stroke-width="17"/><ellipse cx="114" cy="276" rx="9" ry="5"/></g>';
+    var front = base + both("sh", '<ellipse cx="65" cy="57" rx="10" ry="9"/>') + both("ch", '<ellipse cx="86" cy="68" rx="14" ry="10"/>') +
+      g("core", '<rect x="86" y="84" width="28" height="46" rx="10"/>') + both("fa", '<ellipse cx="48" cy="134" rx="6" ry="19"/>') +
+      both("hf", '<ellipse cx="88" cy="146" rx="9" ry="6"/>') + both("quad", '<ellipse cx="84" cy="184" rx="10" ry="24"/>') + both("add", '<ellipse cx="95.5" cy="172" rx="3.5" ry="16"/>');
+    var back = base + both("sh", '<ellipse cx="65" cy="57" rx="10" ry="9"/>') + g("ub", '<ellipse cx="100" cy="66" rx="22" ry="13"/>') +
+      both("lat", '<ellipse cx="81" cy="94" rx="9" ry="18"/>') + g("lb", '<rect x="89" y="106" width="22" height="24" rx="8"/>') +
+      both("gl", '<ellipse cx="88" cy="146" rx="13" ry="11"/>') + both("ham", '<ellipse cx="85" cy="188" rx="10" ry="23"/>') + both("calf", '<ellipse cx="85" cy="236" rx="8" ry="17"/>');
+    var svg = function (inner, lbl) { return '<figure><svg viewBox="30 0 140 290" role="group" aria-label="' + lbl + ' view of the body">' + inner + "</svg><figcaption>" + lbl + "</figcaption></figure>"; };
+    return '<div class="card bodymap"><h3>Which muscles?</h3><p class="small muted">Tap one or more areas to see moves that stretch them.</p><div class="bm-figs">' + svg(front, "Front") + svg(back, "Back") + "</div>" +
+      '<div class="chips">' + MUSCLES.map(function (m) { return '<button class="chip' + on(m[0]) + '" data-act="mg" data-id="' + m[0] + '">' + m[1] + "</button>"; }).join("") +
+      (MG_SEL.length ? '<button class="chip clear" data-act="mg-clear">Clear</button>' : "") + "</div></div>";
   }
   function isStandalone() { return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; }
   function installCard() {
@@ -296,7 +330,10 @@
     h += '<div class="sec"><h2>Stretch library</h2><span class="small muted">' + ST.length + " moves</span></div>";
     var F = [["all", "All"]].concat(ZONES).concat([["warm", "Warm-up"], ["cool", "Cool-down"], ["back", "Back"], ["run", "Running"], ["hyrox", "Hyrox"], ["golf", "Golf"], ["desk", "Desk"], ["bed", "On a bed"], ["sleep", "Sleep"]]);
     h += '<div class="chips">' + F.map(function (f) { return '<button class="chip' + (LIB_F === f[0] ? " on" : "") + '" data-act="filter" data-id="' + f[0] + '">' + f[1] + "</button>"; }).join("") + "</div>";
-    var list = ST.filter(function (s) { return LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0; });
+    if (building) h += bodyMap();
+    var list = ST.filter(function (s) { return (LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0) && (!building || !MG_SEL.length || MG_SEL.some(function (m) { return s.m.indexOf(m) >= 0; })); });
+    if (building && MG_SEL.length) list.sort(function (a, b) { var c = function (s) { return MG_SEL.filter(function (m) { return s.m.indexOf(m) >= 0; }).length; }; return c(b) - c(a); });
+    if (!list.length) h += '<p class="muted small" style="margin:10px 2px">No moves match. Try another area or filter.</p>';
     h += '<div class="lib' + (building ? " building" : "") + '">' + list.map(function (s) {
       var sel = building && building.items.indexOf(s.id) >= 0;
       return '<button class="lcard' + (sel ? " sel" : "") + '" data-act="stretch" data-id="' + s.id + '"><div class="fig">' + art(s.id, s.pose, { stroke: 8 }) + '</div><span class="check">' + (sel ? building.items.indexOf(s.id) + 1 : "") + "</span><h3>" + esc(s.n) + "</h3><p>" + s.z.map(function (z) { return '<span class="zdot" style="background:' + zc(z) + '"></span>'; }).join("") + (s.reps || (s.d + "s" + (s.s ? " each side" : ""))) + "</p></button>";
@@ -762,6 +799,7 @@
     var h = '<h2>Settings</h2><div class="card" style="margin-top:12px"><div class="row"><label class="field">Age<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="' + (s.age || "") + '"></label><label class="field">Height (cm)<input type="number" inputmode="numeric" id="s-height" min="120" max="230" value="' + (s.height || 178) + '"></label><label class="field">Sex<select id="s-sex"><option value="m"' + (s.sex === "m" ? " selected" : "") + '>Male</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">Female</option></select></label></div>" +
       '<p class="small muted" style="margin-top:8px">Age and sex set the typical-score markers (currently available for men only). Height scales the camera\'s cm estimates.</p></div>';
     h += '<div class="card"><div class="row"><label class="field">Time between exercises<select id="s-rest">' + [5, 10, 15, 20, 30, 45, 60].map(function (n) { return '<option value="' + n + '"' + ((s.rest == null ? 10 : s.rest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label><label class="field">Time to switch sides<select id="s-siderest">' + [3, 5, 10, 15].map(function (n) { return '<option value="' + n + '"' + ((s.sideRest == null ? 5 : s.sideRest) === n ? " selected" : "") + ">" + n + " seconds</option>"; }).join("") + '</select></label></div><div class="row" style="margin-top:10px"><label class="field">Final 3, 2, 1 countdown<select id="s-cd">' + [["m", "Voice (male, British)"], ["f", "Voice (female, American)"], ["beeps", "Beeps"], ["off", "Off"]].map(function (o) { return '<option value="' + o[0] + '"' + (cdMode() === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><button class="btn" style="align-self:flex-end" data-act="cd-test">Hear it</button></div><p class="small muted" style="margin-top:6px">Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.</p><div class="row" style="margin-top:10px"><label class="field">Theme<select id="s-theme">' + [["auto", "Match phone"], ["light", "Light"], ["dark", "Dark"]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
+      '<div class="row" style="margin-top:10px"><label class="field">Favourite sport (optional)<select id="s-sport"><option value="">None</option>' + SPORTS.map(function (o) { return '<option value="' + o.id + '"' + (s.sport === o.id ? " selected" : "") + ">" + esc(o.n) + "</option>"; }).join("") + '</select></label></div><p class="small muted" style="margin-top:6px">Sets the top stretches and routines shown on Today.</p>' +
       '<div class="row" style="margin-top:12px"><label class="row grow"><input type="checkbox" id="s-voice"' + (s.voice ? " checked" : "") + '> Voice coaching</label><label class="row grow"><input type="checkbox" id="s-beeps"' + (s.beeps ? " checked" : "") + "> Beeps</label></div>" +
       '<div class="row" style="margin-top:12px"><label class="field" style="flex:2">Coach voice<select id="s-vname"><option value="">Best available</option>' + enVoices().sort(function (x, y) { return voiceScore(y) - voiceScore(x); }).map(function (v) { return '<option value="' + esc(v.name) + '"' + (s.voiceName === v.name ? " selected" : "") + ">" + esc(v.name) + " (" + esc(v.lang) + ")</option>"; }).join("") + '</select></label><label class="field">Speed<select id="s-vrate">' + [[0.85, "Slower"], [0.95, "Normal"], [1.05, "Quicker"]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.voiceRate || 0.95) === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label></div><button class="btn" style="margin-top:8px" data-act="voice-test">Hear the voice</button>' +
       '<p class="small muted" style="margin-top:8px">For the most natural voice, download one on your iPhone: open Settings, search for <b>Voices</b>, then go to English. Pick an <b>Enhanced</b> or <b>Premium</b> voice (Serena, Daniel or Arthur for British), then close and reopen this app and choose it here.</p>' +
@@ -775,8 +813,8 @@
     h += '<div class="card"><button class="btn danger block" data-act="reset">Delete all data</button></div><p class="small muted" style="text-align:center">Signal Mobility v' + APP_VERSION + ' (' + APP_BUILD + ') · body tracking by MediaPipe</p>';
     openSheet(h, function () { if (window.MUSIC && !P && MUSIC.playing()) MUSIC.stop(800); });
     offlineUI();
-    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
-    ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
+    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
+    ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-sport", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
   }
   function applyTheme() { var t = S.settings.theme; if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(document.body).backgroundColor || "#0f6b5c"; }
@@ -828,13 +866,16 @@
         else openStretch(id);
         break;
       case "filter": LIB_F = id; renderRoutines(); break;
-      case "build": building = { items: [] }; LIB_F = "all"; renderRoutines(); toast("Tap moves in the order you want them"); setTimeout(function () { var l = $(".lib"); if (l) l.scrollIntoView({ behavior: "smooth" }); }, 50); break;
-      case "build-cancel": building = null; renderRoutines(); break;
+      case "build": building = { items: [] }; LIB_F = "all"; MG_SEL = []; renderRoutines(); toast("Pick muscle areas, then tap moves in order"); setTimeout(function () { var l = $(".bodymap") || $(".lib"); if (l) l.scrollIntoView({ behavior: "smooth" }); }, 50); break;
+      case "build-cancel": building = null; MG_SEL = []; renderRoutines(); break;
+      case "mg": { var mi = MG_SEL.indexOf(id); if (mi >= 0) MG_SEL.splice(mi, 1); else MG_SEL.push(id); var y = window.scrollY; renderRoutines(); window.scrollTo(0, y); break; }
+      case "mg-clear": MG_SEL = []; renderRoutines(); break;
+      case "settings-open": openSettings(); break;
       case "build-save": {
         var nm = prompt("Name your routine", building.n || "My routine"); if (nm == null) break; nm = nm.trim() || "My routine";
         if (building.id) S.routines = S.routines.map(function (r) { return r.id === building.id ? { id: r.id, n: nm, items: building.items } : r; });
         else S.routines.push({ id: "u" + Date.now().toString(36), n: nm, items: building.items });
-        save(); building = null; renderRoutines(); window.scrollTo(0, 0); toast("Saved " + nm); break;
+        save(); building = null; MG_SEL = []; renderRoutines(); window.scrollTo(0, 0); toast("Saved " + nm); break;
       }
       case "edit-routine": { var rr = S.routines.filter(function (r) { return r.id === id; })[0]; closeSheet(); if (rr) { building = { id: rr.id, n: rr.n, items: rr.items.slice() }; go("routines"); } break; }
       case "del-routine": if (twice("dr" + id, "Tap Delete again to confirm")) { S.routines = S.routines.filter(function (r) { return r.id !== id; }); save(); closeSheet(); render(); } break;
