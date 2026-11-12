@@ -274,4 +274,5 @@
   /* Moves in a sport routine also show up under that sport's filter. */
   PRESETS.forEach(function (p) { if (p.tag) p.items.forEach(function (id) { var s = BY[id]; if (s && s.tags.indexOf(p.tag) < 0) s.tags.push(p.tag); }); });
   window.SMDATA = { MUSCLES: MUSCLES, SPORTS: SPORTS, ZONES: ZONES, AVG_M: AVG_M, TESTS: TESTS, STRETCH: S, BY: BY, PRESETS: PRESETS };
+  if (window.I18N) I18N.applyContent(window.SMDATA);
 })();

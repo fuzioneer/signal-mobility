@@ -39,6 +39,8 @@ The version shows at the bottom of the Today screen and in Settings.
 - 1.17.4 (12 Nov 2026): body map proportions refined: slimmer male figure, narrower female hips, larger heads.
 - 1.17.5 (12 Nov 2026): body map calves moved lower down the leg and ankles slimmed.
 - 1.17.6 (12 Nov 2026): body map muscle groups (posterior chain, anterior chain, hips, shoulder girdle, upper body, lower body) select all their muscles in one tap.
+- 1.17.7 (12 Nov 2026): sideways-scrolling button rows (muscle groups, muscles, library filters) now show left and right arrows and fade at the edges; rows keep their scroll position when you tap.
+- 1.18.0 (12 Nov 2026): language setting (English, Español, Français, Deutsch, Italiano, Português). Translates the whole interface, the coach's spoken lines, all stretch names and instructions, routines and tests; the coach uses a voice in the chosen language and dates follow the language. The recorded 3, 2, 1 clips are English, so other languages count down with the coach's voice. First launch follows the phone's language.
 - 1.12.1 (12 Nov 2026): tap a stretch or test photo to view it full screen (pinch to zoom, tap to close).
 - 1.12.0 (12 Nov 2026): "Save all photos for offline" (Settings and a one-time prompt on Today) downloads every stretch photo to the phone so routines work with bad or no signal.
 - 1.11.0 (12 Nov 2026): photos for every stretch and test (generated with Higgsfield), shown on cards, stretch details, test how-tos and in the routine player with a "Show movement" toggle; photos cache for offline use; option in Settings to go back to stick figures.

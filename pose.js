@@ -14,7 +14,7 @@
           p.initialize().then(function () { res(p); }).catch(function (e) { poseP = null; rej(e); });
         } catch (e) { poseP = null; rej(e); }
       };
-      sc.onerror = function () { poseP = null; rej(new Error("Couldn't download the tracking model")); };
+      sc.onerror = function () { poseP = null; rej(new Error((window.T ? T("Couldn't download the tracking model") : "Couldn't download the tracking model"))); };
       document.head.appendChild(sc);
     });
     return poseP;
@@ -110,7 +110,7 @@
   function better(k, a, b, dir) { if (b == null) return true; if (k === "squat") return a.knee < b.knee; return dir < 0 ? a < b : a > b; }
   function label(k, v, unit) {
     if (v == null) return "–";
-    if (k === "squat") return "Knee " + Math.round(v.knee) + "°, shin " + Math.round(v.shin) + "°, torso " + Math.round(v.torso) + "°" + (v.below ? ", hips below knees" : "");
+    if (k === "squat") return "Knee " + Math.round(v.knee) + "°, shin " + Math.round(v.shin) + "°, torso " + Math.round(v.torso) + "°" + (v.below ? (window.T ? T(", hips below knees") : ", hips below knees") : "");
     unit = unit || "°"; var r = Math.round(v);
     return (r > 0 && (k === "thomas" || k === "backscratch" || k === "toetouch") ? "+" : "") + r + (unit === "cm" ? " cm" : "°");
   }

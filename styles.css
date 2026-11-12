@@ -269,3 +269,15 @@ nav.tabs button.on { color: var(--brand); }
 .bodymap .chips { margin-top: 8px; }
 .chip.clear { border-style: dashed; }
 .bm-lbl { margin: 10px 0 -2px; font-weight: 600; }
+
+/* Scrollable chip rows: arrows and edge fades */
+.chiprow { position: relative; }
+.chiprow .chips { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 44px, #000 calc(100% - 44px), transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 44px, #000 calc(100% - 44px), transparent 100%); }
+.chiprow.at-start .chips { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent 100%); mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent 100%); }
+.chiprow.at-end .chips { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 44px); mask-image: linear-gradient(to right, transparent 0, #000 44px); }
+.chiprow.no-scroll .chips, .chiprow.at-start.at-end .chips { -webkit-mask-image: none; mask-image: none; }
+.cr-arrow { position: absolute; top: calc(50% - 2px); transform: translateY(-50%); z-index: 2; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--ink); display: grid; place-items: center; padding: 0; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.14); transition: opacity .2s; }
+.cr-left { left: -6px; }
+.cr-right { right: -6px; }
+.chiprow.at-start .cr-left, .chiprow.at-end .cr-right, .chiprow.no-scroll .cr-arrow { opacity: 0; pointer-events: none; }
+.swipe-hint { font-weight: 400; opacity: .8; }
