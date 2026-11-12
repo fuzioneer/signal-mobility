@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.19.1", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.20.0", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -203,7 +203,8 @@
   /* ---------- HOME ---------- */
   function renderHome() {
     var L = latest(), sc = score(L.v), last = lastTestDate(), av = avgFor(), d = dailyItems(), st = streak(), today = sessionDays()[iso()];
-    var h = "";
+    var h = "", due = remDue(), snoozed = false; try { snoozed = !!localStorage.getItem("sm-nudge-" + iso()); } catch (e) {}
+    if (due && due.nudge && !snoozed) { var drt = remRoutine(due); h += '<div class="card nudge remnudge"><div class="grow"><h3>' + T("Time for your mobility") + '</h3><p class="muted" style="margin-top:4px">' + esc(drt.n) + " · " + mins(routineSecs(drt.items)) + '</p><div class="row" style="margin-top:12px;gap:8px"><button class="btn primary" data-act="play" data-id="' + esc(drt.id) + '">' + T("Start") + '</button><button class="btn" data-act="rm-later">' + T("Not today") + "</button></div></div></div>"; }
     if (!last) {
       h += ('<div class="card nudge"><div class="grow"><h3>' + T("Start with a mobility test") + '</h3><p class="muted" style="margin-top:4px">' + T("About 15 minutes. It scores six zones so the app can build your daily routine around what's tightest. Camera tracking works for 5 of the tests.") + '</p><button class="btn primary" style="margin-top:12px" data-act="go-test">' + T("Take the test") + '</button></div></div>');
     } else if (daysBetween(last, iso()) >= 28) {
@@ -884,6 +885,75 @@
     if (x.settings) S.settings = Object.assign(S.settings, x.settings);
     save(); applyTheme(); closeSheet(); render(); toast((T("Restored") + " ") + (x.tests || []).length + (" " + T("tests and") + " ") + (x.sessions || []).length + " sessions.");
   }
+  /* ---------- Reminders ----------
+     A web app can't schedule its own notifications with nothing running, so reminders work three ways:
+     1. a repeating Calendar event with an alert (the phone's own notification, works even when the app is closed),
+     2. a nudge card on Today, and 3. a notification when the app is open or in the background at reminder time. */
+  var DAYN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  function rem() { return Object.assign({ on: false, time: "07:30", days: [0, 1, 2, 3, 4, 5, 6], routine: "daily", lead: 0, nudge: true, notify: false }, S.settings.rem || {}); }
+  function setRem(o) { S.settings.rem = Object.assign(rem(), o); save(); }
+  function dayName(i) { return new Date(2026, 10, 8 + i).toLocaleDateString(I18N.locale, { weekday: "short" }); }
+  function remDue() {
+    var r = rem(); if (!r.on) return null; var now = new Date(), hm = r.time.split(":");
+    if (r.days.indexOf(now.getDay()) < 0 || sessionDays()[iso()]) return null;
+    var at = new Date(); at.setHours(+hm[0], +hm[1], 0, 0); return now >= at ? r : null;
+  }
+  function remRoutine(r) { return findRoutine(r.routine) || findRoutine("daily"); }
+  function remIcs() {
+    var r = rem(), rt = remRoutine(r), hm = r.time.split(":"), now = new Date(), start = new Date();
+    start.setHours(+hm[0], +hm[1], 0, 0); for (var k = 0; k < 8 && (r.days.indexOf(start.getDay()) < 0 || start <= now); k++) start.setDate(start.getDate() + 1);
+    var p = function (n) { return (n < 10 ? "0" : "") + n; }, loc = function (d) { return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "T" + p(d.getHours()) + p(d.getMinutes()) + "00"; };
+    var by = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"], mins0 = Math.max(5, Math.round(routineSecs(rt.items) / 60));
+    var url = location.origin + location.pathname + "?play=" + encodeURIComponent(rt.id), title = "Signal Mobility: " + rt.n;
+    var esc2 = function (t) { return String(t).replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n"); };
+    return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Signal Mobility//Reminders//EN", "CALSCALE:GREGORIAN", "BEGIN:VEVENT",
+      "UID:signal-mobility-reminder@" + (location.hostname || "signalmobility"), "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, ""),
+      "DTSTART:" + loc(start), "DURATION:PT" + mins0 + "M", "RRULE:FREQ=WEEKLY;BYDAY=" + r.days.map(function (d) { return by[d]; }).join(","),
+      "SUMMARY:" + esc2(title), "DESCRIPTION:" + esc2(T("Time for your mobility session.") + " " + url), "URL:" + url,
+      "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + esc2(title), "TRIGGER:-PT" + (r.lead || 0) + "M", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
+  }
+  function remCard() {
+    var r = rem(), opts = allRoutines().map(function (x) { return '<option value="' + esc(x.id) + '"' + (r.routine === x.id ? " selected" : "") + ">" + esc(x.n) + "</option>"; }).join("");
+    var h = '<div class="card"><h3>' + T("Mobility reminders") + '</h3><label class="remcheck" style="margin-top:8px"><input type="checkbox" id="rm-on"' + (r.on ? " checked" : "") + "> " + T("Remind me to do my mobility") + "</label>";
+    if (!r.on) return h + "</div>";
+    h += '<div class="row" style="margin-top:10px"><label class="field">' + T("Time") + '<input type="time" id="rm-time" value="' + esc(r.time) + '"></label><label class="field">' + T("How often") + '<select id="rm-freq">' +
+      [["all", T("Every day")], ["wk", T("Weekdays")], ["we", T("Weekends")], ["alt", T("Mon, Wed, Fri")], ["custom", T("Choose days")]].map(function (o) { return '<option value="' + o[0] + '"' + (remFreq(r) === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>";
+    h += '<div class="chips daychips" style="margin-top:8px">' + [1, 2, 3, 4, 5, 6, 0].map(function (d) { return '<button class="chip' + (r.days.indexOf(d) >= 0 ? " on" : "") + '" data-act="rm-day" data-id="' + d + '">' + esc(dayName(d)) + "</button>"; }).join("") + "</div>";
+    h += '<div class="row" style="margin-top:10px"><label class="field" style="flex:1.4">' + T("Routine") + '<select id="rm-routine">' + opts + '</select></label></div><div class="row" style="margin-top:10px"><label class="field">' + T("Alert") + '<select id="rm-lead">' +
+      [[0, T("At the time")], [5, T("5 min before")], [15, T("15 min before")], [30, T("30 min before")]].map(function (o) { return '<option value="' + o[0] + '"' + ((r.lead || 0) === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>";
+    h += '<p class="small" style="margin-top:12px;font-weight:700">' + T("How to remind you") + "</p>";
+    h += '<div class="remhow"><b>' + T("Calendar alert") + '</b><p class="small muted">' + T("Adds a repeating event with an alert to your phone's calendar. This is the reliable one: it notifies you even when the app is closed. Add it again after changing the time or days.") + '</p><button class="btn" data-act="rm-ics">' + T("Add to Calendar") + "</button></div>";
+    h += '<label class="remcheck" style="margin-top:10px"><input type="checkbox" id="rm-nudge"' + (r.nudge ? " checked" : "") + "> " + T("Reminder card on Today when it's time") + "</label>";
+    h += '<label class="remcheck" style="margin-top:8px"><input type="checkbox" id="rm-notify"' + (r.notify ? " checked" : "") + "> " + T("Notification if the app is open or in the background") + "</label>";
+    h += '<p class="small muted" style="margin-top:4px">' + T("On iPhone this needs the app on your Home Screen. Notifications with the app fully closed will come with the App Store version.") + "</p>";
+    return h + "</div>";
+  }
+  function remFreq(r) { var k = r.days.slice().sort().join(""); return k === "0123456" ? "all" : k === "12345" ? "wk" : k === "06" ? "we" : k === "135" ? "alt" : "custom"; }
+  function remRefresh() { var c = $("#rem-slot"); if (c) { c.innerHTML = remCard(); remWire(); } }
+  function remWire() {
+    if (!$("#rm-on")) return;
+    $("#rm-on").addEventListener("change", function (e) { setRem({ on: e.target.checked }); remRefresh(); render(); });
+    var bind = function (id, f) { var e = $(id); if (e) e.addEventListener("change", function () { f(e); render(); }); };
+    bind("#rm-time", function (e) { setRem({ time: e.value || "07:30" }); });
+    bind("#rm-freq", function (e) { var m = { all: [0, 1, 2, 3, 4, 5, 6], wk: [1, 2, 3, 4, 5], we: [0, 6], alt: [1, 3, 5] }; if (m[e.value]) setRem({ days: m[e.value] }); remRefresh(); });
+    bind("#rm-routine", function (e) { setRem({ routine: e.value }); });
+    bind("#rm-lead", function (e) { setRem({ lead: +e.value }); });
+    bind("#rm-nudge", function (e) { setRem({ nudge: e.checked }); });
+    bind("#rm-notify", function (e) {
+      if (!e.checked) return setRem({ notify: false });
+      if (!("Notification" in window)) { e.checked = false; toast(T("This browser can't show notifications. Add the app to your Home Screen first.")); return; }
+      Notification.requestPermission().then(function (p) { if (p === "granted") { setRem({ notify: true }); toast(T("Notifications on")); } else { e.checked = false; setRem({ notify: false }); toast(T("Notifications are blocked. Allow them in Settings > Notifications.")); } });
+    });
+  }
+  /* While the app is running, check every minute whether it's reminder time. */
+  function remTick() {
+    var r = remDue(); if (!r || !r.notify || P) return;
+    var key = "sm-rem-" + iso(); try { if (localStorage.getItem(key)) return; localStorage.setItem(key, "1"); } catch (e) { return; }
+    var rt = remRoutine(r), title = T("Time for your mobility"), body = rt.n + " · " + mins(routineSecs(rt.items));
+    try { if (Notification.permission !== "granted") return; navigator.serviceWorker && navigator.serviceWorker.ready ? navigator.serviceWorker.ready.then(function (reg) { reg.showNotification(title, { body: body, icon: "icons/icon-192.png", tag: "sm-reminder", data: { url: "?play=" + rt.id } }); }) : new Notification(title, { body: body }); } catch (e) {}
+  }
+  setInterval(remTick, 60000); document.addEventListener("visibilitychange", function () { if (!document.hidden) { remTick(); if (TAB === "home") render(); } });
+
   /* ---------- Strava ---------- */
   function stravaLog(name, secs, ids) {
     if (!window.STRAVA || !STRAVA.connected() || !STRAVA.get().auto) return;
@@ -930,6 +1000,7 @@
       ('<div class="row" style="margin-top:14px"><label class="field" style="flex:2">' + T("Routine background music") + '<select id="s-music">') + MUSIC_STYLES.map(function (o) { return '<option value="' + o[0] + '"' + ((s.music || "pads") === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><label class="field">' + T("Music volume") + '<input type="range" id="s-mvol" min="0" max="1" step="0.05" value="' + (s.musicVol == null ? 0.5 : s.musicVol) + ('" style="min-height:46px;padding:0;accent-color:var(--brand)"></label></div><button class="btn" style="margin-top:8px" data-act="music-preview">' + T("Preview music") + '</button><p class="small muted" style="margin-top:6px">' + T("Gentle music generated on your phone. It drops down whenever the coach speaks.") + '</p>') +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-showphotos"' + (s.photos !== false ? " checked" : "") + '> ' + T("Show stretch photos (instead of stick figures)") + '</label>' +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-photos"' + (s.savePhotos ? " checked" : "") + '> ' + T("Save camera test images to Photos") + '</label></div>';
+    h += '<div id="rem-slot">' + remCard() + "</div>";
     h += '<div id="strava-slot">' + stravaCard() + "</div>";
     h += ('<div class="card"><h3>' + T("Your data") + '</h3><p class="small muted" style="margin:4px 0 12px">' + T("Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal's format.") + '</p><div class="row"><button class="btn grow" data-act="export">' + T("Export file") + '</button><button class="btn grow" data-act="copy">' + T("Copy") + '</button></div><div class="row" style="margin-top:8px"><label class="btn grow">' + T("Restore from file") + '<input type="file" accept="application/json,.json" id="s-import" hidden></label></div>') +
       ('<details style="margin-top:10px"><summary class="small" style="color:var(--brand);font-weight:600">' + T("Paste a backup instead") + '</summary><textarea class="inp" id="s-paste" rows="4" style="margin-top:8px;font-size:13px"></textarea><button class="btn" style="margin-top:8px" data-act="paste-import">' + T("Restore pasted backup") + '</button></details></div>');
@@ -940,7 +1011,7 @@
     offlineUI();
     var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
     ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-sport", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
-    stravaWire();
+    stravaWire(); remWire();
     $("#s-lang").addEventListener("change", function (e) { S.settings.lang = e.target.value; save(); setTimeout(function () { location.reload(); }, 150); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
   }
@@ -1003,6 +1074,9 @@
         var y2 = window.scrollY; renderRoutines(); window.scrollTo(0, y2); break; }
       case "mg-clear": MG_SEL = []; MG_LAST = null; renderRoutines(); break;
       case "settings-open": openSettings(); break;
+      case "rm-day": { var rr2 = rem(), dd = +id, ix2 = rr2.days.indexOf(dd); if (ix2 >= 0) { if (rr2.days.length > 1) rr2.days.splice(ix2, 1); } else rr2.days.push(dd); setRem({ days: rr2.days }); remRefresh(); render(); break; }
+      case "rm-ics": { var blob = new Blob([remIcs()], { type: "text/calendar" }), a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "signal-mobility-reminder.ics"; document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 1000); toast(T("Open the file and tap Add to put it in your calendar")); break; }
+      case "rm-later": { try { localStorage.setItem("sm-nudge-" + iso(), "1"); } catch (e) {} render(); break; }
       case "strava-connect": if (!$("#sv-id").value.trim() || !$("#sv-secret").value.trim()) { toast(T("Enter your Strava Client ID and Client Secret first.")); break; } STRAVA.setConfig({ id: $("#sv-id").value, secret: $("#sv-secret").value }); location.href = STRAVA.authorizeUrl(); break;
       case "strava-code": { STRAVA.setConfig({ id: $("#sv-id").value, secret: $("#sv-secret").value }); var cv = ($("#sv-code").value || "").replace(/^.*[?&]code=([^&]+).*$/, "$1"); if (!cv) break; STRAVA.useCode(cv).then(function () { toast(T("Connected to Strava")); stravaRefresh(); }).catch(function (e) { diag("strava: " + e.message); toast(TF("Couldn't connect to Strava ({error})", { error: e.message })); }); break; }
       case "strava-off": STRAVA.disconnect(); stravaRefresh(); toast(T("Disconnected from Strava")); break;
@@ -1090,6 +1164,7 @@
   applyTheme();
   var t0 = "home"; try { t0 = sessionStorage.getItem("sm-tab") || "home"; } catch (e) {}
   go(t0);
+  (function () { var q = new URLSearchParams(location.search), pl = q.get("play"); if (!pl) return; try { history.replaceState(null, "", location.pathname); } catch (e) {} setTimeout(function () { if (findRoutine(pl)) openRoutine(pl); }, 300); })();
   if (window.STRAVA) {
     STRAVA.onLog(diag);
     STRAVA.handleRedirect().then(function (res) {

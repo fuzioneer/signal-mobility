@@ -281,3 +281,12 @@ nav.tabs button.on { color: var(--brand); }
 .cr-right { right: -6px; }
 .chiprow.at-start .cr-left, .chiprow.at-end .cr-right, .chiprow.no-scroll .cr-arrow { opacity: 0; pointer-events: none; }
 .swipe-hint { font-weight: 400; opacity: .8; }
+
+/* Reminders */
+.remhow { background: var(--soft); border-radius: 12px; padding: 12px; margin-top: 8px; }
+.remhow p { margin: 4px 0 10px; }
+.daychips { flex-wrap: wrap; margin: 0; padding: 2px 0 6px; }
+.daychips .chip { min-width: 44px; text-align: center; }
+.remnudge { border: 2px solid var(--brand); }
+.remcheck { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; line-height: 1.35; }
+.remcheck input { width: 22px; height: 22px; flex: 0 0 22px; margin: 0; accent-color: var(--brand); }
