@@ -125,14 +125,18 @@
   /* If iOS stops the element (for example while the coach speaks), start it again once the voice has finished. */
   var elKick = 0, quietAfter = 0;
   /* The app tells us when the coach's whole message has finished, so the music can come back straight away. */
+  function beforeSpeech() {
+    if (mode !== "el" || !el || el.paused || !elWant) return 0;
+    try { el.pause(); } catch (e) {} return 150;
+  }
   function speechEnd() { duckUntil = Math.min(duckUntil, performance.now()); quietAfter = performance.now() + 250; setTimeout(kick, 300); }
   setInterval(kick, 1000);
   function kick() {
     if (mode !== "el" || !elWant || !el || !el.paused || !el.src || el.src.indexOf("blob:") !== 0) return;
     /* Never restart while the coach is talking: on iOS starting the music cancels the rest of what the coach was saying. */
     var now = performance.now(); if (now < duckUntil || now < quietAfter) return;
-    try { if (window.speechSynthesis && (speechSynthesis.speaking || speechSynthesis.pending) && now < duckUntil + 8000) return; } catch (e) {}
-    elKick++; if (elKick <= 3 || elKick % 10 === 0) log("music: audio file was stopped by the phone, restarting");
+    try { if (window.speechSynthesis && (speechSynthesis.speaking || speechSynthesis.pending) && now < duckUntil + 1500) return; } catch (e) {}
+    elKick++; if (elKick <= 3 || elKick % 10 === 0) log("music: back on after the coach");
     playEl("restart");
   }
   function elStop() { elWant = null; try { if (el) { el.muted = true; el.pause(); } } catch (e) {} }
@@ -219,5 +223,5 @@
   }
   setInterval(function () { if (ctx && style) apply(); }, 150);
   function status() { return ctx ? { mode: mode, file: el && mode === "el" ? (el.paused ? "paused" : el.muted ? "muted" : "playing") + " " + Math.round(el.duration || 0) + "s" : undefined, state: ctx.state, t: +ctx.currentTime.toFixed(1), out: +out.gain.value.toFixed(2), duck: +duckG.gain.value.toFixed(2), style: style, paused: paused, notes: live.length } : { state: "none" }; }
-  window.MUSIC = { speechEnd: speechEnd, arm: arm, preload: preload, ios: isIOS, status: status, start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, duckFor: duckFor, setQuiet: setQuiet, playing: function () { return !!style; } };
+  window.MUSIC = { beforeSpeech: beforeSpeech, speechEnd: speechEnd, arm: arm, preload: preload, ios: isIOS, status: status, start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, duckFor: duckFor, setQuiet: setQuiet, playing: function () { return !!style; } };
 })();
