@@ -51,5 +51,5 @@
     [].forEach.call(root.querySelectorAll("[aria-label]"), function (e) { e.setAttribute("aria-label", T(e.getAttribute("aria-label"))); });
   };
   document.documentElement.lang = lang;
-  if (lang !== "en") document.write('<script src="lang/' + lang + '.js"><\/script>');
+  /* The language files (lang-xx.js) are loaded by index.html straight after this file. */
 })();

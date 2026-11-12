@@ -1,0 +1,836 @@
+/* Signal Mobility translations: es */
+I18N.add("es", {
+"&#x2039;": "&#x2039;",
+"&#x203A;": "&#x203A;",
+"&#x2715;": "&#x2715;",
+"+ Build your own": "+ Crea la tuya",
+", about": ", unos",
+", hips below knees": ", cadera por debajo de las rodillas",
+", with your hips below your knees.": ", con la cadera por debajo de las rodillas.",
+"10 seconds.": "10 segundos.",
+"34 to 45": "34 a 45",
+"46 to 55": "46 a 55",
+"56 and over": "56 o más",
+"About 15 minutes. It scores six zones so the app can build your daily routine around what's tightest. Camera tracking works for 5 of the tests.": "Unos 15 minutos. Puntúa seis zonas para que la app cree tu rutina diaria en torno a lo que está más rígido. El seguimiento con cámara funciona en 5 de las pruebas.",
+"About 50 to 80 MB. Best done on Wi-Fi. After that, photos load instantly even with no signal.": "Unos 50 a 80 MB. Mejor con wifi. Después, las fotos cargan al instante incluso sin cobertura.",
+"Abs and obliques": "Abdominales y oblicuos",
+"Add to Home Screen": "Añadir a pantalla de inicio",
+"Add to your Home Screen": "Añade la app a tu pantalla de inicio",
+"Added to your test. Tap Save test when you're done.": "Añadido a tu prueba. Toca Guardar prueba cuando termines.",
+"Adductors, the inside of the thigh": "Aductores, la cara interna del muslo",
+"Age": "Edad",
+"Age and sex set the typical-score markers (currently available for men only). Height scales the camera's cm estimates.": "La edad y el sexo fijan las marcas de puntuación típica (por ahora solo disponibles para hombres). La altura ajusta las estimaciones en cm de la cámara.",
+"Aim for": "Intenta hacer",
+"All": "Todo",
+"All data deleted": "Todos los datos borrados",
+"All done. Nice work today.": "Terminado. Buen trabajo hoy.",
+"All photos saved for offline use": "Todas las fotos guardadas para usar sin conexión",
+"All saved": "Todo guardado",
+"And that's it. Great session.": "Y eso es todo. Gran sesión.",
+"Anterior chain": "Cadena anterior",
+"Back": "Espalda",
+"Back flat against the wall, heels, bum and head touching. Lift both arms overhead with your thumbs together, and reach back towards the wall. Hold it for a couple of seconds.": "Espalda plana contra la pared, con talones, glúteos y cabeza tocándola. Sube los dos brazos por encima de la cabeza con los pulgares juntos y estíralos hacia la pared. Mantén un par de segundos.",
+"Back view of the body": "Vista posterior del cuerpo",
+"Background music": "Música de fondo",
+"Beeps": "Pitidos",
+"Best": "Mejor",
+"Best available": "La mejor disponible",
+"Best positions": "Mejores posiciones",
+"Best readings cleared": "Mejores lecturas borradas",
+"Both sides": "Ambos lados",
+"Both sides recorded. Nice work. Tap Use results when you're happy.": "Ambos lados registrados. Buen trabajo. Toca Usar resultados cuando estés conforme.",
+"Calm pads": "Pads suaves",
+"Camera": "Cámara",
+"Camera access was blocked. Allow it in Settings > Safari > Camera, then try again.": "Se bloqueó el acceso a la cámara. Permítelo en Ajustes > Safari > Cámara y vuelve a intentarlo.",
+"Can't see you. Step back so your whole body is in view.": "No te veo. Retrocede para que se vea todo tu cuerpo.",
+"Cancel": "Cancelar",
+"Change": "Cambiar",
+"Changes the app, the coach's voice and all stretch instructions. The app restarts to apply it.": "Cambia la app, la voz del entrenador y todas las instrucciones de los estiramientos. La app se reinicia para aplicarlo.",
+"Checking…": "Comprobando…",
+"Choose": "Elegir",
+"Clear": "Borrar",
+"Close": "Cerrar",
+"Coach voice": "Voz del entrenador",
+"Coach's voice": "Voz del entrenador",
+"Cool-down": "Vuelta a la calma",
+"Copied": "Copiado",
+"Copied. Paste it into Body Signal or a note.": "Copiado. Pégalo en Body Signal o en una nota.",
+"Copy": "Copiar",
+"Couldn't copy on this device. Use Export file instead.": "No se pudo copiar en este dispositivo. Usa Exportar archivo.",
+"Couldn't download the tracking model": "No se pudo descargar el modelo de seguimiento",
+"Couldn't load body tracking. Check your connection and try again.": "No se pudo cargar el seguimiento corporal. Revisa tu conexión y vuelve a intentarlo.",
+"Couldn't open the save sheet": "No se pudo abrir la hoja para guardar",
+"Couldn't play that video.": "No se pudo reproducir ese vídeo.",
+"Couldn't save. Storage may be full.": "No se pudo guardar. Puede que el almacenamiento esté lleno.",
+"Couldn't start the camera (": "No se pudo iniciar la cámara (",
+"CrossFit": "CrossFit",
+"Cycling": "Ciclismo",
+"Dark": "Oscuro",
+"Deepest squat": "Sentadilla más profunda",
+"Delete": "Eliminar",
+"Delete all data": "Borrar todos los datos",
+"Deltoids, the caps of the shoulders": "Deltoides, la parte redondeada de los hombros",
+"Desk": "Oficina",
+"Diagnostics": "Diagnóstico",
+"Do it now": "Hazlo ahora",
+"Done": "Listo",
+"Edit": "Editar",
+"End session": "Terminar sesión",
+"Enter at least one result first.": "Introduce al menos un resultado primero.",
+"Erector spinae, either side of the lower spine": "Erectores de la columna, a ambos lados de la zona lumbar",
+"Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal's format.": "Todo se guarda solo en este teléfono. Exporta una copia de seguridad de vez en cuando. El archivo también incluye tus pruebas en el formato de Body Signal.",
+"Export file": "Exportar archivo",
+"Face the camera and hold still…": "Mira a la cámara y quédate quieto…",
+"Favourite sport (optional)": "Deporte favorito (opcional)",
+"Feet about shoulder width apart. Squat down as deep as you can, chest up, heels down. Pause at the bottom for a couple of seconds.": "Pies a la anchura de los hombros. Baja en sentadilla tan profundo como puedas, pecho arriba y talones en el suelo. Quédate abajo un par de segundos.",
+"Feet together, knees straight. Reach down as far as you can, and hold it at the bottom.": "Pies juntos, rodillas estiradas. Baja tanto como puedas y mantén abajo.",
+"Female": "Mujer",
+"Final 3, 2, 1 countdown": "Cuenta atrás final 3, 2, 1",
+"Finish": "Terminar",
+"Finish a routine and it'll show here.": "Termina una rutina y aparecerá aquí.",
+"First up,": "Primero,",
+"Flip camera": "Girar cámara",
+"Focus:": "Enfoque:",
+"For the most natural voice, download one on your iPhone: open Settings, search for Voices, then pick your language and an Enhanced or Premium voice. Then close and reopen this app and choose it here.": "Para una voz más natural, descarga una en tu iPhone: abre Ajustes, busca Voces, elige tu idioma y una voz Mejorada o Premium. Después cierra y vuelve a abrir esta app y elígela aquí.",
+"Front": "Delante",
+"Front view of the body": "Vista frontal del cuerpo",
+"Gastrocnemius, soleus and Achilles": "Gastrocnemio, sóleo y tendón de Aquiles",
+"Gentle music generated on your phone. It drops down whenever the coach speaks.": "Música suave generada en tu teléfono. Baja de volumen cada vez que habla el entrenador.",
+"Get into position": "Colócate en posición",
+"Get into your ninety ninety position, with the front shin across your body. Lean forward with a long back, and let the front knee drop. Hold it there.": "Ponte en posición noventa noventa, con la espinilla delantera cruzada delante del cuerpo. Inclínate hacia delante con la espalda larga y deja caer la rodilla delantera. Mantén ahí.",
+"Gluteus maximus and medius, plus the outer hip and IT band": "Glúteo mayor y medio, más la cadera externa y la cintilla iliotibial",
+"Go again": "Otra vez",
+"Golf": "Golf",
+"Good light, fitted clothes.": "Buena luz, ropa ajustada.",
+"Good squat.": "Buena sentadilla.",
+"Good. Swap over to the right.": "Bien. Cambia a la derecha.",
+"Got it.": "Lo tengo.",
+"Great, I've got you. In your own time, move into it and hold at your best point.": "Genial, ya te tengo. Cuando quieras, entra en la posición y mantén en tu mejor punto.",
+"Great, hold it.": "Genial, mantén.",
+"Half-kneel side-on to the phone. Drive the front knee forward over the toes with the heel down. Hold at your furthest point. Swap legs.": "Ponte en semiarrodillado de lado al teléfono. Lleva la rodilla delantera hacia delante por encima de los dedos con el talón en el suelo. Mantén en el punto más lejano. Cambia de pierna.",
+"Halfway there. Breathe out, and sink a little deeper.": "Vas por la mitad. Suelta el aire y baja un poco más.",
+"Halfway there. Keep it smooth.": "Vas por la mitad. Hazlo fluido.",
+"Halfway. Keep breathing.": "Mitad. Sigue respirando.",
+"Halfway. Relax your shoulders, and let it go a bit further.": "Mitad. Relaja los hombros y llega un poco más lejos.",
+"Have another go if you think you can beat it, or tap Use results when you're happy.": "Inténtalo otra vez si crees que puedes superarlo, o toca Usar resultados cuando estés conforme.",
+"Hear it": "Escuchar",
+"Hear the voice": "Escuchar la voz",
+"Height (cm)": "Altura (cm)",
+"Hello. I'll be your coach for mobility tests and stretching. Ready when you are.": "Hola. Seré tu entrenador para las pruebas de movilidad y los estiramientos. Cuando quieras.",
+"Hi there. This is how I'll sound during your sessions. Let's get moving.": "Hola. Así sonaré durante tus sesiones. Vamos a movernos.",
+"Hips": "Caderas",
+"Hips and overhead until you test": "Caderas y overhead hasta que hagas la prueba",
+"History": "Historial",
+"Hold": "Mantén",
+"Hold a stick across your shoulders. First, face me and keep still for a moment, so I can learn your shoulder width.": "Sujeta un palo sobre los hombros. Primero, mírame y quédate quieto un momento para que aprenda la anchura de tus hombros.",
+"How to do it": "Cómo hacerlo",
+"Hyrox": "Hyrox",
+"I can see you. Face me, and keep still for a moment.": "Te veo. Mírame y quédate quieto un momento.",
+"I can't quite see all of you. Take a step back.": "No te veo entero. Da un paso atrás.",
+"I'll let you know when I can see you.": "Te aviso cuando te vea.",
+"I've lost you a bit. Can you step back so I can see all of you?": "Te he perdido un poco. ¿Puedes retroceder para que te vea entero?",
+"Iliopsoas and rectus femoris, at the front of the hip": "Psoas ilíaco y recto femoral, en la parte delantera de la cadera",
+"Images downloaded": "Imágenes descargadas",
+"It then opens full screen, works offline and iOS keeps your data safe.": "Así se abre a pantalla completa, funciona sin conexión e iOS mantiene tus datos a salvo.",
+"Keep both legs straight. Lift one leg as high as you can, without bending the knee, and hold it there for a couple of seconds.": "Mantén las dos piernas estiradas. Sube una pierna tan alto como puedas sin doblar la rodilla y mantén un par de segundos.",
+"Keep holding that.": "Sigue manteniendo.",
+"Keep your front heel down, and drive your knee forward over your toes as far as it'll go. Hold it at the furthest point.": "Mantén el talón delantero en el suelo y lleva la rodilla hacia delante por encima de los dedos todo lo que puedas. Mantén en el punto más lejano.",
+"Keep your front heel down, and push your knee forward past your toes as far as it'll go. Hold it at the furthest point.": "Mantén el talón delantero en el suelo y empuja la rodilla hacia delante más allá de los dedos todo lo que puedas. Mantén en el punto más lejano.",
+"Keep your knees still, and swing both feet outwards as far as they'll go. Hold it there for a couple of seconds.": "Mantén las rodillas quietas y lleva los dos pies hacia fuera todo lo que puedas. Mantén un par de segundos.",
+"Keep your ribs down, and lift one straight arm up overhead as far as it'll go. Hold it there for a couple of seconds, then we'll do the other side.": "Costillas abajo y sube un brazo estirado por encima de la cabeza todo lo que puedas. Mantén un par de segundos y luego haremos el otro lado.",
+"Knee angle °": "Ángulo de rodilla °",
+"Language": "Idioma",
+"Last 8 weeks. Light = some stretching, dark = 8 minutes or more.": "Últimas 8 semanas. Claro = algo de estiramiento, oscuro = 8 minutos o más.",
+"Last one": "El último",
+"Latissimus dorsi, the wings down the sides of the back": "Dorsal ancho, las alas a los lados de la espalda",
+"Left": "Izquierda",
+"Left and right gaps": "Diferencias entre izquierda y derecha",
+"Left side": "Lado izquierdo",
+"Left side first.": "Primero el lado izquierdo.",
+"Left side to begin.": "Empezamos por el lado izquierdo.",
+"Left side,": "Lado izquierdo,",
+"Let's do your": "Vamos con tu",
+"Let's start with": "Empezamos con",
+"Lie back on a bench edge, hug one knee to your chest and let the other leg hang. Side-on to the phone. Hold still for 2 seconds.": "Túmbate boca arriba en el borde de un banco, abraza una rodilla contra el pecho y deja colgar la otra pierna. De lado al teléfono. Quédate quieto 2 segundos.",
+"Lie back on the edge of the bench. Hug one knee to your chest, and let the other leg hang down. Then just relax and hold still.": "Túmbate en el borde del banco. Abraza una rodilla contra el pecho y deja colgar la otra pierna. Luego relájate y quédate quieto.",
+"Lie on your back side-on to the phone, whole body in view. Raise one straight leg as high as you can, hold, lower. Then the other leg.": "Túmbate boca arriba de lado al teléfono, con todo el cuerpo a la vista. Sube una pierna estirada tan alto como puedas, mantén y baja. Luego la otra pierna.",
+"Light": "Claro",
+"Loading body tracking (first time takes a few seconds)…": "Cargando el seguimiento corporal (la primera vez tarda unos segundos)…",
+"Lovely.": "Muy bien.",
+"Lovely. Switch to the right side.": "Muy bien. Cambia al lado derecho.",
+"Lower body": "Tren inferior",
+"Male": "Hombre",
+"Match phone": "Como el teléfono",
+"Men": "Hombres",
+"Mobility score": "Puntuación de movilidad",
+"Mobility test": "Prueba de movilidad",
+"Move back a little, so your whole body's in the picture.": "Échate un poco atrás para que se vea todo tu cuerpo.",
+"Moving on to": "Pasamos a",
+"Muscle groups": "Grupos musculares",
+"Muscles": "Músculos",
+"Music volume": "Volumen de la música",
+"My routine": "Mi rutina",
+"Name your routine": "Ponle nombre a tu rutina",
+"Next": "Siguiente",
+"Next photo": "Foto siguiente",
+"Next up,": "A continuación,",
+"Nice and deep.": "Bien profunda.",
+"Nice one.": "Muy bien.",
+"Nice. Now the right side.": "Bien. Ahora el lado derecho.",
+"No moves match. Try another area or filter.": "Ningún ejercicio coincide. Prueba con otra zona u otro filtro.",
+"No readings captured yet.": "Aún no hay lecturas.",
+"No tests yet.": "Aún no hay pruebas.",
+"None": "Ninguno",
+"Normal": "Normal",
+"Not scored. A check of your squat position.": "Sin puntuación. Una revisión de tu posición de sentadilla.",
+"Nothing logged yet.": "Aún no hay nada registrado.",
+"Now rotate each way and hold.": "Ahora gira hacia cada lado y mantén.",
+"Now the other side.": "Ahora el otro lado.",
+"Now turn the other way.": "Ahora gira hacia el otro lado.",
+"Ocean waves": "Olas del mar",
+"Off": "Desactivado",
+"Offline photos": "Fotos sin conexión",
+"Okay, I can see you. Go whenever you're ready, and hold your best position for a couple of seconds.": "Vale, te veo. Cuando estés listo, entra en la posición y mantén tu mejor postura un par de segundos.",
+"Okay, let's measure your": "Vale, vamos a medir tu",
+"Okay, next is": "Vale, ahora toca",
+"On a bed": "En la cama",
+"One": "Uno",
+"One result": "Un resultado",
+"Open Mobility from the new icon": "Abre Mobility desde el nuevo icono",
+"Overall": "Global",
+"Overall mobility score over time": "Puntuación de movilidad global a lo largo del tiempo",
+"Overall score": "Puntuación global",
+"Paste a backup instead": "Pegar una copia de seguridad",
+"Pause": "Pausa",
+"Paused": "En pausa",
+"Pecs, across the front of the chest": "Pectorales, en la parte delantera del pecho",
+"Perfect, got it. Now turn as far as you can to one side, keep your hips still, and hold it.": "Perfecto, lo tengo. Ahora gira todo lo que puedas hacia un lado, con la cadera quieta, y mantén.",
+"Photo": "Foto",
+"Pick a music style first": "Elige antes un estilo de música",
+"Pick muscle areas, then tap moves in order": "Elige zonas musculares y luego toca los ejercicios en orden",
+"Pick your sport": "Elige tu deporte",
+"Posterior chain": "Cadena posterior",
+"Preview music": "Probar música",
+"Previous": "Anterior",
+"Previous photo": "Foto anterior",
+"Prop the phone at floor level about 2 to 3 metres away.": "Coloca el teléfono a ras de suelo a unos 2 o 3 metros.",
+"Prop the phone at hip height about 2 to 3 metres away.": "Coloca el teléfono a la altura de la cadera a unos 2 o 3 metros.",
+"Prop your phone at bench height, about two metres away, facing you. Get side-on to it.": "Coloca el teléfono a la altura de un banco, a unos dos metros, mirando hacia ti. Ponte de lado.",
+"Prop your phone at chest height, about two metres away. Sit facing it.": "Coloca el teléfono a la altura del pecho, a unos dos metros. Siéntate de frente.",
+"Prop your phone at chest height, about two metres away. Stand with your back to it.": "Coloca el teléfono a la altura del pecho, a unos dos metros. Ponte de espaldas a él.",
+"Prop your phone at hip height, about two metres away, with the screen facing you. Then stand side-on to it.": "Coloca el teléfono a la altura de la cadera, a unos dos metros, con la pantalla hacia ti. Luego ponte de lado.",
+"Prop your phone at hip height, about two metres away. Sit facing it.": "Coloca el teléfono a la altura de la cadera, a unos dos metros. Siéntate de frente.",
+"Prop your phone at knee height, about two metres away. Sit facing it.": "Coloca el teléfono a la altura de las rodillas, a unos dos metros. Siéntate de frente.",
+"Put your arm out to the side at shoulder height, with your elbow bent and your hand pointing at the ceiling. Then let your hand fall back towards the floor, keeping your shoulder down. Hold it at the bottom.": "Lleva el brazo hacia un lado a la altura del hombro, con el codo doblado y la mano apuntando al techo. Luego deja caer la mano hacia el suelo sin levantar el hombro. Mantén abajo.",
+"Put your phone on the floor, about two metres away, with the screen facing you. Lie down side-on to it.": "Pon el teléfono en el suelo, a unos dos metros, con la pantalla hacia ti. Túmbate de lado a él.",
+"Quadriceps, the front of the thigh": "Cuádriceps, la parte delantera del muslo",
+"Quick picks": "Sugerencias rápidas",
+"Quicker": "Más rápida",
+"Reach one hand over your shoulder, and the other up behind your back, so your fingers point at each other. Hold it for a couple of seconds.": "Lleva una mano por encima del hombro y la otra por detrás de la espalda, con los dedos apuntándose. Mantén un par de segundos.",
+"Relax for a second.": "Relájate un segundo.",
+"Reset": "Restablecer",
+"Restore from file": "Restaurar desde archivo",
+"Restore pasted backup": "Restaurar copia pegada",
+"Restored": "Restaurado",
+"Result": "Resultado",
+"Retest now": "Repetir la prueba",
+"Right": "Derecha",
+"Right side": "Lado derecho",
+"Right side,": "Lado derecho,",
+"Right,": "Bien,",
+"Right, now": "Bien, ahora",
+"Routine background music": "Música de fondo de las rutinas",
+"Routines": "Rutinas",
+"Running": "Running",
+"Save": "Guardar",
+"Save all photos for offline": "Guardar todas las fotos sin conexión",
+"Save camera test images to Photos": "Guardar imágenes de las pruebas en Fotos",
+"Save test": "Guardar prueba",
+"Save them to Photos to keep a visual record.": "Guárdalas en Fotos para tener un registro visual.",
+"Save to Photos": "Guardar en Fotos",
+"Saved": "Guardado",
+"Saved.": "Guardado.",
+"Saving…": "Guardando…",
+"Score": "Puntuación",
+"Score so far": "Puntuación hasta ahora",
+"Scroll left": "Desplazar a la izquierda",
+"Scroll right": "Desplazar a la derecha",
+"Sections": "Secciones",
+"Selected": "Seleccionado",
+"Sessions": "Sesiones",
+"Sets the top stretches and routines shown on Today.": "Define los estiramientos y rutinas destacados en Hoy.",
+"Settings": "Ajustes",
+"Sex": "Sexo",
+"Shin lean °": "Inclinación de la tibia °",
+"Shoulder girdle": "Cintura escapular",
+"Show movement": "Mostrar movimiento",
+"Show photo": "Mostrar foto",
+"Show stretch photos (instead of stick figures)": "Mostrar fotos de los estiramientos (en lugar de figuras)",
+"Show the movement": "Mostrar el movimiento",
+"Signal Mobility": "Signal Mobility",
+"Singing bowls": "Cuencos tibetanos",
+"Sleep": "Dormir",
+"Slower": "Más lenta",
+"Speed": "Velocidad",
+"Squat check": "Revisión de sentadilla",
+"Stand side-on, whole body in view, feet shoulder-width. Squat as deep as you can, pause 2 seconds at the bottom, stand up.": "De lado, con todo el cuerpo a la vista, pies a la anchura de los hombros. Baja en sentadilla tan profundo como puedas, quédate 2 segundos abajo y sube.",
+"Stand side-on, whole body in view. Raise one straight arm overhead, hold 2 seconds, lower. Turn round for the other arm.": "De lado, con todo el cuerpo a la vista. Sube un brazo estirado por encima de la cabeza, mantén 2 segundos y baja. Date la vuelta para el otro brazo.",
+"Start": "Empezar",
+"Start camera": "Iniciar cámara",
+"Start with a mobility test": "Empieza con una prueba de movilidad",
+"Start,": "Empezar,",
+"Starting camera…": "Iniciando la cámara…",
+"Step into view so your whole body is on screen.": "Ponte delante de la cámara para que se vea todo tu cuerpo.",
+"Stop preview": "Parar",
+"Stretch library": "Biblioteca de estiramientos",
+"Stretching": "Estiramientos",
+"Switch sides": "Cambia de lado",
+"Take the test": "Hacer la prueba",
+"Tap Delete again to confirm": "Toca Eliminar otra vez para confirmar",
+"Tap a muscle on the body to select it.": "Toca un músculo del cuerpo para seleccionarlo.",
+"Tap again to delete everything on this phone": "Toca otra vez para borrar todo lo de este teléfono",
+"Tap one or more muscles to see moves that stretch them.": "Toca uno o más músculos para ver ejercicios que los estiran.",
+"Tap the Share button in Safari": "Toca el botón Compartir en Safari",
+"Test": "Prueba",
+"Test date": "Fecha de la prueba",
+"Tested": "Probado el",
+"Tests": "Pruebas",
+"That isn't a Signal Mobility backup.": "Eso no es una copia de seguridad de Signal Mobility.",
+"That isn't a valid backup file.": "Eso no es un archivo de copia de seguridad válido.",
+"That's": "Eso es",
+"That's both sides done. Go again if you want to beat them, or tap Use results.": "Ambos lados hechos. Repite si quieres superarlos, o toca Usar resultados.",
+"That's halfway. Keep breathing slowly.": "Vas por la mitad. Sigue respirando despacio.",
+"That's halfway. Nice and controlled.": "Vas por la mitad. Bien controlado.",
+"That's it.": "Eso es.",
+"That's the session finished. Well done.": "Sesión terminada. Muy bien hecho.",
+"The back of the thigh, hip to knee": "La parte trasera del muslo, de la cadera a la rodilla",
+"The cm reading is an estimate scaled to your height (": "La lectura en cm es una estimación ajustada a tu altura (",
+"Theme": "Tema",
+"Then lift the other leg.": "Luego sube la otra pierna.",
+"Then swap hands over.": "Luego cambia de mano.",
+"Then swap legs over.": "Luego cambia de pierna.",
+"Then switch sides.": "Luego cambia de lado.",
+"Then turn round, and do the other arm.": "Luego date la vuelta y haz el otro brazo.",
+"Then turn round, and lift the other arm.": "Luego date la vuelta y sube el otro brazo.",
+"This browser can't open the camera. Open the app in Safari, or use a video instead.": "Este navegador no puede abrir la cámara. Abre la app en Safari o usa un vídeo.",
+"This browser can't store photos offline.": "Este navegador no puede guardar fotos sin conexión.",
+"Three": "Tres",
+"Tightest zone:": "Zona más rígida:",
+"Time between exercises": "Tiempo entre ejercicios",
+"Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.": "Tiempo para recolocarte y coger el material (banda, rodillo, palo) antes de cada ejercicio. Al empezar se lee en voz alta el siguiente ejercicio y su material.",
+"Time to retest": "Hora de repetir la prueba",
+"Time to switch sides": "Tiempo para cambiar de lado",
+"Today": "Hoy",
+"Top routines for": "Rutinas destacadas para",
+"Top stretches for": "Estiramientos destacados para",
+"Torso lean °": "Inclinación del tronco °",
+"Traps and rhomboids, between the shoulder blades": "Trapecio y romboides, entre los omóplatos",
+"Two": "Dos",
+"Typical score for men your age": "Puntuación típica de hombres de tu edad",
+"Up next:": "A continuación:",
+"Upper body": "Tren superior",
+"Use a video": "Usar un vídeo",
+"Use results": "Usar resultados",
+"Video finished. Tap Use results to keep the best readings.": "Vídeo terminado. Toca Usar resultados para quedarte con las mejores lecturas.",
+"Voice": "Voz",
+"Voice (female, American)": "Voz (femenina, estadounidense)",
+"Voice (male, British)": "Voz (masculina, británica)",
+"Voice coaching": "Indicaciones por voz",
+"Warm up for 5 minutes first. Tap": "Calienta 5 minutos antes. Toca",
+"Warm-up": "Calentamiento",
+"We'll begin with": "Comenzamos con",
+"We'll start on the left.": "Empezamos por la izquierda.",
+"Which muscles?": "¿Qué músculos?",
+"Wrist flexors and extensors along the forearm": "Flexores y extensores de la muñeca, a lo largo del antebrazo",
+"You can go again to beat that, or tap Use results.": "Puedes repetir para superarlo, o toca Usar resultados.",
+"You'll need": "Necesitarás",
+"Your daily 10": "Tus 10 diarios",
+"Your data": "Tus datos",
+"Your knee angle is": "Tu ángulo de rodilla es",
+"Your last test was": "Tu última prueba fue hace",
+"Your routine": "Tu rutina",
+"Your score will chart here after your first test.": "Tu puntuación aparecerá en este gráfico tras tu primera prueba.",
+"a band or towel": "una banda o una toalla",
+"a band, towel or belt": "una banda, toalla o cinturón",
+"a bench, sofa or bed": "un banco, sofá o cama",
+"a bench, sofa, bed or chair": "un banco, sofá, cama o silla",
+"a broomstick or towel": "un palo de escoba o una toalla",
+"a broomstick, towel or band": "un palo de escoba, toalla o banda",
+"a door frame or wall edge": "un marco de puerta o el borde de una pared",
+"a foam roller or rolled towel": "un rodillo de espuma o una toalla enrollada",
+"a pillow or two": "una o dos almohadas",
+"a pillow or two, if you like": "una o dos almohadas, si quieres",
+"a sofa, bed or chair": "un sofá, cama o silla",
+"a stair or step": "un escalón",
+"a towel or belt": "una toalla o cinturón",
+"a wall": "una pared",
+"a wall or sofa": "una pared o un sofá",
+"above": "por encima de",
+"age average": "media de la edad",
+"and": "y",
+"average": "media",
+"below": "por debajo de",
+"best": "mejor",
+"body tracking by MediaPipe": "seguimiento corporal con MediaPipe",
+"cm, change it in Settings).": "cm, cámbiala en Ajustes).",
+"cycling": "ciclismo",
+"day streak": "días seguidos",
+"days ago. Retesting every 4 weeks shows what's working.": "días. Repetir la prueba cada 4 semanas muestra lo que funciona.",
+"each side": "por lado",
+"everyday": "el día a día",
+"golf": "golf",
+"left": "izquierdo",
+"lifting": "levantamiento",
+"min": "min",
+"mins this week": "min esta semana",
+"mobility": "movilidad",
+"moves": "ejercicios",
+"moves ·": "ejercicios ·",
+"not done": "sin hacer",
+"of": "de",
+"of 6 zones": "de 6 zonas",
+"of stretching": "de estiramientos",
+"on any test to measure it with live body tracking, or type a result in. Distances in cm are estimated from your height (": "en cualquier prueba para medirla con seguimiento corporal en directo, o escribe un resultado. Las distancias en cm se estiman a partir de tu altura (",
+"photos couldn't be saved. Try again on Wi-Fi.": "fotos no se pudieron guardar. Inténtalo de nuevo con wifi.",
+"photos saved on this phone.": "fotos guardadas en este teléfono.",
+"photos saved on this phone. Routines work with no signal.": "fotos guardadas en este teléfono. Las rutinas funcionan sin cobertura.",
+"points tighter. Give it an extra set.": "puntos más rígido. Haz una serie extra.",
+"position": "posición",
+"right": "derecho",
+"running": "running",
+"seconds": "segundos",
+"selected": "seleccionados",
+"sessions": "sesiones",
+"side is": "está",
+"something sturdy to hold": "algo firme a lo que agarrarte",
+"something thin under your heels": "algo fino bajo los talones",
+"something to hold, if you like": "algo a lo que agarrarte, si quieres",
+"swipe or use the arrows": "desliza o usa las flechas",
+"tests and": "pruebas y",
+"the average": "la media",
+"the edge of the bed": "el borde de la cama",
+"up to 33": "hasta 33",
+"your": "tu",
+"your left side is {n} points tighter. Give it an extra set.": "tu lado izquierdo está {n} puntos más rígido. Hazle una serie extra.",
+"your right side is {n} points tighter. Give it an extra set.": "tu lado derecho está {n} puntos más rígido. Hazle una serie extra.",
+"{n} above the average": "{n} por encima de la media",
+"{n} below the average": "{n} por debajo de la media"
+}, {
+"zone": {
+"shoulders": "Hombros",
+"overhead": "Overhead",
+"thorax": "Tórax",
+"postchain": "Cadena posterior",
+"hips": "Caderas",
+"ankles": "Tobillos"
+},
+"muscle": {
+"sh": "Hombros",
+"ch": "Pecho",
+"ub": "Parte alta de la espalda",
+"lat": "Dorsales",
+"lb": "Zona lumbar",
+"core": "Core",
+"fa": "Antebrazos y muñecas",
+"hf": "Flexores de cadera",
+"quad": "Cuádriceps",
+"add": "Aductores",
+"gl": "Glúteos y cadera externa",
+"ham": "Isquiotibiales",
+"calf": "Gemelos y tobillos"
+},
+"sport": {
+"crossfit": "CrossFit / fitness funcional",
+"hyrox": "Hyrox",
+"running": "Running",
+"golf": "Golf",
+"lifting": "Halterofilia / fuerza",
+"cycling": "Ciclismo",
+"office": "Trabajo de oficina / forma física general"
+},
+"preset": {
+"daily": {
+"n": "Tus 10 diarios",
+"sub": "Basada en tus dos zonas más rígidas"
+},
+"warm": {
+"n": "Calentamiento pre-WOD",
+"sub": "Dinámico, 8 minutos"
+},
+"cool": {
+"n": "Vuelta a la calma post-WOD",
+"sub": "Posiciones largas, unos 12 minutos"
+},
+"overhead": {
+"n": "Día de overhead",
+"sub": "Preparación para arrancada, envión y sentadilla overhead"
+},
+"squat": {
+"n": "Preparación de sentadilla y cargada",
+"sub": "Caderas y tobillos"
+},
+"back": {
+"n": "Cuidado de la espalda",
+"sub": "Suave, para una zona lumbar cargada"
+},
+"desk": {
+"n": "Pausa en la oficina",
+"sub": "5 minutos, sin material"
+},
+"prerun": {
+"n": "Antes de correr",
+"sub": "Calentamiento dinámico para ponerte en marcha"
+},
+"postrun": {
+"n": "Después de correr",
+"sub": "Vuelta a la calma suave para gemelos, caderas e isquiotibiales"
+},
+"hyroxpre": {
+"n": "Calentamiento Hyrox",
+"sub": "Día de carrera o entrenamiento, unos 10 minutos"
+},
+"hyroxpost": {
+"n": "Recuperación Hyrox",
+"sub": "Tras una carrera o sesión dura: gemelos, cuádriceps, caderas, dorsales y agarre"
+},
+"golfpre": {
+"n": "Calentamiento de golf",
+"sub": "En el tee o en el campo de prácticas, todo de pie, unos 8 minutos"
+},
+"golfmob": {
+"n": "Movilidad para golf",
+"sub": "En casa, para un giro más amplio y libre"
+},
+"preride": {
+"n": "Antes de pedalear",
+"sub": "Activa caderas, isquiotibiales y espalda, unos 8 minutos"
+},
+"postride": {
+"n": "Después de pedalear",
+"sub": "Abre caderas y pecho tras horas en el sillín"
+},
+"rideposture": {
+"n": "Postura del ciclista",
+"sub": "Deshaz la joroba: pecho, parte alta de la espalda y cuello"
+},
+"bedhips": {
+"n": "Caderas rígidas, en la cama",
+"sub": "Todo tumbado, en cualquier colchón"
+},
+"sleep": {
+"n": "Relajación antes de dormir",
+"sub": "Lenta y relajante, unos 10 minutos"
+}
+},
+"test": {
+"cam_shflex": {
+"n": "Flexión de hombro",
+"how": "De lado a la cámara. Costillas abajo, zona lumbar neutra. Sube un brazo estirado por encima de la cabeza todo lo que puedas, mantén 2 segundos y baja. Date la vuelta para el otro lado. 180° es completamente vertical."
+},
+"wallflex": {
+"n": "Alcance overhead en pared",
+"how": "De lado a la cámara con talones, glúteos, parte alta de la espalda y cabeza contra la pared, zona lumbar plana. Sube los brazos estirados por encima de la cabeza, pulgares juntos, y llévalos hacia la pared. Mantén 2 segundos. La cámara estima la distancia de los pulgares a la pared (0 = tocando)."
+},
+"backscratch": {
+"n": "Rascado de espalda",
+"how": "De espaldas a la cámara, con toda la parte superior del cuerpo a la vista. Lleva una mano por encima del hombro y la otra por detrás de la espalda, con los dedos apuntándose. Mantén 2 segundos y cambia de mano. Si queda hueco se lee en negativo, si se solapan en positivo. 'Derecha' significa la mano derecha arriba."
+},
+"er": {
+"n": "Rotación externa de hombro",
+"how": "Túmbate boca arriba, de lado a la cámara, con el teléfono a ras de suelo junto al brazo que pruebas. Brazo hacia el lado a la altura del hombro, codo a 90°, antebrazo apuntando al techo. Deja caer la mano hacia el suelo sin levantar el hombro. Mantén 2 segundos. Luego date la vuelta para el otro brazo."
+},
+"trot": {
+"n": "Rotación torácica sentado",
+"how": "Siéntate con las piernas cruzadas frente a la cámara, con un palo de escoba o una toalla enrollada sobre los hombros. Quédate quieto mirando al frente 2 segundos para que la cámara aprenda la anchura de tus hombros y luego gira todo lo que puedas hacia cada lado con la cadera quieta. Mantén 2 segundos en cada extremo."
+},
+"slr": {
+"n": "Elevación de pierna recta",
+"how": "Túmbate boca arriba de lado a la cámara, piernas estiradas. Sube una pierna tan alto como puedas con la rodilla bloqueada y la otra pierna en el suelo. Repite con la otra pierna. 90° es vertical."
+},
+"toetouch": {
+"n": "Tocar los pies de pie",
+"how": "De lado a la cámara sobre un escalón o una caja firme, con los dedos en el borde (para poder pasar de ellos). Pies juntos, rodillas estiradas, baja y mantén 2 segundos. Pasar de los dedos es positivo; no llegar, negativo."
+},
+"hipir": {
+"n": "Rotación interna de cadera",
+"how": "Siéntate en algo lo bastante alto para que los pies no toquen el suelo (una mesa, encimera o banco alto), frente a la cámara, rodillas a 90° y separadas a la anchura de la cadera. Mantén las rodillas quietas y lleva los dos pies hacia fuera todo lo que puedas. Mantén 2 segundos. La cámara mide el ángulo de cada tibia respecto a la vertical."
+},
+"thomas": {
+"n": "Test de Thomas (flexor de cadera)",
+"how": "Siéntate en el extremo de un banco, cama o mesa firme, de lado a la cámara. Túmbate abrazando una rodilla contra el pecho y deja colgar la otra pierna 5 segundos. Cambia. El ángulo es el del muslo que cuelga respecto a la horizontal: negativo es bueno, positivo es rígido."
+},
+"pigeon": {
+"n": "Rotación de cadera 90/90",
+"how": "Siéntate en posición 90/90 frente a la cámara, con la espinilla delantera cruzada delante del cuerpo. Inclínate hacia delante con la espalda recta y deja caer la rodilla delantera. Mantén 2 segundos y cambia de lado. La cámara estima la distancia entre la rodilla delantera y el suelo."
+},
+"cam_shin": {
+"n": "Dorsiflexión de tobillo (inclinación de la tibia)",
+"how": "De lado a la cámara en zancada con una rodilla en el suelo, talón delantero apoyado. Lleva la rodilla hacia delante por encima de los dedos todo lo que puedas sin levantar el talón. Cambia de lado. 40° o más es bueno."
+},
+"k2w": {
+"n": "Rodilla a la pared",
+"how": "En semiarrodillado de lado a la cámara, con toda la parte inferior del cuerpo a la vista. Con el talón delantero en el suelo, lleva la rodilla hacia delante por encima de los dedos todo lo que puedas. Mantén 2 segundos y cambia de pierna. La cámara estima la distancia rodilla-pared (cuánto pasa la rodilla por delante de los dedos)."
+},
+"squat": {
+"n": "Revisión de sentadilla profunda",
+"how": "De lado a la cámara, pies a la anchura de los hombros. Baja en sentadilla tan profundo como puedas, talones en el suelo y pecho arriba. Para abajo y sube. Registra el ángulo de rodilla, la inclinación de la tibia y la del tronco."
+}
+},
+"stretch": {
+"sleeper": {
+"n": "Estiramiento sleeper",
+"cues": "Túmbate de lado, con el brazo de abajo delante a la altura del hombro y el codo a 90°. Con la mano de arriba, empuja suavemente el antebrazo hacia el suelo. Para al notar estiramiento, no dolor."
+},
+"bander": {
+"n": "Rotaciones externas con banda",
+"reps": "15 repeticiones lentas",
+"cues": "Codo pegado al costado y doblado a 90°, sujetando una banda elástica anclada a la altura del codo (una toalla tensa sirve si no tienes banda). Gira el antebrazo hacia fuera con el codo fijo. Vuelve despacio."
+},
+"doorway": {
+"n": "Estiramiento de pecho en puerta",
+"cues": "Antebrazo en el marco de una puerta o el borde de una pared, codo a la altura del hombro. Avanza hasta notar que se abren el pecho y la parte delantera del hombro. Costillas abajo."
+},
+"crossbody": {
+"n": "Estiramiento de hombro cruzado",
+"cues": "Lleva un brazo estirado por delante del pecho y acércalo con el otro antebrazo. Mantén el hombro bajo, lejos de la oreja."
+},
+"wallslide": {
+"n": "Deslizamientos en pared",
+"reps": "10 repeticiones lentas",
+"cues": "Espalda plana contra la pared, brazos en W con codos y muñecas tocando la pared. Deslízalos hasta formar una Y sin perder el contacto ni arquear la espalda."
+},
+"latbench": {
+"n": "Estiramiento de dorsal de rodillas",
+"cues": "Arrodíllate frente a algo de entre la altura de la rodilla y la cadera, como un banco, sofá, cama o silla. Codos encima, palmas juntas. Lleva la cadera atrás y deja que el pecho baje por debajo de los codos. Respira hacia la parte alta de la espalda."
+},
+"childreach": {
+"n": "Postura del niño con alcance",
+"cues": "De rodillas, siéntate sobre los talones, camina con las manos hacia delante y deja que el pecho baje al suelo. Respiraciones lentas hacia la espalda."
+},
+"tspineroll": {
+"n": "Extensiones de la parte alta de la espalda",
+"reps": "10 repeticiones en 3 alturas",
+"cues": "Túmbate con un rodillo de espuma, una toalla enrollada o una esterilla enrollada bajo la parte alta de la espalda, manos detrás de la cabeza y cadera abajo. Extiéndete hacia atrás sobre el rodillo y luego súbelo unos centímetros. Zona lumbar neutra."
+},
+"passthru": {
+"n": "Pasadas de hombro",
+"reps": "15 repeticiones",
+"cues": "Sujeta un palo de escoba, una toalla o una banda con agarre ancho. Con los brazos estirados, llévalo desde delante de la cadera, por encima de la cabeza, hasta detrás y vuelve. Estrecha el agarre a medida que te sueltes."
+},
+"ohshold": {
+"n": "Sentadilla overhead mantenida",
+"cues": "Sujeta un palo de escoba o una toalla con agarre ancho y los brazos bloqueados por encima de la cabeza. Baja a la sentadilla más profunda que puedas mantener con los talones en el suelo y las manos sobre la mitad del pie. Respira y mantén."
+},
+"openbook": {
+"n": "Libro abierto",
+"reps": "10 repeticiones lentas",
+"cues": "Túmbate de lado, rodillas a 90°, brazos juntos delante. Abre el brazo de arriba por encima del cuerpo hacia el otro lado, siguiéndolo con la mirada. Las rodillas se quedan juntas."
+},
+"catcow": {
+"n": "Gato-vaca",
+"reps": "10 repeticiones lentas",
+"cues": "A cuatro patas. Redondea la columna hacia el techo y luego deja caer el abdomen y eleva el pecho. Muévete despacio al ritmo de la respiración."
+},
+"thread": {
+"n": "Enhebrar la aguja",
+"cues": "A cuatro patas. Desliza un brazo por debajo del cuerpo a lo largo del suelo, girando la parte alta de la espalda hasta apoyar el hombro. Estira el otro brazo hacia arriba y cambia."
+},
+"quadrot": {
+"n": "Rotaciones torácicas a cuatro patas",
+"reps": "8 repeticiones",
+"cues": "A cuatro patas, una mano detrás de la cabeza. Gira el codo hacia la otra muñeca y luego hacia el techo. La cadera no se mueve."
+},
+"stickrot": {
+"n": "Rotaciones sentado",
+"reps": "10 hacia cada lado",
+"cues": "Siéntate erguido con un palo de escoba o una toalla enrollada sobre los hombros (o los brazos cruzados sobre el pecho). Gira despacio todo lo que puedas hacia cada lado, con la cadera y la cabeza quietas."
+},
+"elephant": {
+"n": "Pasos de elefante",
+"reps": "10 con cada pierna",
+"cues": "De pie, inclínate hacia delante y apoya las manos en el suelo (dobla las rodillas lo que necesites). Estira una rodilla y luego la otra, pedaleando despacio."
+},
+"hamfloss": {
+"n": "Movilización de isquiotibiales",
+"reps": "12 repeticiones",
+"cues": "Túmbate boca arriba sujetando por detrás un muslo, cadera a 90°. Estira y dobla la rodilla despacio. La otra pierna sigue estirada en el suelo."
+},
+"pike": {
+"n": "Pike sentado",
+"cues": "Siéntate con las piernas estiradas y juntas. Inclínate desde la cadera con la espalda larga y estírate hacia los pies. Relaja el cuello."
+},
+"pancake": {
+"n": "Pancake",
+"cues": "Siéntate con las piernas abiertas y estiradas, dedos hacia arriba. Inclínate hacia delante desde la cadera con la espalda larga, caminando con las manos. Respira y baja un poco más en cada exhalación."
+},
+"downdog": {
+"n": "Perro boca abajo con pedaleo",
+"reps": "10 por lado",
+"cues": "Manos y pies en el suelo, cadera alta formando una V invertida. Pedalea llevando los talones al suelo de uno en uno."
+},
+"bandham": {
+"n": "Estiramiento de isquiotibiales con banda",
+"cues": "Túmbate boca arriba con una banda, toalla o cinturón alrededor de un pie. Sube la pierna estirada hasta notar el isquiotibial y mantén. La otra pierna en el suelo, zona lumbar relajada."
+},
+"couch": {
+"n": "Estiramiento del sofá",
+"cues": "Rodilla de atrás sobre un cojín contra una pared o la parte delantera de un sofá, con la espinilla apoyada. Pie delantero adelantado en zancada. Aprieta el glúteo de atrás y eleva el pecho. Entra poco a poco."
+},
+"kneelhf": {
+"n": "Estiramiento de flexor de cadera en semiarrodillado",
+"cues": "En semiarrodillado, rodilla de atrás bajo la cadera. Mete la pelvis, aprieta el glúteo de atrás y adelanta un poco el cuerpo. Sube el brazo del mismo lado para estirar más."
+},
+"ninety": {
+"n": "Cambios 90/90",
+"reps": "10 cambios",
+"cues": "Siéntate con las dos rodillas a 90°, una pierna delante y otra al lado. Gira las dos rodillas hacia el otro lado y vuelve, manteniéndote erguido."
+},
+"pigeon": {
+"n": "Paloma",
+"cues": "Espinilla delantera cruzada delante del cuerpo, pierna de atrás estirada. Cuadra la cadera e inclínate sobre la pierna delantera. Pon un cojín bajo la cadera si lo necesitas."
+},
+"frog": {
+"n": "Estiramiento de rana",
+"cues": "Sobre antebrazos y rodillas, rodillas separadas, espinillas paralelas y pies alineados con las rodillas. Lleva la cadera atrás despacio y mantén donde notes la cara interna de los muslos."
+},
+"deepsquat": {
+"n": "Sentadilla profunda mantenida",
+"cues": "Pies a la anchura de los hombros, baja al fondo de la sentadilla con los talones en el suelo. Codos por dentro de las rodillas, pecho arriba. Agárrate a algo firme, como el marco de una puerta o el borde de una mesa, si lo necesitas."
+},
+"cossack": {
+"n": "Sentadillas cosacas",
+"reps": "8 por lado",
+"cues": "Postura amplia. Pasa el peso a una cadera y baja en sentadilla sobre esa pierna mientras la otra se queda estirada, con los dedos hacia arriba. Cambia de lado despacio."
+},
+"bridge": {
+"n": "Puente de glúteo",
+"reps": "12 repeticiones, 2 segundos arriba",
+"cues": "Túmbate boca arriba, rodillas dobladas y pies apoyados. Aprieta los glúteos y sube la cadera hasta alinear rodillas, cadera y hombros. Costillas abajo, sin arquear."
+},
+"fig4": {
+"n": "Figura cuatro tumbado",
+"cues": "Túmbate boca arriba, cruza un tobillo sobre la rodilla contraria y lleva ese muslo hacia el pecho. Cabeza y hombros relajados en el suelo."
+},
+"anklerock": {
+"n": "Balanceos rodilla a pared",
+"reps": "15 balanceos",
+"cues": "En semiarrodillado frente a una pared. Lleva la rodilla delantera hacia la pared por encima de los dedos pequeños, con el talón apoyado, y vuelve. Si tienes un peso, apóyalo en la rodilla para cargarla."
+},
+"calfwall": {
+"n": "Estiramiento de gemelo en pared",
+"cues": "Manos en la pared, una pierna atrás con la rodilla estirada y el talón en el suelo. Inclínate hasta notar el gemelo."
+},
+"soleus": {
+"n": "Estiramiento de gemelo con rodilla doblada",
+"cues": "Igual que el estiramiento de gemelo en pared, pero dobla la rodilla de atrás y baja, con el talón en el suelo. Lo notarás más abajo en la pantorrilla."
+},
+"heelsup": {
+"n": "Sentadilla con talones elevados",
+"cues": "Talones sobre un libro fino, una toalla enrollada o discos pequeños, baja en sentadilla y mantén abajo con el pecho erguido. Lleva las rodillas hacia delante por encima de los dedos."
+},
+"deadbug": {
+"n": "Bicho muerto",
+"reps": "8 por lado",
+"cues": "Boca arriba, brazos arriba, cadera y rodillas a 90°. Presiona la zona lumbar contra el suelo. Baja despacio el brazo y la pierna contrarios y cambia."
+},
+"birddog": {
+"n": "Perro de caza",
+"reps": "8 por lado",
+"cues": "A cuatro patas, espalda plana. Estira un brazo hacia delante y la pierna contraria hacia atrás, mantén 2 segundos y vuelve sin girar."
+},
+"breath9090": {
+"n": "Respiración 90/90",
+"cues": "Túmbate boca arriba con las pantorrillas sobre un sofá, cama, silla o banco, rodillas y cadera a 90°. Inspira por la nariz en 4 tiempos y suelta el aire despacio en 6 a 8, dejando caer las costillas."
+},
+"supinetwist": {
+"n": "Torsión de columna tumbado",
+"cues": "Boca arriba, lleva una rodilla cruzada hacia el suelo mientras la otra pierna sigue estirada. Brazo hacia el lado y mira en dirección contraria a la rodilla."
+},
+"legswing": {
+"n": "Balanceos de pierna",
+"reps": "15 balanceos",
+"cues": "Sujétate a algo firme para mantener el equilibrio, como una pared, el marco de una puerta o el respaldo de una silla. Balancea una pierna estirada adelante y atrás, cada vez más alto. Luego de lado a lado."
+},
+"hipcircle": {
+"n": "Círculos de cadera de pie",
+"reps": "8 hacia cada lado",
+"cues": "De pie y erguido, sujétate a algo si lo necesitas. Sube una rodilla a la altura de la cadera, ábrela hacia el lado y bájala por detrás en un círculo grande y lento. Luego al revés."
+},
+"lungetwist": {
+"n": "Zancada caminando con giro",
+"reps": "6 por lado",
+"cues": "Da una zancada larga, con la rodilla de atrás justo por encima del suelo. Gira el pecho sobre la pierna delantera con los brazos abiertos, luego levántate y pasa a la siguiente zancada. Erguido y controlado."
+},
+"askip": {
+"n": "Skipping A",
+"reps": "2 x 15 m",
+"cues": "Avanza saltando, subiendo una rodilla a la altura de la cadera mientras el otro pie impulsa desde la planta. El brazo contrario va hacia delante. Ligero, rápido y elástico."
+},
+"pogo": {
+"n": "Saltos pogo de tobillo",
+"reps": "20 saltos",
+"cues": "Saltitos pequeños y rápidos sobre la planta de los pies con las rodillas casi estiradas, como un muelle. Ligero y silencioso. Activa gemelos y tendón de Aquiles antes de correr."
+},
+"wgs": {
+"n": "El mejor estiramiento del mundo",
+"reps": "4 repeticiones lentas",
+"cues": "Da una zancada larga y apoya las dos manos en el suelo por dentro del pie delantero. Baja el codo interior hacia el empeine, luego gira y lleva ese brazo hacia el techo. Vuelve a bajar la mano, estira la pierna delantera y repite."
+},
+"standquad": {
+"n": "Estiramiento de cuádriceps de pie",
+"cues": "De pie y erguido, sujétate a una pared, valla o respaldo de silla. Dobla una rodilla y sujeta ese tobillo por detrás, llevando el talón hacia el glúteo. Rodillas juntas y cadera ligeramente adelantada."
+},
+"crossover": {
+"n": "Inclinación lateral de pie (cintilla iliotibial)",
+"cues": "Cruza un pie por detrás del otro. Lleva el brazo del mismo lado que la pierna de atrás hacia arriba y por encima de la cabeza, e inclínate hacia el otro lado hasta notar la parte externa de esa cadera. La cadera se queda cuadrada."
+},
+"kneehug": {
+"n": "Abrazo de rodillas",
+"reps": "Balanceos lentos",
+"cues": "Túmbate boca arriba y abraza las dos rodillas contra el pecho. Balancéate suavemente de lado a lado y en pequeños círculos para soltar la zona lumbar y las caderas."
+},
+"wipers": {
+"n": "Limpiaparabrisas",
+"reps": "10 hacia cada lado",
+"cues": "Boca arriba, rodillas dobladas y pies más separados que la cadera. Deja caer despacio las dos rodillas hacia un lado y luego hacia el otro. Los hombros se quedan abajo."
+},
+"happybaby": {
+"n": "Bebé feliz",
+"cues": "Boca arriba, lleva las rodillas abiertas hacia las axilas con las espinillas hacia arriba. Sujeta la parte externa de los pies y tira suavemente hacia abajo. Balancéate de lado a lado si te sienta bien."
+},
+"butterfly": {
+"n": "Mariposa reclinada",
+"cues": "Túmbate boca arriba, junta las plantas de los pies y deja que las rodillas se abran. Apoya las manos en el abdomen y deja que la gravedad haga el trabajo. Pon almohadas bajo las rodillas si es demasiado intenso."
+},
+"edgeflexor": {
+"n": "Estiramiento de flexor de cadera en el borde de la cama",
+"cues": "Túmbate boca arriba con los glúteos en el borde de la cama. Abraza una rodilla contra el pecho y deja colgar la otra pierna fuera del borde, relajada. Nota el estiramiento en la parte delantera de la cadera que cuelga."
+},
+"sidequad": {
+"n": "Estiramiento de cuádriceps tumbado de lado",
+"cues": "Túmbate de lado con la cabeza sobre el brazo. Dobla la rodilla de arriba y sujeta ese tobillo por detrás, llevando el talón hacia el glúteo. Adelanta un poco la cadera."
+},
+"hamtowel": {
+"n": "Estiramiento de isquiotibiales tumbado",
+"cues": "Boca arriba, pasa una toalla o cinturón alrededor de un pie. Sube la pierna estirada hasta notar la parte trasera del muslo y mantén. La otra pierna en el suelo, zona lumbar relajada."
+},
+"clubhinge": {
+"n": "Bisagra de cadera con palo",
+"reps": "10 repeticiones lentas",
+"cues": "Sujeta un palo de golf, un palo de escoba o cualquier palo recto a lo largo de la espalda, tocando la cabeza, la parte alta de la espalda y el coxis. Rodillas sueltas, inclínate desde la cadera hasta tu postura de golpe sin que se separen los tres puntos del palo. Vuelve a subir y repite."
+},
+"clubrot": {
+"n": "Giros de hombros con palo",
+"reps": "10 hacia cada lado",
+"cues": "Sujeta un palo sobre la parte delantera de los hombros y adopta tu postura de golf. Gira los hombros como en el backswing, con la cadera tranquila y la cabeza quieta, y luego gira hasta un final completo. Suave y controlado."
+},
+"wrists": {
+"n": "Estiramiento de muñeca y antebrazo",
+"cues": "Estira un brazo delante con la palma hacia arriba y tira suavemente de los dedos hacia atrás con la otra mano durante 15 segundos. Luego gira la palma hacia abajo y tira suavemente del dorso de la mano hacia ti. Codo estirado y hombro relajado."
+},
+"foldfwd": {
+"n": "Flexión hacia delante de pie",
+"cues": "Pies a la anchura de la cadera, rodillas sueltas. Inclínate y deja colgar el tronco, sujetando los codos contrarios. Mueve suavemente la cabeza para soltar el cuello."
+}
+}
+});

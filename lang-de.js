@@ -1,0 +1,836 @@
+/* Signal Mobility translations: de */
+I18N.add("de", {
+"&#x2039;": "&#x2039;",
+"&#x203A;": "&#x203A;",
+"&#x2715;": "&#x2715;",
+"+ Build your own": "+ Eigene erstellen",
+", about": ", etwa",
+", hips below knees": ", Hüfte unter den Knien",
+", with your hips below your knees.": ", mit der Hüfte unter den Knien.",
+"10 seconds.": "10 Sekunden.",
+"34 to 45": "34 bis 45",
+"46 to 55": "46 bis 55",
+"56 and over": "56 und älter",
+"About 15 minutes. It scores six zones so the app can build your daily routine around what's tightest. Camera tracking works for 5 of the tests.": "Etwa 15 Minuten. Es bewertet sechs Zonen, damit die App deine tägliche Routine um die steifsten Bereiche herum aufbauen kann. Die Kameramessung funktioniert bei 5 der Tests.",
+"About 50 to 80 MB. Best done on Wi-Fi. After that, photos load instantly even with no signal.": "Etwa 50 bis 80 MB. Am besten im WLAN. Danach laden die Fotos sofort, auch ohne Netz.",
+"Abs and obliques": "Bauchmuskeln und schräge Bauchmuskeln",
+"Add to Home Screen": "Zum Home-Bildschirm",
+"Add to your Home Screen": "Füge die App zu deinem Home-Bildschirm hinzu",
+"Added to your test. Tap Save test when you're done.": "Zu deinem Test hinzugefügt. Tippe auf Test speichern, wenn du fertig bist.",
+"Adductors, the inside of the thigh": "Adduktoren, die Innenseite des Oberschenkels",
+"Age": "Alter",
+"Age and sex set the typical-score markers (currently available for men only). Height scales the camera's cm estimates.": "Alter und Geschlecht legen die Markierungen für typische Werte fest (derzeit nur für Männer verfügbar). Die Körpergröße skaliert die cm-Schätzungen der Kamera.",
+"Aim for": "Ziel:",
+"All": "Alle",
+"All data deleted": "Alle Daten gelöscht",
+"All done. Nice work today.": "Fertig. Gute Arbeit heute.",
+"All photos saved for offline use": "Alle Fotos für die Offline-Nutzung gespeichert",
+"All saved": "Alles gespeichert",
+"And that's it. Great session.": "Und das war's. Starke Einheit.",
+"Anterior chain": "Vordere Kette",
+"Back": "Rücken",
+"Back flat against the wall, heels, bum and head touching. Lift both arms overhead with your thumbs together, and reach back towards the wall. Hold it for a couple of seconds.": "Rücken flach an der Wand, Fersen, Po und Kopf berühren sie. Hebe beide Arme über den Kopf, Daumen zusammen, und strecke sie Richtung Wand. Halte ein paar Sekunden.",
+"Back view of the body": "Rückansicht des Körpers",
+"Background music": "Hintergrundmusik",
+"Beeps": "Pieptöne",
+"Best": "Bestwert",
+"Best available": "Beste verfügbare",
+"Best positions": "Beste Positionen",
+"Best readings cleared": "Bestwerte gelöscht",
+"Both sides": "Beide Seiten",
+"Both sides recorded. Nice work. Tap Use results when you're happy.": "Beide Seiten erfasst. Gute Arbeit. Tippe auf Ergebnisse übernehmen, wenn du zufrieden bist.",
+"Calm pads": "Sanfte Klangflächen",
+"Camera": "Kamera",
+"Camera access was blocked. Allow it in Settings > Safari > Camera, then try again.": "Der Kamerazugriff wurde blockiert. Erlaube ihn unter Einstellungen > Safari > Kamera und versuche es erneut.",
+"Can't see you. Step back so your whole body is in view.": "Ich sehe dich nicht. Geh zurück, damit dein ganzer Körper zu sehen ist.",
+"Cancel": "Abbrechen",
+"Change": "Ändern",
+"Changes the app, the coach's voice and all stretch instructions. The app restarts to apply it.": "Ändert die App, die Stimme des Coaches und alle Dehnanleitungen. Die App startet neu, um es zu übernehmen.",
+"Checking…": "Wird geprüft…",
+"Choose": "Auswählen",
+"Clear": "Zurücksetzen",
+"Close": "Schließen",
+"Coach voice": "Stimme des Coaches",
+"Coach's voice": "Stimme des Coaches",
+"Cool-down": "Cool-down",
+"Copied": "Kopiert",
+"Copied. Paste it into Body Signal or a note.": "Kopiert. Füge es in Body Signal oder eine Notiz ein.",
+"Copy": "Kopieren",
+"Couldn't copy on this device. Use Export file instead.": "Kopieren ist auf diesem Gerät nicht möglich. Nutze stattdessen Datei exportieren.",
+"Couldn't download the tracking model": "Das Tracking-Modell konnte nicht geladen werden",
+"Couldn't load body tracking. Check your connection and try again.": "Die Körpererkennung konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.",
+"Couldn't open the save sheet": "Das Speichern-Fenster konnte nicht geöffnet werden",
+"Couldn't play that video.": "Das Video konnte nicht abgespielt werden.",
+"Couldn't save. Storage may be full.": "Speichern fehlgeschlagen. Der Speicher ist vielleicht voll.",
+"Couldn't start the camera (": "Kamera konnte nicht gestartet werden (",
+"CrossFit": "CrossFit",
+"Cycling": "Radfahren",
+"Dark": "Dunkel",
+"Deepest squat": "Tiefste Kniebeuge",
+"Delete": "Löschen",
+"Delete all data": "Alle Daten löschen",
+"Deltoids, the caps of the shoulders": "Deltamuskeln, die Rundung der Schultern",
+"Desk": "Büro",
+"Diagnostics": "Diagnose",
+"Do it now": "Jetzt machen",
+"Done": "Fertig",
+"Edit": "Bearbeiten",
+"End session": "Einheit beenden",
+"Enter at least one result first.": "Gib zuerst mindestens ein Ergebnis ein.",
+"Erector spinae, either side of the lower spine": "Rückenstrecker, beidseits der Lendenwirbelsäule",
+"Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal's format.": "Alles wird nur auf diesem Telefon gespeichert. Exportiere ab und zu eine Sicherung. Die Datei enthält deine Tests auch im Body-Signal-Format.",
+"Export file": "Datei exportieren",
+"Face the camera and hold still…": "Schau zur Kamera und halte still…",
+"Favourite sport (optional)": "Lieblingssport (optional)",
+"Feet about shoulder width apart. Squat down as deep as you can, chest up, heels down. Pause at the bottom for a couple of seconds.": "Füße etwa schulterbreit. Geh so tief in die Kniebeuge wie möglich, Brust hoch, Fersen am Boden. Bleib ein paar Sekunden unten.",
+"Feet together, knees straight. Reach down as far as you can, and hold it at the bottom.": "Füße zusammen, Knie gestreckt. Reich so weit nach unten wie möglich und halte unten.",
+"Female": "Weiblich",
+"Final 3, 2, 1 countdown": "Countdown 3, 2, 1 am Ende",
+"Finish": "Beenden",
+"Finish a routine and it'll show here.": "Schließe eine Routine ab, dann erscheint sie hier.",
+"First up,": "Zuerst:",
+"Flip camera": "Kamera wechseln",
+"Focus:": "Fokus:",
+"For the most natural voice, download one on your iPhone: open Settings, search for Voices, then pick your language and an Enhanced or Premium voice. Then close and reopen this app and choose it here.": "Für die natürlichste Stimme lade eine auf dein iPhone: Öffne Einstellungen, suche nach Stimmen, wähle deine Sprache und eine erweiterte oder Premium-Stimme. Schließe die App dann, öffne sie neu und wähle die Stimme hier aus.",
+"Front": "Vorne",
+"Front view of the body": "Vorderansicht des Körpers",
+"Gastrocnemius, soleus and Achilles": "Wadenmuskel, Schollenmuskel und Achillessehne",
+"Gentle music generated on your phone. It drops down whenever the coach speaks.": "Sanfte Musik, auf deinem Telefon erzeugt. Sie wird leiser, sobald der Coach spricht.",
+"Get into position": "In Position gehen",
+"Get into your ninety ninety position, with the front shin across your body. Lean forward with a long back, and let the front knee drop. Hold it there.": "Geh in deine Neunzig-Neunzig-Position, das vordere Schienbein quer vor dem Körper. Lehn dich mit langem Rücken nach vorn und lass das vordere Knie sinken. Halte dort.",
+"Gluteus maximus and medius, plus the outer hip and IT band": "Großer und mittlerer Gesäßmuskel, dazu die äußere Hüfte und der Tractus iliotibialis",
+"Go again": "Noch mal",
+"Golf": "Golf",
+"Good light, fitted clothes.": "Gutes Licht, enge Kleidung.",
+"Good squat.": "Gute Kniebeuge.",
+"Good. Swap over to the right.": "Gut. Wechsel nach rechts.",
+"Got it.": "Hab's.",
+"Great, I've got you. In your own time, move into it and hold at your best point.": "Super, ich sehe dich. Geh in deinem Tempo in die Position und halte an deinem besten Punkt.",
+"Great, hold it.": "Super, halten.",
+"Half-kneel side-on to the phone. Drive the front knee forward over the toes with the heel down. Hold at your furthest point. Swap legs.": "Halber Kniestand, seitlich zum Telefon. Schieb das vordere Knie über die Zehen, Ferse am Boden. Halte am weitesten Punkt. Bein wechseln.",
+"Halfway there. Breathe out, and sink a little deeper.": "Halbzeit. Ausatmen und etwas tiefer sinken.",
+"Halfway there. Keep it smooth.": "Halbzeit. Schön gleichmäßig.",
+"Halfway. Keep breathing.": "Halbzeit. Weiteratmen.",
+"Halfway. Relax your shoulders, and let it go a bit further.": "Halbzeit. Lockere die Schultern und geh ein Stück weiter.",
+"Have another go if you think you can beat it, or tap Use results when you're happy.": "Versuch es noch mal, wenn du denkst, du schaffst mehr, oder tippe auf Ergebnisse übernehmen, wenn du zufrieden bist.",
+"Hear it": "Anhören",
+"Hear the voice": "Stimme anhören",
+"Height (cm)": "Größe (cm)",
+"Hello. I'll be your coach for mobility tests and stretching. Ready when you are.": "Hallo. Ich bin dein Coach für Mobilitätstests und Dehnen. Bereit, wenn du es bist.",
+"Hi there. This is how I'll sound during your sessions. Let's get moving.": "Hallo. So klinge ich während deiner Einheiten. Los geht's.",
+"Hips": "Hüfte",
+"Hips and overhead until you test": "Hüfte und Overhead, bis du den Test machst",
+"History": "Verlauf",
+"Hold": "Halten",
+"Hold a stick across your shoulders. First, face me and keep still for a moment, so I can learn your shoulder width.": "Halte einen Stab über den Schultern. Schau mich zuerst an und halte kurz still, damit ich deine Schulterbreite erkenne.",
+"How to do it": "So geht's",
+"Hyrox": "Hyrox",
+"I can see you. Face me, and keep still for a moment.": "Ich sehe dich. Schau mich an und halte kurz still.",
+"I can't quite see all of you. Take a step back.": "Ich sehe dich nicht ganz. Geh einen Schritt zurück.",
+"I'll let you know when I can see you.": "Ich sage Bescheid, sobald ich dich sehe.",
+"I've lost you a bit. Can you step back so I can see all of you?": "Ich habe dich etwas verloren. Kannst du zurückgehen, damit ich dich ganz sehe?",
+"Iliopsoas and rectus femoris, at the front of the hip": "Iliopsoas und gerader Oberschenkelmuskel, vorne an der Hüfte",
+"Images downloaded": "Bilder heruntergeladen",
+"It then opens full screen, works offline and iOS keeps your data safe.": "Dann öffnet sie im Vollbild, funktioniert offline und iOS schützt deine Daten.",
+"Keep both legs straight. Lift one leg as high as you can, without bending the knee, and hold it there for a couple of seconds.": "Beide Beine gestreckt lassen. Heb ein Bein so hoch wie möglich, ohne das Knie zu beugen, und halte es ein paar Sekunden.",
+"Keep holding that.": "Weiter halten.",
+"Keep your front heel down, and drive your knee forward over your toes as far as it'll go. Hold it at the furthest point.": "Vordere Ferse unten lassen und das Knie so weit wie möglich über die Zehen schieben. Am weitesten Punkt halten.",
+"Keep your front heel down, and push your knee forward past your toes as far as it'll go. Hold it at the furthest point.": "Vordere Ferse unten lassen und das Knie so weit wie möglich über die Zehen hinaus schieben. Am weitesten Punkt halten.",
+"Keep your knees still, and swing both feet outwards as far as they'll go. Hold it there for a couple of seconds.": "Knie ruhig halten und beide Füße so weit wie möglich nach außen schwingen. Ein paar Sekunden halten.",
+"Keep your ribs down, and lift one straight arm up overhead as far as it'll go. Hold it there for a couple of seconds, then we'll do the other side.": "Rippen unten lassen und einen gestreckten Arm so weit wie möglich über den Kopf heben. Ein paar Sekunden halten, dann machen wir die andere Seite.",
+"Knee angle °": "Kniewinkel °",
+"Language": "Sprache",
+"Last 8 weeks. Light = some stretching, dark = 8 minutes or more.": "Letzte 8 Wochen. Hell = etwas gedehnt, dunkel = 8 Minuten oder mehr.",
+"Last one": "Letzte Übung",
+"Latissimus dorsi, the wings down the sides of the back": "Breiter Rückenmuskel, die Flügel an den Seiten des Rückens",
+"Left": "Links",
+"Left and right gaps": "Unterschiede links und rechts",
+"Left side": "Linke Seite",
+"Left side first.": "Zuerst die linke Seite.",
+"Left side to begin.": "Wir beginnen links.",
+"Left side,": "Linke Seite,",
+"Let's do your": "Jetzt messen wir deine",
+"Let's start with": "Wir starten mit:",
+"Lie back on a bench edge, hug one knee to your chest and let the other leg hang. Side-on to the phone. Hold still for 2 seconds.": "Leg dich an die Kante einer Bank, zieh ein Knie zur Brust und lass das andere Bein hängen. Seitlich zum Telefon. Halte 2 Sekunden still.",
+"Lie back on the edge of the bench. Hug one knee to your chest, and let the other leg hang down. Then just relax and hold still.": "Leg dich an die Kante der Bank. Zieh ein Knie zur Brust und lass das andere Bein hängen. Dann einfach entspannen und stillhalten.",
+"Lie on your back side-on to the phone, whole body in view. Raise one straight leg as high as you can, hold, lower. Then the other leg.": "Leg dich seitlich zum Telefon auf den Rücken, ganzer Körper im Bild. Heb ein gestrecktes Bein so hoch wie möglich, halte, senke es. Dann das andere Bein.",
+"Light": "Hell",
+"Loading body tracking (first time takes a few seconds)…": "Körpererkennung wird geladen (beim ersten Mal dauert es ein paar Sekunden)…",
+"Lovely.": "Schön.",
+"Lovely. Switch to the right side.": "Schön. Wechsel auf die rechte Seite.",
+"Lower body": "Unterkörper",
+"Male": "Männlich",
+"Match phone": "Wie das Telefon",
+"Men": "Männer",
+"Mobility score": "Mobilitätswert",
+"Mobility test": "Mobilitätstest",
+"Move back a little, so your whole body's in the picture.": "Geh ein Stück zurück, damit dein ganzer Körper im Bild ist.",
+"Moving on to": "Weiter mit:",
+"Muscle groups": "Muskelgruppen",
+"Muscles": "Muskeln",
+"Music volume": "Musiklautstärke",
+"My routine": "Meine Routine",
+"Name your routine": "Benenne deine Routine",
+"Next": "Weiter",
+"Next photo": "Nächstes Foto",
+"Next up,": "Als Nächstes:",
+"Nice and deep.": "Schön tief.",
+"Nice one.": "Klasse.",
+"Nice. Now the right side.": "Gut. Jetzt die rechte Seite.",
+"No moves match. Try another area or filter.": "Keine passenden Übungen. Probier einen anderen Bereich oder Filter.",
+"No readings captured yet.": "Noch keine Messwerte.",
+"No tests yet.": "Noch keine Tests.",
+"None": "Keine",
+"Normal": "Normal",
+"Not scored. A check of your squat position.": "Ohne Wertung. Ein Check deiner Kniebeugenposition.",
+"Nothing logged yet.": "Noch nichts eingetragen.",
+"Now rotate each way and hold.": "Jetzt zu beiden Seiten drehen und halten.",
+"Now the other side.": "Jetzt die andere Seite.",
+"Now turn the other way.": "Jetzt in die andere Richtung drehen.",
+"Ocean waves": "Meereswellen",
+"Off": "Aus",
+"Offline photos": "Offline-Fotos",
+"Okay, I can see you. Go whenever you're ready, and hold your best position for a couple of seconds.": "Okay, ich sehe dich. Wenn du bereit bist, geh in die Position und halte deine beste Stellung ein paar Sekunden.",
+"Okay, let's measure your": "Okay, wir messen deine",
+"Okay, next is": "Okay, als Nächstes:",
+"On a bed": "Im Bett",
+"One": "Eins",
+"One result": "Ein Ergebnis",
+"Open Mobility from the new icon": "Öffne Mobility über das neue Symbol",
+"Overall": "Gesamt",
+"Overall mobility score over time": "Gesamter Mobilitätswert im Zeitverlauf",
+"Overall score": "Gesamtwert",
+"Paste a backup instead": "Stattdessen eine Sicherung einfügen",
+"Pause": "Pause",
+"Paused": "Pausiert",
+"Pecs, across the front of the chest": "Brustmuskeln, vorne an der Brust",
+"Perfect, got it. Now turn as far as you can to one side, keep your hips still, and hold it.": "Perfekt, hab's. Dreh dich jetzt so weit wie möglich zu einer Seite, Hüfte ruhig, und halte.",
+"Photo": "Foto",
+"Pick a music style first": "Wähle zuerst einen Musikstil",
+"Pick muscle areas, then tap moves in order": "Wähle Muskelbereiche und tippe dann die Übungen der Reihe nach an",
+"Pick your sport": "Wähle deinen Sport",
+"Posterior chain": "Hintere Kette",
+"Preview music": "Musik anhören",
+"Previous": "Zurück",
+"Previous photo": "Vorheriges Foto",
+"Prop the phone at floor level about 2 to 3 metres away.": "Stell das Telefon auf Bodenhöhe, etwa 2 bis 3 Meter entfernt.",
+"Prop the phone at hip height about 2 to 3 metres away.": "Stell das Telefon auf Hüfthöhe, etwa 2 bis 3 Meter entfernt.",
+"Prop your phone at bench height, about two metres away, facing you. Get side-on to it.": "Stell dein Telefon auf Bankhöhe, etwa zwei Meter entfernt, zu dir gerichtet. Stell dich seitlich dazu.",
+"Prop your phone at chest height, about two metres away. Sit facing it.": "Stell dein Telefon auf Brusthöhe, etwa zwei Meter entfernt. Setz dich davor.",
+"Prop your phone at chest height, about two metres away. Stand with your back to it.": "Stell dein Telefon auf Brusthöhe, etwa zwei Meter entfernt. Stell dich mit dem Rücken dazu.",
+"Prop your phone at hip height, about two metres away, with the screen facing you. Then stand side-on to it.": "Stell dein Telefon auf Hüfthöhe, etwa zwei Meter entfernt, mit dem Bildschirm zu dir. Stell dich dann seitlich dazu.",
+"Prop your phone at hip height, about two metres away. Sit facing it.": "Stell dein Telefon auf Hüfthöhe, etwa zwei Meter entfernt. Setz dich davor.",
+"Prop your phone at knee height, about two metres away. Sit facing it.": "Stell dein Telefon auf Kniehöhe, etwa zwei Meter entfernt. Setz dich davor.",
+"Put your arm out to the side at shoulder height, with your elbow bent and your hand pointing at the ceiling. Then let your hand fall back towards the floor, keeping your shoulder down. Hold it at the bottom.": "Streck den Arm auf Schulterhöhe zur Seite, Ellbogen gebeugt, die Hand zeigt zur Decke. Lass die Hand dann Richtung Boden fallen, ohne die Schulter zu heben. Unten halten.",
+"Put your phone on the floor, about two metres away, with the screen facing you. Lie down side-on to it.": "Leg dein Telefon etwa zwei Meter entfernt auf den Boden, Bildschirm zu dir. Leg dich seitlich dazu.",
+"Quadriceps, the front of the thigh": "Quadrizeps, die Vorderseite des Oberschenkels",
+"Quick picks": "Schnellauswahl",
+"Quicker": "Schneller",
+"Reach one hand over your shoulder, and the other up behind your back, so your fingers point at each other. Hold it for a couple of seconds.": "Führe eine Hand über die Schulter und die andere hinter den Rücken nach oben, die Finger zeigen zueinander. Ein paar Sekunden halten.",
+"Relax for a second.": "Kurz entspannen.",
+"Reset": "Zurücksetzen",
+"Restore from file": "Aus Datei wiederherstellen",
+"Restore pasted backup": "Eingefügte Sicherung wiederherstellen",
+"Restored": "Wiederhergestellt",
+"Result": "Ergebnis",
+"Retest now": "Jetzt neu testen",
+"Right": "Rechts",
+"Right side": "Rechte Seite",
+"Right side,": "Rechte Seite,",
+"Right,": "Gut,",
+"Right, now": "Gut, jetzt:",
+"Routine background music": "Hintergrundmusik bei Routinen",
+"Routines": "Routinen",
+"Running": "Laufen",
+"Save": "Speichern",
+"Save all photos for offline": "Alle Fotos offline speichern",
+"Save camera test images to Photos": "Bilder der Kameratests in Fotos sichern",
+"Save test": "Test speichern",
+"Save them to Photos to keep a visual record.": "Sichere sie in Fotos, um einen visuellen Verlauf zu haben.",
+"Save to Photos": "In Fotos sichern",
+"Saved": "Gespeichert",
+"Saved.": "Gespeichert.",
+"Saving…": "Wird gespeichert…",
+"Score": "Wert",
+"Score so far": "Bisheriger Wert",
+"Scroll left": "Nach links blättern",
+"Scroll right": "Nach rechts blättern",
+"Sections": "Bereiche",
+"Selected": "Ausgewählt",
+"Sessions": "Einheiten",
+"Sets the top stretches and routines shown on Today.": "Legt die empfohlenen Dehnübungen und Routinen auf Heute fest.",
+"Settings": "Einstellungen",
+"Sex": "Geschlecht",
+"Shin lean °": "Schienbeinneigung °",
+"Shoulder girdle": "Schultergürtel",
+"Show movement": "Bewegung zeigen",
+"Show photo": "Foto zeigen",
+"Show stretch photos (instead of stick figures)": "Fotos der Dehnübungen zeigen (statt Strichfiguren)",
+"Show the movement": "Bewegung zeigen",
+"Signal Mobility": "Signal Mobility",
+"Singing bowls": "Klangschalen",
+"Sleep": "Schlaf",
+"Slower": "Langsamer",
+"Speed": "Tempo",
+"Squat check": "Kniebeugen-Check",
+"Stand side-on, whole body in view, feet shoulder-width. Squat as deep as you can, pause 2 seconds at the bottom, stand up.": "Seitlich, ganzer Körper im Bild, Füße schulterbreit. Geh so tief wie möglich in die Kniebeuge, 2 Sekunden unten bleiben, aufstehen.",
+"Stand side-on, whole body in view. Raise one straight arm overhead, hold 2 seconds, lower. Turn round for the other arm.": "Seitlich, ganzer Körper im Bild. Heb einen gestreckten Arm über den Kopf, 2 Sekunden halten, senken. Für den anderen Arm umdrehen.",
+"Start": "Start",
+"Start camera": "Kamera starten",
+"Start with a mobility test": "Starte mit einem Mobilitätstest",
+"Start,": "Start,",
+"Starting camera…": "Kamera startet…",
+"Step into view so your whole body is on screen.": "Tritt ins Bild, damit dein ganzer Körper zu sehen ist.",
+"Stop preview": "Vorschau stoppen",
+"Stretch library": "Dehnbibliothek",
+"Stretching": "Dehnen",
+"Switch sides": "Seite wechseln",
+"Take the test": "Test machen",
+"Tap Delete again to confirm": "Tippe zum Bestätigen noch einmal auf Löschen",
+"Tap a muscle on the body to select it.": "Tippe auf einen Muskel am Körper, um ihn auszuwählen.",
+"Tap again to delete everything on this phone": "Tippe noch einmal, um alles auf diesem Telefon zu löschen",
+"Tap one or more muscles to see moves that stretch them.": "Tippe auf einen oder mehrere Muskeln, um passende Dehnübungen zu sehen.",
+"Tap the Share button in Safari": "Tippe in Safari auf Teilen",
+"Test": "Test",
+"Test date": "Testdatum",
+"Tested": "Getestet am",
+"Tests": "Tests",
+"That isn't a Signal Mobility backup.": "Das ist keine Signal-Mobility-Sicherung.",
+"That isn't a valid backup file.": "Das ist keine gültige Sicherungsdatei.",
+"That's": "Ergebnis:",
+"That's both sides done. Go again if you want to beat them, or tap Use results.": "Beide Seiten erledigt. Mach es noch mal, wenn du sie übertreffen willst, oder tippe auf Ergebnisse übernehmen.",
+"That's halfway. Keep breathing slowly.": "Halbzeit. Ruhig weiteratmen.",
+"That's halfway. Nice and controlled.": "Halbzeit. Schön kontrolliert.",
+"That's it.": "Genau so.",
+"That's the session finished. Well done.": "Die Einheit ist geschafft. Gut gemacht.",
+"The back of the thigh, hip to knee": "Die Rückseite des Oberschenkels, von der Hüfte bis zum Knie",
+"The cm reading is an estimate scaled to your height (": "Der cm-Wert ist eine Schätzung, skaliert auf deine Größe (",
+"Theme": "Design",
+"Then lift the other leg.": "Dann das andere Bein heben.",
+"Then swap hands over.": "Dann die Hände tauschen.",
+"Then swap legs over.": "Dann die Beine tauschen.",
+"Then switch sides.": "Dann die Seite wechseln.",
+"Then turn round, and do the other arm.": "Dann umdrehen und den anderen Arm machen.",
+"Then turn round, and lift the other arm.": "Dann umdrehen und den anderen Arm heben.",
+"This browser can't open the camera. Open the app in Safari, or use a video instead.": "Dieser Browser kann die Kamera nicht öffnen. Öffne die App in Safari oder nutze ein Video.",
+"This browser can't store photos offline.": "Dieser Browser kann keine Fotos offline speichern.",
+"Three": "Drei",
+"Tightest zone:": "Steifste Zone:",
+"Time between exercises": "Zeit zwischen den Übungen",
+"Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.": "Zeit zum Umpositionieren und um Material (Band, Rolle, Stab) zu holen. Die nächste Übung und ihr Material werden zu Beginn angesagt.",
+"Time to retest": "Zeit für einen neuen Test",
+"Time to switch sides": "Zeit zum Seitenwechsel",
+"Today": "Heute",
+"Top routines for": "Top-Routinen für",
+"Top stretches for": "Top-Dehnübungen für",
+"Torso lean °": "Oberkörperneigung °",
+"Traps and rhomboids, between the shoulder blades": "Trapezmuskel und Rautenmuskeln, zwischen den Schulterblättern",
+"Two": "Zwei",
+"Typical score for men your age": "Typischer Wert für Männer in deinem Alter",
+"Up next:": "Als Nächstes:",
+"Upper body": "Oberkörper",
+"Use a video": "Video verwenden",
+"Use results": "Ergebnisse übernehmen",
+"Video finished. Tap Use results to keep the best readings.": "Video beendet. Tippe auf Ergebnisse übernehmen, um die besten Messwerte zu behalten.",
+"Voice": "Stimme",
+"Voice (female, American)": "Stimme (weiblich, amerikanisch)",
+"Voice (male, British)": "Stimme (männlich, britisch)",
+"Voice coaching": "Sprachcoaching",
+"Warm up for 5 minutes first. Tap": "Wärm dich vorher 5 Minuten auf. Tippe bei jedem Test auf",
+"Warm-up": "Aufwärmen",
+"We'll begin with": "Wir beginnen mit:",
+"We'll start on the left.": "Wir starten links.",
+"Which muscles?": "Welche Muskeln?",
+"Wrist flexors and extensors along the forearm": "Hand-Beuger und -Strecker entlang des Unterarms",
+"You can go again to beat that, or tap Use results.": "Du kannst es noch mal versuchen oder auf Ergebnisse übernehmen tippen.",
+"You'll need": "Du brauchst",
+"Your daily 10": "Deine täglichen 10",
+"Your data": "Deine Daten",
+"Your knee angle is": "Dein Kniewinkel beträgt",
+"Your last test was": "Dein letzter Test war vor",
+"Your routine": "Deine Routine",
+"Your score will chart here after your first test.": "Dein Wert erscheint hier nach deinem ersten Test.",
+"a band or towel": "ein Band oder Handtuch",
+"a band, towel or belt": "ein Band, Handtuch oder einen Gürtel",
+"a bench, sofa or bed": "eine Bank, ein Sofa oder ein Bett",
+"a bench, sofa, bed or chair": "eine Bank, ein Sofa, ein Bett oder einen Stuhl",
+"a broomstick or towel": "einen Besenstiel oder ein Handtuch",
+"a broomstick, towel or band": "einen Besenstiel, ein Handtuch oder ein Band",
+"a door frame or wall edge": "einen Türrahmen oder eine Wandkante",
+"a foam roller or rolled towel": "eine Faszienrolle oder ein gerolltes Handtuch",
+"a pillow or two": "ein oder zwei Kissen",
+"a pillow or two, if you like": "ein oder zwei Kissen, wenn du magst",
+"a sofa, bed or chair": "ein Sofa, ein Bett oder einen Stuhl",
+"a stair or step": "eine Stufe",
+"a towel or belt": "ein Handtuch oder einen Gürtel",
+"a wall": "eine Wand",
+"a wall or sofa": "eine Wand oder ein Sofa",
+"above": "über",
+"age average": "Altersdurchschnitt",
+"and": "und",
+"average": "Durchschnitt",
+"below": "unter",
+"best": "Bestwert",
+"body tracking by MediaPipe": "Körpererkennung mit MediaPipe",
+"cm, change it in Settings).": "cm, änderbar in den Einstellungen).",
+"cycling": "Radfahren",
+"day streak": "Tage in Folge",
+"days ago. Retesting every 4 weeks shows what's working.": "Tagen. Alle 4 Wochen neu testen zeigt, was wirkt.",
+"each side": "pro Seite",
+"everyday": "den Alltag",
+"golf": "Golf",
+"left": "links",
+"lifting": "Kraftsport",
+"min": "Min.",
+"mins this week": "Min. diese Woche",
+"mobility": "Mobilität",
+"moves": "Übungen",
+"moves ·": "Übungen ·",
+"not done": "nicht gemacht",
+"of": "von",
+"of 6 zones": "von 6 Zonen",
+"of stretching": "Dehnen",
+"on any test to measure it with live body tracking, or type a result in. Distances in cm are estimated from your height (": ", um ihn mit Live-Körpererkennung zu messen, oder trag ein Ergebnis ein. Entfernungen in cm werden anhand deiner Größe geschätzt (",
+"photos couldn't be saved. Try again on Wi-Fi.": "Fotos konnten nicht gespeichert werden. Versuch es im WLAN erneut.",
+"photos saved on this phone.": "Fotos auf diesem Telefon gespeichert.",
+"photos saved on this phone. Routines work with no signal.": "Fotos auf diesem Telefon gespeichert. Routinen funktionieren auch ohne Netz.",
+"points tighter. Give it an extra set.": "Punkte steifer. Mach einen Extrasatz.",
+"position": "Position",
+"right": "rechts",
+"running": "Laufen",
+"seconds": "Sekunden",
+"selected": "ausgewählt",
+"sessions": "Einheiten",
+"side is": "ist",
+"something sturdy to hold": "etwas Stabiles zum Festhalten",
+"something thin under your heels": "etwas Dünnes unter den Fersen",
+"something to hold, if you like": "etwas zum Festhalten, wenn du magst",
+"swipe or use the arrows": "wischen oder Pfeile nutzen",
+"tests and": "Tests und",
+"the average": "dem Durchschnitt",
+"the edge of the bed": "die Bettkante",
+"up to 33": "bis 33",
+"your": "deine",
+"your left side is {n} points tighter. Give it an extra set.": "deine linke Seite ist {n} Punkte steifer. Gönn ihr einen Extrasatz.",
+"your right side is {n} points tighter. Give it an extra set.": "deine rechte Seite ist {n} Punkte steifer. Gönn ihr einen Extrasatz.",
+"{n} above the average": "{n} über dem Durchschnitt",
+"{n} below the average": "{n} unter dem Durchschnitt"
+}, {
+"zone": {
+"shoulders": "Schultern",
+"overhead": "Overhead",
+"thorax": "Brustwirbelsäule",
+"postchain": "Hintere Kette",
+"hips": "Hüfte",
+"ankles": "Sprunggelenke"
+},
+"muscle": {
+"sh": "Schultern",
+"ch": "Brust",
+"ub": "Oberer Rücken",
+"lat": "Latissimus",
+"lb": "Unterer Rücken",
+"core": "Rumpf",
+"fa": "Unterarme und Handgelenke",
+"hf": "Hüftbeuger",
+"quad": "Oberschenkel vorne",
+"add": "Oberschenkel innen",
+"gl": "Gesäß und äußere Hüfte",
+"ham": "Oberschenkel hinten",
+"calf": "Waden und Sprunggelenke"
+},
+"sport": {
+"crossfit": "CrossFit / funktionelles Training",
+"hyrox": "Hyrox",
+"running": "Laufen",
+"golf": "Golf",
+"lifting": "Gewichtheben / Kraftsport",
+"cycling": "Radfahren",
+"office": "Bürojob / allgemeine Fitness"
+},
+"preset": {
+"daily": {
+"n": "Deine täglichen 10",
+"sub": "Aus deinen zwei steifsten Zonen erstellt"
+},
+"warm": {
+"n": "Aufwärmen vor dem WOD",
+"sub": "Dynamisch, 8 Minuten"
+},
+"cool": {
+"n": "Cool-down nach dem WOD",
+"sub": "Lange Haltepositionen, etwa 12 Minuten"
+},
+"overhead": {
+"n": "Overhead-Tag",
+"sub": "Vorbereitung für Reißen, Stoßen und Overhead Squat"
+},
+"squat": {
+"n": "Vorbereitung für Kniebeuge und Umsetzen",
+"sub": "Hüfte und Sprunggelenke"
+},
+"back": {
+"n": "Rückenpflege",
+"sub": "Sanft, für einen gereizten unteren Rücken"
+},
+"desk": {
+"n": "Schreibtischpause",
+"sub": "5 Minuten, ohne Material"
+},
+"prerun": {
+"n": "Vor dem Laufen",
+"sub": "Dynamisches Aufwärmen, um in Gang zu kommen"
+},
+"postrun": {
+"n": "Nach dem Laufen",
+"sub": "Lockeres Cool-down für Waden, Hüfte und hintere Oberschenkel"
+},
+"hyroxpre": {
+"n": "Hyrox-Aufwärmen",
+"sub": "Wettkampf- oder Trainingstag, etwa 10 Minuten"
+},
+"hyroxpost": {
+"n": "Hyrox-Regeneration",
+"sub": "Nach einem Rennen oder harten Training: Waden, Oberschenkel, Hüfte, Latissimus und Griff"
+},
+"golfpre": {
+"n": "Golf-Aufwärmen",
+"sub": "Am Abschlag oder auf der Range, alles im Stehen, etwa 8 Minuten"
+},
+"golfmob": {
+"n": "Golf-Mobilität",
+"sub": "Zu Hause, für eine größere, freiere Drehung"
+},
+"preride": {
+"n": "Vor der Radtour",
+"sub": "Hüfte, hintere Oberschenkel und Rücken aufwecken, etwa 8 Minuten"
+},
+"postride": {
+"n": "Nach der Radtour",
+"sub": "Hüfte und Brust nach Stunden im Sattel öffnen"
+},
+"rideposture": {
+"n": "Haltung für Radfahrer",
+"sub": "Gegen den Rundrücken: Brust, oberer Rücken und Nacken"
+},
+"bedhips": {
+"n": "Steife Hüfte, im Bett",
+"sub": "Alles im Liegen, auf jeder Matratze"
+},
+"sleep": {
+"n": "Zur Ruhe kommen vor dem Schlafen",
+"sub": "Langsam und beruhigend, etwa 10 Minuten"
+}
+},
+"test": {
+"cam_shflex": {
+"n": "Schulterflexion",
+"how": "Stell dich seitlich zur Kamera. Rippen unten, unterer Rücken neutral. Heb einen gestreckten Arm so weit wie möglich über den Kopf, 2 Sekunden halten, senken. Für die andere Seite umdrehen. 180° ist komplett senkrecht."
+},
+"wallflex": {
+"n": "Overhead-Reichweite an der Wand",
+"how": "Seitlich zur Kamera, Fersen, Po, oberer Rücken und Kopf an der Wand, unterer Rücken flach. Heb die gestreckten Arme über den Kopf, Daumen zusammen, und streck sie Richtung Wand. 2 Sekunden halten. Die Kamera schätzt den Abstand der Daumen zur Wand (0 = Berührung)."
+},
+"backscratch": {
+"n": "Rückenkratzer",
+"how": "Mit dem Rücken zur Kamera, ganzer Oberkörper im Bild. Führe eine Hand über die Schulter und die andere hinter den Rücken nach oben, die Finger zeigen zueinander. 2 Sekunden halten, dann Hände tauschen. Eine Lücke zählt minus, eine Überlappung plus. 'Rechts' heißt rechte Hand oben."
+},
+"er": {
+"n": "Schulter-Außenrotation",
+"how": "Leg dich seitlich zur Kamera auf den Rücken, das Telefon auf Bodenhöhe neben dem getesteten Arm. Oberarm auf Schulterhöhe zur Seite, Ellbogen 90° gebeugt, Unterarm zeigt zur Decke. Lass die Hand Richtung Boden fallen, ohne die Schulter zu heben. 2 Sekunden halten. Für den anderen Arm umdrehen."
+},
+"trot": {
+"n": "Brustwirbelsäulen-Rotation im Sitzen",
+"how": "Setz dich im Schneidersitz vor die Kamera, einen Besenstiel oder ein gerolltes Handtuch über den Schultern. Schau 2 Sekunden still nach vorn, damit die Kamera deine Schulterbreite erkennt, und dreh dich dann mit ruhiger Hüfte so weit wie möglich zu jeder Seite. An jedem Ende 2 Sekunden halten."
+},
+"slr": {
+"n": "Gestrecktes Beinheben",
+"how": "Leg dich seitlich zur Kamera auf den Rücken, Beine gestreckt. Heb ein Bein so hoch wie möglich, Knie durchgestreckt, das andere Bein bleibt flach. Mit dem anderen Bein wiederholen. 90° ist senkrecht."
+},
+"toetouch": {
+"n": "Zehen berühren im Stehen",
+"how": "Stell dich seitlich zur Kamera auf eine Stufe oder stabile Kiste, Zehen an der Kante (damit du darüber hinaus reichen kannst). Füße zusammen, Knie gestreckt, nach unten reichen und 2 Sekunden halten. Über die Zehen hinaus zählt plus, davor minus."
+},
+"hipir": {
+"n": "Hüft-Innenrotation",
+"how": "Setz dich auf etwas so Hohes, dass deine Füße den Boden nicht berühren (Tisch, Arbeitsplatte oder hohe Bank), frontal zur Kamera, Knie 90° gebeugt und hüftbreit. Knie ruhig halten und beide Füße so weit wie möglich nach außen schwingen. 2 Sekunden halten. Die Kamera misst den Winkel jedes Schienbeins zur Senkrechten."
+},
+"thomas": {
+"n": "Thomas-Test (Hüftbeuger)",
+"how": "Setz dich seitlich zur Kamera ans Ende einer Bank, eines Betts oder eines stabilen Tisches. Leg dich zurück, zieh ein Knie zur Brust und lass das andere Bein 5 Sekunden hängen. Wechseln. Der Winkel ist der des hängenden Oberschenkels zur Waagrechten: minus ist gut, plus ist steif."
+},
+"pigeon": {
+"n": "90/90-Hüftrotation",
+"how": "Setz dich in die 90/90-Position frontal zur Kamera, das vordere Schienbein quer vor dem Körper. Lehn dich mit geradem Rücken nach vorn und lass das vordere Knie sinken. 2 Sekunden halten, dann Seite wechseln. Die Kamera schätzt den Abstand zwischen vorderem Knie und Boden."
+},
+"cam_shin": {
+"n": "Dorsalflexion des Sprunggelenks (Schienbeinneigung)",
+"how": "Seitlich zur Kamera im halben Kniestand, vordere Ferse am Boden. Schieb das Knie so weit wie möglich über die Zehen, ohne die Ferse zu heben. Seite wechseln. 40° oder mehr ist gut."
+},
+"k2w": {
+"n": "Knie zur Wand",
+"how": "Halber Kniestand seitlich zur Kamera, ganzer Unterkörper im Bild. Mit der vorderen Ferse am Boden das Knie so weit wie möglich über die Zehen schieben. 2 Sekunden halten, dann Bein wechseln. Die Kamera schätzt den Knie-Wand-Abstand (wie weit das Knie über die Zehen hinausgeht)."
+},
+"squat": {
+"n": "Check der tiefen Kniebeuge",
+"how": "Seitlich zur Kamera, Füße schulterbreit. Geh so tief wie möglich in die Kniebeuge, Fersen unten, Brust hoch. Unten kurz pausieren, dann aufstehen. Misst Kniewinkel, Schienbeinneigung und Oberkörperneigung."
+}
+},
+"stretch": {
+"sleeper": {
+"n": "Sleeper Stretch",
+"cues": "Leg dich auf die Seite, den unteren Arm auf Schulterhöhe vor dir, Ellbogen 90° gebeugt. Drück den Unterarm mit der oberen Hand sanft Richtung Boden. Hör beim Dehngefühl auf, nicht beim Schmerz."
+},
+"bander": {
+"n": "Außenrotation mit Band",
+"reps": "15 langsame Wiederholungen",
+"cues": "Ellbogen seitlich am Körper, 90° gebeugt, ein Widerstandsband auf Ellbogenhöhe befestigt in der Hand (ohne Band geht auch ein straff gezogenes Handtuch). Dreh den Unterarm nach außen, der Ellbogen bleibt fixiert. Langsam zurück."
+},
+"doorway": {
+"n": "Brustdehnung im Türrahmen",
+"cues": "Unterarm an einen Türrahmen oder eine Wandkante, Ellbogen auf Schulterhöhe. Tritt nach vorn, bis sich Brust und vordere Schulter öffnen. Rippen unten."
+},
+"crossbody": {
+"n": "Schulterdehnung vor dem Körper",
+"cues": "Führe einen gestreckten Arm vor der Brust zur anderen Seite und zieh ihn mit dem anderen Unterarm heran. Schulter tief, weg vom Ohr."
+},
+"wallslide": {
+"n": "Wall Slides",
+"reps": "10 langsame Wiederholungen",
+"cues": "Rücken flach an der Wand, Arme in W-Form, Ellbogen und Handgelenke berühren die Wand. Schieb sie zu einem Y nach oben, ohne den Kontakt zu verlieren oder ins Hohlkreuz zu gehen."
+},
+"latbench": {
+"n": "Latissimus-Dehnung im Knien",
+"cues": "Knie vor etwas zwischen Knie- und Hüfthöhe, etwa einer Bank, einem Sofa, Bett oder Stuhl. Ellbogen darauf, Handflächen zusammen. Schieb die Hüfte nach hinten und lass die Brust unter die Ellbogen sinken. Atme in den oberen Rücken."
+},
+"childreach": {
+"n": "Kindhaltung mit Armen nach vorn",
+"cues": "Knie dich hin, setz dich auf die Fersen, wandere mit den Händen nach vorn und lass die Brust zum Boden sinken. Langsam in den Rücken atmen."
+},
+"tspineroll": {
+"n": "Streckung des oberen Rückens",
+"reps": "10 Wiederholungen auf 3 Höhen",
+"cues": "Leg dich mit einer Faszienrolle, einem gerollten Handtuch oder einer gerollten Yogamatte quer unter den oberen Rücken, Hände hinter dem Kopf, Hüfte unten. Streck dich über die Rolle nach hinten und schieb sie dann ein Stück höher. Unterer Rücken neutral."
+},
+"passthru": {
+"n": "Schulter-Durchzüge",
+"reps": "15 Wiederholungen",
+"cues": "Halte einen Besenstiel, ein Handtuch oder ein Band weit gegriffen. Mit gestreckten Armen von vor der Hüfte über den Kopf nach hinten und zurück führen. Den Griff enger machen, je lockerer du wirst."
+},
+"ohshold": {
+"n": "Overhead Squat halten",
+"cues": "Halte einen Besenstiel oder ein Handtuch weit gegriffen, Arme über dem Kopf gestreckt. Geh in die tiefste Kniebeuge, die du mit Fersen am Boden halten kannst, Hände über der Fußmitte. Atmen und halten."
+},
+"openbook": {
+"n": "Offenes Buch",
+"reps": "10 langsame Wiederholungen",
+"cues": "Leg dich auf die Seite, Knie 90° gebeugt, Arme zusammen vor dir. Öffne den oberen Arm über den Körper zur anderen Seite und folge ihm mit den Augen. Die Knie bleiben übereinander."
+},
+"catcow": {
+"n": "Katze-Kuh",
+"reps": "10 langsame Wiederholungen",
+"cues": "Im Vierfüßlerstand. Mach den Rücken zur Decke rund, dann lass den Bauch sinken und heb die Brust. Langsam im Atemrhythmus bewegen."
+},
+"thread": {
+"n": "Einfädeln",
+"cues": "Im Vierfüßlerstand. Schieb einen Arm unter dem Körper am Boden entlang und dreh den oberen Rücken, bis die Schulter aufliegt. Streck den anderen Arm nach oben, dann wechseln."
+},
+"quadrot": {
+"n": "Brustwirbelsäulen-Rotation im Vierfüßlerstand",
+"reps": "8 Wiederholungen",
+"cues": "Im Vierfüßlerstand, eine Hand hinter dem Kopf. Dreh den Ellbogen zum anderen Handgelenk und dann zur Decke. Die Hüfte bleibt gerade."
+},
+"stickrot": {
+"n": "Rotation im Sitzen",
+"reps": "10 pro Richtung",
+"cues": "Sitz aufrecht mit einem Besenstiel oder gerollten Handtuch über den Schultern (oder Arme vor der Brust verschränkt). Dreh dich langsam so weit wie möglich zu jeder Seite, Hüfte und Kopf bleiben ruhig."
+},
+"elephant": {
+"n": "Elefantengang",
+"reps": "10 pro Bein",
+"cues": "Im Stand nach vorn beugen und die Hände flach auf den Boden legen (Knie so weit beugen wie nötig). Ein Knie strecken, dann das andere, langsam im Wechsel."
+},
+"hamfloss": {
+"n": "Mobilisation der hinteren Oberschenkel",
+"reps": "12 Wiederholungen",
+"cues": "Auf dem Rücken einen Oberschenkel von hinten halten, Hüfte 90°. Das Knie langsam strecken und beugen. Das andere Bein bleibt lang am Boden."
+},
+"pike": {
+"n": "Sitzende Vorbeuge",
+"cues": "Setz dich mit gestreckten, geschlossenen Beinen hin. Beug dich mit langem Rücken aus der Hüfte nach vorn und reich Richtung Füße. Nacken locker."
+},
+"pancake": {
+"n": "Pancake",
+"cues": "Setz dich mit weit gegrätschten, gestreckten Beinen hin, Zehen nach oben. Beug dich mit langem Rücken aus der Hüfte nach vorn und wandere mit den Händen vor. Atmen und mit jedem Ausatmen etwas tiefer sinken."
+},
+"downdog": {
+"n": "Herabschauender Hund mit Treten",
+"reps": "10 pro Seite",
+"cues": "Hände und Füße am Boden, Hüfte hoch wie ein umgedrehtes V. Abwechselnd eine Ferse Richtung Boden drücken."
+},
+"bandham": {
+"n": "Dehnung der hinteren Oberschenkel mit Band",
+"cues": "Leg dich auf den Rücken, ein Band, Handtuch oder Gürtel um einen Fuß. Heb das gestreckte Bein, bis du die Rückseite des Oberschenkels spürst, und halte. Das andere Bein flach, unterer Rücken locker."
+},
+"couch": {
+"n": "Couch Stretch",
+"cues": "Hinteres Knie auf einem Kissen an einer Wand oder vor einem Sofa, das Schienbein daran angelehnt. Vorderer Fuß im Ausfallschritt vorn. Spann den hinteren Gesäßmuskel an und heb die Brust. Langsam reingehen."
+},
+"kneelhf": {
+"n": "Hüftbeugerdehnung im halben Kniestand",
+"cues": "Halber Kniestand, hinteres Knie unter der Hüfte. Becken aufrichten, hinteren Gesäßmuskel anspannen und leicht nach vorn schieben. Für mehr Dehnung den Arm derselben Seite nach oben strecken."
+},
+"ninety": {
+"n": "90/90-Wechsel",
+"reps": "10 Wechsel",
+"cues": "Sitz mit beiden Knien 90° gebeugt, ein Bein vorn, eins zur Seite. Dreh beide Knie zur anderen Seite und zurück, bleib dabei aufrecht."
+},
+"pigeon": {
+"n": "Taube",
+"cues": "Vorderes Schienbein quer vor dem Körper, hinteres Bein lang nach hinten. Hüfte gerade ausrichten und über das vordere Bein nach vorn beugen. Bei Bedarf ein Kissen unter die Hüfte legen."
+},
+"frog": {
+"n": "Froschdehnung",
+"cues": "Auf Unterarmen und Knien, Knie weit auseinander, Schienbeine parallel, Füße in Linie mit den Knien. Die Hüfte langsam nach hinten schieben und dort halten, wo du die Innenseite der Oberschenkel spürst."
+},
+"deepsquat": {
+"n": "Tiefe Kniebeuge halten",
+"cues": "Füße schulterbreit, unten in die Kniebeuge sinken, Fersen am Boden. Ellbogen innen an den Knien, Brust hoch. Halt dich bei Bedarf an etwas Stabilem fest, etwa einem Türrahmen oder einer Tischkante."
+},
+"cossack": {
+"n": "Kosaken-Kniebeugen",
+"reps": "8 pro Seite",
+"cues": "Breiter Stand. Verlagere das Gewicht auf eine Hüfte und geh auf diesem Bein tief, während das andere gestreckt bleibt, Zehen nach oben. Langsam die Seite wechseln."
+},
+"bridge": {
+"n": "Glute Bridge",
+"reps": "12 Wiederholungen, 2 Sekunden halten",
+"cues": "Auf dem Rücken, Knie gebeugt, Füße flach. Gesäß anspannen und die Hüfte heben, bis Knie, Hüfte und Schultern eine Linie bilden. Rippen unten, kein Hohlkreuz."
+},
+"fig4": {
+"n": "Liegende Vier",
+"cues": "Leg dich auf den Rücken, leg einen Knöchel über das andere Knie und zieh diesen Oberschenkel zur Brust. Kopf und Schultern entspannt am Boden."
+},
+"anklerock": {
+"n": "Knie-zur-Wand-Wippen",
+"reps": "15 Wippbewegungen",
+"cues": "Halber Kniestand vor einer Wand. Schieb das vordere Knie über die kleinen Zehen Richtung Wand, Ferse unten, dann zurück. Leg ein Gewicht aufs Knie, wenn du eins hast."
+},
+"calfwall": {
+"n": "Wadendehnung an der Wand",
+"cues": "Hände an die Wand, ein Bein nach hinten mit gestrecktem Knie und Ferse am Boden. Lehn dich vor, bis du die Wade spürst."
+},
+"soleus": {
+"n": "Wadendehnung mit gebeugtem Knie",
+"cues": "Wie die Wadendehnung an der Wand, aber das hintere Knie beugen und absinken, Ferse bleibt am Boden. Du spürst es weiter unten in der Wade."
+},
+"heelsup": {
+"n": "Kniebeuge mit erhöhten Fersen halten",
+"cues": "Fersen auf ein dünnes Buch, ein gerolltes Handtuch oder kleine Hantelscheiben, in die Kniebeuge sinken und unten mit aufrechter Brust halten. Knie über die Zehen nach vorn schieben."
+},
+"deadbug": {
+"n": "Dead Bug",
+"reps": "8 pro Seite",
+"cues": "Auf dem Rücken, Arme nach oben, Hüfte und Knie 90°. Unteren Rücken in den Boden drücken. Gegengleichen Arm und Bein langsam absenken, dann wechseln."
+},
+"birddog": {
+"n": "Bird Dog",
+"reps": "8 pro Seite",
+"cues": "Im Vierfüßlerstand, Rücken flach. Einen Arm nach vorn und das gegenüberliegende Bein nach hinten strecken, 2 Sekunden halten, ohne Verdrehen zurück."
+},
+"breath9090": {
+"n": "90/90-Atmung",
+"cues": "Leg dich auf den Rücken, Waden auf einem Sofa, Bett, Stuhl oder einer Bank, Knie und Hüfte 90°. 4 Zählzeiten durch die Nase ein, 6 bis 8 langsam aus, die Rippen sinken lassen."
+},
+"supinetwist": {
+"n": "Wirbelsäulendrehung im Liegen",
+"cues": "Auf dem Rücken ein Knie quer über den Körper Richtung Boden führen, das andere Bein bleibt lang. Arm zur Seite, vom Knie weg schauen."
+},
+"legswing": {
+"n": "Beinschwingen",
+"reps": "15 Schwünge",
+"cues": "Halt dich zum Gleichgewicht an etwas Stabilem fest, etwa einer Wand, einem Türrahmen oder einer Stuhllehne. Ein gestrecktes Bein vor und zurück schwingen, nach und nach höher. Dann seitlich."
+},
+"hipcircle": {
+"n": "Hüftkreisen im Stehen",
+"reps": "8 pro Richtung",
+"cues": "Steh aufrecht und halt dich bei Bedarf fest. Ein Knie auf Hüfthöhe heben, zur Seite öffnen und in einem großen, langsamen Kreis hinter dir absenken. Dann andersherum."
+},
+"lungetwist": {
+"n": "Gehender Ausfallschritt mit Drehung",
+"reps": "6 pro Seite",
+"cues": "Mach einen langen Ausfallschritt, hinteres Knie knapp über dem Boden. Dreh die Brust mit ausgebreiteten Armen über das vordere Bein, steh dann auf und geh in den nächsten Ausfallschritt. Aufrecht und kontrolliert."
+},
+"askip": {
+"n": "A-Skips",
+"reps": "2 x 15 m",
+"cues": "Hüpf vorwärts, zieh ein Knie auf Hüfthöhe, während der andere Fuß über den Ballen abdrückt. Der gegenüberliegende Arm schwingt nach vorn. Leicht, schnell und federnd."
+},
+"pogo": {
+"n": "Pogo-Sprünge",
+"reps": "20 Sprünge",
+"cues": "Kleine, schnelle Sprünge auf den Fußballen, Knie fast gestreckt, wie eine Feder. Leicht und leise bleiben. Weckt Waden und Achillessehne vor dem Laufen."
+},
+"wgs": {
+"n": "World's Greatest Stretch",
+"reps": "4 langsame Wiederholungen",
+"cues": "Mach einen langen Ausfallschritt und setz beide Hände innen neben den vorderen Fuß. Senk den inneren Ellbogen zum Spann, dann dreh dich und streck diesen Arm zur Decke. Hand wieder ab, vorderes Bein strecken, wiederholen."
+},
+"standquad": {
+"n": "Oberschenkeldehnung im Stehen",
+"cues": "Steh aufrecht und halt dich an einer Wand, einem Zaun oder einer Stuhllehne fest. Beug ein Knie und halt den Knöchel hinter dir, zieh die Ferse Richtung Po. Knie zusammen, Hüfte leicht nach vorn."
+},
+"crossover": {
+"n": "Seitbeuge im Stehen (Tractus iliotibialis)",
+"cues": "Kreuz einen Fuß hinter den anderen. Streck den Arm auf der Seite des hinteren Beins über den Kopf und lehn dich weg, bis du die Außenseite dieser Hüfte spürst. Die Hüfte bleibt gerade."
+},
+"kneehug": {
+"n": "Knie umarmen",
+"reps": "Langsames Wiegen",
+"cues": "Leg dich auf den Rücken und zieh beide Knie an die Brust. Wieg dich sanft hin und her und in kleinen Kreisen, um den unteren Rücken und die Hüfte zu lockern."
+},
+"wipers": {
+"n": "Scheibenwischer",
+"reps": "10 pro Seite",
+"cues": "Auf dem Rücken, Knie gebeugt, Füße weiter als hüftbreit. Beide Knie langsam zu einer Seite sinken lassen, dann zur anderen. Die Schultern bleiben unten."
+},
+"happybaby": {
+"n": "Glückliches Baby",
+"cues": "Auf dem Rücken die Knie weit Richtung Achseln ziehen, Schienbeine zeigen nach oben. Die Außenseiten der Füße fassen und sanft nach unten ziehen. Hin und her wiegen, wenn es guttut."
+},
+"butterfly": {
+"n": "Liegender Schmetterling",
+"cues": "Leg dich auf den Rücken, die Fußsohlen zusammen und die Knie nach außen fallen lassen. Hände auf den Bauch, die Schwerkraft arbeiten lassen. Kissen unter die Knie, wenn es zu stark ist."
+},
+"edgeflexor": {
+"n": "Hüftbeugerdehnung an der Bettkante",
+"cues": "Leg dich auf den Rücken, den Po an der Bettkante. Zieh ein Knie zur Brust und lass das andere Bein entspannt über die Kante hängen. Spür die Dehnung vorne an der hängenden Hüfte."
+},
+"sidequad": {
+"n": "Oberschenkeldehnung in Seitenlage",
+"cues": "Leg dich auf die Seite, Kopf auf dem Arm. Beug das obere Knie und halt den Knöchel hinter dir, zieh die Ferse Richtung Po. Die Hüfte leicht nach vorn schieben."
+},
+"hamtowel": {
+"n": "Dehnung der hinteren Oberschenkel im Liegen",
+"cues": "Auf dem Rücken ein Handtuch oder einen Gürtel um einen Fuß legen. Das gestreckte Bein heben, bis du die Rückseite des Oberschenkels spürst, und halten. Das andere Bein flach, unterer Rücken locker."
+},
+"clubhinge": {
+"n": "Hüftbeuge mit Schläger",
+"reps": "10 langsame Wiederholungen",
+"cues": "Halte einen Golfschläger, Besenstiel oder geraden Stab am Rücken entlang, sodass er Kopf, oberen Rücken und Steißbein berührt. Knie locker, dann aus der Hüfte in deine Ansprechhaltung beugen, alle drei Punkte bleiben am Stab. Wieder aufrichten und wiederholen."
+},
+"clubrot": {
+"n": "Schulterdrehung mit Schläger",
+"reps": "10 pro Richtung",
+"cues": "Halte einen Schläger oder Stab vorne über den Schultern und nimm deine Golfhaltung ein. Dreh die Schultern wie beim Rückschwung, Hüfte ruhig und Kopf still, dann durchdrehen bis zum vollen Finish. Fließend und kontrolliert."
+},
+"wrists": {
+"n": "Handgelenk- und Unterarmdehnung",
+"cues": "Streck einen Arm nach vorn, Handfläche nach oben, und zieh die Finger 15 Sekunden sanft mit der anderen Hand nach hinten. Dann die Handfläche nach unten drehen und den Handrücken sanft zu dir ziehen. Ellbogen gestreckt, Schulter locker."
+},
+"foldfwd": {
+"n": "Vorbeuge im Stehen",
+"cues": "Füße hüftbreit, Knie locker. Aus der Hüfte nach vorn beugen und den Oberkörper hängen lassen, die Ellbogen über Kreuz halten. Den Kopf sanft schütteln, um den Nacken zu lösen."
+}
+}
+});

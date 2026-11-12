@@ -1,0 +1,836 @@
+/* Signal Mobility translations: pt */
+I18N.add("pt", {
+"&#x2039;": "&#x2039;",
+"&#x203A;": "&#x203A;",
+"&#x2715;": "&#x2715;",
+"+ Build your own": "+ Criar a sua",
+", about": ", cerca de",
+", hips below knees": ", ancas abaixo dos joelhos",
+", with your hips below your knees.": ", com as ancas abaixo dos joelhos.",
+"10 seconds.": "10 segundos.",
+"34 to 45": "34 a 45",
+"46 to 55": "46 a 55",
+"56 and over": "56 ou mais",
+"About 15 minutes. It scores six zones so the app can build your daily routine around what's tightest. Camera tracking works for 5 of the tests.": "Cerca de 15 minutos. Avalia seis zonas para que a app construa a sua rotina diária em torno do que está mais rígido. O seguimento por câmara funciona em 5 dos testes.",
+"About 50 to 80 MB. Best done on Wi-Fi. After that, photos load instantly even with no signal.": "Cerca de 50 a 80 MB. De preferência em Wi-Fi. Depois disso, as fotos carregam de imediato mesmo sem rede.",
+"Abs and obliques": "Abdominais e oblíquos",
+"Add to Home Screen": "Adicionar ao ecrã principal",
+"Add to your Home Screen": "Adicione a app ao ecrã principal",
+"Added to your test. Tap Save test when you're done.": "Adicionado ao seu teste. Toque em Guardar teste quando terminar.",
+"Adductors, the inside of the thigh": "Adutores, a parte interna da coxa",
+"Age": "Idade",
+"Age and sex set the typical-score markers (currently available for men only). Height scales the camera's cm estimates.": "A idade e o sexo definem as marcas de pontuação típica (por agora só disponíveis para homens). A altura ajusta as estimativas em cm da câmara.",
+"Aim for": "Objetivo:",
+"All": "Todos",
+"All data deleted": "Todos os dados apagados",
+"All done. Nice work today.": "Terminado. Bom trabalho hoje.",
+"All photos saved for offline use": "Todas as fotos guardadas para uso offline",
+"All saved": "Tudo guardado",
+"And that's it. Great session.": "E pronto. Ótima sessão.",
+"Anterior chain": "Cadeia anterior",
+"Back": "Costas",
+"Back flat against the wall, heels, bum and head touching. Lift both arms overhead with your thumbs together, and reach back towards the wall. Hold it for a couple of seconds.": "Costas encostadas à parede, com calcanhares, glúteos e cabeça a tocar. Levante os dois braços acima da cabeça com os polegares juntos e estique-os em direção à parede. Mantenha uns segundos.",
+"Back view of the body": "Vista posterior do corpo",
+"Background music": "Música de fundo",
+"Beeps": "Bips",
+"Best": "Melhor",
+"Best available": "A melhor disponível",
+"Best positions": "Melhores posições",
+"Best readings cleared": "Melhores leituras apagadas",
+"Both sides": "Ambos os lados",
+"Both sides recorded. Nice work. Tap Use results when you're happy.": "Ambos os lados registados. Bom trabalho. Toque em Usar resultados quando estiver satisfeito.",
+"Calm pads": "Pads suaves",
+"Camera": "Câmara",
+"Camera access was blocked. Allow it in Settings > Safari > Camera, then try again.": "O acesso à câmara foi bloqueado. Permita-o em Definições > Safari > Câmara e tente novamente.",
+"Can't see you. Step back so your whole body is in view.": "Não o vejo. Recue para que se veja o corpo todo.",
+"Cancel": "Cancelar",
+"Change": "Alterar",
+"Changes the app, the coach's voice and all stretch instructions. The app restarts to apply it.": "Altera a app, a voz do treinador e todas as instruções dos alongamentos. A app reinicia para aplicar.",
+"Checking…": "A verificar…",
+"Choose": "Escolher",
+"Clear": "Limpar",
+"Close": "Fechar",
+"Coach voice": "Voz do treinador",
+"Coach's voice": "Voz do treinador",
+"Cool-down": "Retorno à calma",
+"Copied": "Copiado",
+"Copied. Paste it into Body Signal or a note.": "Copiado. Cole-o no Body Signal ou numa nota.",
+"Copy": "Copiar",
+"Couldn't copy on this device. Use Export file instead.": "Não foi possível copiar neste dispositivo. Use Exportar ficheiro.",
+"Couldn't download the tracking model": "Não foi possível descarregar o modelo de seguimento",
+"Couldn't load body tracking. Check your connection and try again.": "Não foi possível carregar o seguimento corporal. Verifique a ligação e tente novamente.",
+"Couldn't open the save sheet": "Não foi possível abrir a folha para guardar",
+"Couldn't play that video.": "Não foi possível reproduzir esse vídeo.",
+"Couldn't save. Storage may be full.": "Não foi possível guardar. O armazenamento pode estar cheio.",
+"Couldn't start the camera (": "Não foi possível iniciar a câmara (",
+"CrossFit": "CrossFit",
+"Cycling": "Ciclismo",
+"Dark": "Escuro",
+"Deepest squat": "Agachamento mais profundo",
+"Delete": "Eliminar",
+"Delete all data": "Apagar todos os dados",
+"Deltoids, the caps of the shoulders": "Deltoides, a parte arredondada dos ombros",
+"Desk": "Escritório",
+"Diagnostics": "Diagnóstico",
+"Do it now": "Fazer agora",
+"Done": "OK",
+"Edit": "Editar",
+"End session": "Terminar sessão",
+"Enter at least one result first.": "Introduza primeiro pelo menos um resultado.",
+"Erector spinae, either side of the lower spine": "Eretores da coluna, de cada lado da zona lombar",
+"Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal's format.": "Tudo fica guardado apenas neste telemóvel. Exporte uma cópia de segurança de vez em quando. O ficheiro inclui também os seus testes no formato do Body Signal.",
+"Export file": "Exportar ficheiro",
+"Face the camera and hold still…": "Olhe para a câmara e fique quieto…",
+"Favourite sport (optional)": "Desporto favorito (opcional)",
+"Feet about shoulder width apart. Squat down as deep as you can, chest up, heels down. Pause at the bottom for a couple of seconds.": "Pés à largura dos ombros. Agache o mais fundo que conseguir, peito erguido, calcanhares no chão. Fique em baixo uns segundos.",
+"Feet together, knees straight. Reach down as far as you can, and hold it at the bottom.": "Pés juntos, joelhos esticados. Desça o mais que conseguir e mantenha em baixo.",
+"Female": "Feminino",
+"Final 3, 2, 1 countdown": "Contagem final 3, 2, 1",
+"Finish": "Terminar",
+"Finish a routine and it'll show here.": "Termine uma rotina e ela aparece aqui.",
+"First up,": "Primeiro,",
+"Flip camera": "Trocar câmara",
+"Focus:": "Foco:",
+"For the most natural voice, download one on your iPhone: open Settings, search for Voices, then pick your language and an Enhanced or Premium voice. Then close and reopen this app and choose it here.": "Para uma voz mais natural, descarregue uma no iPhone: abra Definições, procure Vozes, escolha o seu idioma e uma voz Melhorada ou Premium. Depois feche e volte a abrir esta app e escolha-a aqui.",
+"Front": "Frente",
+"Front view of the body": "Vista frontal do corpo",
+"Gastrocnemius, soleus and Achilles": "Gastrocnémio, solear e tendão de Aquiles",
+"Gentle music generated on your phone. It drops down whenever the coach speaks.": "Música suave gerada no seu telemóvel. Baixa sempre que o treinador fala.",
+"Get into position": "Coloque-se em posição",
+"Get into your ninety ninety position, with the front shin across your body. Lean forward with a long back, and let the front knee drop. Hold it there.": "Coloque-se na posição noventa noventa, com a canela da frente atravessada à frente do corpo. Incline-se para a frente com as costas longas e deixe descer o joelho da frente. Mantenha aí.",
+"Gluteus maximus and medius, plus the outer hip and IT band": "Glúteo máximo e médio, mais a anca externa e a banda iliotibial",
+"Go again": "Outra vez",
+"Golf": "Golfe",
+"Good light, fitted clothes.": "Boa luz, roupa justa.",
+"Good squat.": "Bom agachamento.",
+"Good. Swap over to the right.": "Bem. Passe para a direita.",
+"Got it.": "Já está.",
+"Great, I've got you. In your own time, move into it and hold at your best point.": "Ótimo, já o vejo. Ao seu ritmo, entre na posição e mantenha no seu melhor ponto.",
+"Great, hold it.": "Ótimo, mantenha.",
+"Half-kneel side-on to the phone. Drive the front knee forward over the toes with the heel down. Hold at your furthest point. Swap legs.": "Meio ajoelhado de lado para o telemóvel. Leve o joelho da frente para a frente por cima dos dedos com o calcanhar no chão. Mantenha no ponto mais longe. Troque de perna.",
+"Halfway there. Breathe out, and sink a little deeper.": "Já vai a meio. Expire e desça um pouco mais.",
+"Halfway there. Keep it smooth.": "Já vai a meio. Mantenha o movimento suave.",
+"Halfway. Keep breathing.": "Metade. Continue a respirar.",
+"Halfway. Relax your shoulders, and let it go a bit further.": "Metade. Relaxe os ombros e vá um pouco mais longe.",
+"Have another go if you think you can beat it, or tap Use results when you're happy.": "Tente outra vez se acha que consegue melhorar, ou toque em Usar resultados quando estiver satisfeito.",
+"Hear it": "Ouvir",
+"Hear the voice": "Ouvir a voz",
+"Height (cm)": "Altura (cm)",
+"Hello. I'll be your coach for mobility tests and stretching. Ready when you are.": "Olá. Vou ser o seu treinador nos testes de mobilidade e nos alongamentos. Quando quiser.",
+"Hi there. This is how I'll sound during your sessions. Let's get moving.": "Olá. É assim que vou soar nas suas sessões. Vamos mexer-nos.",
+"Hips": "Ancas",
+"Hips and overhead until you test": "Ancas e overhead até fazer o teste",
+"History": "Histórico",
+"Hold": "Mantenha",
+"Hold a stick across your shoulders. First, face me and keep still for a moment, so I can learn your shoulder width.": "Segure um pau sobre os ombros. Primeiro, olhe para mim e fique quieto um momento, para eu aprender a largura dos seus ombros.",
+"How to do it": "Como fazer",
+"Hyrox": "Hyrox",
+"I can see you. Face me, and keep still for a moment.": "Já o vejo. Olhe para mim e fique quieto um momento.",
+"I can't quite see all of you. Take a step back.": "Não o vejo por inteiro. Dê um passo atrás.",
+"I'll let you know when I can see you.": "Aviso quando o vir.",
+"I've lost you a bit. Can you step back so I can see all of you?": "Perdi-o um pouco. Pode recuar para eu o ver por inteiro?",
+"Iliopsoas and rectus femoris, at the front of the hip": "Iliopsoas e reto femoral, na parte da frente da anca",
+"Images downloaded": "Imagens descarregadas",
+"It then opens full screen, works offline and iOS keeps your data safe.": "Assim abre em ecrã inteiro, funciona offline e o iOS mantém os seus dados seguros.",
+"Keep both legs straight. Lift one leg as high as you can, without bending the knee, and hold it there for a couple of seconds.": "Mantenha as duas pernas esticadas. Levante uma perna o mais alto que conseguir sem dobrar o joelho e mantenha uns segundos.",
+"Keep holding that.": "Continue a manter.",
+"Keep your front heel down, and drive your knee forward over your toes as far as it'll go. Hold it at the furthest point.": "Mantenha o calcanhar da frente no chão e leve o joelho para a frente por cima dos dedos o mais que conseguir. Mantenha no ponto mais longe.",
+"Keep your front heel down, and push your knee forward past your toes as far as it'll go. Hold it at the furthest point.": "Mantenha o calcanhar da frente no chão e empurre o joelho para a frente para lá dos dedos o mais que conseguir. Mantenha no ponto mais longe.",
+"Keep your knees still, and swing both feet outwards as far as they'll go. Hold it there for a couple of seconds.": "Mantenha os joelhos quietos e leve os dois pés para fora o mais que conseguir. Mantenha uns segundos.",
+"Keep your ribs down, and lift one straight arm up overhead as far as it'll go. Hold it there for a couple of seconds, then we'll do the other side.": "Costelas em baixo, levante um braço esticado acima da cabeça o mais que conseguir. Mantenha uns segundos e depois fazemos o outro lado.",
+"Knee angle °": "Ângulo do joelho °",
+"Language": "Idioma",
+"Last 8 weeks. Light = some stretching, dark = 8 minutes or more.": "Últimas 8 semanas. Claro = algum alongamento, escuro = 8 minutos ou mais.",
+"Last one": "O último",
+"Latissimus dorsi, the wings down the sides of the back": "Grande dorsal, as asas dos lados das costas",
+"Left": "Esquerda",
+"Left and right gaps": "Diferenças entre esquerda e direita",
+"Left side": "Lado esquerdo",
+"Left side first.": "Primeiro o lado esquerdo.",
+"Left side to begin.": "Começamos pelo lado esquerdo.",
+"Left side,": "Lado esquerdo,",
+"Let's do your": "Vamos à sua",
+"Let's start with": "Começamos com",
+"Lie back on a bench edge, hug one knee to your chest and let the other leg hang. Side-on to the phone. Hold still for 2 seconds.": "Deite-se de costas na borda de um banco, abrace um joelho ao peito e deixe a outra perna pendurada. De lado para o telemóvel. Fique quieto 2 segundos.",
+"Lie back on the edge of the bench. Hug one knee to your chest, and let the other leg hang down. Then just relax and hold still.": "Deite-se na borda do banco. Abrace um joelho ao peito e deixe a outra perna pendurada. Depois relaxe e fique quieto.",
+"Lie on your back side-on to the phone, whole body in view. Raise one straight leg as high as you can, hold, lower. Then the other leg.": "Deite-se de costas de lado para o telemóvel, com o corpo todo visível. Levante uma perna esticada o mais alto que conseguir, mantenha, baixe. Depois a outra perna.",
+"Light": "Claro",
+"Loading body tracking (first time takes a few seconds)…": "A carregar o seguimento corporal (da primeira vez demora uns segundos)…",
+"Lovely.": "Muito bem.",
+"Lovely. Switch to the right side.": "Muito bem. Passe para o lado direito.",
+"Lower body": "Parte inferior",
+"Male": "Masculino",
+"Match phone": "Igual ao telemóvel",
+"Men": "Homens",
+"Mobility score": "Pontuação de mobilidade",
+"Mobility test": "Teste de mobilidade",
+"Move back a little, so your whole body's in the picture.": "Recue um pouco para que o corpo todo fique na imagem.",
+"Moving on to": "Passamos a",
+"Muscle groups": "Grupos musculares",
+"Muscles": "Músculos",
+"Music volume": "Volume da música",
+"My routine": "A minha rotina",
+"Name your routine": "Dê um nome à sua rotina",
+"Next": "Seguinte",
+"Next photo": "Foto seguinte",
+"Next up,": "A seguir,",
+"Nice and deep.": "Bem fundo.",
+"Nice one.": "Boa.",
+"Nice. Now the right side.": "Bem. Agora o lado direito.",
+"No moves match. Try another area or filter.": "Nenhum exercício corresponde. Experimente outra zona ou outro filtro.",
+"No readings captured yet.": "Ainda sem leituras.",
+"No tests yet.": "Ainda sem testes.",
+"None": "Nenhum",
+"Normal": "Normal",
+"Not scored. A check of your squat position.": "Sem pontuação. Uma verificação da sua posição de agachamento.",
+"Nothing logged yet.": "Ainda nada registado.",
+"Now rotate each way and hold.": "Agora rode para cada lado e mantenha.",
+"Now the other side.": "Agora o outro lado.",
+"Now turn the other way.": "Agora rode para o outro lado.",
+"Ocean waves": "Ondas do mar",
+"Off": "Desligado",
+"Offline photos": "Fotos offline",
+"Okay, I can see you. Go whenever you're ready, and hold your best position for a couple of seconds.": "Certo, já o vejo. Quando estiver pronto, entre na posição e mantenha a sua melhor posição uns segundos.",
+"Okay, let's measure your": "Certo, vamos medir a sua",
+"Okay, next is": "Certo, a seguir é",
+"On a bed": "Na cama",
+"One": "Um",
+"One result": "Um resultado",
+"Open Mobility from the new icon": "Abra o Mobility a partir do novo ícone",
+"Overall": "Global",
+"Overall mobility score over time": "Pontuação de mobilidade global ao longo do tempo",
+"Overall score": "Pontuação global",
+"Paste a backup instead": "Colar uma cópia de segurança",
+"Pause": "Pausa",
+"Paused": "Em pausa",
+"Pecs, across the front of the chest": "Peitorais, na parte da frente do peito",
+"Perfect, got it. Now turn as far as you can to one side, keep your hips still, and hold it.": "Perfeito, já está. Agora rode o mais que conseguir para um lado, com as ancas quietas, e mantenha.",
+"Photo": "Foto",
+"Pick a music style first": "Escolha primeiro um estilo de música",
+"Pick muscle areas, then tap moves in order": "Escolha zonas musculares e depois toque nos exercícios por ordem",
+"Pick your sport": "Escolha o seu desporto",
+"Posterior chain": "Cadeia posterior",
+"Preview music": "Ouvir música",
+"Previous": "Anterior",
+"Previous photo": "Foto anterior",
+"Prop the phone at floor level about 2 to 3 metres away.": "Coloque o telemóvel ao nível do chão a cerca de 2 a 3 metros.",
+"Prop the phone at hip height about 2 to 3 metres away.": "Coloque o telemóvel à altura da anca a cerca de 2 a 3 metros.",
+"Prop your phone at bench height, about two metres away, facing you. Get side-on to it.": "Coloque o telemóvel à altura de um banco, a cerca de dois metros, virado para si. Fique de lado.",
+"Prop your phone at chest height, about two metres away. Sit facing it.": "Coloque o telemóvel à altura do peito, a cerca de dois metros. Sente-se de frente.",
+"Prop your phone at chest height, about two metres away. Stand with your back to it.": "Coloque o telemóvel à altura do peito, a cerca de dois metros. Fique de costas para ele.",
+"Prop your phone at hip height, about two metres away, with the screen facing you. Then stand side-on to it.": "Coloque o telemóvel à altura da anca, a cerca de dois metros, com o ecrã virado para si. Depois fique de lado.",
+"Prop your phone at hip height, about two metres away. Sit facing it.": "Coloque o telemóvel à altura da anca, a cerca de dois metros. Sente-se de frente.",
+"Prop your phone at knee height, about two metres away. Sit facing it.": "Coloque o telemóvel à altura dos joelhos, a cerca de dois metros. Sente-se de frente.",
+"Put your arm out to the side at shoulder height, with your elbow bent and your hand pointing at the ceiling. Then let your hand fall back towards the floor, keeping your shoulder down. Hold it at the bottom.": "Leve o braço para o lado à altura do ombro, cotovelo dobrado e mão a apontar para o teto. Depois deixe a mão cair para o chão sem levantar o ombro. Mantenha em baixo.",
+"Put your phone on the floor, about two metres away, with the screen facing you. Lie down side-on to it.": "Ponha o telemóvel no chão, a cerca de dois metros, com o ecrã virado para si. Deite-se de lado.",
+"Quadriceps, the front of the thigh": "Quadríceps, a parte da frente da coxa",
+"Quick picks": "Sugestões rápidas",
+"Quicker": "Mais rápida",
+"Reach one hand over your shoulder, and the other up behind your back, so your fingers point at each other. Hold it for a couple of seconds.": "Leve uma mão por cima do ombro e a outra por trás das costas, com os dedos a apontar um para o outro. Mantenha uns segundos.",
+"Relax for a second.": "Relaxe um segundo.",
+"Reset": "Repor",
+"Restore from file": "Restaurar a partir de ficheiro",
+"Restore pasted backup": "Restaurar cópia colada",
+"Restored": "Restaurado",
+"Result": "Resultado",
+"Retest now": "Repetir o teste",
+"Right": "Direita",
+"Right side": "Lado direito",
+"Right side,": "Lado direito,",
+"Right,": "Certo,",
+"Right, now": "Certo, agora",
+"Routine background music": "Música de fundo das rotinas",
+"Routines": "Rotinas",
+"Running": "Corrida",
+"Save": "Guardar",
+"Save all photos for offline": "Guardar todas as fotos offline",
+"Save camera test images to Photos": "Guardar imagens dos testes em Fotos",
+"Save test": "Guardar teste",
+"Save them to Photos to keep a visual record.": "Guarde-as em Fotos para ter um registo visual.",
+"Save to Photos": "Guardar em Fotos",
+"Saved": "Guardado",
+"Saved.": "Guardado.",
+"Saving…": "A guardar…",
+"Score": "Pontuação",
+"Score so far": "Pontuação até agora",
+"Scroll left": "Deslizar para a esquerda",
+"Scroll right": "Deslizar para a direita",
+"Sections": "Secções",
+"Selected": "Selecionados",
+"Sessions": "Sessões",
+"Sets the top stretches and routines shown on Today.": "Define os alongamentos e rotinas em destaque em Hoje.",
+"Settings": "Definições",
+"Sex": "Sexo",
+"Shin lean °": "Inclinação da canela °",
+"Shoulder girdle": "Cintura escapular",
+"Show movement": "Mostrar movimento",
+"Show photo": "Mostrar foto",
+"Show stretch photos (instead of stick figures)": "Mostrar fotos dos alongamentos (em vez de figuras)",
+"Show the movement": "Mostrar o movimento",
+"Signal Mobility": "Signal Mobility",
+"Singing bowls": "Taças tibetanas",
+"Sleep": "Dormir",
+"Slower": "Mais lenta",
+"Speed": "Velocidade",
+"Squat check": "Verificação do agachamento",
+"Stand side-on, whole body in view, feet shoulder-width. Squat as deep as you can, pause 2 seconds at the bottom, stand up.": "De lado, com o corpo todo visível, pés à largura dos ombros. Agache o mais fundo que conseguir, fique 2 segundos em baixo e suba.",
+"Stand side-on, whole body in view. Raise one straight arm overhead, hold 2 seconds, lower. Turn round for the other arm.": "De lado, com o corpo todo visível. Levante um braço esticado acima da cabeça, mantenha 2 segundos, baixe. Vire-se para o outro braço.",
+"Start": "Começar",
+"Start camera": "Iniciar câmara",
+"Start with a mobility test": "Comece com um teste de mobilidade",
+"Start,": "Começar,",
+"Starting camera…": "A iniciar a câmara…",
+"Step into view so your whole body is on screen.": "Entre no enquadramento para que se veja o corpo todo.",
+"Stop preview": "Parar",
+"Stretch library": "Biblioteca de alongamentos",
+"Stretching": "Alongamentos",
+"Switch sides": "Troque de lado",
+"Take the test": "Fazer o teste",
+"Tap Delete again to confirm": "Toque novamente em Eliminar para confirmar",
+"Tap a muscle on the body to select it.": "Toque num músculo do corpo para o selecionar.",
+"Tap again to delete everything on this phone": "Toque novamente para apagar tudo neste telemóvel",
+"Tap one or more muscles to see moves that stretch them.": "Toque num ou mais músculos para ver exercícios que os alongam.",
+"Tap the Share button in Safari": "Toque no botão Partilhar no Safari",
+"Test": "Teste",
+"Test date": "Data do teste",
+"Tested": "Testado a",
+"Tests": "Testes",
+"That isn't a Signal Mobility backup.": "Isso não é uma cópia de segurança do Signal Mobility.",
+"That isn't a valid backup file.": "Isso não é um ficheiro de cópia de segurança válido.",
+"That's": "Resultado:",
+"That's both sides done. Go again if you want to beat them, or tap Use results.": "Ambos os lados feitos. Repita se quiser melhorar, ou toque em Usar resultados.",
+"That's halfway. Keep breathing slowly.": "Já vai a meio. Continue a respirar devagar.",
+"That's halfway. Nice and controlled.": "Já vai a meio. Bem controlado.",
+"That's it.": "Isso mesmo.",
+"That's the session finished. Well done.": "Sessão terminada. Muito bem.",
+"The back of the thigh, hip to knee": "A parte de trás da coxa, da anca ao joelho",
+"The cm reading is an estimate scaled to your height (": "A leitura em cm é uma estimativa ajustada à sua altura (",
+"Theme": "Tema",
+"Then lift the other leg.": "Depois levante a outra perna.",
+"Then swap hands over.": "Depois troque de mão.",
+"Then swap legs over.": "Depois troque de perna.",
+"Then switch sides.": "Depois troque de lado.",
+"Then turn round, and do the other arm.": "Depois vire-se e faça o outro braço.",
+"Then turn round, and lift the other arm.": "Depois vire-se e levante o outro braço.",
+"This browser can't open the camera. Open the app in Safari, or use a video instead.": "Este navegador não consegue abrir a câmara. Abra a app no Safari, ou use um vídeo.",
+"This browser can't store photos offline.": "Este navegador não consegue guardar fotos offline.",
+"Three": "Três",
+"Tightest zone:": "Zona mais rígida:",
+"Time between exercises": "Tempo entre exercícios",
+"Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.": "Tempo para se reposicionar e pegar no material (elástico, rolo, pau) antes de cada exercício. No início são anunciados o exercício seguinte e o seu material.",
+"Time to retest": "Altura de repetir o teste",
+"Time to switch sides": "Tempo para trocar de lado",
+"Today": "Hoje",
+"Top routines for": "Rotinas em destaque para",
+"Top stretches for": "Alongamentos em destaque para",
+"Torso lean °": "Inclinação do tronco °",
+"Traps and rhomboids, between the shoulder blades": "Trapézio e romboides, entre as omoplatas",
+"Two": "Dois",
+"Typical score for men your age": "Pontuação típica dos homens da sua idade",
+"Up next:": "A seguir:",
+"Upper body": "Parte superior",
+"Use a video": "Usar um vídeo",
+"Use results": "Usar resultados",
+"Video finished. Tap Use results to keep the best readings.": "Vídeo terminado. Toque em Usar resultados para ficar com as melhores leituras.",
+"Voice": "Voz",
+"Voice (female, American)": "Voz (feminina, americana)",
+"Voice (male, British)": "Voz (masculina, britânica)",
+"Voice coaching": "Orientação por voz",
+"Warm up for 5 minutes first. Tap": "Aqueça 5 minutos antes. Toque em",
+"Warm-up": "Aquecimento",
+"We'll begin with": "Começamos com",
+"We'll start on the left.": "Começamos pela esquerda.",
+"Which muscles?": "Que músculos?",
+"Wrist flexors and extensors along the forearm": "Flexores e extensores do pulso, ao longo do antebraço",
+"You can go again to beat that, or tap Use results.": "Pode repetir para melhorar, ou toque em Usar resultados.",
+"You'll need": "Vai precisar de",
+"Your daily 10": "Os seus 10 diários",
+"Your data": "Os seus dados",
+"Your knee angle is": "O seu ângulo do joelho é",
+"Your last test was": "O seu último teste foi há",
+"Your routine": "A sua rotina",
+"Your score will chart here after your first test.": "A sua pontuação vai aparecer aqui depois do primeiro teste.",
+"a band or towel": "um elástico ou uma toalha",
+"a band, towel or belt": "um elástico, uma toalha ou um cinto",
+"a bench, sofa or bed": "um banco, um sofá ou uma cama",
+"a bench, sofa, bed or chair": "um banco, um sofá, uma cama ou uma cadeira",
+"a broomstick or towel": "um cabo de vassoura ou uma toalha",
+"a broomstick, towel or band": "um cabo de vassoura, uma toalha ou um elástico",
+"a door frame or wall edge": "a ombreira de uma porta ou a esquina de uma parede",
+"a foam roller or rolled towel": "um rolo de espuma ou uma toalha enrolada",
+"a pillow or two": "uma ou duas almofadas",
+"a pillow or two, if you like": "uma ou duas almofadas, se quiser",
+"a sofa, bed or chair": "um sofá, uma cama ou uma cadeira",
+"a stair or step": "um degrau",
+"a towel or belt": "uma toalha ou um cinto",
+"a wall": "uma parede",
+"a wall or sofa": "uma parede ou um sofá",
+"above": "acima de",
+"age average": "média da idade",
+"and": "e",
+"average": "média",
+"below": "abaixo de",
+"best": "melhor",
+"body tracking by MediaPipe": "seguimento corporal com MediaPipe",
+"cm, change it in Settings).": "cm, altere-a nas Definições).",
+"cycling": "o ciclismo",
+"day streak": "dias seguidos",
+"days ago. Retesting every 4 weeks shows what's working.": "dias. Repetir o teste a cada 4 semanas mostra o que resulta.",
+"each side": "de cada lado",
+"everyday": "o dia a dia",
+"golf": "o golfe",
+"left": "esquerdo",
+"lifting": "o levantamento de pesos",
+"min": "min",
+"mins this week": "min esta semana",
+"mobility": "mobilidade",
+"moves": "exercícios",
+"moves ·": "exercícios ·",
+"not done": "por fazer",
+"of": "de",
+"of 6 zones": "de 6 zonas",
+"of stretching": "de alongamento",
+"on any test to measure it with live body tracking, or type a result in. Distances in cm are estimated from your height (": "em qualquer teste para o medir com seguimento corporal em direto, ou escreva um resultado. As distâncias em cm são estimadas a partir da sua altura (",
+"photos couldn't be saved. Try again on Wi-Fi.": "fotos não puderam ser guardadas. Tente novamente em Wi-Fi.",
+"photos saved on this phone.": "fotos guardadas neste telemóvel.",
+"photos saved on this phone. Routines work with no signal.": "fotos guardadas neste telemóvel. As rotinas funcionam sem rede.",
+"points tighter. Give it an extra set.": "pontos mais rígido. Faça uma série extra.",
+"position": "posição",
+"right": "direito",
+"running": "a corrida",
+"seconds": "segundos",
+"selected": "selecionados",
+"sessions": "sessões",
+"side is": "está",
+"something sturdy to hold": "algo firme onde se segurar",
+"something thin under your heels": "algo fino debaixo dos calcanhares",
+"something to hold, if you like": "algo onde se segurar, se quiser",
+"swipe or use the arrows": "deslize ou use as setas",
+"tests and": "testes e",
+"the average": "a média",
+"the edge of the bed": "a borda da cama",
+"up to 33": "até 33",
+"your": "o seu",
+"your left side is {n} points tighter. Give it an extra set.": "o seu lado esquerdo está {n} pontos mais rígido. Faça-lhe uma série extra.",
+"your right side is {n} points tighter. Give it an extra set.": "o seu lado direito está {n} pontos mais rígido. Faça-lhe uma série extra.",
+"{n} above the average": "{n} acima da média",
+"{n} below the average": "{n} abaixo da média"
+}, {
+"zone": {
+"shoulders": "Ombros",
+"overhead": "Overhead",
+"thorax": "Tórax",
+"postchain": "Cadeia posterior",
+"hips": "Ancas",
+"ankles": "Tornozelos"
+},
+"muscle": {
+"sh": "Ombros",
+"ch": "Peito",
+"ub": "Parte superior das costas",
+"lat": "Dorsais",
+"lb": "Zona lombar",
+"core": "Core",
+"fa": "Antebraços e pulsos",
+"hf": "Flexores da anca",
+"quad": "Quadríceps",
+"add": "Parte interna das coxas",
+"gl": "Glúteos e anca externa",
+"ham": "Isquiotibiais",
+"calf": "Gémeos e tornozelos"
+},
+"sport": {
+"crossfit": "CrossFit / fitness funcional",
+"hyrox": "Hyrox",
+"running": "Corrida",
+"golf": "Golfe",
+"lifting": "Halterofilismo / força",
+"cycling": "Ciclismo",
+"office": "Trabalho de escritório / forma física geral"
+},
+"preset": {
+"daily": {
+"n": "Os seus 10 diários",
+"sub": "Criada a partir das suas duas zonas mais rígidas"
+},
+"warm": {
+"n": "Aquecimento pré-WOD",
+"sub": "Dinâmico, 8 minutos"
+},
+"cool": {
+"n": "Retorno à calma pós-WOD",
+"sub": "Posições longas, cerca de 12 minutos"
+},
+"overhead": {
+"n": "Dia de overhead",
+"sub": "Preparação para arranque, arremesso e agachamento overhead"
+},
+"squat": {
+"n": "Preparação para agachamento e clean",
+"sub": "Ancas e tornozelos"
+},
+"back": {
+"n": "Cuidar das costas",
+"sub": "Suave, para uma lombar queixosa"
+},
+"desk": {
+"n": "Pausa no escritório",
+"sub": "5 minutos, sem material"
+},
+"prerun": {
+"n": "Antes de correr",
+"sub": "Aquecimento dinâmico para se pôr a mexer"
+},
+"postrun": {
+"n": "Depois de correr",
+"sub": "Retorno à calma tranquilo para gémeos, ancas e isquiotibiais"
+},
+"hyroxpre": {
+"n": "Aquecimento Hyrox",
+"sub": "Dia de prova ou de treino, cerca de 10 minutos"
+},
+"hyroxpost": {
+"n": "Recuperação Hyrox",
+"sub": "Depois de uma prova ou sessão dura: gémeos, quadríceps, ancas, dorsais e pega"
+},
+"golfpre": {
+"n": "Aquecimento de golfe",
+"sub": "No tee ou no driving range, tudo de pé, cerca de 8 minutos"
+},
+"golfmob": {
+"n": "Mobilidade para golfe",
+"sub": "Em casa, para uma rotação maior e mais livre"
+},
+"preride": {
+"n": "Antes de pedalar",
+"sub": "Acorde ancas, isquiotibiais e costas, cerca de 8 minutos"
+},
+"postride": {
+"n": "Depois de pedalar",
+"sub": "Abra as ancas e o peito depois de horas no selim"
+},
+"rideposture": {
+"n": "Postura do ciclista",
+"sub": "Desfaça a corcunda: peito, parte superior das costas e pescoço"
+},
+"bedhips": {
+"n": "Ancas rígidas, na cama",
+"sub": "Tudo deitado, em qualquer colchão"
+},
+"sleep": {
+"n": "Relaxar antes de dormir",
+"sub": "Lenta e calmante, cerca de 10 minutos"
+}
+},
+"test": {
+"cam_shflex": {
+"n": "Flexão do ombro",
+"how": "De lado para a câmara. Costelas em baixo, zona lombar neutra. Levante um braço esticado acima da cabeça o mais que conseguir, mantenha 2 segundos, baixe. Vire-se para o outro lado. 180° é totalmente vertical."
+},
+"wallflex": {
+"n": "Alcance overhead na parede",
+"how": "De lado para a câmara com calcanhares, glúteos, parte superior das costas e cabeça encostados à parede, zona lombar plana. Levante os braços esticados acima da cabeça, polegares juntos, e estique-os em direção à parede. Mantenha 2 segundos. A câmara estima a distância dos polegares à parede (0 = a tocar)."
+},
+"backscratch": {
+"n": "Coçar as costas",
+"how": "De costas para a câmara, com toda a parte superior do corpo visível. Leve uma mão por cima do ombro e a outra por trás das costas, com os dedos a apontar um para o outro. Mantenha 2 segundos e troque de mão. Um espaço conta negativo, uma sobreposição positivo. 'Direita' significa a mão direita em cima."
+},
+"er": {
+"n": "Rotação externa do ombro",
+"how": "Deite-se de costas, de lado para a câmara, com o telemóvel ao nível do chão junto ao braço a testar. Braço para o lado à altura do ombro, cotovelo a 90°, antebraço a apontar para o teto. Deixe a mão cair para o chão sem levantar o ombro. Mantenha 2 segundos. Depois vire-se para o outro braço."
+},
+"trot": {
+"n": "Rotação torácica sentado",
+"how": "Sente-se de pernas cruzadas de frente para a câmara, com um cabo de vassoura ou uma toalha enrolada sobre os ombros. Fique quieto a olhar em frente 2 segundos para a câmara aprender a largura dos ombros e depois rode o mais que conseguir para cada lado com as ancas quietas. Mantenha 2 segundos em cada extremo."
+},
+"slr": {
+"n": "Elevação da perna esticada",
+"how": "Deite-se de costas de lado para a câmara, pernas esticadas. Levante uma perna o mais alto que conseguir, joelho bloqueado, a outra perna no chão. Repita com a outra perna. 90° é vertical."
+},
+"toetouch": {
+"n": "Tocar nos pés de pé",
+"how": "De lado para a câmara num degrau ou numa caixa firme, com os dedos na borda (para poder ir além deles). Pés juntos, joelhos esticados, desça e mantenha 2 segundos. Além dos dedos conta positivo, antes deles negativo."
+},
+"hipir": {
+"n": "Rotação interna da anca",
+"how": "Sente-se em algo alto o suficiente para os pés não tocarem no chão (uma mesa, bancada ou banco alto), de frente para a câmara, joelhos a 90° e à largura das ancas. Mantenha os joelhos quietos e leve os dois pés para fora o mais que conseguir. Mantenha 2 segundos. A câmara mede o ângulo de cada canela em relação à vertical."
+},
+"thomas": {
+"n": "Teste de Thomas (flexor da anca)",
+"how": "Sente-se na ponta de um banco, cama ou mesa firme, de lado para a câmara. Deite-se a abraçar um joelho ao peito e deixe a outra perna pendurada 5 segundos. Troque. O ângulo é o da coxa pendurada em relação à horizontal: negativo é bom, positivo é rígido."
+},
+"pigeon": {
+"n": "Rotação da anca 90/90",
+"how": "Sente-se na posição 90/90 de frente para a câmara, com a canela da frente atravessada à frente do corpo. Incline-se para a frente com as costas direitas e deixe descer o joelho da frente. Mantenha 2 segundos e troque de lado. A câmara estima a distância entre o joelho da frente e o chão."
+},
+"cam_shin": {
+"n": "Dorsiflexão do tornozelo (inclinação da canela)",
+"how": "De lado para a câmara em afundo com um joelho no chão, calcanhar da frente apoiado. Leve o joelho para a frente por cima dos dedos o mais que conseguir sem levantar o calcanhar. Troque de lado. 40° ou mais é bom."
+},
+"k2w": {
+"n": "Joelho à parede",
+"how": "Meio ajoelhado de lado para a câmara, com toda a parte inferior do corpo visível. Com o calcanhar da frente no chão, leve o joelho para a frente por cima dos dedos o mais que conseguir. Mantenha 2 segundos e troque de perna. A câmara estima a distância joelho-parede (quanto o joelho passa à frente dos dedos)."
+},
+"squat": {
+"n": "Verificação do agachamento profundo",
+"how": "De lado para a câmara, pés à largura dos ombros. Agache o mais fundo que conseguir, calcanhares no chão, peito erguido. Pare em baixo e suba. Regista o ângulo do joelho, a inclinação da canela e a do tronco."
+}
+},
+"stretch": {
+"sleeper": {
+"n": "Alongamento sleeper",
+"cues": "Deite-se de lado, braço de baixo à frente à altura do ombro, cotovelo dobrado a 90°. Com a mão de cima, empurre suavemente o antebraço em direção ao chão. Pare no alongamento, não na dor."
+},
+"bander": {
+"n": "Rotações externas com elástico",
+"reps": "15 repetições lentas",
+"cues": "Cotovelo junto ao corpo, dobrado a 90°, a segurar um elástico preso à altura do cotovelo (uma toalha esticada serve se não tiver elástico). Rode o antebraço para fora com o cotovelo fixo. Volte devagar."
+},
+"doorway": {
+"n": "Alongamento do peito na porta",
+"cues": "Antebraço na ombreira de uma porta ou na esquina de uma parede, cotovelo à altura do ombro. Avance até sentir abrir o peito e a frente do ombro. Costelas em baixo."
+},
+"crossbody": {
+"n": "Alongamento do ombro cruzado",
+"cues": "Leve um braço esticado à frente do peito e puxe-o com o outro antebraço. Mantenha o ombro em baixo, longe da orelha."
+},
+"wallslide": {
+"n": "Deslizes na parede",
+"reps": "10 repetições lentas",
+"cues": "Costas encostadas à parede, braços em W com cotovelos e pulsos a tocar na parede. Deslize até formar um Y sem perder o contacto nem arquear as costas."
+},
+"latbench": {
+"n": "Alongamento dos dorsais de joelhos",
+"cues": "Ajoelhe-se de frente para algo entre a altura do joelho e da anca, como um banco, sofá, cama ou cadeira. Cotovelos em cima, palmas juntas. Leve as ancas para trás e deixe o peito descer abaixo dos cotovelos. Respire para a parte superior das costas."
+},
+"childreach": {
+"n": "Postura da criança com braços à frente",
+"cues": "De joelhos, sente-se nos calcanhares, avance com as mãos e deixe o peito descer até ao chão. Respirações lentas para as costas."
+},
+"tspineroll": {
+"n": "Extensões da parte superior das costas",
+"reps": "10 repetições em 3 alturas",
+"cues": "Deite-se com um rolo de espuma, uma toalha enrolada ou um tapete de ioga enrolado debaixo da parte superior das costas, mãos atrás da cabeça, ancas em baixo. Estenda-se para trás por cima do rolo e depois suba-o uns centímetros. Zona lombar neutra."
+},
+"passthru": {
+"n": "Passagens de ombros",
+"reps": "15 repetições",
+"cues": "Segure um cabo de vassoura, uma toalha ou um elástico com pega larga. Com os braços esticados, leve-o da frente das ancas, por cima da cabeça, até atrás e volte. Aperte a pega à medida que ganha mobilidade."
+},
+"ohshold": {
+"n": "Agachamento overhead mantido",
+"cues": "Segure um cabo de vassoura ou uma toalha com pega larga, braços bloqueados acima da cabeça. Desça para o agachamento mais profundo que consiga manter com os calcanhares no chão e as mãos por cima do meio do pé. Respire e mantenha."
+},
+"openbook": {
+"n": "Livro aberto",
+"reps": "10 repetições lentas",
+"cues": "Deite-se de lado, joelhos a 90°, braços juntos à frente. Abra o braço de cima por cima do corpo para o outro lado, seguindo-o com os olhos. Os joelhos ficam juntos."
+},
+"catcow": {
+"n": "Gato-vaca",
+"reps": "10 repetições lentas",
+"cues": "Em quatro apoios. Arredonde a coluna em direção ao teto e depois deixe descer a barriga e levante o peito. Mova-se devagar ao ritmo da respiração."
+},
+"thread": {
+"n": "Enfiar a agulha",
+"cues": "Em quatro apoios. Deslize um braço por baixo do corpo ao longo do chão, rodando a parte superior das costas até o ombro assentar. Estique o outro braço para cima e troque."
+},
+"quadrot": {
+"n": "Rotações torácicas em quatro apoios",
+"reps": "8 repetições",
+"cues": "Em quatro apoios, uma mão atrás da cabeça. Rode o cotovelo em direção ao outro pulso e depois em direção ao teto. As ancas ficam paradas."
+},
+"stickrot": {
+"n": "Rotações sentado",
+"reps": "10 para cada lado",
+"cues": "Sente-se direito com um cabo de vassoura ou uma toalha enrolada sobre os ombros (ou os braços cruzados no peito). Rode devagar o mais que conseguir para cada lado, com ancas e cabeça quietas."
+},
+"elephant": {
+"n": "Passos de elefante",
+"reps": "10 por perna",
+"cues": "De pé, incline-se para a frente e apoie as mãos no chão (dobre os joelhos o que precisar). Estique um joelho e depois o outro, a pedalar devagar."
+},
+"hamfloss": {
+"n": "Mobilização dos isquiotibiais",
+"reps": "12 repetições",
+"cues": "Deitado de costas, segure por trás uma coxa, anca a 90°. Estique e dobre o joelho devagar. A outra perna fica esticada no chão."
+},
+"pike": {
+"n": "Pike sentado",
+"cues": "Sente-se com as pernas esticadas e juntas. Incline-se a partir das ancas com as costas longas e estique-se em direção aos pés. Relaxe o pescoço."
+},
+"pancake": {
+"n": "Pancake",
+"cues": "Sente-se com as pernas afastadas e esticadas, dedos para cima. Incline-se para a frente a partir das ancas com as costas longas, a avançar com as mãos. Respire e desça um pouco mais a cada expiração."
+},
+"downdog": {
+"n": "Cão a olhar para baixo a pedalar",
+"reps": "10 de cada lado",
+"cues": "Mãos e pés no chão, ancas altas num V invertido. Pedale levando um calcanhar de cada vez em direção ao chão."
+},
+"bandham": {
+"n": "Alongamento dos isquiotibiais com elástico",
+"cues": "Deite-se de costas com um elástico, toalha ou cinto à volta de um pé. Levante a perna esticada até sentir o isquiotibial e mantenha. A outra perna no chão, zona lombar relaxada."
+},
+"couch": {
+"n": "Alongamento do sofá",
+"cues": "Joelho de trás numa almofada contra uma parede ou a frente de um sofá, com a canela encostada. Pé da frente à frente em afundo. Contraia o glúteo de trás e levante o peito. Entre aos poucos."
+},
+"kneelhf": {
+"n": "Alongamento do flexor da anca meio ajoelhado",
+"cues": "Meio ajoelhado, joelho de trás debaixo da anca. Encaixe a bacia, contraia o glúteo de trás e avance ligeiramente. Levante o braço do mesmo lado para alongar mais."
+},
+"ninety": {
+"n": "Trocas 90/90",
+"reps": "10 trocas",
+"cues": "Sente-se com os dois joelhos a 90°, uma perna à frente e outra de lado. Rode os dois joelhos para o outro lado e volte, mantendo-se direito."
+},
+"pigeon": {
+"n": "Pombo",
+"cues": "Canela da frente atravessada à frente do corpo, perna de trás esticada para trás. Alinhe as ancas e incline-se sobre a perna da frente. Ponha uma almofada debaixo da anca se precisar."
+},
+"frog": {
+"n": "Alongamento da rã",
+"cues": "Em antebraços e joelhos, joelhos afastados, canelas paralelas, pés alinhados com os joelhos. Leve as ancas para trás devagar e mantenha onde sentir a parte interna das coxas."
+},
+"deepsquat": {
+"n": "Agachamento profundo mantido",
+"cues": "Pés à largura dos ombros, desça até ao fundo do agachamento com os calcanhares no chão. Cotovelos por dentro dos joelhos, peito erguido. Segure-se a algo firme, como uma ombreira ou a borda de uma mesa, se precisar."
+},
+"cossack": {
+"n": "Agachamentos cossacos",
+"reps": "8 de cada lado",
+"cues": "Base larga. Passe o peso para uma anca e agache baixo sobre essa perna enquanto a outra fica esticada, dedos para cima. Troque de lado devagar."
+},
+"bridge": {
+"n": "Ponte de glúteos",
+"reps": "12 repetições, 2 segundos em cima",
+"cues": "Deite-se de costas, joelhos dobrados, pés apoiados. Contraia os glúteos e levante as ancas até alinhar joelhos, ancas e ombros. Costelas em baixo, sem arquear."
+},
+"fig4": {
+"n": "Figura quatro deitado",
+"cues": "Deite-se de costas, cruze um tornozelo sobre o joelho oposto e puxe essa coxa em direção ao peito. Cabeça e ombros relaxados no chão."
+},
+"anklerock": {
+"n": "Balanços joelho à parede",
+"reps": "15 balanços",
+"cues": "Meio ajoelhado de frente para uma parede. Leve o joelho da frente em direção à parede por cima dos dedos mais pequenos, calcanhar no chão, e volte. Apoie um peso no joelho para o carregar, se tiver."
+},
+"calfwall": {
+"n": "Alongamento dos gémeos na parede",
+"cues": "Mãos na parede, uma perna atrás com o joelho esticado e o calcanhar no chão. Incline-se até sentir os gémeos."
+},
+"soleus": {
+"n": "Alongamento dos gémeos com joelho dobrado",
+"cues": "Igual ao alongamento dos gémeos na parede, mas dobre o joelho de trás e desça, com o calcanhar no chão. Vai senti-lo mais abaixo na barriga da perna."
+},
+"heelsup": {
+"n": "Agachamento com calcanhares elevados mantido",
+"cues": "Calcanhares num livro fino, numa toalha enrolada ou em discos pequenos, desça para o agachamento e mantenha em baixo com o peito erguido. Empurre os joelhos para a frente por cima dos dedos."
+},
+"deadbug": {
+"n": "Dead bug",
+"reps": "8 de cada lado",
+"cues": "De costas, braços para cima, ancas e joelhos a 90°. Pressione a zona lombar contra o chão. Baixe devagar o braço e a perna opostos e troque."
+},
+"birddog": {
+"n": "Bird dog",
+"reps": "8 de cada lado",
+"cues": "Em quatro apoios, costas direitas. Estique um braço para a frente e a perna oposta para trás, mantenha 2 segundos e volte sem rodar."
+},
+"breath9090": {
+"n": "Respiração 90/90",
+"cues": "Deite-se de costas com as pernas apoiadas num sofá, cama, cadeira ou banco, joelhos e ancas a 90°. Inspire pelo nariz em 4 tempos, expire devagar em 6 a 8, deixando descer as costelas."
+},
+"supinetwist": {
+"n": "Torção da coluna deitado",
+"cues": "De costas, leve um joelho por cima do corpo em direção ao chão enquanto a outra perna fica esticada. Braço para o lado, olhe para o lado contrário ao joelho."
+},
+"legswing": {
+"n": "Balanços de perna",
+"reps": "15 balanços",
+"cues": "Segure-se a algo firme para se equilibrar, como uma parede, ombreira ou costas de uma cadeira. Balance uma perna esticada para a frente e para trás, cada vez mais alto. Depois de um lado para o outro."
+},
+"hipcircle": {
+"n": "Círculos de anca de pé",
+"reps": "8 para cada lado",
+"cues": "De pé e direito, segure-se a algo se precisar. Levante um joelho à altura da anca, abra-o para o lado e baixe-o atrás de si num círculo grande e lento. Depois ao contrário."
+},
+"lungetwist": {
+"n": "Afundo a andar com rotação",
+"reps": "6 de cada lado",
+"cues": "Dê um afundo longo, joelho de trás logo acima do chão. Rode o peito sobre a perna da frente com os braços abertos, depois levante-se e avance para o afundo seguinte. Direito e controlado."
+},
+"askip": {
+"n": "Skipping A",
+"reps": "2 x 15 m",
+"cues": "Avance aos saltinhos, levando um joelho à altura da anca enquanto o outro pé impulsiona na parte da frente do pé. O braço oposto vai para a frente. Leve, rápido e elástico."
+},
+"pogo": {
+"n": "Saltos pogo de tornozelo",
+"reps": "20 saltos",
+"cues": "Saltos pequenos e rápidos na parte da frente dos pés, com os joelhos quase esticados, como uma mola. Leve e silencioso. Acorda os gémeos e o tendão de Aquiles antes de correr."
+},
+"wgs": {
+"n": "O melhor alongamento do mundo",
+"reps": "4 repetições lentas",
+"cues": "Dê um afundo longo e apoie as duas mãos no chão por dentro do pé da frente. Baixe o cotovelo de dentro em direção ao peito do pé, depois rode e estique esse braço para o teto. Volte a pousar a mão, estique a perna da frente e repita."
+},
+"standquad": {
+"n": "Alongamento dos quadríceps de pé",
+"cues": "De pé e direito, segure-se a uma parede, vedação ou costas de uma cadeira. Dobre um joelho e agarre esse tornozelo atrás de si, puxando o calcanhar em direção ao glúteo. Joelhos juntos, ancas ligeiramente para a frente."
+},
+"crossover": {
+"n": "Inclinação lateral de pé (banda iliotibial)",
+"cues": "Cruze um pé atrás do outro. Leve o braço do mesmo lado da perna de trás por cima da cabeça e incline-se para o lado contrário até sentir a parte de fora dessa anca. As ancas ficam de frente."
+},
+"kneehug": {
+"n": "Abraçar os joelhos",
+"reps": "Balanços lentos",
+"cues": "Deite-se de costas e abrace os dois joelhos ao peito. Balance suavemente de um lado para o outro e em pequenos círculos para soltar a zona lombar e as ancas."
+},
+"wipers": {
+"n": "Limpa-vidros",
+"reps": "10 para cada lado",
+"cues": "De costas, joelhos dobrados e pés mais afastados do que as ancas. Deixe cair devagar os dois joelhos para um lado e depois para o outro. Os ombros ficam no chão."
+},
+"happybaby": {
+"n": "Bebé feliz",
+"cues": "De costas, leve os joelhos afastados em direção às axilas com as canelas para cima. Agarre a parte de fora dos pés e puxe suavemente para baixo. Balance de um lado para o outro se souber bem."
+},
+"butterfly": {
+"n": "Borboleta deitada",
+"cues": "Deite-se de costas, junte as plantas dos pés e deixe os joelhos abrirem. Pouse as mãos na barriga e deixe a gravidade trabalhar. Almofadas debaixo dos joelhos se for demasiado intenso."
+},
+"edgeflexor": {
+"n": "Alongamento do flexor da anca na borda da cama",
+"cues": "Deite-se de costas com os glúteos na borda da cama. Abrace um joelho ao peito e deixe a outra perna pendurada fora da borda, relaxada. Sinta o alongamento na frente da anca pendurada."
+},
+"sidequad": {
+"n": "Alongamento dos quadríceps deitado de lado",
+"cues": "Deite-se de lado, cabeça apoiada no braço. Dobre o joelho de cima e agarre esse tornozelo atrás de si, puxando o calcanhar em direção ao glúteo. Empurre ligeiramente a anca para a frente."
+},
+"hamtowel": {
+"n": "Alongamento dos isquiotibiais deitado",
+"cues": "De costas, passe uma toalha ou um cinto à volta de um pé. Levante a perna esticada até sentir a parte de trás da coxa e mantenha. A outra perna no chão, zona lombar relaxada."
+},
+"clubhinge": {
+"n": "Dobradiça da anca com taco",
+"reps": "10 repetições lentas",
+"cues": "Segure um taco de golfe, um cabo de vassoura ou qualquer pau direito ao longo das costas, a tocar na cabeça, na parte superior das costas e no cóccix. Joelhos soltos, incline-se a partir das ancas até à sua postura de address, sem perder os três pontos de contacto. Volte a subir e repita."
+},
+"clubrot": {
+"n": "Rotações de ombros com taco",
+"reps": "10 para cada lado",
+"cues": "Segure um taco ou pau à frente dos ombros e assuma a sua postura de golfe. Rode os ombros como no backswing, com as ancas tranquilas e a cabeça parada, e depois rode até um finish completo. Suave e controlado."
+},
+"wrists": {
+"n": "Alongamento dos pulsos e antebraços",
+"cues": "Estique um braço à frente com a palma para cima e puxe suavemente os dedos para trás com a outra mão durante 15 segundos. Depois vire a palma para baixo e puxe suavemente as costas da mão na sua direção. Cotovelo esticado e ombro relaxado."
+},
+"foldfwd": {
+"n": "Flexão à frente de pé",
+"cues": "Pés à largura das ancas, joelhos soltos. Incline-se e deixe o tronco pendurado, segurando os cotovelos opostos. Abane suavemente a cabeça para soltar o pescoço."
+}
+}
+});
