@@ -21,6 +21,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.10.3 (12 Nov 2026): countdown voice clips embedded in the app (clips.js) so they no longer depend on the audio folder loading; load errors logged in Diagnostics.
 - 1.10.2 (12 Nov 2026): countdown falls back to the voice on any audio error; Diagnostics panel in Settings logs countdown events and errors.
 - 1.10.1 (12 Nov 2026): countdown falls back to the phone's voice if the audio clock is stalled (fixes silent 3, 2, 1 on iPhone); clips preload on first tap; "10 seconds" call simplified.
 - 1.10.0 (12 Nov 2026): new "Tight hips, in bed" routine and 7 bed-friendly stretches (knee hugs, windscreen wipers, happy baby, reclined butterfly, bed-edge hip flexor, side-lying quad, lying hamstring); "On a bed" filter in the library.

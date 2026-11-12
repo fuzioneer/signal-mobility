@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.10.2", APP_BUILD = "11 Nov 2026";
+  var APP_VERSION = "1.10.3", APP_BUILD = "11 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -326,12 +326,18 @@
      (The phone's speech engine starts after an unpredictable delay, which made spoken numbers uneven.) Clips: Piper TTS British voices. */
   var CDBUF = {}, CDLOAD = {};
   function cdMode() { var m = S.settings.countdown; return m == null ? "f" : m; }
+  function b64buf(s) { var b = atob(s), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u.buffer; }
+  /* Works with both the promise and the older callback form of decodeAudioData (Safari). */
+  function decode(buf) { return new Promise(function (res, rej) { try { var p = AC.decodeAudioData(buf, res, rej); if (p && p.then) p.then(res, rej); } catch (e) { rej(e); } }); }
   function cdLoad(v) {
     if (v !== "f" && v !== "m") return Promise.resolve(null);
     if (CDBUF[v]) return Promise.resolve(CDBUF[v]); if (CDLOAD[v]) return CDLOAD[v];
     unlockAudio();
-    CDLOAD[v] = Promise.all([3, 2, 1].map(function (n) { return fetch("audio/cd-" + v + "-" + n + ".wav").then(function (r) { if (!r.ok) throw 0; return r.arrayBuffer(); }).then(function (b) { return new Promise(function (res, rej) { AC.decodeAudioData(b, res, rej); }); }); }))
-      .then(function (bs) { CDBUF[v] = bs; return bs; }).catch(function () { CDLOAD[v] = null; return null; });
+    var embedded = function () { if (!window.CDCLIPS || !CDCLIPS[v]) return Promise.reject(new Error("no embedded clips")); return Promise.all(CDCLIPS[v].map(function (s) { return decode(b64buf(s)); })); };
+    var files = function () { return Promise.all([3, 2, 1].map(function (n) { return fetch("audio/cd-" + v + "-" + n + ".wav").then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.arrayBuffer(); }).then(decode); })); };
+    CDLOAD[v] = embedded().catch(function (e) { diag("embedded clips failed: " + (e && e.message || e)); return files(); })
+      .then(function (bs) { CDBUF[v] = bs; diag("countdown clips ready (" + v + ")"); return bs; })
+      .catch(function (e) { diag("countdown clips failed to load: " + (e && e.message || e)); CDLOAD[v] = null; return null; });
     return CDLOAD[v];
   }
   function tone(t, f, dur, vol) { var o = AC.createOscillator(), g = AC.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + dur + 0.05); return o; }
