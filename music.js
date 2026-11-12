@@ -118,10 +118,13 @@
   function setQuiet(on) { quiet = !!on; apply(); }
   function apply(fast) {
     if (!ctx || !duckG) return; var speaking = performance.now() < duckUntil;
-    try { speaking = speaking || !!(window.speechSynthesis && (speechSynthesis.speaking || speechSynthesis.pending)); } catch (e) {}
+    /* iOS can leave speechSynthesis.speaking stuck on true (for example after a silent unlock utterance), which kept the music ducked
+       to near silence. Only trust it for a short while after the app actually asked the coach to speak. */
+    try { if (performance.now() < duckUntil + 6000) speaking = speaking || !!(window.speechSynthesis && (speechSynthesis.speaking || speechSynthesis.pending)); } catch (e) {}
     var target = speaking ? 0.12 : quiet ? 0.4 : 1; if (target === lastTarget) return; var down = target < lastTarget; lastTarget = target;
     var t = ctx.currentTime; duckG.gain.cancelScheduledValues(t); duckG.gain.setValueAtTime(duckG.gain.value, t); duckG.gain.linearRampToValueAtTime(target, t + (down ? (fast ? 0.15 : 0.3) : 1.5));
   }
   setInterval(function () { if (ctx && style) apply(); }, 150);
-  window.MUSIC = { start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, duckFor: duckFor, setQuiet: setQuiet, playing: function () { return !!style; } };
+  function status() { return ctx ? { state: ctx.state, t: +ctx.currentTime.toFixed(1), out: +out.gain.value.toFixed(2), duck: +duckG.gain.value.toFixed(2), style: style, paused: paused, notes: live.length } : { state: "none" }; }
+  window.MUSIC = { status: status, start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, duckFor: duckFor, setQuiet: setQuiet, playing: function () { return !!style; } };
 })();

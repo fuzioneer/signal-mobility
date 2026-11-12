@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.15.0", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.15.1", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -414,7 +414,7 @@
   function sayQ(text, urgent) { speak(text, urgent); }
   /* Set the audio session before any AudioContext exists so music and beeps play with the silent switch on, and the context isn't interrupted by a later change. */
   try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) {}
-  function unlockAudio() { try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state !== "running") AC.resume(); if (window.speechSynthesis) { var u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); } } catch (e) {} }
+  function unlockAudio() { try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state !== "running") AC.resume(); if (window.speechSynthesis && !unlockAudio.spoke) { unlockAudio.spoke = true; var u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); } } catch (e) {} }
   var wake = null;
   function wakeOn() { try { if (navigator.wakeLock) navigator.wakeLock.request("screen").then(function (w) { wake = w; }).catch(function () {}); } catch (e) {} }
   function wakeOff() { try { if (wake) wake.release(); } catch (e) {} wake = null; }
@@ -427,7 +427,11 @@
   }
   var MUSIC_STYLES = [["off", "Off"], ["pads", "Calm pads"], ["bowls", "Singing bowls"], ["ocean", "Ocean waves"]];
   function musicOn() { return S.settings.music && S.settings.music !== "off"; }
-  function startMusic() { if (window.MUSIC && musicOn()) { unlockAudio(); MUSIC.start(AC, S.settings.music, S.settings.musicVol); if (P && P.paused) MUSIC.pause(300); } }
+  function startMusic() {
+    if (!window.MUSIC || !musicOn()) return; unlockAudio(); MUSIC.start(AC, S.settings.music, S.settings.musicVol); if (P && P.paused) MUSIC.pause(300);
+    diag("music start " + S.settings.music + " vol " + S.settings.musicVol + ", audio " + (AC ? AC.state : "none"));
+    setTimeout(function () { if (MUSIC.playing()) diag("music after 4s " + JSON.stringify(MUSIC.status())); }, 4000);
+  }
   function play(routine) {
     unlockAudio(); cdLoad(cdMode()); /* music starts with the first hold, not during the get-ready countdown */
     P = { r: routine, st: steps(routine.items), i: 0, phase: "prep", left: restSecs(true), total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
