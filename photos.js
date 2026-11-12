@@ -66,7 +66,10 @@ window.PHOTOS = {
  "t_k2w": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_103717_d67d4007-283e-48ac-afc9-a05613b82e2e.png",
  "t_cam_shin": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_103717_d67d4007-283e-48ac-afc9-a05613b82e2e.png",
  "t_squat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_103431_450504b0-18a5-455f-802d-174ce6ae8946.png",
- "t_pigeon": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_103112_14f806fa-7fa4-4808-8f49-057e334fcc8b.png"
+ "t_pigeon": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_103112_14f806fa-7fa4-4808-8f49-057e334fcc8b.png",
+ "clubhinge": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_145443_b359f2b0-5634-4d48-b4d3-d9c759509d4a.png",
+ "clubrot": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_145728_32682ba9-a9ca-4419-978d-03cc037666f3.png",
+ "wrists": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_145937_502543e3-952f-42ea-8e86-aa73b4386def.png"
 };
 /* Second position for two-position moves; the app slowly cross-fades between the two. */
 window.PHOTOS2 = {
@@ -90,7 +93,9 @@ window.PHOTOS2 = {
  "pogo": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134603_12001295-a3f8-43fc-a5f8-f11dc7746eb1.png",
  "wgs": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134644_06ce0f64-8f2a-421a-8d0e-f3044d544b56.png",
  "kneehug": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134749_56f1e77a-3a1d-4700-a5f9-a293cefc29b9.png",
- "wipers": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134820_829572a3-2e74-4e2a-975c-28dbf9b73046.png"
+ "wipers": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134820_829572a3-2e74-4e2a-975c-28dbf9b73046.png",
+ "clubrot": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_145846_5c586041-ee61-4158-a365-163234265b7e.png",
+ "wrists": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_150114_f096ae65-417c-43e5-a46d-a7109707d49e.png"
 };
 /* Extra positions: pre = shown before the main photo (start positions), post = after the second position. */
 window.PHOTOEXTRA = {
@@ -128,6 +133,12 @@ window.PHOTOEXTRA = {
  "thread": {
   "pre": [
    "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_140515_38324da9-abd9-4c34-ab0f-49c1fd77adb5.png"
+  ],
+  "post": []
+ },
+ "clubhinge": {
+  "pre": [
+   "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_145543_107a8350-83a9-45e3-8322-97a9d8504fe8.png"
   ],
   "post": []
  }

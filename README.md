@@ -31,6 +31,7 @@ The version shows at the bottom of the Today screen and in Settings.
 - 1.15.5 (12 Nov 2026): on iPhone and iPad the background music now always plays as a pre-rendered loop started from the Play tap (the coach's voice was freezing the generated music); pausing mutes it.
 - 1.15.6 (12 Nov 2026): on iPhone the music waits until the coach has finished the whole message before restarting (restarting early was cutting the coach off), and comes back as soon as the coach finishes.
 - 1.15.7 (12 Nov 2026): on iPhone the music now pauses itself just before the coach speaks and returns when the coach finishes (iOS was cutting the coach off when it paused the music itself).
+- 1.16.0 (12 Nov 2026): new Hyrox warm-up, Hyrox recovery, Golf warm-up and Golf mobility routines; new moves (club hip hinge, club shoulder turns, wrist and forearm stretch) with photos; Hyrox and Golf filters.
 - 1.12.1 (12 Nov 2026): tap a stretch or test photo to view it full screen (pinch to zoom, tap to close).
 - 1.12.0 (12 Nov 2026): "Save all photos for offline" (Settings and a one-time prompt on Today) downloads every stretch photo to the phone so routines work with bad or no signal.
 - 1.11.0 (12 Nov 2026): photos for every stretch and test (generated with Higgsfield), shown on cards, stretch details, test how-tos and in the routine player with a "Show movement" toggle; photos cache for offline use; option in Settings to go back to stick figures.

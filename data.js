@@ -212,6 +212,16 @@
     { id: "hamtowel", n: "Lying hamstring stretch", z: ["postchain", "hips"], tags: ["bed", "sleep", "cool", "run"], d: 60, s: true,
       cues: "On your back, loop a towel or belt around one foot. Lift the straight leg until you feel the back of the thigh, and hold. Other leg flat, lower back relaxed.",
       pose: mk("supine", { nl: [75, 75, 350], na: [60, 70] }) },
+    /* Golf: standing moves you can do on the tee or the range with a club */
+    { id: "clubhinge", n: "Club hip hinge", z: ["postchain", "hips"], tags: ["warm", "golf"], d: 40, reps: "10 slow reps",
+      cues: "Hold a golf club, broomstick or any straight stick down your back so it touches your head, upper back and tailbone. Soft knees, then hinge forward from the hips into your address posture, keeping all three points on the stick. Stand back up and repeat.",
+      pose: mk("stand", { na: [240, 60], fa: [300, 110] }), pose2: mk("stand", { t: 300, nk: 300, nl: [275, 268, 0], fl: [275, 268, 0], na: [240, 60], fa: [300, 110] }) },
+    { id: "clubrot", n: "Club shoulder turns", z: ["thorax"], tags: ["warm", "golf"], d: 45, reps: "10 each way",
+      cues: "Hold a club or stick across the front of your shoulders and get into your golf posture. Turn your shoulders as if making a backswing, keeping your hips quiet and your head still, then turn through to a full finish. Smooth and controlled.",
+      pose: mk("stand", { t: 300, nk: 300, na: [200, 130], fa: [20, 60] }), pose2: mk("stand", { t: 300, nk: 300, na: [20, 60], fa: [200, 130] }) },
+    { id: "wrists", n: "Wrist and forearm stretch", z: ["shoulders"], tags: ["warm", "golf", "desk"], d: 40, s: true,
+      cues: "Hold one arm straight out in front, palm up, and gently pull the fingers back with your other hand for 15 seconds. Then turn the palm down and gently pull the back of the hand towards you. Keep the elbow straight and the shoulder relaxed.",
+      pose: mk("stand", { na: [0, 0], fa: [10, 0] }), pose2: mk("stand", { na: [0, 0], fa: [10, 0] }) },
     { id: "foldfwd", n: "Standing forward fold", z: ["postchain"], tags: ["desk", "cool"], d: 45,
       cues: "Feet hip-width, soft knees. Hinge and let your upper body hang, holding opposite elbows. Shake your head gently to release the neck.",
       pose: mk("stand", { t: 285, nk: 275, na: [270, 20], fa: [270, 20] }) }
@@ -228,8 +238,14 @@
     { id: "desk", n: "Desk break", sub: "5 minutes, no kit", items: ["doorway", "crossbody", "kneelhf", "foldfwd", "stickrot"] },
     { id: "prerun", n: "Before a run", sub: "Dynamic warm-up to get you moving", items: ["legswing", "hipcircle", "lungetwist", "wgs", "anklerock", "bridge", "askip", "pogo"] },
     { id: "postrun", n: "After a run", sub: "Easy cool-down for calves, hips and hamstrings", items: ["calfwall", "soleus", "standquad", "kneelhf", "hamtowel", "fig4", "crossover", "pigeon", "childreach"] },
+    { id: "hyroxpre", n: "Hyrox warm-up", sub: "Race or training day, about 10 minutes", tag: "hyrox", items: ["catcow", "passthru", "legswing", "hipcircle", "wgs", "lungetwist", "anklerock", "deepsquat", "askip", "pogo"] },
+    { id: "hyroxpost", n: "Hyrox recovery", sub: "After a race or hard session: calves, quads, hips, lats and grip", tag: "hyrox", items: ["calfwall", "soleus", "couch", "pigeon", "hamtowel", "latbench", "doorway", "wrists", "childreach", "breath9090"] },
+    { id: "golfpre", n: "Golf warm-up", sub: "On the tee or range, all standing, about 8 minutes", tag: "golf", items: ["clubhinge", "legswing", "hipcircle", "clubrot", "crossbody", "crossover", "wrists"] },
+    { id: "golfmob", n: "Golf mobility", sub: "At home, for a bigger, freer turn", tag: "golf", items: ["openbook", "quadrot", "thread", "ninety", "kneelhf", "fig4", "sleeper", "supinetwist", "wrists"] },
     { id: "bedhips", n: "Tight hips, in bed", sub: "All lying down, on any mattress", items: ["kneehug", "wipers", "fig4", "happybaby", "butterfly", "edgeflexor", "sidequad", "hamtowel", "supinetwist", "bridge"] },
     { id: "sleep", n: "Bedtime wind-down", sub: "Slow and calming, about 10 minutes", items: ["childreach", "supinetwist", "fig4", "bandham", "breath9090"] }
   ];
+  /* Moves in a sport routine also show up under that sport's filter. */
+  PRESETS.forEach(function (p) { if (p.tag) p.items.forEach(function (id) { var s = BY[id]; if (s && s.tags.indexOf(p.tag) < 0) s.tags.push(p.tag); }); });
   window.SMDATA = { ZONES: ZONES, AVG_M: AVG_M, TESTS: TESTS, STRETCH: S, BY: BY, PRESETS: PRESETS };
 })();
