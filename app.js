@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.20.0", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.21.0", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -33,7 +33,7 @@
   var KEY = "signal-mobility-v1";
   function blank() { return { v: 1, settings: { age: 40, sex: "m", height: 178, voice: true, savePhotos: true, music: "pads", musicVol: 0.5, beeps: true, prep: 5, rest: 10, sideRest: 5, theme: "auto" }, tests: [], sessions: [], routines: [] }; }
   function load() {
-    try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; return b; } } catch (e) {}
+    try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; if (x.fb) b.fb = x.fb; return b; } } catch (e) {}
     return blank();
   }
   var S = load();
@@ -99,7 +99,8 @@
   function weekSecs() { var m = sessionDays(), t = 0; for (var i = 0; i < 7; i++) t += m[addDays(iso(), -i)] || 0; return t; }
 
   /* ---------- routines ---------- */
-  function itemSecs(s) { return s.d * (s.s ? 2 : 1); }
+  function holdSecs(s) { var k = (S.fb && S.fb.scale) || 1; return k === 1 ? s.d : Math.max(10, Math.round(s.d * k / 5) * 5); }
+  function itemSecs(s) { return holdSecs(s) * (s.s ? 2 : 1); }
   function routineSecs(ids) { return ids.reduce(function (t, id) { return t + (BY[id] ? itemSecs(BY[id]) : 0); }, 0); }
   function seededShuffle(arr, seed) { var a = arr.slice(), x = seed || 1; for (var i = a.length - 1; i > 0; i--) { x = (x * 9301 + 49297) % 233280; var j = Math.floor(x / 233280 * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
   function tightest() {
@@ -420,7 +421,7 @@
     var F = [["all", (T("All"))]].concat(ZONES).concat([["warm", (T("Warm-up"))], ["cool", (T("Cool-down"))], ["back", (T("Back"))], ["run", (T("Running"))], ["hyrox", (T("Hyrox"))], [(T("golf")), (T("Golf"))], ["cycle", (T("Cycling"))], ["desk", (T("Desk"))], ["bed", (T("On a bed"))], ["sleep", (T("Sleep"))]]);
     h += chipRow(F.map(function (f) { return '<button class="chip' + (LIB_F === f[0] ? " on" : "") + '" data-act="filter" data-id="' + f[0] + '">' + f[1] + "</button>"; }).join(""));
     if (building) h += bodyMap();
-    var list = ST.filter(function (s) { return (LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0) && (!building || !MG_SEL.length || MG_SEL.some(function (m) { return s.m.indexOf(m) >= 0; })); });
+    var list = ST.filter(function (s) { return canDo(s) && (LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0) && (!building || !MG_SEL.length || MG_SEL.some(function (m) { return s.m.indexOf(m) >= 0; })); });
     if (building && MG_SEL.length) list.sort(function (a, b) { var c = function (s) { return MG_SEL.filter(function (m) { return s.m.indexOf(m) >= 0; }).length; }; return c(b) - c(a); });
     if (!list.length) h += ('<p class="muted small" style="margin:10px 2px">' + T("No moves match. Try another area or filter.") + '</p>');
     h += '<div class="lib' + (building ? " building" : "") + '">' + list.map(function (s) {
@@ -432,10 +433,11 @@
     $("#v-routines").innerHTML = h; wireRows($("#v-routines"), keep);
   }
   function openRoutine(id) {
-    var r = findRoutine(id); if (!r) return;
-    var h = '<h2>' + esc(r.n) + '</h2><p class="muted" style="margin:4px 0 14px">' + esc(r.sub) + " · " + mins(routineSecs(r.items)) + "</p>";
+    var r = findRoutine(id); if (!r) return; var ad = adapt(r.items);
+    var h = '<h2>' + esc(r.n) + '</h2><p class="muted" style="margin:4px 0 14px">' + esc(r.sub) + " · " + mins(routineSecs(ad.items)) + "</p>";
+    if (ad.notes.length) h += '<div class="adnote small">' + ad.notes.map(function (n) { return "<div>" + esc(adaptNote(n)) + "</div>"; }).join("") + "</div>";
     h += '<button class="btn primary big block" data-act="play" data-id="' + esc(r.id) + '">' + ICON.play.replace("<svg", '<svg width="20" height="20"') + (" " + T("Start") + "</button>");
-    h += '<div class="card flush" style="margin-top:14px">' + r.items.map(function (sid, i) { var s = BY[sid]; return '<div class="hitem" data-act="stretch" data-id="' + sid + '" style="cursor:pointer"><div class="thumb" style="width:52px;height:52px">' + art(sid, s.pose, { stroke: 9 }) + '</div><div class="grow"><b>' + (i + 1) + ". " + esc(s.n) + '</b><div class="small muted">' + (s.reps || s.d + "s") + (s.s ? (" " + T("each side")) : "") + "</div></div></div>"; }).join("") + "</div>";
+    h += '<div class="card flush" style="margin-top:14px">' + ad.items.map(function (sid, i) { var s = BY[sid]; return '<div class="hitem" data-act="stretch" data-id="' + sid + '" style="cursor:pointer"><div class="thumb" style="width:52px;height:52px">' + art(sid, s.pose, { stroke: 9 }) + '</div><div class="grow"><b>' + (i + 1) + ". " + esc(s.n) + '</b><div class="small muted">' + (s.reps || s.d + "s") + (s.s ? (" " + T("each side")) : "") + "</div></div></div>"; }).join("") + "</div>";
     if (r.custom) h += '<div class="row" style="margin-top:8px"><button class="btn" data-act="edit-routine" data-id="' + esc(r.id) + '">' + T("Edit") + '</button><button class="btn danger" data-act="del-routine" data-id="' + esc(r.id) + '">' + T("Delete") + '</button></div>';
     openSheet(h);
   }
@@ -443,7 +445,7 @@
     var s = BY[id];
     var pu = photoUrl(id);
     var h = (pu ? '<div class="bigfig photo-wrap">' + bigPhoto(id, "", s.n) + ('</div><details class="small" style="margin:-6px 0 12px"><summary style="color:var(--brand);font-weight:600">' + T("Show the movement") + '</summary><div class="bigfig" data-anim="s:') + id + '" style="margin-top:8px"></div></details>' : '<div class="bigfig" data-anim="s:' + id + '"></div>') + '<h2>' + esc(s.n) + '</h2><p style="margin:6px 0">' + s.z.map(function (z) { return '<span class="tag"><span class="zdot" style="background:' + zc(z) + '"></span>' + ZN[z] + "</span>"; }).join("") + s.tags.map(function (t) { return '<span class="tag">' + esc(TAGN[t] || t) + "</span>"; }).join("") + "</p>";
-    h += '<p class="muted" style="margin-bottom:6px">' + (s.reps ? esc(s.reps) + (T(", about") + " ") : (T("Hold") + " ")) + s.d + " " + T("seconds") + (s.s ? (" " + T("each side")) : "") + ".</p><p>" + esc(s.cues) + "</p>";
+    h += '<p class="muted" style="margin-bottom:6px">' + (s.reps ? esc(s.reps) + (T(", about") + " ") : (T("Hold") + " ")) + holdSecs(s) + " " + T("seconds") + (s.s ? (" " + T("each side")) : "") + ".</p><p>" + esc(s.cues) + "</p>";
     h += '<div class="row" style="margin-top:16px"><button class="btn primary grow" data-act="play-one" data-id="' + id + '">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + (" " + T("Do it now") + "</button></div>");
     openSheet(h);
   }
@@ -570,20 +572,62 @@
   }
   function play(routine) {
     unlockAudio(); if (window.MUSIC && musicOn()) MUSIC.arm(S.settings.music, S.settings.musicVol); cdLoad(cdMode()); /* music starts with the first hold, not during the get-ready countdown */
-    P = { r: routine, st: steps(routine.items), i: 0, phase: "prep", left: restSecs(true), total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
+    var ad = adapt(routine.items); if (ad.notes.length) toast(ad.notes.map(adaptNote).join(". "));
+    P = { r: routine, st: steps(ad.items), moves: ad.items.slice(), i: 0, phase: "prep", left: restSecs(true), total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
     var el = $("#player"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn();
     el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="p-close" aria-label="' + T("End session") + '">' + ICON.close + '</button><h2>' + esc(routine.n) + '</h2><button class="icon-btn" data-act="p-music" aria-label="' + T("Background music") + '">' + (musicOn() ? ICON.music : ICON.musicOff) + '</button><button class="icon-btn" data-act="p-voice" aria-label="' + T("Voice") + '">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div><div class="pbar"><i id="p-bar"></i></div>' +
-      ('<div class="player"><div class="pfig"><span class="side" id="p-side" hidden></span><div class="figwrap" id="p-fig"></div><button class="chip figbtn" id="p-figbtn" data-act="p-fig" hidden>' + T("Show movement") + '</button></div><div class="pname" id="p-name"></div><div class="pcue" id="p-cue"></div>') +
+      ('<div class="player"><div class="pfig"><span class="side" id="p-side" hidden></span><div class="figwrap" id="p-fig"></div><button class="chip figbtn" id="p-figbtn" data-act="p-fig" hidden>' + T("Show movement") + '</button></div><div class="pname" id="p-name"></div><div class="pcue" id="p-cue"></div><div class="padj" id="p-adj"><button class="chip" data-act="p-easier" id="p-easier">' + T("Easier") + '</button><button class="chip" data-act="p-more">+15s</button><button class="chip" data-act="p-harder" id="p-harder">' + T("Harder") + '</button></div>') +
       '<div class="phase" id="p-phase"></div><div class="clock"><div class="tring" id="p-ring"></div></div>' +
       '<div class="ctrls"><button class="icon-btn" data-act="p-prev" aria-label="' + T("Previous") + '">' + ICON.prev + '</button><button class="icon-btn play" data-act="p-pause" id="p-pp" aria-label="' + T("Pause") + '">' + ICON.pause + '</button><button class="icon-btn" data-act="p-next" aria-label="' + T("Next") + '">' + ICON.next + '</button></div><div class="upnext" id="p-up"></div><label class="mvol"><span aria-hidden="true">' + ICON.music + '</span><input type="range" id="p-mvol" min="0" max="1" step="0.05" value="' + S.settings.musicVol + '" aria-label="' + T("Music volume") + '"></label></div>';
     $("#p-mvol").addEventListener("input", function (e) { S.settings.musicVol = parseFloat(e.target.value); if (window.MUSIC) MUSIC.setVol(S.settings.musicVol); });
     $("#p-mvol").addEventListener("change", save);
+    if (window.MUSIC && !musicOn() && MUSIC.keepAlive) MUSIC.keepAlive(true); msHandlers(true);
     enterStep(); P.timer = setInterval(tick, 200);
   }
-  function stepDur(st) { return st.s.d; }
-  var KIT = [[/\bband\b/i, (T("a band, towel or belt"))], [/roller/i, (T("a foam roller or rolled towel"))], [/broomstick/i, (T("a broomstick or towel"))], [/\bwall\b|fence/i, (T("a wall"))], [/bench|sofa/i, (T("a bench, sofa or bed"))], [/door frame/i, (T("a door frame or wall edge"))], [/stair|step or sturdy box/i, (T("a stair or step"))], [/towel|belt/i, (T("a towel or belt"))], [/pillow/i, (T("a pillow or two"))], [/something sturdy|chair back/i, (T("something sturdy to hold"))]];
-  var KIT_FIX = { butterfly: [(T("a pillow or two, if you like"))], edgeflexor: [(T("the edge of the bed"))], passthru: [(T("a broomstick, towel or band"))], legswing: [(T("something sturdy to hold"))], breath9090: [(T("a sofa, bed or chair"))], hipcircle: [(T("something to hold, if you like"))], standquad: [(T("something to hold, if you like"))], bander: [(T("a band or towel"))], ohshold: [(T("a broomstick or towel"))], stickrot: [], deepsquat: [], heelsup: [(T("something thin under your heels"))], anklerock: [(T("a wall"))], couch: [(T("a wall or sofa"))], latbench: [(T("a bench, sofa, bed or chair"))], hamtowel: [(T("a towel or belt"))], bandham: [(T("a band, towel or belt"))], tspineroll: [(T("a foam roller or rolled towel"))] };
-  function kitFor(s) { if (KIT_FIX[s.id]) return KIT_FIX[s.id]; var en = s._en || s, txt = en.n + " " + en.cues, out = []; KIT.forEach(function (k) { if (k[0].test(txt) && out.indexOf(k[1]) < 0) out.push(k[1]); }); return out; }
+  function stepDur(st) { return holdSecs(st.s); }
+  /* Kit is worked out in English (from the English instructions) and translated for display. */
+  var KIT = [[/\bband\b/i, "a band, towel or belt"], [/roller/i, "a foam roller or rolled towel"], [/broomstick/i, "a broomstick or towel"], [/\bwall\b|fence/i, "a wall"], [/bench|sofa/i, "a bench, sofa or bed"], [/door frame/i, "a door frame or wall edge"], [/stair|step or sturdy box/i, "a stair or step"], [/towel|belt/i, "a towel or belt"], [/pillow/i, "a pillow or two"], [/something sturdy|chair back/i, "something sturdy to hold"]];
+  var KIT_FIX = { butterfly: ["a pillow or two, if you like"], edgeflexor: ["the edge of the bed"], passthru: ["a broomstick, towel or band"], legswing: ["something sturdy to hold"], breath9090: ["a sofa, bed or chair"], hipcircle: ["something to hold, if you like"], standquad: ["something to hold, if you like"], bander: ["a band or towel"], ohshold: ["a broomstick or towel"], stickrot: [], deepsquat: [], heelsup: ["something thin under your heels"], anklerock: ["a wall"], couch: ["a wall or sofa"], latbench: ["a bench, sofa, bed or chair"], hamtowel: ["a towel or belt"], bandham: ["a band, towel or belt"], tspineroll: ["a foam roller or rolled towel"], clubhinge: ["a broomstick or towel"], clubrot: ["a broomstick or towel"] };
+  function kitEn(s) { if (KIT_FIX[s.id]) return KIT_FIX[s.id]; var en = s._en || s, txt = en.n + " " + en.cues, out = []; KIT.forEach(function (k) { if (k[0].test(txt) && out.indexOf(k[1]) < 0) out.push(k[1]); }); return out; }
+  function kitFor(s) { return kitEn(s).map(function (k) { return T(k); }); }
+  /* Equipment: each piece of kit can be covered by any of these. Things marked "if you like" or easily found aren't required. */
+  var EQ = [["band", T("Resistance band")], ["roller", T("Foam roller")], ["stick", T("Broomstick or dowel")], ["towel", T("Towel or belt")], ["wall", T("A clear wall")], ["furniture", T("Bench, sofa, bed or chair")], ["door", T("Door frame")], ["step", T("Step or stair")], ["pillow", T("Pillow or cushion")]];
+  var EQREQ = { "a band, towel or belt": ["band", "towel"], "a foam roller or rolled towel": ["roller", "towel"], "a broomstick or towel": ["stick", "towel"], "a wall": ["wall"], "a bench, sofa or bed": ["furniture"],
+    "a door frame or wall edge": ["door", "wall"], "a stair or step": ["step"], "a towel or belt": ["towel"], "a pillow or two": ["pillow", "furniture"], "something sturdy to hold": ["wall", "door", "furniture"],
+    "the edge of the bed": ["furniture"], "a broomstick, towel or band": ["stick", "towel", "band"], "a sofa, bed or chair": ["furniture"], "a band or towel": ["band", "towel"], "a wall or sofa": ["wall", "furniture"], "a bench, sofa, bed or chair": ["furniture"] };
+  function eqOn() { return !!S.settings.eqOn && Array.isArray(S.settings.eq); }
+  function canDo(s) { if (!eqOn()) return true; var have = S.settings.eq; return kitEn(s).every(function (k) { var need = EQREQ[k]; return !need || need.some(function (e) { return have.indexOf(e) >= 0; }); }); }
+  function missingKit(s) { var have = S.settings.eq || []; return kitEn(s).filter(function (k) { var need = EQREQ[k]; return need && !need.some(function (e) { return have.indexOf(e) >= 0; }); }).map(T); }
+
+  /* Easier and harder alternatives, used for swaps in the player, for moves that hurt and for missing equipment. */
+  var ALT = { couch: ["kneelhf"], kneelhf: ["edgeflexor", "couch"], edgeflexor: [null, "kneelhf"], pigeon: ["fig4"], fig4: [null, "pigeon"], ninety: ["fig4", "pigeon"], frog: ["butterfly", "pancake"],
+    pancake: ["frog"], butterfly: [null, "frog"], pike: ["hamtowel"], bandham: [null, "pike"], hamtowel: [null, "pike"], elephant: ["hamfloss", "pike"], hamfloss: [null, "elephant"], downdog: ["calfwall"],
+    calfwall: [null, "downdog"], soleus: ["calfwall"], deepsquat: ["heelsup", "ohshold"], heelsup: [null, "deepsquat"], ohshold: ["deepsquat"], cossack: ["frog"], latbench: ["childreach", "passthru"],
+    childreach: [null, "latbench"], doorway: ["crossbody", "passthru"], passthru: ["wallslide", "ohshold"], wallslide: ["doorway", "passthru"], sleeper: ["crossbody", "bander"], crossbody: [null, "sleeper"],
+    tspineroll: ["catcow", "openbook"], openbook: ["supinetwist", "thread"], thread: ["openbook", "quadrot"], quadrot: ["thread", "stickrot"], stickrot: ["quadrot"], catcow: [null, "tspineroll"], wgs: ["lungetwist"],
+    lungetwist: ["legswing", "wgs"], legswing: ["hipcircle", "askip"], hipcircle: [null, "legswing"], deadbug: ["breath9090", "birddog"], birddog: ["deadbug"], standquad: ["sidequad", "couch"], sidequad: [null, "standquad"],
+    happybaby: ["kneehug", "frog"], kneehug: [null, "happybaby"], wipers: [null, "supinetwist"], supinetwist: ["wipers", "openbook"], askip: ["hipcircle"], pogo: ["anklerock"], anklerock: ["calfwall"],
+    clubrot: ["stickrot"], clubhinge: ["hamtowel"], foldfwd: ["hamtowel", "pike"], bander: ["crossbody"] };
+  function altOf(id, dir) { var a = ALT[id]; var x = a ? a[dir === "hard" ? 1 : 0] : null; return x && BY[x] ? x : null; }
+
+  /* Personal adjustments from session feedback: hold length scale and moves flagged as painful. */
+  function fb() { if (!S.fb) S.fb = { scale: 1, hurt: {} }; return S.fb; }
+  /* Swap or drop moves that hurt last time or need kit you don't have. Returns the items to use and notes on what changed. */
+  function adapt(items) {
+    var out = [], notes = [], hurt = fb().hurt;
+    items.forEach(function (id) {
+      var s = BY[id]; if (!s) return; var why = hurt[id] ? "hurt" : !canDo(s) ? "kit" : null;
+      if (!why) return out.push(id);
+      var alt = [altOf(id, "easy"), altOf(id, "hard")].filter(function (a) { return a && !hurt[a] && canDo(BY[a]) && items.indexOf(a) < 0 && out.indexOf(a) < 0; })[0];
+      if (alt) out.push(alt);
+      notes.push({ from: id, to: alt || null, why: why });
+    });
+    return { items: out, notes: notes };
+  }
+  function adaptNote(n) {
+    var a = BY[n.from].n, why = n.why === "hurt" ? T("it hurt last time") : TF("needs {kit}", { kit: listJoin(missingKit(BY[n.from])) });
+    return n.to ? TF("{a} swapped for {b} ({why})", { a: a, b: BY[n.to].n, why: why }) : TF("{a} skipped ({why})", { a: a, why: why });
+  }
   function listJoin(xs) { return xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " " + T("and") + " " + xs[xs.length - 1]; }
   /* Time to reposition and grab kit between exercises, and a shorter pause to switch sides. Both set in Settings. */
   function restSecs(newExercise) { var s = S.settings; return newExercise ? (s.rest == null ? 10 : s.rest) : (s.sideRest == null ? 5 : s.sideRest); }
@@ -605,8 +649,38 @@
     var sd = $("#p-side"); sd.hidden = !st.side; sd.textContent = st.side ? T(st.side + " side") : "";
     var nx = P.st[P.i + 1]; $("#p-up").textContent = nx ? (T("Up next:") + " ") + nx.s.n + (nx.side ? " (" + T(nx.side.toLowerCase()) + ")" : "") : (T("Last one"));
     $("#p-bar").style.width = (P.i / P.st.length * 100) + "%";
+    $("#p-easier").disabled = !altOf(st.s.id, "easy"); $("#p-harder").disabled = !altOf(st.s.id, "hard");
     speak(st.first ? (P.i === 0 ? pick([(T("Let's start with") + " "), (T("First up,") + " "), (T("We'll begin with") + " ")]) : pick([(T("Next up,") + " "), (T("Okay, next is") + " "), (T("Moving on to") + " "), (T("Right, now") + " ")])) + (/^(es|fr|it|pt)$/.test(I18N.lang) ? st.s.n.charAt(0).toLowerCase() + st.s.n.slice(1) : st.s.n) + "." + (kit.length ? (" " + T("You'll need") + " ") + listJoin(kit) + "." : "") + (st.side ? pick([(" " + T("Left side first.")), (" " + T("We'll start on the left.")), (" " + T("Left side to begin."))]) : "") + (st.s.reps ? (" " + T("Aim for") + " ") + st.s.reps + "." : "") : pick([(T("Lovely. Switch to the right side.")), (T("Nice. Now the right side.")), (T("Good. Swap over to the right."))]), !queue);
-    draw();
+    draw(); msUpdate();
+  }
+  /* Swap the current move for its easier or harder alternative, for the rest of this session. */
+  function swapMove(dir) {
+    if (!P || !P.st[P.i]) return; var cur = P.st[P.i].s.id, alt = altOf(cur, dir); if (!alt) return;
+    var j = P.i; while (j > 0 && P.st[j - 1].s.id === cur) j--; var k = P.i; while (k < P.st.length && P.st[k].s.id === cur) k++;
+    P.st.splice.apply(P.st, [j, k - j].concat(steps([alt]))); P.i = j;
+    var mi = P.moves.indexOf(cur); if (mi >= 0) P.moves[mi] = alt; else P.moves.push(alt);
+    toast(TF("Swapped for {name}", { name: BY[alt].n })); enterStep();
+  }
+  function addTime(sec) { if (!P || !P.st[P.i]) return; if (P.cd) { cdClear(); P.cd = null; } P.left += sec; P.dur += sec; P.spoke.half = P.left <= P.dur / 2 ? 1 : P.spoke.half; draw(); msUpdate(); }
+  function togglePause() { if (!P) return; P.paused = !P.paused; if (P.paused) cdClear(); if (window.MUSIC) { if (P.paused) MUSIC.pause(1500); else MUSIC.resume(2000); } var b = $("#p-pp"); if (b) b.innerHTML = P.paused ? ICON.play : ICON.pause; if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); msUpdate(); }
+  /* Lock-screen and Control Centre: current move, time left, and pause, skip and +15s controls. */
+  function msUpdate() {
+    if (!("mediaSession" in navigator)) return; var ms = navigator.mediaSession;
+    try {
+      if (!P || !P.st[P.i]) { ms.metadata = null; ms.playbackState = "none"; return; }
+      var st = P.st[P.i], ph = P.phase === "prep" ? (st.first ? T("Get into position") : T("Switch sides")) : T("Hold");
+      var art = photoUrl(st.s.id), abs = function (u) { return new URL(u, location.href).href; };
+      ms.metadata = new MediaMetadata({ title: st.s.n + (st.side ? " · " + T(st.side + " side") : ""), artist: ph + " · " + (P.i + 1) + "/" + P.st.length, album: P.r.n,
+        artwork: [{ src: abs(art || "icons/icon-512.png"), sizes: "512x512", type: art ? "image/png" : "image/png" }] });
+      ms.playbackState = P.paused ? "paused" : "playing";
+      if (ms.setPositionState && P.dur > 0) ms.setPositionState({ duration: P.dur, position: Math.min(P.dur, Math.max(0, P.dur - P.left)), playbackRate: 1 });
+    } catch (e) {}
+  }
+  function msHandlers(on) {
+    if (!("mediaSession" in navigator)) return; var ms = navigator.mediaSession, set = function (a, f) { try { ms.setActionHandler(a, on ? f : null); } catch (e) {} };
+    set("play", function () { if (P && P.paused) togglePause(); }); set("pause", function () { if (P && !P.paused) togglePause(); });
+    set("nexttrack", function () { if (P) { P.i++; enterStep(); } }); set("previoustrack", function () { if (P) { P.i = Math.max(0, P.i - 1); enterStep(); } });
+    set("seekforward", function () { addTime(15); });
   }
   function tick() {
     if (!P) return;
@@ -629,7 +703,7 @@
     /* Halfway call on every hold of 24 seconds or more (shorter holds just get the countdown). */
     if (P.phase === "work" && P.dur >= 24 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; var reps = !!P.st[P.i].s.reps; speak(reps ? pick([(T("Halfway there. Keep it smooth.")), (T("That's halfway. Nice and controlled.")), (T("Halfway. Keep breathing."))]) : pick([(T("Halfway there. Breathe out, and sink a little deeper.")), (T("That's halfway. Keep breathing slowly.")), (T("Halfway. Relax your shoulders, and let it go a bit further."))]), true); }
     if (P.left <= 0) {
-      if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); diag("hold " + P.st[P.i].s.id + " " + P.dur + "s, countdown " + cdMode()); beep(990, 380, 0.3); if (window.MUSIC) { if (!MUSIC.playing()) startMusic(); MUSIC.setQuiet(false); } }
+      if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); msUpdate(); diag("hold " + P.st[P.i].s.id + " " + P.dur + "s, countdown " + cdMode()); beep(990, 380, 0.3); if (window.MUSIC) { if (!MUSIC.playing()) startMusic(); MUSIC.setQuiet(false); } }
       else { if (!P.cd) beep(520, 300, 0.3); P.i++; return enterStep(true); }
     }
     draw();
@@ -648,14 +722,21 @@
     say(secs >= 30 ? pick([(T("And that's it. Great session.")), (T("All done. Nice work today.")), (T("That's the session finished. Well done."))]) : "");
     $("#p-bar").style.width = "100%";
     $(".player").innerHTML = '<div style="flex:1;display:grid;place-items:center;text-align:center"><div><div class="ring" style="margin:0 auto 16px">' + ringSVG(100, 128, 12) + '<div class="lbl"><div><b>' + streak() + ('</b><span>' + T("day streak") + '</span></div></div></div><h2>' + T("Done") + '</h2><p class="muted" style="margin-top:6px">') + esc(r.n) + " · " + mmss(secs) + (" " + T("of stretching") + "</p></div></div>") +
-      ('<button class="btn primary big block" data-act="p-close">' + T("Finish") + '</button>');
-    P = null;
+      fbBlock(P.moves) + ('<button class="btn primary big block" data-act="p-close">' + T("Finish") + '</button>');
+    LASTMOVES = P.moves.slice(); P = null; msUpdate();
+  }
+  var LASTMOVES = [];
+  function fbBlock(moves) {
+    var hurt = fb().hurt;
+    return '<div class="fbbox"><p class="fbq">' + T("How did that feel?") + '</p><div class="row fbrate"><button class="chip" data-act="fb-rate" data-id="-1">' + T("Too easy") + '</button><button class="chip" data-act="fb-rate" data-id="0">' + T("About right") + '</button><button class="chip" data-act="fb-rate" data-id="1">' + T("Too much") + "</button></div>" +
+      '<p class="fbq" style="margin-top:12px">' + T("Did anything hurt? Tap it and I'll swap it for an easier move next time.") + '</p><div class="chips fbhurt">' + moves.filter(function (v, i, a) { return a.indexOf(v) === i; }).map(function (id) { return '<button class="chip' + (hurt[id] ? " on" : "") + '" data-act="fb-hurt" data-id="' + id + '">' + esc(BY[id].n) + "</button>"; }).join("") + "</div></div>";
   }
   function closePlayer() {
     cdClear();
     if (P) { clearInterval(P.timer); if (P.stop) P.stop(); var secs = Math.round(P.worked); if (secs >= 60) { S.sessions.push({ date: iso(), t: Date.now(), id: P.r.id, n: P.r.n + " (part)", secs: secs, items: P.i }); save(); stravaLog(P.r.n, secs, P.r.items.slice(0, P.i + 1)); } P = null; }
     try { speechSynthesis.cancel(); } catch (e) {}
     if (window.MUSIC) { MUSIC.stop(1500); MUSIC.setQuiet(false); }
+    if (window.MUSIC && MUSIC.keepAlive) MUSIC.keepAlive(false); msHandlers(false); msUpdate();
     wakeOff(); $("#player").hidden = true; $("#player").innerHTML = ""; document.body.style.overflow = ""; render();
   }
 
@@ -928,6 +1009,18 @@
     h += '<p class="small muted" style="margin-top:4px">' + T("On iPhone this needs the app on your Home Screen. Notifications with the app fully closed will come with the App Store version.") + "</p>";
     return h + "</div>";
   }
+  function eqCard() {
+    var have = S.settings.eq || EQ.map(function (e) { return e[0]; });
+    return '<div class="card"><h3>' + T("My equipment") + '</h3><label class="remcheck" style="margin-top:8px"><input type="checkbox" id="eq-on"' + (S.settings.eqOn ? " checked" : "") + "> " + T("Only use moves I have the kit for") + '</label><p class="small muted" style="margin:6px 0 8px">' + T("Moves that need something you don't have are swapped for an alternative or skipped. Turn it off to see everything, for example when you're at the gym.") + '</p><div class="chips daychips">' +
+      EQ.map(function (e) { return '<button class="chip' + (have.indexOf(e[0]) >= 0 ? " on" : "") + '" data-act="eq-item" data-id="' + e[0] + '">' + esc(e[1]) + "</button>"; }).join("") + "</div></div>";
+  }
+  function paCard() {
+    var f = fb(), hurt = Object.keys(f.hurt).filter(function (id) { return BY[id]; });
+    var h = '<div class="card"><h3>' + T("Personal adjustments") + '</h3><p class="small muted" style="margin:6px 0 8px">' + T("Set by your feedback after each session.") + "</p>";
+    h += '<p><b>' + TF("Hold times: {n}% of standard", { n: Math.round(f.scale * 100) }) + "</b>" + (f.scale !== 1 ? ' <button class="btn small" data-act="fb-reset">' + T("Reset") + "</button>" : "") + "</p>";
+    h += '<p style="margin-top:10px"><b>' + T("Moves that hurt") + "</b></p>" + (hurt.length ? '<div class="chips daychips">' + hurt.map(function (id) { return '<button class="chip on" data-act="fb-unhurt" data-id="' + id + '">' + esc(BY[id].n) + " ✕</button>"; }).join("") + '</div><p class="small muted">' + T("Tap one to bring it back.") + "</p>" : '<p class="small muted">' + T("None. Nice.") + "</p>");
+    return h + "</div>";
+  }
   function remFreq(r) { var k = r.days.slice().sort().join(""); return k === "0123456" ? "all" : k === "12345" ? "wk" : k === "06" ? "we" : k === "135" ? "alt" : "custom"; }
   function remRefresh() { var c = $("#rem-slot"); if (c) { c.innerHTML = remCard(); remWire(); } }
   function remWire() {
@@ -1000,6 +1093,7 @@
       ('<div class="row" style="margin-top:14px"><label class="field" style="flex:2">' + T("Routine background music") + '<select id="s-music">') + MUSIC_STYLES.map(function (o) { return '<option value="' + o[0] + '"' + ((s.music || "pads") === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><label class="field">' + T("Music volume") + '<input type="range" id="s-mvol" min="0" max="1" step="0.05" value="' + (s.musicVol == null ? 0.5 : s.musicVol) + ('" style="min-height:46px;padding:0;accent-color:var(--brand)"></label></div><button class="btn" style="margin-top:8px" data-act="music-preview">' + T("Preview music") + '</button><p class="small muted" style="margin-top:6px">' + T("Gentle music generated on your phone. It drops down whenever the coach speaks.") + '</p>') +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-showphotos"' + (s.photos !== false ? " checked" : "") + '> ' + T("Show stretch photos (instead of stick figures)") + '</label>' +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-photos"' + (s.savePhotos ? " checked" : "") + '> ' + T("Save camera test images to Photos") + '</label></div>';
+    h += eqCard() + '<div id="pa-slot">' + paCard() + "</div>";
     h += '<div id="rem-slot">' + remCard() + "</div>";
     h += '<div id="strava-slot">' + stravaCard() + "</div>";
     h += ('<div class="card"><h3>' + T("Your data") + '</h3><p class="small muted" style="margin:4px 0 12px">' + T("Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal's format.") + '</p><div class="row"><button class="btn grow" data-act="export">' + T("Export file") + '</button><button class="btn grow" data-act="copy">' + T("Copy") + '</button></div><div class="row" style="margin-top:8px"><label class="btn grow">' + T("Restore from file") + '<input type="file" accept="application/json,.json" id="s-import" hidden></label></div>') +
@@ -1012,6 +1106,7 @@
     var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
     ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-sport", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
     stravaWire(); remWire();
+    $("#eq-on").addEventListener("change", function (e) { S.settings.eqOn = e.target.checked; if (!S.settings.eq) S.settings.eq = EQ.map(function (x) { return x[0]; }); save(); render(); });
     $("#s-lang").addEventListener("change", function (e) { S.settings.lang = e.target.value; save(); setTimeout(function () { location.reload(); }, 150); });
     $("#s-import").addEventListener("change", function (e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { doImport(r.result); }; r.readAsText(f); });
   }
@@ -1110,7 +1205,18 @@
       case "voice-test": { unlockAudio(); var was = S.settings.voice; S.settings.voice = true; speak(pick([(T("Hi there. This is how I'll sound during your sessions. Let's get moving.")), (T("Hello. I'll be your coach for mobility tests and stretching. Ready when you are."))]), true); S.settings.voice = was; break; }
       case "c-voice": case "p-voice": S.settings.voice = !S.settings.voice; save(); el.innerHTML = S.settings.voice ? ICON.sound : ICON.mute; if (!S.settings.voice) try { speechSynthesis.cancel(); } catch (x) {} break;
       case "p-close": closePlayer(); break;
-      case "p-pause": if (P) { P.paused = !P.paused; if (P.paused) cdClear(); if (window.MUSIC) { if (P.paused) MUSIC.pause(1500); else MUSIC.resume(2000); } el.innerHTML = P.paused ? ICON.play : ICON.pause; if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); } break;
+      case "p-pause": togglePause(); break;
+      case "p-easier": swapMove("easy"); break;
+      case "p-harder": swapMove("hard"); break;
+      case "p-more": addTime(15); toast(T("15 seconds added")); break;
+      case "fb-rate": { var f = fb(), d0 = +id; f.scale = Math.round(Math.max(0.7, Math.min(1.5, f.scale + (d0 < 0 ? 0.1 : d0 > 0 ? -0.1 : 0))) * 100) / 100; save();
+        [].forEach.call(document.querySelectorAll(".fbrate .chip"), function (c) { c.classList.toggle("on", c === el); });
+        toast(d0 < 0 ? T("Got it. Holds will be a little longer next time.") : d0 > 0 ? T("Got it. Holds will be a little shorter next time.") : T("Great, keeping it as it is.")); break; }
+      case "fb-hurt": { var hh = fb().hurt; if (hh[id]) delete hh[id]; else hh[id] = iso(); save(); el.classList.toggle("on", !!hh[id]);
+        if (hh[id]) toast(altOf(id, "easy") ? TF("Next time {a} will be swapped for {b}.", { a: BY[id].n, b: BY[altOf(id, "easy")].n }) : TF("Next time {a} will be skipped.", { a: BY[id].n })); break; }
+      case "fb-unhurt": { delete fb().hurt[id]; save(); var pa = $("#pa-slot"); if (pa) pa.innerHTML = paCard(); break; }
+      case "fb-reset": { fb().scale = 1; save(); var pb = $("#pa-slot"); if (pb) pb.innerHTML = paCard(); toast(T("Holds reset to standard")); break; }
+      case "eq-item": { var have = S.settings.eq || EQ.map(function (e) { return e[0]; }), ei = have.indexOf(id); if (ei >= 0) have.splice(ei, 1); else have.push(id); S.settings.eq = have; save(); el.classList.toggle("on", ei < 0); render(); break; }
       case "p-next": if (P) { P.i++; enterStep(); } break;
       case "p-prev": if (P) { if (P.phase === "work" && P.left < P.dur - 3) { /* restart current */ } else P.i = Math.max(0, P.i - 1); enterStep(); } break;
       case "test-detail": testDetail(id); break;
@@ -1176,5 +1282,5 @@
   }
   if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(function () {});
   if (window.speechSynthesis) speechSynthesis.getVoices();
-  window.SM = { state: function () { return S; }, score: score, dailyItems: dailyItems, cam: function () { return CAM; } };
+  window.SM = { state: function () { return S; }, score: score, dailyItems: dailyItems, cam: function () { return CAM; }, player: function () { return P; }, enterStep: function () { enterStep(); } };
 })();

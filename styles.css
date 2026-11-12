@@ -290,3 +290,14 @@ nav.tabs button.on { color: var(--brand); }
 .remnudge { border: 2px solid var(--brand); }
 .remcheck { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; line-height: 1.35; }
 .remcheck input { width: 22px; height: 22px; flex: 0 0 22px; margin: 0; accent-color: var(--brand); }
+/* Player adjust buttons */
+.padj { display: flex; justify-content: center; gap: 8px; margin: 10px 0 2px; }
+.padj .chip { min-width: 74px; text-align: center; }
+.padj .chip:disabled { opacity: .35; pointer-events: none; }
+/* Feedback after a session */
+.fbbox { background: var(--soft); border-radius: 14px; padding: 14px; margin: 0 0 14px; text-align: left; }
+.fbq { font-weight: 700; font-size: 15px; }
+.fbrate { gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.fbhurt { flex-wrap: wrap; margin: 8px 0 0; padding: 0; }
+.adnote { background: var(--amber-soft, #fdf3dc); border-radius: 12px; padding: 10px 12px; margin: -4px 0 12px; line-height: 1.4; }
+.adnote div + div { margin-top: 4px; }

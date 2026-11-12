@@ -139,6 +139,18 @@
     elKick++; if (elKick <= 3 || elKick % 10 === 0) log("music: back on after the coach");
     playEl("restart");
   }
+  /* With music off, a silent loop keeps an audio session open on iPhone so the lock screen shows the routine controls. Call from a tap. */
+  var silentUrl = null;
+  function keepAlive(on) {
+    if (!useEl) return;
+    if (!on) { if (elWant === "silent") { elWant = null; try { el.pause(); } catch (e) {} } return; }
+    ensureEl();
+    if (!silentUrl) { var n = 22050 * 2, dv = new DataView(new ArrayBuffer(44 + n * 2)), w = function (o, s2) { for (var i = 0; i < s2.length; i++) dv.setUint8(o + i, s2.charCodeAt(i)); };
+      w(0, "RIFF"); dv.setUint32(4, 36 + n * 2, true); w(8, "WAVEfmt "); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true); dv.setUint32(24, 22050, true); dv.setUint32(28, 44100, true); dv.setUint16(32, 2, true); dv.setUint16(34, 16, true); w(36, "data"); dv.setUint32(40, n * 2, true);
+      for (var i = 0; i < n; i++) dv.setInt16(44 + i * 2, (i % 2) ? 1 : -1, true);
+      silentUrl = URL.createObjectURL(new Blob([dv], { type: "audio/wav" })); }
+    mode = "el"; elWant = "silent"; el.src = silentUrl; el.loop = true; el.muted = false; playEl("keep-alive");
+  }
   function elStop() { elWant = null; try { if (el) { el.muted = true; el.pause(); } } catch (e) {} }
   function renderLoop(s, v, cb) {
     var OC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if (!OC) { log("music: no offline audio"); return; }
@@ -222,6 +234,6 @@
     var t = ctx.currentTime; duckG.gain.cancelScheduledValues(t); duckG.gain.setValueAtTime(duckG.gain.value, t); duckG.gain.linearRampToValueAtTime(target, t + (down ? (fast ? 0.15 : 0.3) : 1.5));
   }
   setInterval(function () { if (ctx && style) apply(); }, 150);
-  function status() { return ctx ? { mode: mode, file: el && mode === "el" ? (el.paused ? "paused" : el.muted ? "muted" : "playing") + " " + Math.round(el.duration || 0) + "s" : undefined, state: ctx.state, t: +ctx.currentTime.toFixed(1), out: +out.gain.value.toFixed(2), duck: +duckG.gain.value.toFixed(2), style: style, paused: paused, notes: live.length } : { state: "none" }; }
-  window.MUSIC = { beforeSpeech: beforeSpeech, speechEnd: speechEnd, arm: arm, preload: preload, ios: isIOS, status: status, start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, duckFor: duckFor, setQuiet: setQuiet, playing: function () { return !!style; } };
+  function status() { var f = el ? { mode: mode, want: elWant, file: (el.paused ? "paused" : el.muted ? "muted" : "playing") + " " + Math.round(el.duration || 0) + "s" } : {}; return ctx ? Object.assign({ state: ctx.state, t: +ctx.currentTime.toFixed(1), out: +out.gain.value.toFixed(2), duck: +duckG.gain.value.toFixed(2), style: style, paused: paused, notes: live.length }, f) : Object.assign({ state: "none" }, f); }
+  window.MUSIC = { keepAlive: keepAlive, beforeSpeech: beforeSpeech, speechEnd: speechEnd, arm: arm, preload: preload, ios: isIOS, status: status, start: start, stop: stop, setVol: setVol, pause: pause, resume: resume, duckFor: duckFor, setQuiet: setQuiet, playing: function () { return !!style; } };
 })();
