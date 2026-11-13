@@ -412,3 +412,5 @@ body.on-home header.top h1 { position: absolute; width: 1px; height: 1px; overfl
 .chip .chipvid svg path { fill: #fff; }
 .chip.on .chipvid svg circle { fill: var(--bg); }
 .chip.on .chipvid svg path { fill: var(--ink); }
+
+#splash .spver { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom) + 28px); text-align: center; font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: .04em; }

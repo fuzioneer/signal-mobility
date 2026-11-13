@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.38.0 (13 Nov 2026): The splash screen shows the app version number under the logo.
 - 1.37.0 (13 Nov 2026): Stretch library is now in alphabetical order (in the chosen language), and a new "With video" filter shows only the moves that have a video demo.
 - 1.36.0 (13 Nov 2026): Movage logo added from the brand design pack: in the header of the Today screen, on a short splash screen when the app opens, and on the shared score image. The light and dark versions follow the app theme.
 - 1.35.1 (13 Nov 2026): New Tibialis raises photos (female and male) with both heels on the floor and only the toes lifted.
