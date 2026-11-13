@@ -370,3 +370,22 @@ main, #sheet-body { zoom: var(--ts); }
 .lcard .fig .vbadge { width: 26px; height: 26px; right: 6px; bottom: 6px; }
 .vlegend { display: flex; align-items: center; gap: 6px; margin: 2px 2px 0; }
 .vlegend svg { width: 16px; height: 16px; flex: none; }
+
+/* Monthly challenge */
+.chcard { cursor: pointer; }
+.chbar { position: relative; height: 10px; background: var(--soft); border-radius: 6px; margin-top: 14px; }
+.chfill { height: 100%; border-radius: 6px; transition: width .4s; }
+.chmark { position: absolute; top: -3px; transform: translateX(-50%); }
+.chmark i { display: block; width: 16px; height: 16px; border-radius: 50%; background: var(--card); border: 3px solid var(--mc); }
+.chmark.got i { background: var(--mc); }
+.chmark em { position: absolute; top: 19px; left: 50%; transform: translateX(-50%); font-style: normal; font-size: 11px; font-weight: 700; color: var(--muted); }
+.chmark:last-child { transform: translateX(-100%); }
+.chmark:last-child em { left: auto; right: 0; transform: none; }
+.medal { flex: none; }
+.medal.none circle:first-of-type { opacity: .6; }
+.medalgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.mcell { text-align: center; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 4px; }
+.mcell.now { border-color: var(--brand); }
+.mcell b { display: block; font-size: 13px; }
+.mcell span { font-size: 12px; color: var(--muted); }
+.medalwin { display: flex; gap: 12px; align-items: center; text-align: left; margin: 14px 0; }

@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.31.1", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.32.0", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -265,6 +265,7 @@
     h += '<p class="small muted" style="margin-bottom:12px">' + d.items.map(function (id) { return esc(BY[id].n); }).join(" · ") + "</p>";
     h += '<button class="btn primary big block" data-act="play" data-id="daily">' + ICON.play.replace("<svg", '<svg width="20" height="20"') + (today ? (" " + T("Go again")) : (" " + T("Start,") + " ") + mins(routineSecs(d.items))) + "</button></div>";
     h += '<div class="stat3"><div><b>' + st + ('</b><span>' + T("day streak") + '</span></div><div><b>') + Math.round(weekSecs() / 60) + ('</b><span>' + T("mins this week") + '</span></div><div><b>') + S.sessions.length + ("</b><span>" + T("sessions") + "</span></div></div>");
+    h += chCard();
     var g = gaps(L.v);
     if (g.length) {
       h += ('<div class="sec"><h2>' + T("Left and right gaps") + '</h2></div><div class="card stack">');
@@ -929,11 +930,14 @@
   function finish() {
     var secs = Math.round(P.worked), r = P.r;
     clearInterval(P.timer); if (P.stop) P.stop();
+    var mdBefore = medalFor(monthCount(ym()));
     if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); stravaLog(r.n, secs, r.items); }
+    var mdAfter = medalFor(monthCount(ym())), newMedal = mdAfter && (!mdBefore || mdAfter[1] > mdBefore[1]) ? mdAfter : null;
     if (window.MUSIC) setTimeout(function () { if (!P) MUSIC.stop(6000); }, 4000);
     say(secs >= 30 ? pick([(T("And that's it. Great session.")), (T("All done. Nice work today.")), (T("That's the session finished. Well done."))]) : "");
     tlDone();
     $(".player").innerHTML = '<div style="flex:1;display:grid;place-items:center;text-align:center"><div><div class="ring" style="margin:0 auto 16px">' + ringSVG(100, 128, 12) + '<div class="lbl"><div><b>' + streak() + ('</b><span>' + T("day streak") + '</span></div></div></div><h2>' + T("Done") + '</h2><p class="muted" style="margin-top:6px">') + esc(r.n) + " · " + mmss(secs) + (" " + T("of stretching") + "</p></div></div>") +
+      (newMedal ? '<div class="card medalwin">' + medalSVG(newMedal, 56) + '<div class="grow"><b>' + TF("{medal} for {month}!", { medal: T(newMedal[2]), month: monthName(ym()) }) + '</b><div class="small muted">' + TF("{n} sessions this month", { n: monthCount(ym()) }) + (nextMedal(monthCount(ym())) ? " · " + TF("{n} more for {medal}", { n: nextMedal(monthCount(ym()))[1] - monthCount(ym()), medal: T(nextMedal(monthCount(ym()))[2]) }) : "") + "</div></div></div>" : "") +
       fbBlock(P.moves) + ('<button class="btn primary big block" data-act="p-close">' + T("Finish") + '</button>');
     LASTMOVES = P.moves.slice(); P = null; msUpdate();
   }
@@ -1127,6 +1131,37 @@
     pts.forEach(function (p, i) { s += '<circle cx="' + x(i) + '" cy="' + y(p.s) + '" r="4" fill="var(--brand)"/>'; if (i === 0 || i === pts.length - 1 || pts.length <= 6) s += '<text x="' + x(i) + '" y="' + (H - 6) + '" text-anchor="' + (pts.length > 1 && i === pts.length - 1 ? "end" : pts.length > 1 && i === 0 ? "start" : "middle") + '" font-size="10" fill="var(--muted)">' + short(p.d) + "</text>"; });
     return s + "</svg>";
   }
+  /* ---------- Monthly challenge: bronze, silver, gold and platinum for the number of sessions in a calendar month.
+     Up to two sessions a day count (say morning and evening), so a medal cannot be earned in one afternoon. ---------- */
+  var MEDALS = [["bronze", 4, "Bronze", "#c07a3a"], ["silver", 8, "Silver", "#9aa4ad"], ["gold", 12, "Gold", "#d4a21f"], ["platinum", 20, "Platinum", "#5fb4c8"]];
+  function ym(d) { return (d || iso()).slice(0, 7); }
+  function monthCount(m) { var per = {}; S.sessions.forEach(function (s) { if (s.date && s.date.slice(0, 7) === m) per[s.date] = Math.min(2, (per[s.date] || 0) + 1); }); return Object.keys(per).reduce(function (t, d) { return t + per[d]; }, 0); }
+  function medalFor(n) { var got = null; MEDALS.forEach(function (md) { if (n >= md[1]) got = md; }); return got; }
+  function nextMedal(n) { return MEDALS.filter(function (md) { return n < md[1]; })[0] || null; }
+  function monthName(m, short) { var p = m.split("-"); try { return new Date(+p[0], p[1] - 1, 1).toLocaleDateString(I18N.locale, short ? { month: "short" } : { month: "long", year: undefined }); } catch (e) { return m; } }
+  function medalSVG(md, size) {
+    size = size || 44; var col = md ? md[3] : "var(--line)", lab = md ? T(md[2]) : T("No medal yet");
+    return '<svg class="medal' + (md ? "" : " none") + '" width="' + size + '" height="' + size + '" viewBox="0 0 48 48" role="img" aria-label="' + esc(lab) + '"><path d="M15 3h7l4 13h-7zM33 3h-7l-4 13h7z" fill="' + (md ? col : "var(--line)") + '" opacity=".55"/>' +
+      '<circle cx="24" cy="30" r="14" fill="' + col + '"/><circle cx="24" cy="30" r="10.5" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.5"/>' +
+      (md ? '<path d="M24 23.5l2 4.1 4.5.6-3.3 3.1.8 4.5-4-2.2-4 2.2.8-4.5-3.3-3.1 4.5-.6z" fill="#fff"/>' : "") + "</svg>";
+  }
+  function daysLeftInMonth() { var d = new Date(), end = new Date(d.getFullYear(), d.getMonth() + 1, 0); return end.getDate() - d.getDate(); }
+  function chCard() {
+    var m = ym(), n = monthCount(m), md = medalFor(n), nx = nextMedal(n), top = MEDALS[MEDALS.length - 1][1];
+    var marks = MEDALS.map(function (x) { return '<span class="chmark' + (n >= x[1] ? " got" : "") + '" style="left:' + (x[1] / top * 100) + '%;--mc:' + x[3] + '"><i></i><em>' + x[1] + "</em></span>"; }).join("");
+    var line = nx ? TF("{n} more for {medal}", { n: nx[1] - n, medal: T(nx[2]) }) + " · " + TF("{d} days left", { d: daysLeftInMonth() }) : T("Platinum reached. Top level for this month!");
+    return '<div class="card chcard" data-act="challenge"><div class="row" style="gap:12px;align-items:center">' + medalSVG(md, 52) + '<div class="grow"><h3>' + TF("{month} challenge", { month: monthName(m).replace(/^./, function (c) { return c.toUpperCase(); }) }) + '</h3><p class="small muted">' + (md ? T(md[2]) + " · " : "") + TF("{n} sessions this month", { n: n }) + "</p></div></div>" +
+      '<div class="chbar" role="progressbar" aria-valuemin="0" aria-valuemax="' + top + '" aria-valuenow="' + Math.min(n, top) + '" aria-valuetext="' + esc(TF("{n} sessions this month", { n: n }) + ". " + line) + '"><div class="chfill" style="width:' + Math.min(100, n / top * 100) + "%;background:" + (md ? md[3] : "var(--brand)") + '"></div>' + marks + '</div><p class="small muted" style="margin-top:22px">' + line + "</p></div>";
+  }
+  function openChallenge() {
+    var h = "<h2>" + T("Monthly challenge") + '</h2><p class="muted" style="margin:6px 0 14px">' + T("Earn a medal each month for how often you do your mobility. Up to two sessions a day count.") + "</p>";
+    h += '<div class="card flush">' + MEDALS.map(function (md) { return '<div class="hitem">' + medalSVG(md, 40) + '<div class="grow"><b>' + T(md[2]) + '</b><div class="small muted">' + TF("{n} sessions in a month", { n: md[1] }) + "</div></div></div>"; }).join("") + "</div>";
+    var months = [], d = new Date(); for (var i = 0; i < 12; i++) { months.push(iso(new Date(d.getFullYear(), d.getMonth() - i, 1)).slice(0, 7)); }
+    var first = S.sessions.reduce(function (a, s) { return !a || (s.date && s.date < a) ? s.date : a; }, null);
+    months = months.filter(function (m) { return m === ym() || (first && m >= first.slice(0, 7)); });
+    h += '<h3 style="margin:18px 0 8px">' + T("Your medals") + '</h3><div class="medalgrid">' + months.map(function (m) { var n = monthCount(m), md = medalFor(n); return '<div class="mcell' + (m === ym() ? " now" : "") + '">' + medalSVG(md, 46) + "<b>" + esc(monthName(m, true)) + "</b><span>" + n + "</span></div>"; }).join("") + "</div>";
+    openSheet(h);
+  }
   function renderHistory() {
     var tests = S.tests.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
     var pts = tests.slice().reverse().map(function (t) { return { d: t.date, s: score(t.v).overall }; }).filter(function (p) { return isNum(p.s); });
@@ -1134,6 +1169,7 @@
     var m = sessionDays(), cells = "", start = addDays(iso(), -55), dow = (parse(start).getDay() + 6) % 7; start = addDays(start, -dow);
     for (var i = 0; i < 56 + 7; i++) { var d = addDays(start, i); if (d > iso()) break; var v = m[d] || 0; cells += '<i title="' + d + '" class="' + (v >= 480 ? "l2" : v ? "l1" : "") + (d === iso() ? " today" : "") + '"></i>'; }
     h += ('<div class="sec"><h2>' + T("Stretching") + '</h2><span class="small muted">') + streak() + (" " + T("day streak") + "</span></div><div class=\"card\"><div class=\"calwrap\"><div class=\"dl\"><span>M</span><span></span><span>W</span><span></span><span>F</span><span></span><span>S</span></div><div class=\"cal\">") + cells + ('</div></div><div class="legend"><span>' + T("Last 8 weeks. Light = some stretching, dark = 8 minutes or more.") + '</span></div></div>');
+    h += chCard();
     h += ('<div class="sec"><h2>' + T("Tests") + '</h2></div><div class="card flush">') + (tests.length ? tests.map(function (t) {
       var sc = score(t.v);
       return '<div class="hitem" data-act="test-detail" data-id="' + t.date + '" style="cursor:pointer"><span class="big">' + (isNum(sc.overall) ? sc.overall : "–") + '</span><div class="grow"><b>' + nice(t.date) + '</b><div class="small muted">' + sc.n + (' ' + T("of 6 zones") + '</div></div><div class="mini">') + ZONES.map(function (z) { var p = sc.zones[z[0]]; return '<i style="height:' + Math.max(3, (p || 0) / 100 * 26) + "px;background:" + (isNum(p) ? zc(z[0]) : "var(--line)") + '"></i>'; }).join("") + "</div>" + ICON.chev + "</div>";
@@ -1399,6 +1435,7 @@
       case "go-test": go("test"); break;
       case "routine": openRoutine(id); break;
       case "qw-open": qwOpen(); break;
+      case "challenge": openChallenge(); break;
       case "qw-time": case "qw-group": case "qw-muscle": case "qw-sport": case "qw-when": case "qw-next": case "qw-back": case "qw-shuffle": case "qw-start": case "qw-save": qwAct(a, id); break;
       case "play": { var r = findRoutine(id); if (!$("#sheet").hidden) closeSheet(); if (r) play(r); break; }
       case "play-one": closeSheet(); play({ id: "single", n: BY[id].n, items: [id] }); break;

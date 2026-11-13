@@ -569,7 +569,22 @@ I18N.add("pt", {
 "after training": "depois do treino",
 "Whole body": "Corpo inteiro",
 "Video demo": "Vídeo de demonstração",
-"Moves with this badge have a video demo": "Os exercícios com este símbolo têm um vídeo de demonstração"
+"Moves with this badge have a video demo": "Os exercícios com este símbolo têm um vídeo de demonstração",
+"Bronze": "Bronze",
+"Silver": "Prata",
+"Gold": "Ouro",
+"Platinum": "Platina",
+"No medal yet": "Ainda sem medalha",
+"{n} more for {medal}": "Faltam {n} para {medal}",
+"{d} days left": "Faltam {d} dias",
+"Platinum reached. Top level for this month!": "Platina alcançada. Nível máximo este mês!",
+"{month} challenge": "Desafio de {month}",
+"{n} sessions this month": "{n} sessões este mês",
+"Monthly challenge": "Desafio mensal",
+"Earn a medal each month for how often you do your mobility. Up to two sessions a day count.": "Ganha uma medalha todos os meses conforme a frequência com que fazes mobilidade. Contam até duas sessões por dia.",
+"{n} sessions in a month": "{n} sessões num mês",
+"Your medals": "As tuas medalhas",
+"{medal} for {month}!": "{medal} em {month}!"
 }, {
 "zone": {
 "shoulders": "Ombros",

@@ -21,6 +21,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.32.0 (13 Nov 2026): Monthly challenge with Bronze (4 sessions), Silver (8), Gold (12) and Platinum (20) medals each calendar month. Up to two sessions a day count. A card on Today and History shows this month's medal, a progress bar marked with each level, how many more you need and days left. You get a medal message at the end of the session that earns it, and tapping the card shows the levels and your medals from past months.
 - 1.31.1 (13 Nov 2026): Routine cards no longer show the video badge, since it only applies to single moves.
 - 1.31.0 (13 Nov 2026): Moves with a looping demo video now show a small play badge on their thumbnail, in the Stretch library, routine lists, Make me a routine and the sport picks, with a key above the library. It follows the Female/Male model setting and hides when videos are off.
 - 1.30.0 (13 Nov 2026): Make me a routine. Pick 5, 10 or 20 minutes, choose chains, areas or muscles and/or a sport, then say whether it's before training, after training or any time. The app builds a routine that fits the time (rests included), skips moves that hurt or need kit you don't have, and spreads it across the body. Start it, shuffle for a different mix, or save it to your routines. On the Today screen and in Routines.
