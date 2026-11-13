@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.22.1", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.23.0", APP_BUILD = "12 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -132,12 +132,17 @@
   function toast(msg) { var t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove("on"); }, 2400); }
   function fig(pose, opts) { return FIG.svg(pose, opts); }
   /* Photo of a stretch (id) or test ("t_" + id) when one exists and photos are switched on, otherwise the stick figure. */
-  function photoUrl(key) { return S.settings.photos !== false && window.PHOTOS && PHOTOS[key] || null; }
+  /* Photo model: female (default) or male. Each move uses the chosen model's photos, falling back to the other model if one is missing. */
+  function maleOn(key) { return S.settings.model === "m" && window.PHOTOS_M && PHOTOS_M[key]; }
+  function pmain(key) { return maleOn(key) ? PHOTOS_M[key] : window.PHOTOS && PHOTOS[key]; }
+  function p2(key) { return maleOn(key) ? (window.PHOTOS2_M || {})[key] : (window.PHOTOS2 || {})[key]; }
+  function px(key) { return (maleOn(key) ? window.PHOTOEXTRA_M : window.PHOTOEXTRA || {}) && (maleOn(key) ? (window.PHOTOEXTRA_M || {})[key] : (window.PHOTOEXTRA || {})[key]) || {}; }
+  function photoUrl(key) { return S.settings.photos !== false && pmain(key) || null; }
   /* Every photo of a move in order: start positions first, then the main photo, the second position and any later positions. */
   function photoSet(key) {
-    if (S.settings.photos === false || !window.PHOTOS || !PHOTOS[key]) return [];
-    var x = (window.PHOTOEXTRA || {})[key] || {}, out = (x.pre || []).slice();
-    out.push(PHOTOS[key]); if (window.PHOTOS2 && PHOTOS2[key]) out.push(PHOTOS2[key]);
+    if (S.settings.photos === false || !pmain(key)) return [];
+    var x = px(key), out = (x.pre || []).slice();
+    out.push(pmain(key)); if (p2(key)) out.push(p2(key));
     return out.concat(x.post || []);
   }
   /* Big photo: moves with more than one position stack their photos and slowly cross-fade from one to the next. */
@@ -1127,6 +1132,7 @@
         : T("For the most natural voice, download one on your iPhone: open Settings, search for Voices, then pick your language and an Enhanced or Premium voice. Then close and reopen this app and choose it here.")) + '</p>' +
       ('<div class="row" style="margin-top:14px"><label class="field" style="flex:2">' + T("Routine background music") + '<select id="s-music">') + MUSIC_STYLES.map(function (o) { return '<option value="' + o[0] + '"' + ((s.music || "pads") === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><label class="field">' + T("Music volume") + '<input type="range" id="s-mvol" min="0" max="1" step="0.05" value="' + (s.musicVol == null ? 0.5 : s.musicVol) + ('" style="min-height:46px;padding:0;accent-color:var(--brand)"></label></div><button class="btn" style="margin-top:8px" data-act="music-preview">' + T("Preview music") + '</button><p class="small muted" style="margin-top:6px">' + T("Gentle music generated on your phone. It drops down whenever the coach speaks.") + '</p>') +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-showphotos"' + (s.photos !== false ? " checked" : "") + '> ' + T("Show stretch photos (instead of stick figures)") + '</label>' +
+      '<div class="row" style="margin-top:10px"><label class="field">' + T("Mobility model in photos") + '<select id="s-model"><option value="f"' + (s.model !== "m" ? " selected" : "") + ">" + T("Female") + '</option><option value="m"' + (s.model === "m" ? " selected" : "") + ">" + T("Male") + "</option></select></label></div>" +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-photos"' + (s.savePhotos ? " checked" : "") + '> ' + T("Save camera test images to Photos") + '</label></div>';
     h += '<div class="card"><h3>' + T("Accessibility") + '</h3><div class="row" style="margin-top:8px"><label class="field">' + T("Text size") + '<select id="s-text">' +
       [["std", T("Standard")], ["l", T("Large")], ["xl", T("Extra large")], ["xxl", T("Largest")], ["phone", T("Match iPhone text size")]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.textSize || "std") === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") +
@@ -1144,6 +1150,7 @@
     var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
     ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-sport", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
     stravaWire(); remWire();
+    $("#s-model").addEventListener("change", function (e) { S.settings.model = e.target.value; save(); render(); offlineUI(); toast(T("Photos updated. Tap Save all photos for offline to keep this model's photos on your phone.")); });
     $("#s-text").addEventListener("change", function (e) { S.settings.textSize = e.target.value; save(); applyTextSize(); });
     $("#s-capt").addEventListener("change", function (e) { S.settings.captions = e.target.checked; save(); if (e.target.checked) caption(T("Captions on. You'll see what the coach says here."), 3000); });
     $("#eq-on").addEventListener("change", function (e) { S.settings.eqOn = e.target.checked; if (!S.settings.eq) S.settings.eq = EQ.map(function (x) { return x[0]; }); save(); var ec = $("#eq-count"); if (ec) ec.innerHTML = eqCountText(S.settings.eq); render(); });
@@ -1272,8 +1279,8 @@
 
   /* ---------- offline photos: save every stretch photo into the app's photo cache so routines work with no signal ---------- */
   var OFF = { busy: false, done: 0, total: 0 };
-  function photoList() { var seen = {}, out = []; var ex = window.PHOTOEXTRA || {}, xm = {}; Object.keys(ex).forEach(function (k) { (ex[k].pre || []).concat(ex[k].post || []).forEach(function (u, i) { xm[k + "#" + i] = u; }); });
-    [window.PHOTOS || {}, window.PHOTOS2 || {}, xm].forEach(function (m) { Object.keys(m).forEach(function (k) { var u = m[k]; if (!seen[u]) { seen[u] = 1; out.push(u); } }); }); return out; }
+  /* Photos to keep offline: every photo of the chosen model. */
+  function photoList() { var seen = {}, out = []; Object.keys(window.PHOTOS || {}).forEach(function (k) { photoSet(k).forEach(function (u) { if (!seen[u]) { seen[u] = 1; out.push(u); } }); }); return out; }
   function offlineCount() {
     if (!window.caches) return Promise.resolve(0);
     return caches.open("sm-photos").then(function (c) { return Promise.all(photoList().map(function (u) { return c.match(u).then(function (r) { return r ? 1 : 0; }); })); }).then(function (xs) { return xs.reduce(function (s, x) { return s + x; }, 0); }).catch(function () { return 0; });

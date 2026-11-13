@@ -21,6 +21,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.23.0 (12 Nov 2026): New Settings option, Mobility model in photos: choose a Female or Male model for every stretch photo. Male photos match the same poses, props and room. Tap Save all photos for offline after switching to keep the new set on your phone.
 - 1.22.1 (12 Nov 2026): My equipment shows how many items are selected (or that it's off).
 - 1.22.0 (12 Nov 2026): accessibility: text size setting (Standard to Largest, or match the iPhone's text size), on-screen captions of everything the coach says (on by default, also shown with the voice off), VoiceOver labels for the body map muscles (as toggle buttons, keyboard operable), player timer, pause/resume and adjust buttons.
 - 1.21.3 (12 Nov 2026): Today's streak, minutes and sessions numbers centred in their boxes.

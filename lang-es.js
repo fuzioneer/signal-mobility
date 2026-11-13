@@ -524,7 +524,9 @@ I18N.add("es", {
 "Show captions of what the coach says": "Mostrar subtítulos de lo que dice el entrenador",
 "Captions on. You'll see what the coach says here.": "Subtítulos activados. Aquí verás lo que dice el entrenador.",
 "{n} of {total} selected": "{n} de {total} seleccionados",
-"Off, all moves shown": "Desactivado, se muestran todos"
+"Off, all moves shown": "Desactivado, se muestran todos",
+"Mobility model in photos": "Modelo de movilidad en las fotos",
+"Photos updated. Tap Save all photos for offline to keep this model's photos on your phone.": "Fotos actualizadas. Toca Guardar todas las fotos sin conexión para tener las fotos de este modelo en tu teléfono."
 }, {
 "zone": {
 "shoulders": "Hombros",
