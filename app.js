@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.38.0", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.38.1", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -425,7 +425,7 @@
       h += '<div class="sec"><h2>' + (z[0] ? '<span class="zdot" style="background:' + zc(z[0]) + '"></span>' : "") + z[1] + '</h2><span class="pctpill" data-zone="' + (z[0] || "") + '"></span></div>';
       ts.forEach(function (t) {
         h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + art("t_" + t.id, t.pose, { stroke: 8 }) + '</div><div><h3>' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? (T("Not scored. A check of your squat position.")) : (t.sides ? (T("Both sides")) : (T("One result"))) + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
-        h += ('<details><summary>' + T("How to do it") + '</summary><div class="how"><p>') + esc(t.how) + '</p><div class="fig" data-anim="t:' + t.id + '"></div>' + (photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(t.n) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
+        h += ('<details><summary>' + T("How to do it") + '</summary><div class="how"><p>') + esc(t.how) + '</p>' + (photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(t.n) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
         h += '<div class="inputs">' + fieldsFor(t).map(function (f) { return '<label class="field">' + f[1] + '<input type="number" inputmode="decimal" step="any" data-k="' + f[0] + '" value="' + (isNum(draft.v[f[0]]) ? draft.v[f[0]] : "") + '"></label>'; }).join("");
         if (t.cam) h += '<button class="btn" data-act="cam" data-id="' + t.id + '" style="flex:none">' + ICON.cam.replace("<svg", '<svg width="20" height="20"') + (" " + T("Camera") + "</button>");
         h += "</div></div>";
