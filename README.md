@@ -21,6 +21,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.28.3 (13 Nov 2026): New 90/90 switches videos (female and male), made by copying the movement from a real demonstration clip: switch the knees to one side and lean in, then switch to the other side and lean in.
 - 1.28.2 (13 Nov 2026): Male Dead bug video remade by copying the movement from a real demonstration clip (motion transfer), so the arms and legs move exactly as they should.
 - 1.28.1 (13 Nov 2026): Male Dead bug photos and video remade so the correct arm and opposite leg move on each side.
 - 1.28.0 (13 Nov 2026): Dead bug reshot from directly overhead so both sides are clear. New photos (start position, then each side) and new looping videos for both models: one arm goes back along the floor above the head while the opposite leg straightens, both stopping just above the floor, then the other side.
