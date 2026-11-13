@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.38.1", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.39.0", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -34,7 +34,7 @@
   var TAGLINE = "Joint Venture";
   function blank() { return { v: 1, settings: { age: 40, sex: "m", height: 178, voice: true, savePhotos: true, music: "pads", musicVol: 0.5, beeps: true, prep: 5, rest: 10, sideRest: 5, theme: "auto" }, tests: [], sessions: [], routines: [] }; }
   function load() {
-    try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; if (x.fb) b.fb = x.fb; return b; } } catch (e) {}
+    try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; if (x.fb) b.fb = x.fb; if (x.cloud) b.cloud = x.cloud; return b; } } catch (e) {}
     return blank();
   }
   var S = load();
@@ -229,7 +229,7 @@
   })();
 
   /* ---------- navigation ---------- */
-  var TAB = "home", TITLES = { home: (T("Today")), test: (T("Mobility test")), routines: (T("Routines")), history: (T("History")) };
+  var TAB = "home", TITLES = { home: (T("Today")), test: (T("Mobility test")), routines: (T("Routines")), history: (T("History")), community: (T("Community")) };
   function go(tab) {
     TAB = tab; stopAnims();
     $$("nav.tabs button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-tab") === tab); });
@@ -238,7 +238,7 @@
     render(); window.scrollTo(0, 0);
     try { sessionStorage.setItem("sm-tab", tab); } catch (e) {}
   }
-  function render() { ({ home: renderHome, test: renderTest, routines: renderRoutines, history: renderHistory })[TAB](); }
+  function render() { ({ home: renderHome, test: renderTest, routines: renderRoutines, history: renderHistory, community: renderCommunity })[TAB](); }
   $$("nav.tabs button").forEach(function (b) { b.addEventListener("click", function () { go(b.getAttribute("data-tab")); }); });
 
   /* ---------- HOME ---------- */
@@ -410,7 +410,7 @@
 
   /* ---------- TEST ---------- */
   var draft = null;
-  function draftFor(date) { var t = S.tests.filter(function (x) { return x.date === date; })[0]; return { date: date, v: Object.assign({}, t ? t.v : {}) }; }
+  function draftFor(date) { var t = S.tests.filter(function (x) { return x.date === date; })[0], cam = {}; (t && t.cam || []).forEach(function (k) { cam[k] = 1; }); return { date: date, v: Object.assign({}, t ? t.v : {}), cam: cam }; }
   function fieldsFor(t) {
     if (t.id === "squat") return [["squat_knee", (T("Knee angle °"))], ["squat_shin", (T("Shin lean °"))], ["squat_torso", (T("Torso lean °"))]];
     if (t.sides) return [[t.id + "_l", (T("Left") + " ") + t.u], [t.id + "_r", (T("Right") + " ") + t.u]];
@@ -435,7 +435,7 @@
     $("#v-test").innerHTML = h;
     $$("#v-test details").forEach(function (d) { d.addEventListener("toggle", function () { if (d.open) animateIn(d); }); });
     $("#t-date").addEventListener("change", function (e) { var keep = draft.v; draft = draftFor(e.target.value || iso()); if (!S.tests.some(function (x) { return x.date === draft.date; })) draft.v = keep; renderTest(); });
-    $$("#v-test input[data-k]").forEach(function (inp) { inp.addEventListener("input", function () { var x = parseFloat(inp.value); if (isNum(x)) draft.v[inp.getAttribute("data-k")] = x; else delete draft.v[inp.getAttribute("data-k")]; liveScore(); }); });
+    $$("#v-test input[data-k]").forEach(function (inp) { inp.addEventListener("input", function () { var x = parseFloat(inp.value); if (isNum(x)) draft.v[inp.getAttribute("data-k")] = x; else delete draft.v[inp.getAttribute("data-k")]; if (draft.cam) delete draft.cam[inp.getAttribute("data-k")]; liveScore(); }); });
     liveScore();
   }
   function liveScore() {
@@ -448,7 +448,8 @@
     var keys = Object.keys(draft.v).filter(function (k) { return isNum(draft.v[k]); });
     if (!keys.length) { toast((T("Enter at least one result first."))); return; }
     var v = {}; keys.forEach(function (k) { v[k] = draft.v[k]; });
-    S.tests = S.tests.filter(function (x) { return x.date !== draft.date; }); S.tests.push({ date: draft.date, v: v, t: Date.now() }); save();
+    var cam = keys.filter(function (k) { return draft.cam && draft.cam[k]; });
+    S.tests = S.tests.filter(function (x) { return x.date !== draft.date; }); S.tests.push({ date: draft.date, v: v, t: Date.now(), cam: cam }); save(); cmSync();
     var sc = score(v); toast((T("Saved.") + " ") + (isNum(sc.overall) ? (T("Score") + " ") + sc.overall + "." : ""));
     draft = null; go("home");
   }
@@ -935,7 +936,7 @@
     var secs = Math.round(P.worked), r = P.r;
     clearInterval(P.timer); if (P.stop) P.stop();
     var mdBefore = medalFor(monthCount(ym()));
-    if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); stravaLog(r.n, secs, r.items); }
+    if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), cid: cmUuid(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); stravaLog(r.n, secs, r.items); cmSync(); }
     var mdAfter = medalFor(monthCount(ym())), newMedal = mdAfter && (!mdBefore || mdAfter[1] > mdBefore[1]) ? mdAfter : null;
     if (window.MUSIC) setTimeout(function () { if (!P) MUSIC.stop(6000); }, 4000);
     say(secs >= 30 ? pick([(T("And that's it. Great session.")), (T("All done. Nice work today.")), (T("That's the session finished. Well done."))]) : "");
@@ -953,7 +954,7 @@
   }
   function closePlayer() {
     cdClear();
-    if (P) { clearInterval(P.timer); if (P.stop) P.stop(); var secs = Math.round(P.worked); if (secs >= 60) { S.sessions.push({ date: iso(), t: Date.now(), id: P.r.id, n: P.r.n + " (part)", secs: secs, items: P.i }); save(); stravaLog(P.r.n, secs, P.r.items.slice(0, P.i + 1)); } P = null; }
+    if (P) { clearInterval(P.timer); if (P.stop) P.stop(); var secs = Math.round(P.worked); if (secs >= 60) { S.sessions.push({ date: iso(), t: Date.now(), cid: cmUuid(), id: P.r.id, n: P.r.n + " (part)", secs: secs, items: P.i }); save(); stravaLog(P.r.n, secs, P.r.items.slice(0, P.i + 1)); cmSync(); } P = null; }
     try { speechSynthesis.cancel(); } catch (e) {}
     if (window.MUSIC) { MUSIC.stop(1500); MUSIC.setQuiet(false); }
     if (window.MUSIC && MUSIC.keepAlive) MUSIC.keepAlive(false); msHandlers(false); msUpdate();
@@ -1089,9 +1090,10 @@
   function camUse() {
     var b = CAM.sess ? CAM.sess.best : {}, t = CAM.t, got = 0;
     if (!draft) draft = draftFor(iso());
-    if (CAM.k === "squat") { var q = bestSquat(); if (q) { draft.v.squat_knee = Math.round(q.knee); draft.v.squat_shin = Math.round(q.shin); draft.v.squat_torso = Math.round(q.torso); got = 1; } }
-    else if (!t.sides) { if (b.c) { draft.v[t.id] = Math.round(b.c.v); got = 1; } }
-    else ["l", "r"].forEach(function (sd) { if (b[sd]) { draft.v[t.id + "_" + sd] = Math.round(b[sd].v); got++; } });
+    draft.cam = draft.cam || {};
+    if (CAM.k === "squat") { var q = bestSquat(); if (q) { draft.v.squat_knee = Math.round(q.knee); draft.v.squat_shin = Math.round(q.shin); draft.v.squat_torso = Math.round(q.torso); draft.cam.squat_knee = draft.cam.squat_shin = draft.cam.squat_torso = 1; got = 1; } }
+    else if (!t.sides) { if (b.c) { draft.v[t.id] = Math.round(b.c.v); draft.cam[t.id] = 1; got = 1; } }
+    else ["l", "r"].forEach(function (sd) { if (b[sd]) { draft.v[t.id + "_" + sd] = Math.round(b[sd].v); draft.cam[t.id + "_" + sd] = 1; got++; } });
     var snaps = ["l", "r", "c"].filter(function (sd) { return b[sd] && b[sd].img; }).map(function (sd) { return { sd: sd, img: b[sd].img }; });
     LASTSNAPS = snaps.map(function (s) { return { img: s.img, name: "mobility-" + t.id + (s.sd === "c" ? "" : "-" + (s.sd === "l" ? (T("left")) : (T("right")))) + "-" + iso() + ".jpg" }; });
     /* Must run inside the tap so iOS allows the share sheet. */
@@ -1488,6 +1490,7 @@
       case "qw-open": qwOpen(); break;
       case "challenge": openChallenge(); break;
       case "share-score": shareScore(); break;
+      case "cm-send": case "cm-verify": case "cm-other-email": case "cm-savenick": case "cm-scope": case "cm-board": case "cm-period": case "cm-verified": case "cm-joinsheet": case "cm-join": case "cm-create": case "cm-invite": case "cm-leave": case "cm-toggle": case "cm-nickedit": case "cm-signout": case "cm-delete": case "cm-retry": cmAct(a, id); break;
       case "qw-time": case "qw-group": case "qw-muscle": case "qw-sport": case "qw-when": case "qw-next": case "qw-back": case "qw-shuffle": case "qw-start": case "qw-save": qwAct(a, id); break;
       case "play": { var r = findRoutine(id); if (!$("#sheet").hidden) closeSheet(); if (r) play(r); break; }
       case "play-one": closeSheet(); play({ id: "single", n: BY[id].n, items: [id] }); break;
@@ -1603,10 +1606,241 @@
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {});
   }
 
+  /* ---------- Community: accounts, communities and leaderboards (through the CLOUD adapter, Supabase) ----------
+     Opt-in. People sign in with an emailed code, pick a nickname and choose what to share. Only time from the
+     guided player counts. A score gets a tick when every result in it was measured with the camera. */
+  var CM = { stage: null, email: "", board: "time", period: "week", scope: null, verifiedOnly: false, comms: [], rows: null, prof: null, busy: false, err: "", pendingJoin: null, arm: "", req: 0 };
+  function cmOn() { return !!(window.CLOUD && CLOUD.configured()); }
+  function cmUuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) { var r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 3 | 8)).toString(16); });
+  }
+  function cmErr(e) {
+    var m = String((e && (e.message || e.error_description)) || e || "");
+    var map = [["set a nickname first", T("Choose a nickname first.")], ["no community with that code", T("No community has that code. Check it and try again.")],
+      ["community limit reached", T("You can create up to 10 communities.")], ["membership limit reached", T("You can be in up to 20 communities.")],
+      ["not a member", T("You're not in that community any more.")], ["profiles_nickname_ci", T("That nickname is taken. Try another.")]];
+    for (var i = 0; i < map.length; i++) if (m.indexOf(map[i][0]) >= 0) return map[i][1];
+    if (/rate limit|too many|security purposes/i.test(m)) return T("Too many attempts. Wait a minute and try again.");
+    if (/token|otp|expired|invalid/i.test(m)) return T("That code didn't work. Check it, or ask for a new one.");
+    if (/network|fetch|load failed|offline/i.test(m)) return T("Can't reach the community right now. Check your connection.");
+    return m || T("Something went wrong. Try again.");
+  }
+  function cmRange(p) {
+    var d = new Date(), to = iso(d);
+    if (p === "day") return [to, to];
+    if (p === "week") { var w = new Date(d); w.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return [iso(w), to]; }
+    return [iso(new Date(d.getFullYear(), d.getMonth(), 1)), to];
+  }
+  function cmDaysAgo(n) { var d = new Date(); d.setDate(d.getDate() - n); return iso(d); }
+  function cmHm(s) { var m = Math.round((s || 0) / 60), h = Math.floor(m / 60); return h ? TF("{h} h {m} min", { h: h, m: m % 60 }) : TF("{m} min", { m: m }); }
+  /* Sessions from the last 31 days count once someone joins, so the board isn't empty on day one. */
+  function cmBackfill() { var cut = cmDaysAgo(31), ch = false; S.sessions.forEach(function (s) { if (!s.cid && s.date >= cut && s.secs >= 30) { s.cid = cmUuid(); ch = true; } }); if (ch) save(); }
+  function cmLatestScore() {
+    var v = {}, cam = {};
+    S.tests.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; }).forEach(function (t) { var c = t.cam || []; Object.keys(t.v).forEach(function (k) { if (isNum(t.v[k])) { v[k] = t.v[k]; cam[k] = c.indexOf(k) >= 0; } }); });
+    var sc = score(v); if (!isNum(sc.overall)) return null;
+    var used = Object.keys(v).filter(function (k) { return k.indexOf("squat_") !== 0; });
+    var zones = {}; Object.keys(sc.zones).forEach(function (z) { if (isNum(sc.zones[z])) zones[z] = sc.zones[z]; });
+    return { overall: Math.round(sc.overall), zones: zones, verified: used.length > 0 && used.every(function (k) { return cam[k]; }), tested_on: lastTestDate() };
+  }
+  var CM_SYNCING = false;
+  function cmSync() {
+    if (!cmOn() || CM_SYNCING || !CM.prof || navigator.onLine === false) return Promise.resolve();
+    CM_SYNCING = true;
+    var cut = cmDaysAgo(34), job = Promise.resolve();
+    if (CM.prof.share_time) S.sessions.filter(function (s) { return s.cid && !s.up && s.date >= cut && s.secs >= 30; }).forEach(function (s) {
+      job = job.then(function () { return CLOUD.addSession({ id: s.cid, local_date: s.date, secs: Math.min(7200, Math.round(s.secs)) }).then(function () { s.up = 1; }, function (e) { if (e && e.permanent) s.up = -1; else throw e; }); });
+    });
+    if (CM.prof.share_score) {
+      var sc = cmLatestScore();
+      if (sc) { var sig = JSON.stringify([sc.overall, sc.verified, sc.tested_on]); if (!S.cloud || S.cloud.scoreSig !== sig) job = job.then(function () { return CLOUD.setScore(sc).then(function () { S.cloud = Object.assign(S.cloud || {}, { scoreSig: sig }); }); }); }
+    }
+    return job.catch(function (e) { diag("community sync: " + (e && e.message)); }).then(function () { save(); CM_SYNCING = false; });
+  }
+  /* At start-up, only phones that have signed in before load anything. */
+  function cmBoot() {
+    if (!cmOn() || !CLOUD.hasSession()) return;
+    CLOUD.user().then(function (u) { if (!u) return; return CLOUD.profile().then(function (p) { if (!p) return; CM.prof = p; if (!CM.stage) { CM.stage = "main"; cmComms(); } cmBackfill(); return cmSync(); }); }).catch(function (e) { diag("community: " + (e && e.message)); });
+    window.addEventListener("online", function () { cmSync(); });
+  }
+  function cmComms() { return CLOUD.myCommunities().then(function (c) { CM.comms = c || []; if (CM.scope && !CM.comms.some(function (x) { return x.id === CM.scope; })) CM.scope = null; }, function () {}); }
+  function cmLoad() {
+    if (!cmOn()) { CM.stage = "off"; return renderCommunity(); }
+    CM.stage = "loading"; CM.err = ""; renderCommunity();
+    CLOUD.user().then(function (u) {
+      if (!u) { CM.stage = "signin"; return; }
+      return CLOUD.profile().then(function (p) {
+        CM.prof = p; if (!p) { CM.stage = "nick"; return; }
+        CM.stage = "main"; cmBackfill(); return cmComms().then(function () { return cmSync(); });
+      });
+    }).catch(function (e) { CM.err = cmErr(e); CM.stage = "error"; }).then(cmAfterIn);
+  }
+  function cmAfterIn() {
+    if (CM.stage === "main" && CM.pendingJoin) { var c = CM.pendingJoin; CM.pendingJoin = null; return cmJoin(c); }
+    if (CM.stage === "main") return cmRefresh();
+    renderCommunity();
+  }
+  function cmRefresh() {
+    if (CM.stage !== "main") return renderCommunity();
+    var my = ++CM.req; CM.rows = null; CM.err = ""; renderCommunity();
+    var r = cmRange(CM.period);
+    var p = CM.board === "time" ? CLOUD.timeBoard(CM.scope, r[0], r[1]) : CLOUD.scoreBoard(CM.scope, CM.verifiedOnly);
+    p.then(function (rows) { if (my !== CM.req) return; CM.rows = rows || []; }, function (e) { if (my !== CM.req) return; CM.rows = []; CM.err = cmErr(e); if (/not a member/.test(String(e && e.message))) { CM.scope = null; cmComms(); } })
+      .then(function () { if (my === CM.req) renderCommunity(); });
+  }
+  function cmJoin(code) {
+    CM.busy = true; renderCommunity();
+    return CLOUD.joinCommunity(code).then(function (c) {
+      CM.busy = false; closeSheet(); if (!c) return;
+      toast(TF("You've joined {name}.", { name: c.name }));
+      CM.scope = c.id; return cmComms().then(cmRefresh);
+    }, function (e) { CM.busy = false; toast(cmErr(e)); renderCommunity(); });
+  }
+  function cmBusy() { return CM.busy ? " disabled" : ""; }
+  function cmToggle(id, on, label, sub) {
+    return '<button class="cmtoggle" role="switch" aria-checked="' + (on ? "true" : "false") + '" data-act="cm-toggle" data-id="' + id + '"><span class="grow"><b>' + label + "</b>" + (sub ? '<span class="small muted">' + sub + "</span>" : "") + '</span><span class="cmsw' + (on ? " on" : "") + '"><i></i></span></button>';
+  }
+  function renderCommunity() {
+    if (TAB !== "community") return;
+    var el = $("#v-community"); if (!el) return;
+    if (CM.stage === null) { cmLoad(); return; }
+    var h = "", st = CM.stage;
+    var intro = '<div class="card cmhero"><img class="lg-l" src="img/logo-s-light.png" alt=""><img class="lg-d" src="img/logo-s-dark.png" alt=""><h2>' + T("Move together") + '</h2><p class="muted">' + T("Join a community, see who's putting the time in, and compare mobility scores with friends, your gym or everyone on Movage.") + "</p></div>";
+    if (st === "off") h = intro + '<div class="card"><p>' + T("Community leaderboards are coming soon.") + "</p></div>";
+    else if (st === "loading") h = '<div class="card"><p class="muted">' + T("Loading the community…") + "</p></div>";
+    else if (st === "error") h = '<div class="card"><p>' + esc(CM.err) + '</p><button class="btn block" data-act="cm-retry" style="margin-top:12px">' + T("Try again") + "</button></div>";
+    else if (st === "signin") {
+      h = intro + '<div class="card"><h3>' + T("Sign in or create an account") + '</h3><p class="small muted" style="margin:4px 0 12px">' + T("We'll email you a 6-digit code. No password needed. Your email is never shown to anyone.") + "</p>" +
+        '<input class="inp" id="cm-email" type="email" inputmode="email" autocomplete="email" placeholder="' + esc(T("Your email address")) + '" value="' + esc(CM.email) + '" style="width:100%">' +
+        '<button class="btn primary block" data-act="cm-send" style="margin-top:12px"' + cmBusy() + ">" + T("Email me a code") + "</button></div>";
+    } else if (st === "code") {
+      h = '<div class="card"><h3>' + T("Check your email") + '</h3><p class="small muted" style="margin:4px 0 12px">' + TF("Enter the code we sent to {email}.", { email: esc(CM.email) }) + "</p>" +
+        '<input class="inp cmcode" id="cm-code" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="123456" style="width:100%">' +
+        '<button class="btn primary block" data-act="cm-verify" style="margin-top:12px"' + cmBusy() + ">" + T("Sign in") + '</button><button class="btn ghost block" data-act="cm-other-email" style="margin-top:6px">' + T("Use a different email") + "</button></div>";
+    } else if (st === "nick") {
+      var pr = CM.prof || { nickname: "", share_time: true, share_score: true };
+      h = '<div class="card"><h3>' + T("Choose a nickname") + '</h3><p class="small muted" style="margin:4px 0 12px">' + T("This is the only name other people will see on the leaderboards.") + "</p>" +
+        '<input class="inp" id="cm-nick" maxlength="20" autocomplete="nickname" placeholder="' + esc(T("Nickname")) + '" value="' + esc(pr.nickname || "") + '" style="width:100%">' +
+        '<label class="cmcheck"><input type="checkbox" id="cm-st"' + (pr.share_time !== false ? " checked" : "") + "> " + T("Show my mobility time on leaderboards") + "</label>" +
+        '<label class="cmcheck"><input type="checkbox" id="cm-ss"' + (pr.share_score !== false ? " checked" : "") + "> " + T("Show my mobility score on leaderboards") + "</label>" +
+        '<button class="btn primary block" data-act="cm-savenick" style="margin-top:12px"' + cmBusy() + ">" + T("Save") + "</button></div>";
+    } else if (st === "main") {
+      var scopeChips = '<button class="chip' + (!CM.scope ? " on" : "") + '" data-act="cm-scope" data-id="">' + T("Everyone") + "</button>" +
+        CM.comms.map(function (c) { return '<button class="chip' + (CM.scope === c.id ? " on" : "") + '" data-act="cm-scope" data-id="' + c.id + '">' + esc(c.name) + "</button>"; }).join("") +
+        '<button class="chip clear" data-act="cm-joinsheet">' + T("+ Join or create") + "</button>";
+      h += chipRow(scopeChips);
+      h += '<div class="seg cmseg" role="tablist"><button role="tab" aria-selected="' + (CM.board === "time") + '" class="' + (CM.board === "time" ? "on" : "") + '" data-act="cm-board" data-id="time">' + T("Time") + '</button><button role="tab" aria-selected="' + (CM.board === "score") + '" class="' + (CM.board === "score" ? "on" : "") + '" data-act="cm-board" data-id="score">' + T("Score") + "</button></div>";
+      if (CM.board === "time") h += '<div class="chips cmsub">' + [["day", T("Today")], ["week", T("This week")], ["month", T("This month")]].map(function (p) { return '<button class="chip' + (CM.period === p[0] ? " on" : "") + '" data-act="cm-period" data-id="' + p[0] + '">' + p[1] + "</button>"; }).join("") + "</div>";
+      else h += '<div class="chips cmsub"><button class="chip' + (CM.verifiedOnly ? " on" : "") + '" data-act="cm-verified" aria-pressed="' + CM.verifiedOnly + '"><span class="cmtick">' + ICON.check + "</span>" + T("Camera-verified only") + "</button></div>";
+      h += '<div class="card cmboard">';
+      if (CM.rows === null) h += '<p class="muted">' + T("Loading…") + "</p>";
+      else if (CM.err) h += "<p>" + esc(CM.err) + "</p>";
+      else if (!CM.rows.length) h += '<p class="muted">' + (CM.board === "time" ? T("No time logged in this period yet. Finish a guided routine to get on the board.") : (CM.verifiedOnly ? T("No camera-verified scores yet.") : T("No scores shared yet. Save a mobility test to add yours."))) + "</p>";
+      else h += CM.rows.map(function (r) {
+        var val = CM.board === "time" ? cmHm(r.secs) : '<b>' + r.overall + "</b>" + (r.verified ? '<span class="cmtick on" role="img" aria-label="' + esc(T("Camera verified")) + '" title="' + esc(T("Camera verified")) + '">' + ICON.check + "</span>" : '<span class="cmtick"></span>');
+        return '<div class="cmrow' + (r.is_me ? " me" : "") + '"><span class="cmrank">' + r.rank + '</span><span class="cmname">' + esc(r.nickname) + (r.is_me ? ' <span class="small muted">(' + T("you") + ")</span>" : "") + '</span><span class="cmval">' + val + "</span></div>";
+      }).join("");
+      h += "</div>";
+      h += '<p class="small muted cmnote">' + (CM.board === "time" ? T("Only time from the guided player counts. Sessions from the 31 days before you joined are included.") : T("Your latest score from your most recent tests. A tick means every result in it was measured with the camera.")) + "</p>";
+      var cur = CM.scope && CM.comms.filter(function (c) { return c.id === CM.scope; })[0];
+      if (cur) h += '<div class="card cmcomm"><div class="grow"><h3>' + esc(cur.name) + '</h3><p class="small muted">' + TF("{n} members", { n: cur.members }) + " · " + T("Invite code") + ' <b class="cmcodebig">' + esc(cur.code) + '</b></p></div><div class="row" style="margin-top:12px;gap:8px"><button class="btn primary" data-act="cm-invite" data-id="' + cur.id + '">' + T("Invite") + '</button><button class="btn ghost" data-act="cm-leave" data-id="' + cur.id + '">' + (CM.arm === "leave" ? T("Tap again to leave") : T("Leave")) + "</button></div></div>";
+      var me = CM.prof || {};
+      h += '<div class="sec"><h2>' + T("Your profile") + '</h2></div><div class="card cmprof"><p>' + TF("Signed in as {name}", { name: "<b>" + esc(me.nickname || "") + "</b>" }) + '</p><button class="btn ghost" data-act="cm-nickedit" style="margin:8px 0">' + T("Change nickname") + "</button>" +
+        cmToggle("share_time", me.share_time, T("Show my mobility time"), "") + cmToggle("share_score", me.share_score, T("Show my mobility score"), "") +
+        '<div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap"><button class="btn" data-act="cm-signout">' + T("Sign out") + '</button><button class="btn danger" data-act="cm-delete"' + cmBusy() + ">" + (CM.arm === "delete" ? T("Tap again to delete for good") : T("Delete my account")) + "</button></div>" +
+        '<p class="small muted" style="margin-top:8px">' + T("Deleting your account removes your nickname, communities, shared time and score from Movage's servers. Your history on this phone stays.") + "</p></div>";
+    }
+    var keep = [].map.call(document.querySelectorAll("#v-community .chiprow .chips"), function (c) { return c.scrollLeft; });
+    el.innerHTML = h; wireRows(el, keep);
+  }
+  function cmAct(a, id) {
+    if (a !== "cm-leave" && a !== "cm-delete") CM.arm = "";
+    var val = function (sel) { var x = $(sel); return x ? x.value.trim() : ""; };
+    switch (a) {
+      case "cm-retry": CM.stage = null; renderCommunity(); break;
+      case "cm-send": {
+        var em = val("#cm-email"); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { toast(T("Enter a valid email address.")); return; }
+        CM.email = em; CM.busy = true; renderCommunity();
+        CLOUD.sendCode(em).then(function () { CM.busy = false; CM.stage = "code"; renderCommunity(); setTimeout(function () { var c = $("#cm-code"); if (c) c.focus(); }, 50); }, function (e) { CM.busy = false; toast(cmErr(e)); renderCommunity(); });
+        break;
+      }
+      case "cm-verify": {
+        var code = val("#cm-code").replace(/\D/g, ""); if (code.length < 6) { toast(T("Enter the code from the email.")); return; }
+        CM.busy = true; renderCommunity();
+        CLOUD.verifyCode(CM.email, code).then(function () { return CLOUD.profile(); }).then(function (p) {
+          CM.busy = false; CM.prof = p;
+          if (!p) { CM.stage = "nick"; return renderCommunity(); }
+          CM.stage = "main"; cmBackfill(); return cmComms().then(cmSync).then(cmAfterIn);
+        }, function (e) { CM.busy = false; toast(cmErr(e)); renderCommunity(); });
+        break;
+      }
+      case "cm-other-email": CM.stage = "signin"; renderCommunity(); break;
+      case "cm-savenick": {
+        var nk = val("#cm-nick"); if (nk.length < 2 || nk.length > 20) { toast(T("Nicknames are 2 to 20 characters.")); return; }
+        if (/[<>]/.test(nk)) { toast(T("Nicknames can't contain < or >.")); return; }
+        var p = { nickname: nk, share_time: $("#cm-st").checked, share_score: $("#cm-ss").checked };
+        CM.busy = true; renderCommunity();
+        CLOUD.saveProfile(p).then(function (pr) {
+          var first = !CM.prof; CM.busy = false; CM.prof = pr; CM.stage = "main";
+          if (first) toast(T("Welcome to the Movage community."));
+          cmBackfill(); return cmComms().then(cmSync).then(cmAfterIn);
+        }, function (e) { CM.busy = false; toast(cmErr(e)); renderCommunity(); });
+        break;
+      }
+      case "cm-scope": CM.scope = id || null; cmRefresh(); break;
+      case "cm-board": CM.board = id; cmRefresh(); break;
+      case "cm-period": CM.period = id; cmRefresh(); break;
+      case "cm-verified": CM.verifiedOnly = !CM.verifiedOnly; cmRefresh(); break;
+      case "cm-joinsheet":
+        openSheet('<h2>' + T("Join or create a community") + '</h2><div class="card" style="margin-top:12px"><h3>' + T("Join with a code") + '</h3><p class="small muted" style="margin:4px 0 10px">' + T("Ask a member for their 6-letter invite code.") + '</p><input class="inp cmcode" id="cm-joincode" maxlength="6" autocapitalize="characters" autocomplete="off" placeholder="ABC234" style="width:100%"><button class="btn primary block" data-act="cm-join" style="margin-top:10px">' + T("Join") + "</button></div>" +
+          '<div class="card"><h3>' + T("Start a new community") + '</h3><p class="small muted" style="margin:4px 0 10px">' + T("For your gym, club, team or friends. You'll get a code to share.") + '</p><input class="inp" id="cm-newname" maxlength="40" placeholder="' + esc(T("Community name")) + '" style="width:100%"><button class="btn block" data-act="cm-create" style="margin-top:10px">' + T("Create") + "</button></div>");
+        break;
+      case "cm-join": { var jc = val("#cm-joincode").toUpperCase(); if (!/^[A-Z2-9]{6}$/.test(jc)) { toast(T("Invite codes are 6 letters and numbers.")); return; } cmJoin(jc); break; }
+      case "cm-create": {
+        var nm = val("#cm-newname"); if (nm.length < 2 || nm.length > 40 || /[<>]/.test(nm)) { toast(T("Names are 2 to 40 characters.")); return; }
+        CLOUD.createCommunity(nm).then(function (c) { closeSheet(); toast(TF("{name} is ready. Share the code {code} to invite people.", { name: c.name, code: c.code })); CM.scope = c.id; return cmComms().then(cmRefresh); }, function (e) { toast(cmErr(e)); });
+        break;
+      }
+      case "cm-invite": {
+        var c = CM.comms.filter(function (x) { return x.id === id; })[0]; if (!c) return;
+        var link = location.origin + location.pathname + "?join=" + c.code, text = TF("Join {name} on Movage and let's see who moves most. Code: {code}", { name: c.name, code: c.code });
+        if (navigator.share) navigator.share({ title: "Movage", text: text, url: link }).catch(function () {});
+        else if (navigator.clipboard) navigator.clipboard.writeText(text + " " + link).then(function () { toast(T("Invite copied.")); }, function () { toast(link); });
+        else toast(link);
+        break;
+      }
+      case "cm-leave":
+        if (CM.arm !== "leave") { CM.arm = "leave"; renderCommunity(); return; }
+        CM.arm = ""; CLOUD.leaveCommunity(id).then(function () { toast(T("You've left the community.")); CM.scope = null; return cmComms().then(cmRefresh); }, function (e) { toast(cmErr(e)); });
+        break;
+      case "cm-toggle": {
+        var np = Object.assign({}, CM.prof); np[id] = !np[id];
+        CLOUD.saveProfile(np).then(function (pr) { CM.prof = pr; if (pr[id]) cmSync().then(cmRefresh); else cmRefresh(); }, function (e) { toast(cmErr(e)); });
+        break;
+      }
+      case "cm-nickedit": CM.stage = "nick"; renderCommunity(); break;
+      case "cm-signout":
+        CLOUD.signOut().then(function () { CM.prof = null; CM.comms = []; CM.scope = null; CM.rows = null; CM.stage = "signin"; renderCommunity(); toast(T("Signed out.")); });
+        break;
+      case "cm-delete":
+        if (CM.arm !== "delete") { CM.arm = "delete"; renderCommunity(); return; }
+        CM.arm = ""; CM.busy = true; renderCommunity();
+        CLOUD.deleteAccount().then(function () {
+          S.sessions.forEach(function (s) { delete s.up; }); delete S.cloud; save();
+          CM.busy = false; CM.prof = null; CM.comms = []; CM.scope = null; CM.rows = null; CM.stage = "signin"; renderCommunity();
+          toast(T("Your account and community data have been deleted."));
+        }, function (e) { CM.busy = false; toast(cmErr(e)); renderCommunity(); });
+        break;
+    }
+  }
+
   /* ---------- boot ---------- */
   document.addEventListener("touchend", function once() { document.removeEventListener("touchend", once); try { unlockAudio(); cdLoad(cdMode()); } catch (e) {} }, { passive: true });
   applyTheme();
   var t0 = "home"; try { t0 = sessionStorage.getItem("sm-tab") || "home"; } catch (e) {}
+  (function () { var j = new URLSearchParams(location.search).get("join"); if (!j || !/^[A-Za-z2-9]{6}$/.test(j)) return; CM.pendingJoin = j.toUpperCase(); try { history.replaceState(null, "", location.pathname); } catch (e) {} t0 = "community"; })();
+  cmBoot();
   go(t0);
   (function () { var sp = $("#splash"); if (!sp) return; var sv = $("#splash-ver"); if (sv) sv.textContent = "v" + APP_VERSION; setTimeout(function () { sp.classList.add("out"); setTimeout(function () { sp.remove(); }, 450); }, 700); })();
   (function () { var q = new URLSearchParams(location.search), pl = q.get("play"); if (!pl) return; try { history.replaceState(null, "", location.pathname); } catch (e) {} setTimeout(function () { if (findRoutine(pl)) openRoutine(pl); }, 300); })();

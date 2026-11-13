@@ -41,7 +41,7 @@ main { padding: 4px 16px calc(var(--tab) + env(safe-area-inset-bottom) + 24px); 
 .view { display: none; }
 .view.on { display: block; animation: fade .18s ease-out; }
 @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-nav.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; display: grid; grid-template-columns: repeat(4, 1fr);
+nav.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; display: grid; grid-template-columns: repeat(5, 1fr);
   background: color-mix(in srgb, var(--card) 92%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom); }
 nav.tabs button { background: none; border: 0; height: var(--tab); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 600; color: var(--muted); }
@@ -414,3 +414,34 @@ body.on-home header.top h1 { position: absolute; width: 1px; height: 1px; overfl
 .chip.on .chipvid svg path { fill: var(--ink); }
 
 #splash .spver { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom) + 28px); text-align: center; font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: .04em; }
+
+/* Community tab */
+.cmhero { text-align: center; }
+.cmhero img { width: 150px; height: auto; margin: 4px auto 10px; }
+.cmhero h2 { margin-bottom: 6px; }
+.cmcode { font-size: 22px; letter-spacing: .25em; text-align: center; font-weight: 700; }
+.cmcheck { display: flex; gap: 10px; align-items: center; margin-top: 12px; font-size: 15px; }
+.cmcheck input { width: 20px; height: 20px; accent-color: var(--brand); }
+.seg { display: grid; grid-template-columns: 1fr 1fr; background: var(--soft); border: 1px solid var(--line); border-radius: 12px; padding: 3px; margin: 10px 0 6px; }
+.seg button { appearance: none; border: 0; background: none; border-radius: 9px; padding: 9px; font-weight: 700; font-size: 15px; color: var(--muted); }
+.seg button.on { background: var(--card); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.cmsub { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+.cmboard { padding: 6px 12px; }
+.cmrow { display: flex; align-items: center; gap: 12px; padding: 11px 4px; border-bottom: 1px solid var(--line); }
+.cmrow:last-child { border-bottom: 0; }
+.cmrow.me { background: var(--brand-soft); margin: 0 -12px; padding-left: 16px; padding-right: 16px; border-radius: 10px; }
+.cmrank { width: 26px; text-align: center; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cmname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.cmval { display: flex; align-items: center; gap: 6px; font-variant-numeric: tabular-nums; font-weight: 600; }
+.cmtick { display: inline-grid; place-items: center; width: 20px; height: 20px; }
+.cmtick.on { background: var(--good); color: #fff; border-radius: 50%; }
+.cmtick.on svg { width: 12px; height: 12px; }
+.chip .cmtick { width: 16px; height: 16px; margin-right: 6px; vertical-align: -3px; }
+.chip .cmtick svg { width: 14px; height: 14px; }
+.cmnote { margin: 6px 4px 14px; }
+.cmcodebig { letter-spacing: .12em; color: var(--ink); }
+.cmtoggle { appearance: none; width: 100%; display: flex; align-items: center; gap: 12px; background: none; border: 0; border-top: 1px solid var(--line); padding: 12px 0; text-align: left; color: var(--ink); font-size: 15px; }
+.cmtoggle .grow { display: flex; flex-direction: column; }
+.cmsw { width: 46px; height: 28px; border-radius: 999px; background: var(--line); position: relative; flex: none; transition: background .2s; }
+.cmsw i { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: left .2s; }
+.cmsw.on { background: var(--brand); } .cmsw.on i { left: 21px; }

@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.39.0 (13 Nov 2026): New Community tab. Sign in with an emailed code, choose a nickname, create or join communities with a 6-character code or invite link, and see leaderboards for total mobility time (today, this week, this month) and mobility score, for each community or everyone. Scores measured entirely with the camera get a verified tick, with a camera-verified-only filter. Sharing is opt-in and accounts can be deleted in the app. Runs on Supabase; see supabase/README.md to switch it on.
 - 1.38.1 (13 Nov 2026): Removed the animated stick figure from the mobility test "How to do it" sections; the photo and written steps remain.
 - 1.38.0 (13 Nov 2026): The splash screen shows the app version number under the logo.
 - 1.37.0 (13 Nov 2026): Stretch library is now in alphabetical order (in the chosen language), and a new "With video" filter shows only the moves that have a video demo.
