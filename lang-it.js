@@ -541,8 +541,8 @@ I18N.add("it", {
 "Nothing opens? Email {addr} directly.": "Non si apre nulla? Scrivi direttamente a {addr}.",
 "Add a few words first.": "Scrivi prima qualche parola.",
 "demo video": "video dimostrativo",
-"Search moves, muscles or kit": "Cerca esercizi, muscoli o attrezzi",
-"Search the stretch library": "Cerca nella libreria di stretching"
+"Search the stretch library": "Cerca nella libreria di stretching",
+"Search by move name": "Cerca per nome dell'esercizio"
 }, {
 "zone": {
 "shoulders": "Spalle",

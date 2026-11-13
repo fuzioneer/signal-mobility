@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.29.1", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.29.2", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -455,7 +455,7 @@
     allRoutines().forEach(function (r) { h += routineCard(r); });
     h += ('<div class="sec"><h2>' + T("Stretch library") + '</h2><span class="small muted">') + ST.length + " " + T("moves") + "</span></div>";
     var F = [["all", (T("All"))]].concat(ZONES).concat([["warm", (T("Warm-up"))], ["cool", (T("Cool-down"))], ["back", (T("Back"))], ["run", (T("Running"))], ["hyrox", (T("Hyrox"))], ["golf", (T("Golf"))], ["cycle", (T("Cycling"))], ["desk", (T("Desk"))], ["bed", (T("On a bed"))], ["sleep", (T("Sleep"))]]);
-    h += '<div class="libsearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" class="inp" id="lib-q" placeholder="' + esc(T("Search moves, muscles or kit")) + '" aria-label="' + esc(T("Search the stretch library")) + '" value="' + esc(LIB_Q) + '" autocomplete="off" enterkeyhint="search"></div>';
+    h += '<div class="libsearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" class="inp" id="lib-q" placeholder="' + esc(T("Search by move name")) + '" aria-label="' + esc(T("Search the stretch library")) + '" value="' + esc(LIB_Q) + '" autocomplete="off" enterkeyhint="search"></div>';
     h += chipRow(F.map(function (f) { return '<button class="chip' + (LIB_F === f[0] ? " on" : "") + '" data-act="filter" data-id="' + f[0] + '">' + f[1] + "</button>"; }).join(""));
     if (building) h += bodyMap();
     var list = ST.filter(function (s) { return canDo(s) && (LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0) && (!building || !MG_SEL.length || MG_SEL.some(function (m) { return s.m.indexOf(m) >= 0; })); });
@@ -470,12 +470,9 @@
     $("#v-routines").innerHTML = h; wireRows($("#v-routines"), keep);
     var q = $("#lib-q"); if (q) { q.addEventListener("input", function () { LIB_Q = q.value; libSearch(); }); libSearch(); }
   }
-  /* Library search: matches the move name, its cues, areas, tags, muscles and kit, ignoring case and accents. Filters in place so typing keeps focus. */
+  /* Library search: matches the move name only (and its English name in other languages), ignoring case and accents. Filters in place so typing keeps focus. */
   function fold(t) { return String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
-  function libText(s) {
-    var mname = {}; MUSCLES.forEach(function (m) { mname[m[0]] = m[1]; });
-    var en = s._en || {}; return fold([s.n, s.cues, s.reps || "", en.n || "", en.cues || ""].concat(s.z.map(function (z) { return ZN[z] || z; }), s.tags.map(function (t) { return TAGN[t] || t; }), s.m.map(function (m) { return mname[m] || m; }), kitFor(s), kitEn(s)).join(" "));
-  }
+  function libText(s) { var en = s._en || {}; return fold([s.n, en.n || ""].join(" ")); }
   function libSearch() {
     var words = fold(LIB_Q).split(/\s+/).filter(Boolean), shown = 0;
     $$("#v-routines .lcard").forEach(function (c) { var t = c.getAttribute("data-q") || ""; var ok = words.every(function (w) { return t.indexOf(w) >= 0; }); c.hidden = !ok; if (ok) shown++; });
