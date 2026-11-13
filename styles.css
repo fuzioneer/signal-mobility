@@ -311,10 +311,25 @@ nav.tabs button.on { color: var(--brand); }
 main, #sheet-body { zoom: var(--ts); }
 .bigtext .pname, .bigtext .pcue, .bigtext .upnext, .bigtext .phase, .bigtext .padj, .bigtext .fbbox, .bigtext .camtxt, .bigtext #c-msg { zoom: var(--ts); }
 .bigtext .tabs button { font-size: calc(11px * var(--ts)); }
-.caption { position: fixed; left: 12px; right: 12px; top: calc(env(safe-area-inset-top, 0px) + 72px); z-index: 120; max-width: 560px; margin: 0 auto;
+.caption { position: fixed; left: 12px; right: 12px; top: calc(env(safe-area-inset-top, 0px) + 116px); z-index: 120; max-width: 560px; margin: 0 auto;
   background: rgba(10, 20, 18, .88); color: #fff; border-radius: 14px; padding: 10px 14px; font-size: calc(16px * var(--ts)); line-height: 1.35; text-align: center;
   opacity: 0; transform: translateY(-6px); transition: opacity .25s, transform .25s; pointer-events: none; }
 .caption.on { opacity: 1; transform: none; }
 .mg:focus-visible { outline: none; stroke: var(--ink); stroke-width: 2.5; }
 .eqhead { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 .eqcount { font-size: 13px; font-weight: 700; color: var(--brand); background: var(--brand-soft); border-radius: 999px; padding: 3px 10px; white-space: nowrap; }
+
+/* Routine timeline: a segment per stage, amber for getting into position, green for holds. */
+.tline { margin: 0 16px; }
+.tlbar { display: flex; align-items: center; gap: 1px; height: 12px; }
+.tls { flex: 1 1 0; min-width: 2px; height: 6px; background: var(--line); border-radius: 2px; overflow: hidden; position: relative; transition: height .2s; }
+.tls i { display: block; height: 100%; width: 0; background: var(--brand); }
+.tls.prep i { background: var(--amber); }
+.tls.prep { opacity: .85; }
+.tls.mv { margin-left: 3px; }
+.tls.cur { height: 12px; }
+.tls.cur.hold.half::after { content: ""; position: absolute; left: 50%; top: 2px; bottom: 2px; width: 2px; margin-left: -1px; background: var(--bg, #fff); opacity: .8; border-radius: 1px; }
+.tlmeta { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.tlmeta span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tlmeta span:last-child { white-space: nowrap; }
+.bigtext .tlmeta { zoom: var(--ts); }

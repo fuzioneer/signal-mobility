@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.23.0", APP_BUILD = "12 Nov 2026";
+  var APP_VERSION = "1.25.1", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -597,7 +597,7 @@
     var ad = adapt(routine.items); if (ad.notes.length) toast(ad.notes.map(adaptNote).join(". "));
     P = { r: routine, st: steps(ad.items), moves: ad.items.slice(), i: 0, phase: "prep", left: restSecs(true), total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
     var el = $("#player"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn();
-    el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="p-close" aria-label="' + T("End session") + '">' + ICON.close + '</button><h2>' + esc(routine.n) + '</h2><button class="icon-btn" data-act="p-music" aria-label="' + T("Background music") + '">' + (musicOn() ? ICON.music : ICON.musicOff) + '</button><button class="icon-btn" data-act="p-voice" aria-label="' + T("Voice") + '">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div><div class="pbar"><i id="p-bar"></i></div>' +
+    el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="p-close" aria-label="' + T("End session") + '">' + ICON.close + '</button><h2>' + esc(routine.n) + '</h2><button class="icon-btn" data-act="p-music" aria-label="' + T("Background music") + '">' + (musicOn() ? ICON.music : ICON.musicOff) + '</button><button class="icon-btn" data-act="p-voice" aria-label="' + T("Voice") + '">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div><div class="tline" id="p-tl" role="progressbar" aria-valuemin="0"><div class="tlbar" id="p-tlbar" aria-hidden="true"></div><div class="tlmeta"><span id="p-tlstage"></span><span id="p-tltime"></span></div></div>' +
       ('<div class="player"><div class="pfig"><span class="side" id="p-side" hidden></span><div class="figwrap" id="p-fig"></div><button class="chip figbtn" id="p-figbtn" data-act="p-fig" hidden>' + T("Show movement") + '</button></div><div class="pname" id="p-name" aria-live="polite"></div><div class="pcue" id="p-cue"></div><div class="padj" id="p-adj" role="group" aria-label="' + T("Adjust this move") + '"><button class="chip" data-act="p-easier" id="p-easier">' + T("Easier") + '</button><button class="chip" data-act="p-more" aria-label="' + T("Add 15 seconds") + '">+15s</button><button class="chip" data-act="p-harder" id="p-harder">' + T("Harder") + '</button></div>') +
       '<div class="phase" id="p-phase"></div><div class="clock"><div class="tring" id="p-ring" role="timer" aria-live="off"></div></div>' +
       '<div class="ctrls"><button class="icon-btn" data-act="p-prev" aria-label="' + T("Previous") + '">' + ICON.prev + '</button><button class="icon-btn play" data-act="p-pause" id="p-pp" aria-label="' + T("Pause") + '">' + ICON.pause + '</button><button class="icon-btn" data-act="p-next" aria-label="' + T("Next") + '">' + ICON.next + '</button></div><div class="upnext" id="p-up"></div><label class="mvol"><span aria-hidden="true">' + ICON.music + '</span><input type="range" id="p-mvol" min="0" max="1" step="0.05" value="' + S.settings.musicVol + '" aria-label="' + T("Music volume") + '"></label></div>';
@@ -683,7 +683,7 @@
     var kit = kitFor(st.s); $("#p-name").textContent = st.s.n; $("#p-cue").textContent = (kit.length ? (T("You'll need") + " ") + listJoin(kit) + ". " : "") + st.s.cues;
     var sd = $("#p-side"); sd.hidden = !st.side; sd.textContent = st.side ? T(st.side + " side") : "";
     var nx = P.st[P.i + 1]; $("#p-up").textContent = nx ? (T("Up next:") + " ") + nx.s.n + (nx.side ? " (" + T(nx.side.toLowerCase()) + ")" : "") : (T("Last one"));
-    $("#p-bar").style.width = (P.i / P.st.length * 100) + "%";
+    P.act = P.act || []; P.act[P.i] = { p: P.dur };
     $("#p-easier").disabled = !altOf(st.s.id, "easy"); $("#p-harder").disabled = !altOf(st.s.id, "hard");
     speak(st.first ? (P.i === 0 ? pick([(T("Let's start with") + " "), (T("First up,") + " "), (T("We'll begin with") + " ")]) : pick([(T("Next up,") + " "), (T("Okay, next is") + " "), (T("Moving on to") + " "), (T("Right, now") + " ")])) + (/^(es|fr|it|pt)$/.test(I18N.lang) ? st.s.n.charAt(0).toLowerCase() + st.s.n.slice(1) : st.s.n) + "." + (kit.length ? (" " + T("You'll need") + " ") + listJoin(kit) + "." : "") + (st.side ? pick([(" " + T("Left side first.")), (" " + T("We'll start on the left.")), (" " + T("Left side to begin."))]) : "") + (st.s.reps ? (" " + T("Aim for") + " ") + st.s.reps + "." : "") : pick([(T("Lovely. Switch to the right side.")), (T("Nice. Now the right side.")), (T("Good. Swap over to the right."))]), !queue);
     draw(); msUpdate();
@@ -696,7 +696,7 @@
     var mi = P.moves.indexOf(cur); if (mi >= 0) P.moves[mi] = alt; else P.moves.push(alt);
     toast(TF("Swapped for {name}", { name: BY[alt].n })); enterStep();
   }
-  function addTime(sec) { if (!P || !P.st[P.i]) return; if (P.cd) { cdClear(); P.cd = null; } P.left += sec; P.dur += sec; P.spoke.half = P.left <= P.dur / 2 ? 1 : P.spoke.half; draw(); msUpdate(); }
+  function addTime(sec) { if (!P || !P.st[P.i]) return; if (P.cd) { cdClear(); P.cd = null; } P.left += sec; P.dur += sec; if (P.act && P.act[P.i]) P.act[P.i][P.phase === "prep" ? "p" : "h"] = P.dur; P.spoke.half = P.left <= P.dur / 2 ? 1 : P.spoke.half; draw(); msUpdate(); }
   function togglePause() { if (!P) return; P.paused = !P.paused; if (P.paused) cdClear(); if (window.MUSIC) { if (P.paused) MUSIC.pause(1500); else MUSIC.resume(2000); } var b = $("#p-pp"); if (b) { b.innerHTML = P.paused ? ICON.play : ICON.pause; b.setAttribute("aria-label", P.paused ? T("Resume") : T("Pause")); } if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); msUpdate(); }
   /* Lock-screen and Control Centre: current move, time left, and pause, skip and +15s controls. */
   function msUpdate() {
@@ -741,7 +741,7 @@
     /* Halfway call on every hold of 24 seconds or more (shorter holds just get the countdown). */
     if (P.phase === "work" && P.dur >= 24 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; var reps = !!P.st[P.i].s.reps; speak(reps ? pick([(T("Halfway there. Keep it smooth.")), (T("That's halfway. Nice and controlled.")), (T("Halfway. Keep breathing."))]) : pick([(T("Halfway there. Breathe out, and sink a little deeper.")), (T("That's halfway. Keep breathing slowly.")), (T("Halfway. Relax your shoulders, and let it go a bit further."))]), true); }
     if (P.left <= 0) {
-      if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); msUpdate(); diag("hold " + P.st[P.i].s.id + " " + P.dur + "s, countdown " + cdMode()); beep(990, 380, 0.3); if (window.MUSIC) { if (!MUSIC.playing()) startMusic(); MUSIC.setQuiet(false); } }
+      if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); P.act[P.i].h = P.dur; msUpdate(); diag("hold " + P.st[P.i].s.id + " " + P.dur + "s, countdown " + cdMode()); beep(990, 380, 0.3); if (window.MUSIC) { if (!MUSIC.playing()) startMusic(); MUSIC.setQuiet(false); } }
       else { if (!P.cd) beep(520, 300, 0.3); P.i++; return enterStep(true); }
     }
     draw();
@@ -751,15 +751,49 @@
     var p = P.dur ? Math.max(0, P.left) / P.dur * 100 : 0;
     $("#p-ring").innerHTML = ringSVG(p, 112, 9, P.phase === "prep" ? "var(--amber)" : "var(--brand)") + '<b aria-hidden="true">' + Math.max(0, Math.ceil(P.left)) + "</b>";
     $("#p-ring").setAttribute("aria-label", TF("{n} seconds left", { n: Math.max(0, Math.ceil(P.left)) }));
+    drawTL();
     var ph = $("#p-phase"); ph.textContent = P.paused ? (T("Paused")) : P.phase === "prep" ? (P.st[P.i].first ? (T("Get into position")) : (T("Switch sides"))) : (T("Hold")); ph.className = "phase" + (P.phase === "prep" ? " prep" : "");
   }
+  /* Routine timeline: one segment per stage (get ready, then each hold, both sides of a move), sized by its time, filled as you go. */
+  function tlSegs() {
+    var out = [], act = P.act || [];
+    P.st.forEach(function (st, i) {
+      var a = act[i] || {}, cur = i === P.i;
+      var p = cur && P.phase === "prep" ? P.dur : a.p != null ? a.p : restSecs(st.first);
+      var h = cur && P.phase === "work" ? P.dur : a.h != null ? a.h : stepDur(st);
+      out.push({ i: i, k: "prep", d: p, move: !!st.first }, { i: i, k: "hold", d: h, half: h >= 24 });
+    });
+    return out;
+  }
+  function moveNo(i) { var n = 0; for (var j = 0; j <= i && j < P.st.length; j++) if (P.st[j].first) n++; return n; }
+  function drawTL() {
+    var bar = $("#p-tlbar"); if (!bar || !P) return;
+    var segs = tlSegs(), sig = segs.map(function (g) { return Math.round(g.d); }).join(",") + "|" + P.i;
+    if (bar.dataset.sig !== sig) {
+      bar.dataset.sig = sig;
+      bar.innerHTML = segs.map(function (g, n) { return '<span class="tls ' + g.k + (g.move && n ? " mv" : "") + (g.half ? " half" : "") + (g.i === P.i ? " cur" : "") + '" style="flex-grow:' + Math.max(1, g.d) + '"><i></i></span>'; }).join("");
+    }
+    var total = 0, done = 0, els = bar.children;
+    segs.forEach(function (g, n) {
+      var f = g.i < P.i ? 1 : g.i > P.i ? 0 : g.k === "prep" ? (P.phase === "prep" ? 1 - Math.max(0, P.left) / (P.dur || 1) : 1) : (P.phase === "work" ? 1 - Math.max(0, P.left) / (P.dur || 1) : 0);
+      f = Math.min(1, Math.max(0, f)); total += g.d; done += g.d * f;
+      if (els[n]) els[n].firstChild.style.width = (f * 100).toFixed(1) + "%";
+    });
+    var st = P.st[P.i], moves = P.st.filter(function (x) { return x.first; }).length;
+    var stage = (P.phase === "prep" ? (st.first ? T("Get into position") : T("Switch sides")) : T("Hold")) + (st.side ? " · " + T(st.side + " side") : "");
+    var txt = TF("Move {n} of {m}", { n: moveNo(P.i), m: moves }) + " · " + stage, left = Math.max(0, Math.round(total - done));
+    $("#p-tlstage").textContent = txt; $("#p-tltime").textContent = TF("{t} left", { t: mmss(left) });
+    var tl = $("#p-tl"); tl.setAttribute("aria-valuemax", Math.round(total)); tl.setAttribute("aria-valuenow", Math.round(done));
+    tl.setAttribute("aria-valuetext", txt + ". " + TF("{t} left", { t: mmss(left) }));
+  }
+  function tlDone() { var bar = $("#p-tlbar"); if (!bar) return; [].forEach.call(bar.children, function (c) { c.classList.remove("cur"); c.firstChild.style.width = "100%"; }); var t = $("#p-tltime"); if (t) t.textContent = T("Done"); var g = $("#p-tlstage"); if (g) g.textContent = ""; }
   function finish() {
     var secs = Math.round(P.worked), r = P.r;
     clearInterval(P.timer); if (P.stop) P.stop();
     if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); stravaLog(r.n, secs, r.items); }
     if (window.MUSIC) setTimeout(function () { if (!P) MUSIC.stop(6000); }, 4000);
     say(secs >= 30 ? pick([(T("And that's it. Great session.")), (T("All done. Nice work today.")), (T("That's the session finished. Well done."))]) : "");
-    $("#p-bar").style.width = "100%";
+    tlDone();
     $(".player").innerHTML = '<div style="flex:1;display:grid;place-items:center;text-align:center"><div><div class="ring" style="margin:0 auto 16px">' + ringSVG(100, 128, 12) + '<div class="lbl"><div><b>' + streak() + ('</b><span>' + T("day streak") + '</span></div></div></div><h2>' + T("Done") + '</h2><p class="muted" style="margin-top:6px">') + esc(r.n) + " · " + mmss(secs) + (" " + T("of stretching") + "</p></div></div>") +
       fbBlock(P.moves) + ('<button class="btn primary big block" data-act="p-close">' + T("Finish") + '</button>');
     LASTMOVES = P.moves.slice(); P = null; msUpdate();
@@ -1119,6 +1153,29 @@
     ["#sv-id", "#sv-secret", "#sv-auto"].forEach(function (id) { var e = $(id); if (e) e.addEventListener("change", upd); });
     if ($("#sv-type")) $("#sv-type").addEventListener("change", function () { upd(); stravaRefresh(); });
   }
+  /* Report a bug or suggest a feature: builds an email in the phone's Mail app, with the app details added for bugs. */
+  var FEEDBACK_TO = "daveburley@gmail.com";
+  function fbMailCard() {
+    return '<div class="card"><h3>' + T("Report a bug or suggest an idea") + '</h3><p class="small muted" style="margin:4px 0 10px">' + T("Tell us what went wrong or what you'd like to see. This opens an email in your Mail app, ready to send.") + "</p>" +
+      '<div class="row"><label class="field">' + T("Type") + '<select id="fm-type"><option value="bug">' + T("Bug") + '</option><option value="idea">' + T("New feature idea") + "</option></select></label></div>" +
+      '<label class="field" style="margin-top:10px">' + T("Details") + '<textarea class="inp" id="fm-text" rows="5" style="font-size:15px;font-weight:500" placeholder="' + esc(T("What happened, or what would you like the app to do?")) + '"></textarea></label>' +
+      '<label class="remcheck" style="margin-top:10px"><input type="checkbox" id="fm-info" checked> ' + T("Include app version and phone details (helps with bugs)") + "</label>" +
+      '<button class="btn primary block" style="margin-top:12px" data-act="fm-send">' + T("Send by email") + '</button></div>';
+  }
+  function fbMailSend() {
+    var type = $("#fm-type").value, text = ($("#fm-text").value || "").trim();
+    if (!text) { toast(T("Add a few words first.")); $("#fm-text").focus(); return; }
+    var first = text.split("\n")[0].slice(0, 60), subj = "Signal Mobility " + (type === "bug" ? "bug" : "idea") + ": " + first;
+    var body = text;
+    if ($("#fm-info").checked) {
+      var st = window.matchMedia && matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+      body += "\n\n----\nApp: Signal Mobility v" + APP_VERSION + " (" + APP_BUILD + ")\nLanguage: " + I18N.lang + "\nPhoto model: " + (S.settings.model === "m" ? "male" : "female") + "\nInstalled to home screen: " + (st ? "yes" : "no") +
+        "\nScreen: " + screen.width + "x" + screen.height + "\nDevice: " + navigator["user" + "Agent"];
+      if (type === "bug" && DIAG.length) body += "\n\nRecent log:\n" + DIAG.slice(-8).join("\n");
+    }
+    location.href = "mailto:" + FEEDBACK_TO + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body.slice(0, 1800));
+    diag("feedback email opened (" + type + ")");
+  }
   function stravaRefresh() { var c = $("#strava-slot"); if (c) { c.innerHTML = stravaCard(); stravaWire(); } }
   function openSettings() {
     var s = S.settings;
@@ -1143,6 +1200,7 @@
     h += ('<div class="card"><h3>' + T("Your data") + '</h3><p class="small muted" style="margin:4px 0 12px">' + T("Everything is stored on this phone only. Export a backup now and then. The file also carries your tests in Body Signal's format.") + '</p><div class="row"><button class="btn grow" data-act="export">' + T("Export file") + '</button><button class="btn grow" data-act="copy">' + T("Copy") + '</button></div><div class="row" style="margin-top:8px"><label class="btn grow">' + T("Restore from file") + '<input type="file" accept="application/json,.json" id="s-import" hidden></label></div>') +
       ('<details style="margin-top:10px"><summary class="small" style="color:var(--brand);font-weight:600">' + T("Paste a backup instead") + '</summary><textarea class="inp" id="s-paste" rows="4" style="margin-top:8px;font-size:13px"></textarea><button class="btn" style="margin-top:8px" data-act="paste-import">' + T("Restore pasted backup") + '</button></details></div>');
     h += ('<div class="card"><h3>' + T("Offline photos") + '</h3><p class="small muted" style="margin:4px 0 10px" id="off-status">' + T("Checking…") + '</p><button class="btn primary block" id="off-btn" data-act="off-save">' + T("Save all photos for offline") + '</button><p class="small muted" style="margin-top:8px">' + T("About 50 to 80 MB. Best done on Wi-Fi. After that, photos load instantly even with no signal.") + '</p></div>');
+    h += fbMailCard();
     h += ('<details class="card"><summary class="small" style="color:var(--brand);font-weight:600">' + T("Diagnostics") + '</summary><pre class="small" id="s-diag" style="white-space:pre-wrap;margin:8px 0 0;font-size:11px">') + esc(DIAG.slice(-12).join("\n") || (T("Nothing logged yet."))) + ('</pre><button class="btn" style="margin-top:8px" data-act="diag-copy">' + T("Copy") + '</button></details>');
     h += ('<div class="card"><button class="btn danger block" data-act="reset">' + T("Delete all data") + '</button></div><p class="small muted" style="text-align:center">Signal Mobility v') + APP_VERSION + ' (' + APP_BUILD + ') · ' + T("body tracking by MediaPipe") + '</p>';
     openSheet(h, function () { if (window.MUSIC && !P && MUSIC.playing()) MUSIC.stop(800); });
@@ -1246,6 +1304,7 @@
       case "off-dismiss": S.settings.offDismiss = true; save(); offlineUI(); break;
       case "p-fig": if (P && P.st[P.i]) { P.figMode = !P.figMode; showFig(P.st[P.i]); } break;
       case "sheet-close": closeSheet(); break;
+      case "fm-send": fbMailSend(); break;
       case "diag-copy": try { navigator.clipboard.writeText("v" + APP_VERSION + " " + navigator.userAgent + "\n" + DIAG.join("\n")).then(function () { toast((T("Copied"))); }); } catch (e) {} break;
       case "cd-test": { unlockAudio(); var m0 = cdMode(); cdLoad(m0).then(function () { var fake = P, mine = { cd: null }; P = mine; cdStart(); if (m0 === "voice") setTimeout(function () { if (P === mine) P = fake; }, 3200); else P = fake; }); break; }
       case "p-music": if (musicOn()) { S.settings.lastMusic = S.settings.music; S.settings.music = "off"; MUSIC.stop(1200); } else { S.settings.music = S.settings.lastMusic || "pads"; startMusic(); } save(); el.innerHTML = musicOn() ? ICON.music : ICON.musicOff; break;

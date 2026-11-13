@@ -526,7 +526,20 @@ I18N.add("fr", {
 "{n} of {total} selected": "{n} sur {total} sélectionnés",
 "Off, all moves shown": "Désactivé, tout est affiché",
 "Mobility model in photos": "Modèle de mobilité sur les photos",
-"Photos updated. Tap Save all photos for offline to keep this model's photos on your phone.": "Photos mises à jour. Touchez Enregistrer toutes les photos hors ligne pour garder les photos de ce modèle sur votre téléphone."
+"Photos updated. Tap Save all photos for offline to keep this model's photos on your phone.": "Photos mises à jour. Touchez Enregistrer toutes les photos hors ligne pour garder les photos de ce modèle sur votre téléphone.",
+"Move {n} of {m}": "Exercice {n} sur {m}",
+"{t} left": "{t} restantes",
+"Report a bug or suggest an idea": "Signaler un bug ou proposer une idée",
+"Tell us what went wrong or what you'd like to see. This opens an email in your Mail app, ready to send.": "Dites-nous ce qui n'a pas marché ou ce que vous aimeriez voir. Un e-mail s'ouvre dans votre app Mail, prêt à envoyer.",
+"Type": "Type",
+"Bug": "Bug",
+"New feature idea": "Idée de nouvelle fonction",
+"Details": "Détails",
+"What happened, or what would you like the app to do?": "Que s'est-il passé, ou que voudriez-vous que l'app fasse ?",
+"Include app version and phone details (helps with bugs)": "Inclure la version de l'app et les infos du téléphone (utile pour les bugs)",
+"Send by email": "Envoyer par e-mail",
+"Nothing opens? Email {addr} directly.": "Rien ne s'ouvre ? Écrivez directement à {addr}.",
+"Add a few words first.": "Écrivez quelques mots d'abord."
 }, {
 "zone": {
 "shoulders": "Épaules",

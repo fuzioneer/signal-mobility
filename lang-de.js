@@ -526,7 +526,20 @@ I18N.add("de", {
 "{n} of {total} selected": "{n} von {total} ausgewählt",
 "Off, all moves shown": "Aus, alle Übungen sichtbar",
 "Mobility model in photos": "Mobility-Modell auf den Fotos",
-"Photos updated. Tap Save all photos for offline to keep this model's photos on your phone.": "Fotos aktualisiert. Tippe auf Alle Fotos offline speichern, um die Fotos dieses Modells auf deinem Handy zu behalten."
+"Photos updated. Tap Save all photos for offline to keep this model's photos on your phone.": "Fotos aktualisiert. Tippe auf Alle Fotos offline speichern, um die Fotos dieses Modells auf deinem Handy zu behalten.",
+"Move {n} of {m}": "Übung {n} von {m}",
+"{t} left": "Noch {t}",
+"Report a bug or suggest an idea": "Fehler melden oder Idee vorschlagen",
+"Tell us what went wrong or what you'd like to see. This opens an email in your Mail app, ready to send.": "Sag uns, was nicht funktioniert hat oder was du dir wünschst. Es öffnet sich eine E-Mail in deiner Mail-App, fertig zum Senden.",
+"Type": "Art",
+"Bug": "Fehler",
+"New feature idea": "Idee für eine neue Funktion",
+"Details": "Details",
+"What happened, or what would you like the app to do?": "Was ist passiert, oder was soll die App können?",
+"Include app version and phone details (helps with bugs)": "App-Version und Handy-Details mitsenden (hilft bei Fehlern)",
+"Send by email": "Per E-Mail senden",
+"Nothing opens? Email {addr} directly.": "Es öffnet sich nichts? Schreib direkt an {addr}.",
+"Add a few words first.": "Schreib zuerst ein paar Worte."
 }, {
 "zone": {
 "shoulders": "Schultern",

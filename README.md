@@ -21,6 +21,9 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.25.1 (13 Nov 2026): The feedback section no longer shows the email address on screen.
+- 1.25.0 (13 Nov 2026): Settings has a new Report a bug or suggest an idea section. Choose Bug or New feature idea, describe it, and tap Send by email to open a ready-to-send email in the Mail app. The app version, language and phone details are added (you can turn this off), and bug reports also include the last few lines of the diagnostics log.
+- 1.24.0 (13 Nov 2026): Routine timeline at the top of the player. Each stage has its own segment, sized by its time: amber for getting into position, green for each hold, with both sides of a move shown and a gap between moves. The current stage is raised and fills as you go, with a halfway mark on longer holds. Underneath it shows the move number, the stage and the time left for the whole routine. Adding 15 seconds lengthens the bar. Coach captions now sit just below it.
 - 1.23.0 (12 Nov 2026): New Settings option, Mobility model in photos: choose a Female or Male model for every stretch photo. Male photos match the same poses, props and room. Tap Save all photos for offline after switching to keep the new set on your phone.
 - 1.22.1 (12 Nov 2026): My equipment shows how many items are selected (or that it's off).
 - 1.22.0 (12 Nov 2026): accessibility: text size setting (Standard to Largest, or match the iPhone's text size), on-screen captions of everything the coach says (on by default, also shown with the voice off), VoiceOver labels for the body map muscles (as toggle buttons, keyboard operable), player timer, pause/resume and adjust buttons.
