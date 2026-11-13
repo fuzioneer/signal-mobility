@@ -567,7 +567,9 @@ I18N.add("es", {
 "{n} min {focus}": "{focus} {n} min",
 "before training": "antes de entrenar",
 "after training": "después de entrenar",
-"Whole body": "Cuerpo entero"
+"Whole body": "Cuerpo entero",
+"Video demo": "Vídeo de demostración",
+"Moves with this badge have a video demo": "Los ejercicios con esta insignia tienen un vídeo de demostración"
 }, {
 "zone": {
 "shoulders": "Hombros",

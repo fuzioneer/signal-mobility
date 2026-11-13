@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.30.0", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.31.0", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -191,7 +191,10 @@
       if (cur) cur.classList.remove("on"); imgs[(i + 1) % imgs.length].classList.add("on");
     });
   }, 4500);
-  function art(key, pose, opts) { var u = photoUrl(key); return u ? '<img class="photo" loading="lazy" decoding="async" alt="" src="' + esc(u) + '">' : fig(pose, opts); }
+  /* Small play badge on thumbnails of moves that have a looping demo video for the chosen model. */
+  var VBADGE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="M10 8.2v7.6l6-3.8z"/></svg>';
+  function vbadge(key) { return vidUrl(key) ? '<span class="vbadge" role="img" aria-label="' + esc(T("Video demo")) + '" title="' + esc(T("Video demo")) + '">' + VBADGE + "</span>" : ""; }
+  function art(key, pose, opts) { var u = photoUrl(key); return (u ? '<img class="photo" loading="lazy" decoding="async" alt="" src="' + esc(u) + '">' : fig(pose, opts)) + vbadge(key); }
   var stops = [];
   function stopAnims() { stops.forEach(function (f) { f(); }); stops = []; }
   function animateIn(root) { $$("[data-anim]", root).forEach(function (el) { var s = el.getAttribute("data-anim").split(":"), src = s[0] === "t" ? TESTS.filter(function (t) { return t.id === s[1]; })[0] : BY[s[1]]; if (src) stops.push(FIG.animate(el, src.pose, src.pose2, 1500)); }); }
@@ -461,6 +464,7 @@
     if (building) h += bodyMap();
     var list = ST.filter(function (s) { return canDo(s) && (LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0) && (!building || !MG_SEL.length || MG_SEL.some(function (m) { return s.m.indexOf(m) >= 0; })); });
     if (building && MG_SEL.length) list.sort(function (a, b) { var c = function (s) { return MG_SEL.filter(function (m) { return s.m.indexOf(m) >= 0; }).length; }; return c(b) - c(a); });
+    if (ST.some(function (s) { return vidUrl(s.id); })) h += '<p class="small muted vlegend">' + VBADGE + " " + T("Moves with this badge have a video demo") + "</p>";
     h += '<p class="muted small" id="lib-none" style="margin:10px 2px"' + (list.length ? " hidden" : "") + '>' + T("No moves match. Try another area or filter.") + '</p>';
     h += '<div class="lib' + (building ? " building" : "") + '">' + list.map(function (s) {
       var sel = building && building.items.indexOf(s.id) >= 0;

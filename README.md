@@ -21,6 +21,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.31.0 (13 Nov 2026): Moves with a looping demo video now show a small play badge on their thumbnail, in the Stretch library, routine lists, Make me a routine and the sport picks, with a key above the library. It follows the Female/Male model setting and hides when videos are off.
 - 1.30.0 (13 Nov 2026): Make me a routine. Pick 5, 10 or 20 minutes, choose chains, areas or muscles and/or a sport, then say whether it's before training, after training or any time. The app builds a routine that fits the time (rests included), skips moves that hurt or need kit you don't have, and spreads it across the body. Start it, shuffle for a different mix, or save it to your routines. On the Today screen and in Routines.
 - 1.29.2 (13 Nov 2026): Library search now matches move names only, so typing 90 shows just the 90/90 moves.
 - 1.29.1 (13 Nov 2026): Fixed demo videos stopping when the coach speaks (for example at the halfway call). On iPhone, speech pauses inline videos; the app now restarts the clip straight away unless you have paused the routine.

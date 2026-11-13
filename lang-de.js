@@ -567,7 +567,9 @@ I18N.add("de", {
 "{n} min {focus}": "{focus} {n} Min.",
 "before training": "vor dem Training",
 "after training": "nach dem Training",
-"Whole body": "Ganzkörper"
+"Whole body": "Ganzkörper",
+"Video demo": "Demovideo",
+"Moves with this badge have a video demo": "Übungen mit diesem Symbol haben ein Demovideo"
 }, {
 "zone": {
 "shoulders": "Schultern",
