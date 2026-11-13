@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.36.0 (13 Nov 2026): Movage logo added from the brand design pack: in the header of the Today screen, on a short splash screen when the app opens, and on the shared score image. The light and dark versions follow the app theme.
 - 1.35.1 (13 Nov 2026): New Tibialis raises photos (female and male) with both heels on the floor and only the toes lifted.
 - 1.35.0 (13 Nov 2026): 45 new stretches, taking the library to 102. They cover every zone (neck and shoulders, overhead, upper back, hamstrings, hips and ankles), each with photos of both the female and male model, coaching cues, and translations in all six languages. They work in search, Build your own, the body map and the Make me a routine builder.
 - 1.34.1 (13 Nov 2026): The shared score image now includes the Instagram handle @movageapp.

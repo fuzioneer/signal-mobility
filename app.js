@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.35.1", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.36.0", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -234,7 +234,7 @@
     TAB = tab; stopAnims();
     $$("nav.tabs button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-tab") === tab); });
     $$(".view").forEach(function (v) { v.classList.toggle("on", v.id === "v-" + tab); });
-    $("#title").textContent = TITLES[tab];
+    $("#title").textContent = TITLES[tab]; document.body.classList.toggle("on-home", tab === "home");
     render(); window.scrollTo(0, 0);
     try { sessionStorage.setItem("sm-tab", tab); } catch (e) {}
   }
@@ -1191,12 +1191,13 @@
     if (st) bits.push(TF("{n} day streak", { n: st }));
     if (md) bits.push(TF("{medal} this month", { medal: T(md[2]) }));
     x.textAlign = "center"; x.fillStyle = "#fff"; x.font = font(700, 44);
-    if (bits.length) x.fillText(bits.join("  ·  "), W / 2, 1660);
-    x.font = font(800, 56); x.fillStyle = "#fff"; x.fillText("Movage", W / 2, 1790);
-    x.font = font(600, 34); x.fillStyle = "rgba(255,255,255,.85)"; x.fillText(TAGLINE, W / 2, 1836);
+    if (bits.length) x.fillText(bits.join("  ·  "), W / 2, 1560);
+    if (LOGO_W.complete && LOGO_W.naturalWidth) { var lw = 290, lh = lw * LOGO_W.naturalHeight / LOGO_W.naturalWidth; x.drawImage(LOGO_W, (W - lw) / 2, 1600, lw, lh); }
+    else { x.font = font(800, 56); x.fillStyle = "#fff"; x.fillText("Movage", W / 2, 1790); x.font = font(600, 34); x.fillStyle = "rgba(255,255,255,.85)"; x.fillText(TAGLINE, W / 2, 1836); }
     x.font = font(500, 30); x.fillStyle = "rgba(255,255,255,.6)"; x.fillText("@movageapp  ·  " + T("Tested") + " " + short(lastTestDate() || iso()), W / 2, 1882);
     return c;
   }
+  var LOGO_W = new Image(); LOGO_W.src = "img/logo-s-white.png";
   function rr(x, a, b, w, h, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
   function shareScore() {
     var c = scoreImage(); if (!c) { toast(T("Do a mobility test first to get a score to share.")); return; }
@@ -1604,6 +1605,7 @@
   applyTheme();
   var t0 = "home"; try { t0 = sessionStorage.getItem("sm-tab") || "home"; } catch (e) {}
   go(t0);
+  (function () { var sp = $("#splash"); if (!sp) return; setTimeout(function () { sp.classList.add("out"); setTimeout(function () { sp.remove(); }, 450); }, 700); })();
   (function () { var q = new URLSearchParams(location.search), pl = q.get("play"); if (!pl) return; try { history.replaceState(null, "", location.pathname); } catch (e) {} setTimeout(function () { if (findRoutine(pl)) openRoutine(pl); }, 300); })();
   if (window.STRAVA) {
     STRAVA.onLog(diag);

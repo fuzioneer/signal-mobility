@@ -391,3 +391,16 @@ main, #sheet-body { zoom: var(--ts); }
 .medalwin { display: flex; gap: 12px; align-items: center; text-align: left; margin: 14px 0; }
 
 .sharebtn { margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+/* Brand logo: header on Today, splash on open. Light/dark versions follow the theme. */
+.lg-d { display: none; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .lg-l { display: none; } :root:not([data-theme="light"]) .lg-d { display: block; } }
+:root[data-theme="dark"] .lg-l { display: none; } :root[data-theme="dark"] .lg-d { display: block; }
+header.top .brand { display: none; }
+body.on-home header.top .brand { display: flex; flex: 1; align-items: center; }
+header.top .brand img { height: 38px; width: auto; }
+body.on-home header.top h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+#splash { position: fixed; inset: 0; z-index: 100; background: var(--bg); display: flex; align-items: center; justify-content: center; transition: opacity .4s ease; }
+#splash img { width: min(240px, 60vw); height: auto; }
+#splash.out { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { #splash { transition: none; } }
