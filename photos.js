@@ -34,7 +34,7 @@ window.PHOTOS = {
  "calfwall": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_103820_fa7bc995-6c74-44a9-a005-32534ecfe40c.png",
  "soleus": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_103931_e73003cf-a9d4-4bdc-84d5-c2c87786d508.png",
  "heelsup": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_104111_c655ef60-fb62-49a8-8c4f-5d43583a3dde.png",
- "deadbug": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_104203_443418bd-0f09-4113-90db-7844a4e4c6d3.png",
+ "deadbug": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_105030_fa777ff2-f66c-4345-9ccd-cfb7d4ad1038.png",
  "birddog": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_104244_6bc55551-a939-4542-92e4-f17424258d79.png",
  "breath9090": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_104318_531cd5ca-9631-4b31-ab3e-55bb92d87e7c.png",
  "supinetwist": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_104402_1ac62007-c3d6-407d-9440-4e94621ce5d5.png",
@@ -85,7 +85,7 @@ window.PHOTOS2 = {
  "ninety": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133759_a73b1a95-ad08-494e-9766-de8748557cac.png",
  "bridge": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133916_15ca92b3-f391-431b-a20f-12c375ba9ab2.png",
  "anklerock": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_133954_c3038a9f-3c0a-49c5-8661-d44066cbdcbe.png",
- "deadbug": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134140_9daab185-1361-4021-bb1a-da4d956202f7.png",
+ "deadbug": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_105125_cf8187be-38c6-4ac8-ab47-1e2ed4cc2471.png",
  "legswing": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134250_f7ad9128-f563-4870-8bd0-051ef937503f.png",
  "hipcircle": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134329_cef9ef86-8aa1-4590-b9f7-08d9fff51539.png",
  "lungetwist": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_134418_9ca14f8e-e73a-43a8-b5ca-218a74f6a986.png",
@@ -99,6 +99,12 @@ window.PHOTOS2 = {
 };
 /* Extra positions: pre = shown before the main photo (start positions), post = after the second position. */
 window.PHOTOEXTRA = {
+ "deadbug": {
+  "pre": [],
+  "post": [
+   "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_105153_e27e072c-16f4-45bb-a5fd-f2256214d8e8.png"
+  ]
+ },
  "downdog": {
   "pre": [],
   "post": [
@@ -179,7 +185,7 @@ window.PHOTOS_M = {
  "calfwall": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_222320_08c23f37-8624-405f-8fc1-413effbc7fa5.png",
  "soleus": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_222424_d4dbd0b7-6e99-4828-9d8c-fd46cd07dc1e.png",
  "heelsup": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_222557_9b0481ee-9f9a-4425-acac-528c0f26623b.png",
- "deadbug": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_222640_22b64e67-0f2c-47e2-b900-4a0584d4b5bc.png",
+ "deadbug": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_105708_08469fd6-7f2d-45e4-a7ed-5c68bd7521ef.png",
  "birddog": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_222729_7261b675-3f43-4872-add8-8ac12d596307.png",
  "breath9090": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_222829_2349ca18-f29c-4596-9195-26f712e6aed7.png",
  "supinetwist": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_222910_f7a2df3e-e85e-440d-b200-0418dc5a567b.png",
@@ -229,7 +235,7 @@ window.PHOTOS2_M = {
  "ninety": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_225719_8c6ce0a6-1316-4d3d-9c75-acb3e2f3a6f8.png",
  "bridge": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_225802_0552d9bf-3e7f-4b5b-9972-7f4087ccf92a.png",
  "anklerock": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_225831_8c2af1d1-a678-44a6-a16b-45797ee79e93.png",
- "deadbug": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_225914_10c8be1c-2a2d-4e38-9bad-140023af7926.png",
+ "deadbug": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_110529_071115d9-2991-4b5f-9fab-64922a051236.png",
  "legswing": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_225958_0b744498-c549-4e15-be31-2fe1fe312ced.png",
  "hipcircle": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_230040_197f2337-193f-4b49-a568-1f95689521fc.png",
  "lungetwist": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_230108_18866e0f-97ee-4d4e-97a9-4ffe036dc1d0.png",
@@ -284,5 +290,11 @@ window.PHOTOEXTRA_M = {
    "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_231103_0e51bf09-0687-40ca-a1a1-10faa366f6bc.png"
   ],
   "post": []
+ },
+ "deadbug": {
+  "pre": [],
+  "post": [
+   "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_110624_314009ea-1600-40dc-8f35-7b2c1c621d26.png"
+  ]
  }
 };

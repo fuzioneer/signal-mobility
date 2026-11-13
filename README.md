@@ -21,6 +21,14 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.28.2 (13 Nov 2026): Male Dead bug video remade by copying the movement from a real demonstration clip (motion transfer), so the arms and legs move exactly as they should.
+- 1.28.1 (13 Nov 2026): Male Dead bug photos and video remade so the correct arm and opposite leg move on each side.
+- 1.28.0 (13 Nov 2026): Dead bug reshot from directly overhead so both sides are clear. New photos (start position, then each side) and new looping videos for both models: one arm goes back along the floor above the head while the opposite leg straightens, both stopping just above the floor, then the other side.
+- 1.27.4 (13 Nov 2026): Dead bug video (female) remade from keyframes so only one arm and the opposite leg move at a time.
+- 1.27.3 (13 Nov 2026): Dead bug redone from the correct start position (both arms vertical, hips and knees at 90 degrees). New photos and videos for both models: left arm and right leg lower together to just above the floor and return, then right arm and left leg.
+- 1.27.2 (13 Nov 2026): New Dead bug videos (female and male) with the correct cross-body pattern: one arm lowers with the opposite leg, then swap.
+- 1.27.1 (13 Nov 2026): New Leg swings videos (female and male) with bigger, quicker swings, up to hip height in front and well behind at the back.
+- 1.27.0 (13 Nov 2026): Looping demo videos for 11 more moves, in female and male versions: Walking lunge with a twist, Standing hip circles, Leg swings, Upper-back extensions, Cossack squats, Shoulder pass-throughs, Club shoulder turns, Dead bug, Bird dog, 90/90 switches and A-skips (shown on the spot).
 - 1.26.0 (13 Nov 2026): World's greatest stretch now shows a short looping video of the full movement instead of a still photo, in the player and on its stretch page. There are female and male model versions, following the Settings choice. It pauses with the routine. Tap it to see the still photos. Save all photos for offline also saves the clips. With Reduce Motion on, or photos turned off, the still photos are shown instead.
 - 1.25.1 (13 Nov 2026): The feedback section no longer shows the email address on screen.
 - 1.25.0 (13 Nov 2026): Settings has a new Report a bug or suggest an idea section. Choose Bug or New feature idea, describe it, and tap Send by email to open a ready-to-send email in the Mail app. The app version, language and phone details are added (you can turn this off), and bug reports also include the last few lines of the diagnostics log.
