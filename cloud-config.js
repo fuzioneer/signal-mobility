@@ -2,6 +2,6 @@
    what the database security rules in supabase/schema.sql permit. Leave them empty to keep the
    Community tab switched off. Find them in Supabase: Project Settings > API. */
 window.MOVAGE_CLOUD = {
-  url: "",
-  anonKey: ""
+  url: "https://atmoejivzryboipwvwdv.supabase.co",
+  anonKey: "sb_publishable_WgkGQ5AbZDwK0zICuAAnBQ_oVkDCbCJ"
 };

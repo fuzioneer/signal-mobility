@@ -14,8 +14,6 @@
 -- rows directly. Leaderboards and community actions go through the functions at the bottom,
 -- which only ever return nicknames and totals, never emails or ids of other people.
 
-create extension if not exists pgcrypto;
-
 -- ---------- tables ----------
 
 create table if not exists public.profiles (
