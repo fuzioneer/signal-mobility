@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.34.0", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.34.1", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -1194,7 +1194,7 @@
     if (bits.length) x.fillText(bits.join("  ·  "), W / 2, 1660);
     x.font = font(800, 56); x.fillStyle = "#fff"; x.fillText("Movage", W / 2, 1790);
     x.font = font(600, 34); x.fillStyle = "rgba(255,255,255,.85)"; x.fillText(TAGLINE, W / 2, 1836);
-    x.font = font(500, 30); x.fillStyle = "rgba(255,255,255,.6)"; x.fillText(T("Tested") + " " + short(lastTestDate() || iso()), W / 2, 1882);
+    x.font = font(500, 30); x.fillStyle = "rgba(255,255,255,.6)"; x.fillText("@movageapp  ·  " + T("Tested") + " " + short(lastTestDate() || iso()), W / 2, 1882);
     return c;
   }
   function rr(x, a, b, w, h, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
