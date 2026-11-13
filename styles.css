@@ -445,3 +445,7 @@ body.on-home header.top h1 { position: absolute; width: 1px; height: 1px; overfl
 .cmsw { width: 46px; height: 28px; border-radius: 999px; background: var(--line); position: relative; flex: none; transition: background .2s; }
 .cmsw i { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: left .2s; }
 .cmsw.on { background: var(--brand); } .cmsw.on i { left: 21px; }
+
+.gbtn { display: flex; align-items: center; justify-content: center; gap: 10px; background: #fff; color: #1f1f1f; border: 1px solid #dadce0; font-weight: 600; }
+.ordiv { display: flex; align-items: center; gap: 10px; margin: 14px 0 6px; color: var(--muted); font-size: 13px; }
+.ordiv::before, .ordiv::after { content: ""; flex: 1; height: 1px; background: var(--line); }

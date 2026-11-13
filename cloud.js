@@ -20,7 +20,7 @@
   function client() {
     if (!configured()) return Promise.reject(new Error("not configured"));
     return loadLib().then(function () {
-      if (!sb) sb = window.supabase.createClient(C.url, C.anonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: AUTH_KEY } });
+      if (!sb) sb = window.supabase.createClient(C.url, C.anonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, flowType: "pkce", storageKey: AUTH_KEY } });
       return sb;
     });
   }
@@ -34,8 +34,27 @@
     configured: configured,
     hasSession: hasSession,
     user: function () { return client().then(function (c) { return c.auth.getSession(); }).then(function (r) { var s = ok(r).session; return s ? s.user : null; }); },
+    /* A friendly starting nickname from the Google profile (first name), if there is one. */
+    suggestedName: function (u) { var m = (u && u.user_metadata) || {}; var n = String(m.given_name || m.name || m.full_name || "").split(" ")[0].replace(/[<>]/g, "").slice(0, 20); return n.length >= 2 ? n : ""; },
     sendCode: function (email) { return client().then(function (c) { return c.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true } }); }).then(ok); },
     verifyCode: function (email, code) { return client().then(function (c) { return c.auth.verifyOtp({ email: email, token: code, type: "email" }); }).then(function (r) { return ok(r).user; }); },
+    /* Google sign-in: leaves the app for Google, then comes back to this page with ?auth=google&code=...
+       (the marker keeps it apart from Strava's return, which uses state=sm). The native build will use a
+       Capacitor browser plugin and Sign in with Apple instead. */
+    signInWithGoogle: function () {
+      var back = location.origin + location.pathname + "?auth=google";
+      return client().then(function (c) { return c.auth.signInWithOAuth({ provider: "google", options: { redirectTo: back, queryParams: { prompt: "select_account" } } }); }).then(ok);
+    },
+    isOAuthReturn: function () { try { var q = new URLSearchParams(location.search); return q.get("auth") === "google" || (!!q.get("code") && !q.get("state")); } catch (e) { return false; } },
+    /* Resolves null when this page load isn't a return from Google; otherwise { user } or { error }. */
+    handleOAuthReturn: function () {
+      var q = new URLSearchParams(location.search);
+      if (!window.CLOUD.isOAuthReturn()) return Promise.resolve(null);
+      try { history.replaceState(null, "", location.pathname); } catch (e) {}
+      if (q.get("error")) return Promise.resolve({ error: q.get("error_description") || q.get("error") });
+      var code = q.get("code"); if (!code) return Promise.resolve({ error: "no code" });
+      return client().then(function (c) { return c.auth.exchangeCodeForSession(code); }).then(function (r) { return { user: ok(r).user }; }, function (e) { return { error: (e && e.message) || "exchange failed" }; });
+    },
     signOut: function () { return client().then(function (c) { return c.auth.signOut(); }).then(function () {}, function () {}).then(function () { try { localStorage.removeItem(AUTH_KEY); } catch (e) {} }); },
     profile: function () { return client().then(function (c) { return c.from("profiles").select("nickname, share_time, share_score").maybeSingle(); }).then(ok); },
     saveProfile: function (p) {

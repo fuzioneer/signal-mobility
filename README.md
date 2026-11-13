@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.40.0 (13 Nov 2026): "Continue with Google" on the Community sign-in screen, alongside the emailed code. A Google sign-up suggests your first name as the nickname. Invite links still work if you sign in with Google first.
 - 1.39.1 (13 Nov 2026): Community tab switched on, connected to the Movage Supabase project (London).
 - 1.39.0 (13 Nov 2026): New Community tab. Sign in with an emailed code, choose a nickname, create or join communities with a 6-character code or invite link, and see leaderboards for total mobility time (today, this week, this month) and mobility score, for each community or everyone. Scores measured entirely with the camera get a verified tick, with a camera-verified-only filter. Sharing is opt-in and accounts can be deleted in the app. Runs on Supabase; see supabase/README.md to switch it on.
 - 1.38.1 (13 Nov 2026): Removed the animated stick figure from the mobility test "How to do it" sections; the photo and written steps remain.

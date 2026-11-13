@@ -32,6 +32,23 @@ and nothing is sent anywhere.
    Both are designed to be public; the security rules in `schema.sql` decide what anyone can do.
    Never put the **secret** or **service_role** key in the app.
 
+## Google sign-in
+
+1. **Google Cloud Console** (console.cloud.google.com): create a project called Movage.
+   - APIs & Services > OAuth consent screen: External, app name `Movage`, your support email,
+     authorised domain `supabase.co` (and `movage.co.uk` once the site is live). Add yourself as a
+     test user, then press Publish app when ready for everyone.
+   - APIs & Services > Credentials > Create credentials > OAuth client ID > Web application.
+     - Authorised JavaScript origins: `https://fuzioneer.github.io`
+     - Authorised redirect URIs: `https://atmoejivzryboipwvwdv.supabase.co/auth/v1/callback`
+2. **Supabase** > Authentication > Sign In / Providers > Google: turn it on and paste the Client ID
+   and Client secret from step 1. (The secret only ever goes here, never in the app.)
+3. **Supabase** > Authentication > URL Configuration > Redirect URLs: add
+   `https://fuzioneer.github.io/signal-mobility/**` so the app gets the sign-in back.
+
+App Store note: once an app offers Google sign-in, Apple requires Sign in with Apple as well
+(guideline 4.8). Add that with the Capacitor build.
+
 ## Before launch
 
 - **Email sending.** Supabase's built-in email is rate limited (a few emails an hour) and meant for

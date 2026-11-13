@@ -672,7 +672,11 @@ I18N.add("es", {
 "Invite copied.": "Invitación copiada.",
 "You've left the community.": "Has salido de la comunidad.",
 "Signed out.": "Sesión cerrada.",
-"Your account and community data have been deleted.": "Se han eliminado tu cuenta y tus datos de la comunidad."
+"Your account and community data have been deleted.": "Se han eliminado tu cuenta y tus datos de la comunidad.",
+"Continue with Google": "Continuar con Google",
+"or use your email": "o usa tu correo",
+"Google sign-in was cancelled.": "Se canceló el inicio de sesión con Google.",
+"Google sign-in didn't finish. Try again.": "El inicio de sesión con Google no se completó. Inténtalo de nuevo."
 }, {
 "zone": {
 "shoulders": "Hombros",
