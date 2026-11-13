@@ -389,3 +389,5 @@ main, #sheet-body { zoom: var(--ts); }
 .mcell b { display: block; font-size: 13px; }
 .mcell span { font-size: 12px; color: var(--muted); }
 .medalwin { display: flex; gap: 12px; align-items: center; text-align: left; margin: 14px 0; }
+
+.sharebtn { margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }

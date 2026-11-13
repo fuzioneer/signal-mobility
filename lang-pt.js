@@ -584,7 +584,14 @@ I18N.add("pt", {
 "Earn a medal each month for how often you do your mobility. Up to two sessions a day count.": "Ganha uma medalha todos os meses conforme a frequência com que fazes mobilidade. Contam até duas sessões por dia.",
 "{n} sessions in a month": "{n} sessões num mês",
 "Your medals": "As tuas medalhas",
-"{medal} for {month}!": "{medal} em {month}!"
+"{medal} for {month}!": "{medal} em {month}!",
+"My mobility score": "A minha pontuação de mobilidade",
+"out of 100": "em 100",
+"{n} day streak": "Sequência de {n} dias",
+"{medal} this month": "{medal} este mês",
+"Do a mobility test first to get a score to share.": "Faça primeiro um teste de mobilidade para ter uma pontuação para partilhar.",
+"Image saved. Open Instagram and add it to your Story.": "Imagem guardada. Abra o Instagram e adicione-a à sua história.",
+"Share to Instagram": "Partilhar no Instagram"
 }, {
 "zone": {
 "shoulders": "Ombros",

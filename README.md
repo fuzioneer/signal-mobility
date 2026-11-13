@@ -21,6 +21,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.33.0 (13 Nov 2026): Share to Instagram button on the Today score card. It makes a Story sized image (score ring, zone bars, streak and this month's medal) and opens the iPhone share sheet, where you pick Instagram. Where sharing images is not supported, the image is saved instead.
 - 1.32.1 (13 Nov 2026): New Bird dog videos (female and male), made by copying the movement from a real demonstration clip, so one arm reaches forward with the opposite leg back, then the other side.
 - 1.32.0 (13 Nov 2026): Monthly challenge with Bronze (4 sessions), Silver (8), Gold (12) and Platinum (20) medals each calendar month. Up to two sessions a day count. A card on Today and History shows this month's medal, a progress bar marked with each level, how many more you need and days left. You get a medal message at the end of the session that earns it, and tapping the card shows the levels and your medals from past months.
 - 1.31.1 (13 Nov 2026): Routine cards no longer show the video badge, since it only applies to single moves.

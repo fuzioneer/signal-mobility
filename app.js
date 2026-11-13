@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.32.1", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.33.0", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -258,7 +258,7 @@
         h += '<div class="zbar"><span>' + z[1] + '</span><div class="track">' + (isNum(p) ? '<div class="fill" style="width:' + p + "%;background:" + zc(z[0]) + '"></div>' : "") + (isNum(a) ? '<div class="avg" style="left:' + a + '%"></div>' : "") + "</div><b>" + (isNum(p) ? p : "–") + "</b></div>";
       });
       h += "</div>";
-      h += '<div class="legend">' + (av ? ("<span><i></i>" + T("Typical score for men your age") + "</span>") : "") + ('<span class="grow" style="text-align:right">' + T("Tested") + ' ') + short(last) + "</span></div></div>";
+      h += '<div class="legend">' + (av ? ("<span><i></i>" + T("Typical score for men your age") + "</span>") : "") + ('<span class="grow" style="text-align:right">' + T("Tested") + ' ') + short(last) + '</span></div><button class="btn block sharebtn" data-act="share-score"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg> ' + T("Share to Instagram") + "</button></div>";
     }
     h += ('<div class="sec"><h2>' + T("Your daily 10") + '</h2><span class="small muted">') + (sc.n ? (T("Focus:") + " ") + d.zones.map(function (z) { return ZN[z]; }).join((" " + T("and") + " ")) : (T("Hips and overhead until you test"))) + "</span></div>";
     h += '<div class="card"><div class="row" style="gap:6px;margin-bottom:12px">' + d.items.slice(0, 6).map(function (id) { return '<div class="thumb" style="width:calc((100% - 30px)/6);height:auto;aspect-ratio:1">' + art(id, BY[id].pose, { stroke: 9 }) + "</div>"; }).join("") + "</div>";
@@ -1162,6 +1162,51 @@
     h += '<h3 style="margin:18px 0 8px">' + T("Your medals") + '</h3><div class="medalgrid">' + months.map(function (m) { var n = monthCount(m), md = medalFor(n); return '<div class="mcell' + (m === ym() ? " now" : "") + '">' + medalSVG(md, 46) + "<b>" + esc(monthName(m, true)) + "</b><span>" + n + "</span></div>"; }).join("") + "</div>";
     openSheet(h);
   }
+  /* ---------- Share your score: draws a 1080x1920 Story image and opens the phone's share sheet (pick Instagram there).
+     Where sharing files is not supported the image is saved instead, ready to add to a Story. ---------- */
+  function cssVar(n, fb) { try { var v = getComputedStyle(document.documentElement).getPropertyValue(n).trim(); return v || fb; } catch (e) { return fb; } }
+  function scoreImage() {
+    var L = latest(), sc = score(L.v); if (!sc.n) return null;
+    var W = 1080, H = 1920, c = document.createElement("canvas"); c.width = W; c.height = H; var x = c.getContext("2d");
+    var font = function (w, s) { return w + " " + s + 'px -apple-system, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif'; };
+    var g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#0f6b5c"); g.addColorStop(1, "#06302a"); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.globalAlpha = .07; x.fillStyle = "#fff"; x.beginPath(); x.arc(W * .85, H * .12, 360, 0, 7); x.fill(); x.beginPath(); x.arc(W * .1, H * .9, 300, 0, 7); x.fill(); x.globalAlpha = 1;
+    x.textAlign = "center"; x.fillStyle = "rgba(255,255,255,.75)"; x.font = font(700, 40);
+    x.fillText(T("My mobility score").toUpperCase(), W / 2, 230);
+    var cx = W / 2, cy = 560, r = 250, lw = 42;
+    x.lineWidth = lw; x.lineCap = "round"; x.strokeStyle = "rgba(255,255,255,.16)"; x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.stroke();
+    x.strokeStyle = "#ffffff"; x.beginPath(); x.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.max(.01, sc.overall / 100)); x.stroke();
+    x.fillStyle = "#fff"; x.font = font(800, 210); x.textBaseline = "middle"; x.fillText(String(sc.overall), cx, cy + 6); x.textBaseline = "alphabetic";
+    x.font = font(600, 40); x.fillStyle = "rgba(255,255,255,.75)"; x.fillText(T("out of 100"), cx, cy + 140);
+    var zs = ZONES.filter(function (z) { return isNum(sc.zones[z[0]]); }), y = 1290 - (zs.length * 118) / 2 + 40, bx = 140, bw = W - 280;
+    zs.forEach(function (z) {
+      var p = sc.zones[z[0]]; x.textAlign = "left"; x.fillStyle = "#fff"; x.font = font(650, 42); x.fillText(z[1], bx, y);
+      x.textAlign = "right"; x.font = font(800, 42); x.fillText(isNum(p) ? p + "%" : "–", bx + bw, y);
+      var ty = y + 26, th = 22; x.fillStyle = "rgba(255,255,255,.16)"; rr(x, bx, ty, bw, th, 11); x.fill();
+      if (isNum(p)) { x.fillStyle = cssVar("--z-" + z[0], "#ffffff"); rr(x, bx, ty, Math.max(th, bw * p / 100), th, 11); x.fill(); }
+      y += 118;
+    });
+    var md = medalFor(monthCount(ym())), st = streak(), bits = [];
+    if (st) bits.push(TF("{n} day streak", { n: st }));
+    if (md) bits.push(TF("{medal} this month", { medal: T(md[2]) }));
+    x.textAlign = "center"; x.fillStyle = "#fff"; x.font = font(700, 44);
+    if (bits.length) x.fillText(bits.join("  ·  "), W / 2, 1720);
+    x.font = font(800, 48); x.fillStyle = "#fff"; x.fillText("Signal Mobility", W / 2, 1810);
+    x.font = font(500, 34); x.fillStyle = "rgba(255,255,255,.7)"; x.fillText(T("Tested") + " " + short(lastTestDate() || iso()), W / 2, 1862);
+    return c;
+  }
+  function rr(x, a, b, w, h, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
+  function shareScore() {
+    var c = scoreImage(); if (!c) { toast(T("Do a mobility test first to get a score to share.")); return; }
+    c.toBlob(function (blob) {
+      if (!blob) return;
+      var name = "signal-mobility-score.png", file = null; try { file = new File([blob], name, { type: "image/png" }); } catch (e) {}
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: T("My mobility score") }).then(function () { diag("score shared"); }).catch(function (e) { if (e && e.name !== "AbortError") saveImg(); });
+      } else saveImg();
+      function saveImg() { var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500); toast(T("Image saved. Open Instagram and add it to your Story.")); }
+    }, "image/png");
+  }
   function renderHistory() {
     var tests = S.tests.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
     var pts = tests.slice().reverse().map(function (t) { return { d: t.date, s: score(t.v).overall }; }).filter(function (p) { return isNum(p.s); });
@@ -1436,6 +1481,7 @@
       case "routine": openRoutine(id); break;
       case "qw-open": qwOpen(); break;
       case "challenge": openChallenge(); break;
+      case "share-score": shareScore(); break;
       case "qw-time": case "qw-group": case "qw-muscle": case "qw-sport": case "qw-when": case "qw-next": case "qw-back": case "qw-shuffle": case "qw-start": case "qw-save": qwAct(a, id); break;
       case "play": { var r = findRoutine(id); if (!$("#sheet").hidden) closeSheet(); if (r) play(r); break; }
       case "play-one": closeSheet(); play({ id: "single", n: BY[id].n, items: [id] }); break;
