@@ -539,7 +539,8 @@ I18N.add("es", {
 "Include app version and phone details (helps with bugs)": "Incluir la versión de la app y datos del teléfono (ayuda con los errores)",
 "Send by email": "Enviar por correo",
 "Nothing opens? Email {addr} directly.": "¿No se abre nada? Escribe directamente a {addr}.",
-"Add a few words first.": "Escribe unas palabras primero."
+"Add a few words first.": "Escribe unas palabras primero.",
+"demo video": "vídeo de demostración"
 }, {
 "zone": {
 "shoulders": "Hombros",

@@ -333,3 +333,6 @@ main, #sheet-body { zoom: var(--ts); }
 .tlmeta span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tlmeta span:last-child { white-space: nowrap; }
 .bigtext .tlmeta { zoom: var(--ts); }
+
+.xfade.vid video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.player .pfig .figwrap .xfade.vid video { object-fit: contain; }

@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.25.1", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.26.0", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -146,13 +146,30 @@
     return out.concat(x.post || []);
   }
   /* Big photo: moves with more than one position stack their photos and slowly cross-fade from one to the next. */
+  /* Looping demo clip for a stretch, matching the chosen model. Off with photos off or with Reduce Motion on. */
+  function vidUrl(key) {
+    if (S.settings.photos === false || reduceMotion) return null;
+    var v = S.settings.model === "m" ? window.VIDEOS_M : window.VIDEOS;
+    return (v && v[key]) || null;
+  }
   function bigPhoto(key, cls, alt) {
     var set = photoSet(key); if (!set.length) return "";
+    var vu = vidUrl(key);
+    if (vu) return '<div class="xfade vid" data-key="' + esc(key) + '"><video class="photo ' + cls + ' on" data-vsrc="' + esc(vu) + '" poster="' + esc(set[0]) + '" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc((alt || "") + ", " + T("demo video")) + '"></video></div>';
     return '<div class="xfade' + (set.length > 1 ? " multi" : "") + '" data-key="' + esc(key) + '">' + set.map(function (u, i) {
       return '<img class="photo ' + cls + (i === 0 ? " on" : "") + '" data-i="' + i + '" alt="' + esc(alt || "") + (set.length > 1 ? " (" + T("position") + " " + (i + 1) + " " + T("of") + " " + set.length + ")" : "") + '" src="' + esc(u) + '">';
     }).join("") + "</div>";
   }
   var reduceMotion = false; try { reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+  /* Clips play from the offline copy when there is one (as a blob, which iPhones play reliably), otherwise straight from the web. */
+  function vidHydrate(v) {
+    if (v.dataset.vdone) return; v.dataset.vdone = 1; var u = v.dataset.vsrc;
+    var go = function (src) { v.src = src; var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+    if (!window.caches) return go(u);
+    caches.open("sm-photos").then(function (c) { return c.match(u); }).then(function (r) { return r && r.type !== "opaque" ? r.blob() : null; })
+      .then(function (b) { go(b ? URL.createObjectURL(b) : u); }).catch(function () { go(u); });
+  }
+  try { new MutationObserver(function () { document.querySelectorAll("video[data-vsrc]:not([data-vdone])").forEach(vidHydrate); }).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
   setInterval(function () {
     if (reduceMotion || document.hidden) return;
     document.querySelectorAll(".xfade.multi").forEach(function (w) {
@@ -697,7 +714,7 @@
     toast(TF("Swapped for {name}", { name: BY[alt].n })); enterStep();
   }
   function addTime(sec) { if (!P || !P.st[P.i]) return; if (P.cd) { cdClear(); P.cd = null; } P.left += sec; P.dur += sec; if (P.act && P.act[P.i]) P.act[P.i][P.phase === "prep" ? "p" : "h"] = P.dur; P.spoke.half = P.left <= P.dur / 2 ? 1 : P.spoke.half; draw(); msUpdate(); }
-  function togglePause() { if (!P) return; P.paused = !P.paused; if (P.paused) cdClear(); if (window.MUSIC) { if (P.paused) MUSIC.pause(1500); else MUSIC.resume(2000); } var b = $("#p-pp"); if (b) { b.innerHTML = P.paused ? ICON.play : ICON.pause; b.setAttribute("aria-label", P.paused ? T("Resume") : T("Pause")); } if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} draw(); msUpdate(); }
+  function togglePause() { if (!P) return; P.paused = !P.paused; if (P.paused) cdClear(); if (window.MUSIC) { if (P.paused) MUSIC.pause(1500); else MUSIC.resume(2000); } var b = $("#p-pp"); if (b) { b.innerHTML = P.paused ? ICON.play : ICON.pause; b.setAttribute("aria-label", P.paused ? T("Resume") : T("Pause")); } if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} document.querySelectorAll("#p-fig video").forEach(function (v) { if (P.paused) v.pause(); else { var q = v.play(); if (q && q.catch) q.catch(function () {}); } }); draw(); msUpdate(); }
   /* Lock-screen and Control Centre: current move, time left, and pause, skip and +15s controls. */
   function msUpdate() {
     if (!("mediaSession" in navigator)) return; var ms = navigator.mediaSession;
@@ -1248,6 +1265,7 @@
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("#lightbox").hidden) closeLightbox(); });
   document.addEventListener("click", function (e) {
     var big = e.target.closest(".xfade") || e.target.closest(".photo-wrap img, img.pphoto, img.howphoto, .snaps img");
+    if (big && big.classList.contains("vid") && !e.target.closest("[data-act]")) { e.preventDefault(); var ps = photoSet(big.getAttribute("data-key")); if (ps.length) openLightbox(ps[0], "", ps, 0); return; }
     if (big && big.classList.contains("xfade") && !e.target.closest("[data-act]")) {
       e.preventDefault(); var all = [].slice.call(big.querySelectorAll("img")), on = big.querySelector("img.on") || all[0];
       openLightbox(on.src, (on.getAttribute("alt") || "").replace(/ \(position.*\)$/, ""), all.map(function (im) { return im.src; }), all.indexOf(on)); return;
@@ -1339,7 +1357,7 @@
   /* ---------- offline photos: save every stretch photo into the app's photo cache so routines work with no signal ---------- */
   var OFF = { busy: false, done: 0, total: 0 };
   /* Photos to keep offline: every photo of the chosen model. */
-  function photoList() { var seen = {}, out = []; Object.keys(window.PHOTOS || {}).forEach(function (k) { photoSet(k).forEach(function (u) { if (!seen[u]) { seen[u] = 1; out.push(u); } }); }); return out; }
+  function photoList() { var seen = {}, out = []; Object.keys(window.PHOTOS || {}).forEach(function (k) { photoSet(k).concat(vidUrl(k) || []).forEach(function (u) { if (!seen[u]) { seen[u] = 1; out.push(u); } }); }); return out; }
   function offlineCount() {
     if (!window.caches) return Promise.resolve(0);
     return caches.open("sm-photos").then(function (c) { return Promise.all(photoList().map(function (u) { return c.match(u).then(function (r) { return r ? 1 : 0; }); })); }).then(function (xs) { return xs.reduce(function (s, x) { return s + x; }, 0); }).catch(function () { return 0; });
