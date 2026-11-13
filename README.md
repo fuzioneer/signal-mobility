@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.35.0 (13 Nov 2026): 45 new stretches, taking the library to 102. They cover every zone (neck and shoulders, overhead, upper back, hamstrings, hips and ankles), each with photos of both the female and male model, coaching cues, and translations in all six languages. They work in search, Build your own, the body map and the Make me a routine builder.
 - 1.34.1 (13 Nov 2026): The shared score image now includes the Instagram handle @movageapp.
 - 1.34.0 (13 Nov 2026): The app is now called Movage, with the tagline "Joint Venture". The new name shows on the home screen icon label, in the app, on shared score images, backups, calendar reminders and feedback emails. Saved data carries over, and backups made under the old name still restore.
 - 1.33.0 (13 Nov 2026): Share to Instagram button on the Today score card. It makes a Story sized image (score ring, zone bars, streak and this month's medal) and opens the iPhone share sheet, where you pick Instagram. Where sharing images is not supported, the image is saved instead.

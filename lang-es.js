@@ -1008,6 +1008,186 @@ I18N.add("es", {
 "foldfwd": {
 "n": "Flexión hacia delante de pie",
 "cues": "Pies a la anchura de la cadera, rodillas sueltas. Inclínate y deja colgar el tronco, sujetando los codos contrarios. Mueve suavemente la cabeza para soltar el cuello."
+},
+"towelbehind": {
+"n": "Estiramiento con toalla por la espalda",
+"cues": "Sujeta una toalla con una mano por encima del hombro y la otra detrás de la zona lumbar. Acerca las manos hasta notar estiramiento en la parte delantera del hombro de abajo y en la parte trasera del brazo de arriba. Mantén las costillas abajo."
+},
+"wallangel": {
+"n": "Ángeles en la pared",
+"cues": "Apoya la espalda, la cabeza y los glúteos en una pared, con los pies un pequeño paso por delante. Brazos en forma de portería contra la pared. Deslízalos hacia arriba todo lo que puedas sin perder el contacto y vuelve a bajar. Mantén la zona lumbar suavemente plana."
+},
+"armcircle": {
+"n": "Círculos de brazos",
+"cues": "De pie, con los brazos estirados a los lados. Haz círculos pequeños que vayan creciendo poco a poco y luego cambia de sentido. Mantén los hombros lejos de las orejas."
+},
+"neckside": {
+"n": "Estiramiento lateral de cuello",
+"cues": "Sentado o de pie, bien erguido. Inclina la oreja hacia el hombro y apoya suavemente la mano de ese lado sobre la cabeza. Lleva la otra mano hacia el suelo hasta notar el estiramiento en el lateral del cuello. Sin tirar."
+},
+"chintuck": {
+"n": "Retracciones de barbilla",
+"cues": "Sentado o de pie, mirando al frente. Lleva la barbilla hacia atrás en línea recta, como haciendo papada, con la mirada horizontal. Aguanta dos segundos y relaja. Nota cómo se alarga la nuca."
+},
+"pronechest": {
+"n": "Apertura de pecho boca abajo",
+"cues": "Túmbate boca abajo con un brazo estirado al lado a la altura del hombro, palma abajo. Empuja con la otra mano y gira el cuerpo alejándote del brazo estirado, doblando la rodilla de arriba para equilibrarte. Para al notar el estiramiento en el pecho y la parte delantera del hombro."
+},
+"tricep": {
+"n": "Estiramiento de tríceps por encima de la cabeza",
+"cues": "Lleva un brazo por encima de la cabeza y dobla el codo para que la mano caiga detrás de la cabeza. Con la otra mano, empuja suavemente el codo hacia atrás y hacia dentro. Mantén las costillas abajo y la cabeza erguida."
+},
+"puppy": {
+"n": "Postura del cachorro",
+"cues": "Empieza a cuatro patas. Avanza las manos y deja que el pecho baje hacia el suelo, con las caderas por encima de las rodillas. Apoya la frente y respira hacia la parte alta de la espalda y las axilas."
+},
+"walllat": {
+"n": "Estiramiento de dorsal en la pared",
+"cues": "Ponte a un brazo de distancia de una pared y apoya las manos a la altura de la cadera. Retrocede con los pies y flexiona la cadera, llevando el pecho hacia abajo entre los brazos. Espalda larga y rodillas suaves."
+},
+"sidereach": {
+"n": "Alcance lateral de pie",
+"cues": "De pie, pies al ancho de las caderas. Lleva un brazo hacia arriba y por encima de la cabeza, inclinándote hacia el lado contrario. Mantén ambos pies apoyados y las caderas rectas. Respira hacia el lado estirado y vuelve despacio."
+},
+"proney": {
+"n": "Elevaciones en Y boca abajo",
+"cues": "Túmbate boca abajo con los brazos por encima de la cabeza en forma de Y, pulgares hacia arriba. Levanta ambos brazos unos centímetros del suelo juntando las escápulas hacia atrás y abajo. Pausa y baja. Mantén la frente apoyada."
+},
+"deadhang": {
+"n": "Colgarse de la barra",
+"cues": "Agarra una barra de dominadas algo más abierta que el ancho de hombros y deja que el cuerpo cuelgue, con los pies en el aire o rozando el suelo. Relaja los hombros hacia las orejas y respira. Baja antes de que falle el agarre."
+},
+"cobra": {
+"n": "Cobra",
+"cues": "Túmbate boca abajo con las manos bajo los hombros. Empuja suavemente para elevar el pecho mientras las caderas siguen en el suelo. Codos suaves y hombros abajo. Sube solo hasta donde tu zona lumbar esté cómoda."
+},
+"sphinx": {
+"n": "Esfinge",
+"cues": "Túmbate boca abajo y apóyate sobre los antebrazos, con los codos bajo los hombros. Deja que el abdomen se relaje hacia el suelo y alárgate desde la coronilla. Respira despacio."
+},
+"seatedside": {
+"n": "Inclinación lateral sentado",
+"cues": "Siéntate erguido en una silla o en el suelo. Lleva un brazo por encima de la cabeza e inclínate hacia el lado contrario, con ambos isquiones apoyados. Nota el estiramiento a lo largo del costado, de la cadera a la punta de los dedos."
+},
+"chairtwist": {
+"n": "Torsión sentado en silla",
+"cues": "Siéntate erguido en la parte delantera de una silla, pies planos. Gira el pecho hacia un lado, sujetando el respaldo, y respira. Crece al inspirar y gira un poco más al espirar. Las caderas miran al frente."
+},
+"scorpion": {
+"n": "Escorpión boca abajo",
+"cues": "Túmbate boca abajo con los brazos abiertos. Dobla una rodilla y lleva ese pie cruzando el cuerpo hacia la mano contraria, rotando la zona lumbar y la espalda alta. Mantén ambos hombros en el suelo. Vuelve y cambia de lado."
+},
+"inchworm": {
+"n": "Gusanos",
+"cues": "De pie, flexiona la cadera y apoya las manos en el suelo, doblando las rodillas lo necesario. Camina con las manos hasta la plancha y luego acerca los pies a las manos con las piernas casi estiradas. Ponte de pie y repite."
+},
+"gate": {
+"n": "Inclinación lateral de rodillas (postura de la puerta)",
+"cues": "De rodillas, estira una pierna hacia el lado con el pie apoyado. Apoya esa mano sobre la pierna estirada y lleva el otro brazo hacia arriba y por encima hacia ella. Pecho al frente y respira hacia el lado largo."
+},
+"stepham": {
+"n": "Estiramiento de isquios de pie",
+"cues": "Apoya un talón en un escalón o banco bajo, pierna estirada y punta hacia arriba. Espalda larga y flexiona desde la cadera hasta notar el estiramiento detrás del muslo. No redondees la espalda para llegar más lejos."
+},
+"headknee": {
+"n": "Flexión adelante sentado a una pierna",
+"cues": "Siéntate con una pierna estirada y el otro pie contra el interior de ese muslo. Siéntate erguido y flexiona hacia delante sobre la pierna estirada, buscando la espinilla o el pie. Guía con el pecho y relaja el cuello."
+},
+"jefferson": {
+"n": "Jefferson curl (sin peso)",
+"cues": "De pie, barbilla al pecho. Baja enrollándote vértebra a vértebra, dejando caer los brazos hacia los pies. Pausa abajo y sube despacio. Sin peso, y para mucho antes de sentir dolor de espalda."
+},
+"goodmorning": {
+"n": "Buenos días sin peso",
+"cues": "De pie, pies al ancho de las caderas, manos suaves detrás de la cabeza. Afloja las rodillas y flexiona la cadera con la espalda plana hasta notar los isquios. Aprieta los glúteos para volver arriba."
+},
+"rdlreach": {
+"n": "Peso muerto a una pierna con alcance",
+"cues": "Apóyate en una pierna con la rodilla suave. Flexiona hacia delante y lleva las manos hacia el suelo mientras la otra pierna se estira hacia atrás. Caderas niveladas. Vuelve a la posición de pie con control."
+},
+"legswall": {
+"n": "Piernas en la pared",
+"cues": "Túmbate boca arriba con los glúteos cerca de una pared y las piernas estiradas apoyadas en ella. Relaja los brazos a los lados y respira despacio. Aléjate un poco de la pared si notas los isquios demasiado tensos."
+},
+"squatstand": {
+"n": "De sentadilla a de pie",
+"cues": "De pie, pies al ancho de los hombros. Flexiona y agarra las puntas de los pies, doblando las rodillas para bajar a una sentadilla profunda con los codos por dentro de las rodillas. Levanta el pecho y estira las piernas sin soltar los pies."
+},
+"lizard": {
+"n": "Zancada del lagarto",
+"cues": "Desde una zancada, apoya ambas manos por dentro del pie delantero y baja la rodilla trasera. Deja que la cadera baje hacia delante y abajo. Para ir más profundo, apóyate en los antebrazos. Sigue respirando."
+},
+"seatedbfly": {
+"n": "Mariposa sentado",
+"cues": "Siéntate erguido con las plantas de los pies juntas y las rodillas cayendo a los lados. Sujeta los tobillos e inclínate suavemente desde la cadera. Deja que las rodillas bajen poco a poco, sin empujarlas."
+},
+"chairfig4": {
+"n": "Figura cuatro sentado",
+"cues": "Siéntate en una silla y apoya un tobillo sobre la rodilla contraria. Espalda larga e inclínate desde la cadera hasta notar el estiramiento en la cadera externa y el glúteo. Presiona suavemente la rodilla de arriba si quieres más."
+},
+"addrock": {
+"n": "Balanceo de aductores de rodillas",
+"cues": "A cuatro patas, estira una pierna hacia el lado con el pie apoyado. Lleva la cadera hacia atrás, hacia el talón, con la espalda plana, hasta notar la cara interna del muslo. Vuelve adelante y repite."
+},
+"sidelunge": {
+"n": "Estiramiento en zancada lateral",
+"cues": "De pie con los pies separados. Dobla una rodilla y desplaza la cadera sobre ella, con la otra pierna estirada y el pie apoyado. Siéntate en la cadera y nota el estiramiento en la cara interna del muslo estirado."
+},
+"lungereach": {
+"n": "Zancada baja con brazos arriba",
+"cues": "De rodillas en zancada, con la rodilla trasera en el suelo. Mete el coxis, aprieta el glúteo de atrás y lleva ambos brazos arriba. Inclínate muy ligeramente hacia el lado contrario a la pierna de atrás para abrir la parte delantera de la cadera."
+},
+"firehydrant": {
+"n": "Hidrantes",
+"cues": "A cuatro patas, con una rodilla doblada, levántala hacia el lado abriendo la cadera sin inclinar el cuerpo. Baja con control. Espalda plana y abdomen activo."
+},
+"clam": {
+"n": "Almejas",
+"cues": "Túmbate de lado con las rodillas dobladas y los pies juntos. Sin separar los pies, abre la rodilla de arriba como una almeja, sin girar la cadera hacia atrás. Baja despacio."
+},
+"seatedtwist": {
+"n": "Torsión sentado",
+"cues": "Siéntate con ambas piernas estiradas. Dobla una rodilla y cruza ese pie por encima de la otra pierna. Abraza la rodilla con el brazo contrario y gira el pecho hacia la pierna doblada, con la otra mano detrás. Siéntate erguido."
+},
+"wideleg": {
+"n": "Flexión adelante con piernas abiertas",
+"cues": "De pie con los pies muy separados y paralelos. Flexiona la cadera e inclínate hacia delante, con las manos en el suelo o sujetando los tobillos. Deja colgar la cabeza y el peso sobre la parte delantera de los pies."
+},
+"hipcars": {
+"n": "Círculos de cadera a cuatro patas",
+"cues": "A cuatro patas, levanta un poco una rodilla y dibuja con ella el círculo más grande que puedas, adelante, al lado y atrás. Espalda quieta y movimiento solo desde la cadera. Cambia de sentido."
+},
+"gobletpry": {
+"n": "Sentadilla goblet abriendo rodillas",
+"cues": "Baja a una sentadilla profunda con las manos juntas en el pecho y los codos por dentro de las rodillas. Usa los codos para abrir suavemente las rodillas y desplaza el peso de un lado a otro. Talones abajo si puedes."
+},
+"tibraise": {
+"n": "Elevaciones de tibial",
+"cues": "Apoya la espalda en una pared con los talones a unos 30 cm. Eleva las puntas y la parte delantera de los pies hacia las espinillas y baja despacio. Nota cómo trabaja la parte delantera de la espinilla."
+},
+"calfraise": {
+"n": "Elevaciones de gemelo a una pierna",
+"cues": "Apóyate en un pie, sujetándote ligeramente a una pared. Sube todo lo que puedas sobre la parte delantera del pie, pausa y baja despacio hasta abajo. Rodilla estirada pero sin bloquear."
+},
+"anklecircle": {
+"n": "Círculos de tobillo",
+"cues": "Sentado o tumbado, levanta un pie. Dibuja círculos lentos y completos con los dedos, lo más grandes posible, y cambia de sentido. Pierna quieta para que el movimiento salga del tobillo."
+},
+"shinsit": {
+"n": "Estiramiento de espinillas de rodillas",
+"cues": "De rodillas, con los pies en punta y el empeine apoyado en el suelo. Siéntate sobre los talones e inclínate un poco hacia atrás con las manos detrás para estirar la parte delantera de espinillas y tobillos."
+},
+"toetuck": {
+"n": "Estiramiento de dedos de rodillas",
+"cues": "De rodillas con los dedos de los pies flexionados debajo, siéntate hacia los talones. Espalda erguida y manos en los muslos. Notarás el estiramiento en la planta de los pies. Suaviza si es intenso."
+},
+"stepcalf": {
+"n": "Bajada de talón en escalón",
+"cues": "Ponte en un escalón con la parte delantera de un pie en el borde y el talón fuera, sujetándote a la barandilla. Baja el talón despacio por debajo del escalón hasta notar un estiramiento profundo del gemelo. Rodilla estirada."
+},
+"towelfoot": {
+"n": "Estiramiento de pie con toalla sentado",
+"cues": "Siéntate con una pierna estirada y pasa una toalla por la parte delantera de ese pie. Tira suavemente para llevar los dedos hacia ti, con la rodilla estirada. Nota el estiramiento en el gemelo y la planta del pie."
 }
 }
 });

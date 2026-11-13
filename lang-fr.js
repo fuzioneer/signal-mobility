@@ -1008,6 +1008,186 @@ I18N.add("fr", {
 "foldfwd": {
 "n": "Flexion avant debout",
 "cues": "Pieds à la largeur des hanches, genoux souples. Basculez et laissez pendre le haut du corps en tenant les coudes opposés. Bougez doucement la tête pour relâcher la nuque."
+},
+"towelbehind": {
+"n": "Étirement à la serviette dans le dos",
+"cues": "Tenez une serviette d'une main par-dessus l'épaule et de l'autre derrière le bas du dos. Rapprochez les mains jusqu'à sentir un étirement à l'avant de l'épaule du bas et à l'arrière du bras du haut. Gardez les côtes basses."
+},
+"wallangel": {
+"n": "Anges au mur",
+"cues": "Dos, tête et fessiers contre un mur, pieds un petit pas en avant. Bras en forme de poteau de but contre le mur. Faites-les glisser vers le haut autant que possible sans perdre le contact, puis redescendez. Gardez le bas du dos doucement à plat."
+},
+"armcircle": {
+"n": "Cercles de bras",
+"cues": "Debout, bras tendus sur les côtés. Faites de petits cercles qui grandissent peu à peu, puis changez de sens. Gardez les épaules loin des oreilles."
+},
+"neckside": {
+"n": "Étirement latéral du cou",
+"cues": "Assis ou debout, bien droit. Inclinez l'oreille vers l'épaule et posez légèrement la main du même côté sur la tête. Tendez l'autre main vers le sol jusqu'à sentir l'étirement sur le côté du cou. Sans tirer."
+},
+"chintuck": {
+"n": "Rentrés de menton",
+"cues": "Assis ou debout, regard droit devant. Reculez le menton en ligne droite comme pour faire un double menton, les yeux à l'horizontale. Tenez deux secondes, puis relâchez. Sentez la nuque s'allonger."
+},
+"pronechest": {
+"n": "Ouverture de poitrine à plat ventre",
+"cues": "Allongé sur le ventre, un bras tendu sur le côté à hauteur d'épaule, paume vers le sol. Poussez avec l'autre main et roulez le corps à l'opposé du bras tendu, en pliant le genou du haut pour l'équilibre. Arrêtez-vous quand la poitrine et l'avant de l'épaule s'étirent."
+},
+"tricep": {
+"n": "Étirement des triceps au-dessus de la tête",
+"cues": "Levez un bras au-dessus de la tête et pliez le coude pour que la main descende derrière la tête. Avec l'autre main, poussez doucement le coude vers l'arrière et vers l'intérieur. Côtes basses, tête droite."
+},
+"puppy": {
+"n": "Posture du chiot",
+"cues": "Commencez à quatre pattes. Avancez les mains et laissez la poitrine descendre vers le sol, hanches au-dessus des genoux. Posez le front et respirez dans le haut du dos et les aisselles."
+},
+"walllat": {
+"n": "Étirement des dorsaux au mur",
+"cues": "Placez-vous à une longueur de bras d'un mur, mains posées à hauteur de hanches. Reculez les pieds et basculez depuis les hanches en poussant la poitrine vers le bas entre les bras. Dos long, genoux souples."
+},
+"sidereach": {
+"n": "Allongement latéral debout",
+"cues": "Debout, pieds à largeur de hanches. Levez un bras au-dessus de la tête en vous penchant du côté opposé. Les deux pieds restent ancrés et les hanches de face. Respirez dans le côté étiré, puis revenez lentement."
+},
+"proney": {
+"n": "Élévations en Y à plat ventre",
+"cues": "Allongé sur le ventre, bras au-dessus de la tête en Y, pouces vers le haut. Décollez les deux bras de quelques centimètres en serrant les omoplates vers l'arrière et le bas. Pause, puis redescendez. Front au sol."
+},
+"deadhang": {
+"n": "Suspension à la barre",
+"cues": "Saisissez une barre de traction un peu plus large que les épaules et laissez le corps pendre, pieds décollés ou effleurant le sol. Relâchez les épaules vers les oreilles et respirez. Redescendez avant que la prise ne lâche."
+},
+"cobra": {
+"n": "Cobra",
+"cues": "Allongé sur le ventre, mains sous les épaules. Poussez doucement pour soulever la poitrine, hanches au sol. Coudes souples, épaules basses. Montez seulement autant que le bas du dos le permet confortablement."
+},
+"sphinx": {
+"n": "Sphinx",
+"cues": "Allongé sur le ventre, appuyé sur les avant-bras, coudes sous les épaules. Laissez le ventre se relâcher vers le sol et grandissez-vous par le sommet du crâne. Respirez lentement."
+},
+"seatedside": {
+"n": "Inclinaison latérale assise",
+"cues": "Asseyez-vous bien droit sur une chaise ou au sol. Levez un bras au-dessus de la tête et penchez-vous du côté opposé, les deux ischions au sol. Sentez l'étirement le long du flanc, de la hanche au bout des doigts."
+},
+"chairtwist": {
+"n": "Torsion assise sur chaise",
+"cues": "Asseyez-vous droit à l'avant d'une chaise, pieds à plat. Tournez la poitrine d'un côté en tenant le dossier et respirez. Grandissez-vous à l'inspiration, tournez un peu plus à l'expiration. Les hanches restent de face."
+},
+"scorpion": {
+"n": "Scorpion à plat ventre",
+"cues": "Allongé sur le ventre, bras écartés. Pliez un genou et amenez ce pied en travers du corps vers la main opposée, en tournant le bas et le haut du dos. Les deux épaules restent au sol. Revenez et changez de côté."
+},
+"inchworm": {
+"n": "Chenilles",
+"cues": "Debout, penchez-vous et posez les mains au sol en pliant les genoux si besoin. Avancez les mains jusqu'à la planche, puis ramenez les pieds vers les mains, jambes presque tendues. Redressez-vous et recommencez."
+},
+"gate": {
+"n": "Inclinaison latérale à genoux (posture de la porte)",
+"cues": "À genoux, tendez une jambe sur le côté, pied à plat. Posez cette main sur la jambe tendue et levez l'autre bras par-dessus vers elle. Poitrine de face, respirez dans le côté allongé."
+},
+"stepham": {
+"n": "Étirement des ischios debout",
+"cues": "Posez un talon sur une marche ou un banc bas, jambe tendue, orteils vers le haut. Dos long, basculez depuis les hanches jusqu'à sentir l'arrière de la cuisse s'étirer. N'arrondissez pas le dos pour aller plus loin."
+},
+"headknee": {
+"n": "Flexion avant assise sur une jambe",
+"cues": "Assis, une jambe tendue et l'autre pied contre l'intérieur de cette cuisse. Grandissez-vous, puis penchez-vous au-dessus de la jambe tendue vers le tibia ou le pied. Menez avec la poitrine et relâchez la nuque."
+},
+"jefferson": {
+"n": "Jefferson curl (sans charge)",
+"cues": "Debout, menton vers la poitrine. Enroulez-vous lentement vertèbre par vertèbre, bras pendants vers les orteils. Pause en bas, puis remontez lentement. Sans charge, et arrêtez bien avant toute douleur dans le dos."
+},
+"goodmorning": {
+"n": "Good mornings au poids du corps",
+"cues": "Debout, pieds à largeur de hanches, mains légèrement derrière la tête. Fléchissez un peu les genoux et basculez depuis les hanches, dos plat, jusqu'à sentir les ischios. Serrez les fessiers pour remonter."
+},
+"rdlreach": {
+"n": "Soulevé de terre sur une jambe avec allongement",
+"cues": "En appui sur une jambe, genou souple. Basculez en avant et tendez les mains vers le sol pendant que l'autre jambe s'allonge derrière vous. Hanches à niveau. Revenez debout avec contrôle."
+},
+"legswall": {
+"n": "Jambes au mur",
+"cues": "Allongé sur le dos, fessiers près d'un mur, jambes tendues posées contre lui. Relâchez les bras le long du corps et respirez lentement. Éloignez-vous un peu du mur si les ischios tirent trop."
+},
+"squatstand": {
+"n": "Du squat à debout",
+"cues": "Debout, pieds à largeur d'épaules. Penchez-vous et tenez vos orteils, pliez les genoux pour descendre en squat profond, coudes à l'intérieur des genoux. Levez la poitrine, puis tendez les jambes sans lâcher les orteils."
+},
+"lizard": {
+"n": "Fente du lézard",
+"cues": "Depuis une fente, posez les deux mains à l'intérieur du pied avant et descendez le genou arrière. Laissez les hanches descendre vers l'avant et le bas. Pour aller plus loin, descendez sur les avant-bras. Continuez à respirer."
+},
+"seatedbfly": {
+"n": "Papillon assis",
+"cues": "Asseyez-vous droit, plantes des pieds jointes, genoux tombant sur les côtés. Tenez les chevilles et penchez-vous doucement depuis les hanches. Laissez les genoux descendre peu à peu, sans les pousser."
+},
+"chairfig4": {
+"n": "Figure quatre assise",
+"cues": "Assis sur une chaise, posez une cheville sur le genou opposé. Dos long, penchez-vous depuis les hanches jusqu'à sentir l'extérieur de la hanche et le fessier s'étirer. Appuyez doucement sur le genou du haut pour accentuer."
+},
+"addrock": {
+"n": "Balancements des adducteurs à genoux",
+"cues": "À quatre pattes, tendez une jambe sur le côté, pied à plat. Reculez les hanches vers le talon, dos plat, jusqu'à sentir l'intérieur de la cuisse. Revenez vers l'avant et recommencez."
+},
+"sidelunge": {
+"n": "Étirement en fente latérale",
+"cues": "Debout, pieds écartés. Pliez un genou et déplacez les hanches au-dessus, l'autre jambe tendue et son pied à plat. Asseyez-vous dans la hanche et sentez l'intérieur de la cuisse tendue s'étirer."
+},
+"lungereach": {
+"n": "Fente basse bras levés",
+"cues": "À genoux en fente, genou arrière au sol. Rentrez le bassin, serrez le fessier arrière et levez les deux bras. Penchez-vous très légèrement à l'opposé de la jambe arrière pour ouvrir l'avant de la hanche."
+},
+"firehydrant": {
+"n": "Bouches d'incendie",
+"cues": "À quatre pattes, genou plié, levez-le sur le côté pour ouvrir la hanche sans pencher le corps. Redescendez avec contrôle. Dos plat, gainage actif."
+},
+"clam": {
+"n": "Coquillages",
+"cues": "Allongé sur le côté, genoux pliés, pieds joints. Gardez les pieds collés et ouvrez le genou du haut comme un coquillage, sans basculer les hanches en arrière. Redescendez lentement."
+},
+"seatedtwist": {
+"n": "Torsion assise",
+"cues": "Assis, jambes tendues. Pliez un genou et passez ce pied par-dessus l'autre jambe. Enlacez le genou avec le bras opposé et tournez la poitrine vers la jambe pliée, l'autre main derrière vous. Restez grand."
+},
+"wideleg": {
+"n": "Flexion avant jambes écartées",
+"cues": "Debout, pieds très écartés et parallèles. Basculez depuis les hanches et penchez-vous en avant, mains au sol ou sur les chevilles. Laissez pendre la tête, poids sur l'avant des pieds."
+},
+"hipcars": {
+"n": "Cercles de hanche à quatre pattes",
+"cues": "À quatre pattes, levez un peu un genou et dessinez le plus grand cercle possible, vers l'avant, sur le côté et vers l'arrière. Dos immobile, le mouvement vient seulement de la hanche. Changez de sens."
+},
+"gobletpry": {
+"n": "Squat goblet en ouverture",
+"cues": "Descendez en squat profond, mains jointes devant la poitrine, coudes à l'intérieur des genoux. Utilisez les coudes pour écarter doucement les genoux et transférez le poids d'un côté à l'autre. Talons au sol si possible."
+},
+"tibraise": {
+"n": "Relevés des tibias",
+"cues": "Dos contre un mur, talons à environ 30 cm. Relevez les orteils et l'avant des pieds vers les tibias, puis redescendez lentement. Sentez l'avant des tibias travailler."
+},
+"calfraise": {
+"n": "Relevés de mollet sur une jambe",
+"cues": "En appui sur un pied, tenez-vous légèrement à un mur. Montez le plus haut possible sur l'avant du pied, marquez une pause, puis redescendez lentement jusqu'en bas. Genou tendu sans être verrouillé."
+},
+"anklecircle": {
+"n": "Cercles de cheville",
+"cues": "Assis ou allongé, soulevez un pied. Dessinez avec les orteils des cercles lents et complets, aussi grands que possible, puis changez de sens. Jambe immobile, le mouvement vient de la cheville."
+},
+"shinsit": {
+"n": "Étirement des tibias à genoux",
+"cues": "À genoux, pieds en pointe, dessus des pieds à plat au sol. Asseyez-vous sur les talons et penchez-vous un peu en arrière, mains derrière vous, pour étirer l'avant des tibias et des chevilles."
+},
+"toetuck": {
+"n": "Étirement des orteils à genoux",
+"cues": "À genoux, orteils retournés sous les pieds, asseyez-vous vers les talons. Dos droit, mains sur les cuisses. L'étirement se ressent sous la plante des pieds. Relâchez si c'est trop vif."
+},
+"stepcalf": {
+"n": "Descente du talon sur une marche",
+"cues": "Sur une marche, l'avant d'un pied au bord et le talon dans le vide, tenez la rampe. Descendez lentement le talon sous la marche jusqu'à sentir un étirement profond du mollet. Genou tendu."
+},
+"towelfoot": {
+"n": "Étirement du pied à la serviette, assis",
+"cues": "Assis, une jambe tendue, passez une serviette autour de l'avant du pied. Tirez doucement pour ramener les orteils vers vous, genou tendu. Sentez l'étirement dans le mollet et sous le pied."
 }
 }
 });

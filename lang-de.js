@@ -1008,6 +1008,186 @@ I18N.add("de", {
 "foldfwd": {
 "n": "Vorbeuge im Stehen",
 "cues": "Füße hüftbreit, Knie locker. Aus der Hüfte nach vorn beugen und den Oberkörper hängen lassen, die Ellbogen über Kreuz halten. Den Kopf sanft schütteln, um den Nacken zu lösen."
+},
+"towelbehind": {
+"n": "Handtuchdehnung hinter dem Rücken",
+"cues": "Halte ein Handtuch mit einer Hand über der Schulter und mit der anderen hinter dem unteren Rücken. Führe die Hände zueinander, bis du eine Dehnung vorne an der unteren Schulter und hinten am oberen Arm spürst. Rippen unten halten."
+},
+"wallangel": {
+"n": "Wandengel",
+"cues": "Rücken, Kopf und Po an eine Wand, Füße einen kleinen Schritt davor. Arme in Torpfosten-Form an der Wand. Schiebe sie so weit wie möglich nach oben, ohne den Kontakt zu verlieren, und wieder herunter. Unteren Rücken sanft flach halten."
+},
+"armcircle": {
+"n": "Armkreisen",
+"cues": "Stehe aufrecht, Arme gestreckt zur Seite. Mache kleine Kreise, die allmählich größer werden, dann Richtung wechseln. Schultern weg von den Ohren."
+},
+"neckside": {
+"n": "Seitliche Nackendehnung",
+"cues": "Sitze oder stehe aufrecht. Neige das Ohr zur Schulter und lege die Hand derselben Seite leicht auf den Kopf. Schiebe die andere Hand Richtung Boden, bis du die Seite des Halses dehnst. Nicht ziehen."
+},
+"chintuck": {
+"n": "Kinn zurückziehen",
+"cues": "Sitze oder stehe aufrecht, Blick geradeaus. Schiebe das Kinn gerade nach hinten, als würdest du ein Doppelkinn machen, Augen bleiben waagerecht. Zwei Sekunden halten, dann lösen. Spüre, wie sich der Nacken verlängert."
+},
+"pronechest": {
+"n": "Brustöffner in Bauchlage",
+"cues": "Lege dich auf den Bauch, einen Arm auf Schulterhöhe zur Seite gestreckt, Handfläche nach unten. Drücke dich mit der anderen Hand weg und rolle den Körper vom gestreckten Arm weg, oberes Knie zur Balance gebeugt. Stopp, wenn Brust und vordere Schulter dehnen."
+},
+"tricep": {
+"n": "Trizepsdehnung über Kopf",
+"cues": "Strecke einen Arm über den Kopf und beuge den Ellbogen, sodass die Hand hinter den Kopf fällt. Drücke den Ellbogen mit der anderen Hand sanft nach hinten und innen. Rippen unten, Kopf aufrecht."
+},
+"puppy": {
+"n": "Welpenhaltung",
+"cues": "Beginne im Vierfüßlerstand. Wandere mit den Händen nach vorn und lass die Brust Richtung Boden sinken, Hüfte bleibt über den Knien. Stirn ablegen und in den oberen Rücken und die Achseln atmen."
+},
+"walllat": {
+"n": "Latdehnung an der Wand",
+"cues": "Stelle dich eine Armlänge vor eine Wand und lege die Hände auf Hüfthöhe auf. Gehe mit den Füßen zurück und beuge aus der Hüfte, Brust zwischen den Armen nach unten drücken. Rücken lang, Knie locker."
+},
+"sidereach": {
+"n": "Seitliches Strecken im Stehen",
+"cues": "Stehe hüftbreit. Strecke einen Arm nach oben und über den Kopf und neige dich zur Gegenseite. Beide Füße fest am Boden, Hüfte gerade. In die gedehnte Seite atmen, dann langsam zurück."
+},
+"proney": {
+"n": "Y-Heben in Bauchlage",
+"cues": "Lege dich auf den Bauch, Arme in Y-Form über dem Kopf, Daumen nach oben. Hebe beide Arme ein paar Zentimeter an, indem du die Schulterblätter nach hinten unten ziehst. Kurz halten, dann senken. Stirn bleibt unten."
+},
+"deadhang": {
+"n": "Hängen an der Stange",
+"cues": "Greife eine Klimmzugstange etwas breiter als schulterbreit und lass den Körper hängen, Füße in der Luft oder leicht am Boden. Lass die Schultern zu den Ohren sinken und atme. Steige ab, bevor der Griff nachlässt."
+},
+"cobra": {
+"n": "Kobra",
+"cues": "Lege dich auf den Bauch, Hände unter den Schultern. Drücke dich sanft hoch und hebe die Brust, Hüfte bleibt am Boden. Ellbogen locker, Schultern unten. Nur so hoch, wie es sich für den unteren Rücken gut anfühlt."
+},
+"sphinx": {
+"n": "Sphinx",
+"cues": "Lege dich auf den Bauch und stütze dich auf die Unterarme, Ellbogen unter den Schultern. Lass den Bauch Richtung Boden entspannen und strecke dich über den Scheitel lang. Langsam atmen."
+},
+"seatedside": {
+"n": "Seitneigung im Sitzen",
+"cues": "Sitze aufrecht auf einem Stuhl oder am Boden. Strecke einen Arm über den Kopf und neige dich zur Gegenseite, beide Sitzbeinhöcker bleiben unten. Spüre die Dehnung an der Seite von der Hüfte bis in die Fingerspitzen."
+},
+"chairtwist": {
+"n": "Drehung auf dem Stuhl",
+"cues": "Sitze aufrecht vorn auf einem Stuhl, Füße flach. Drehe die Brust zu einer Seite, halte dich an der Lehne fest und atme. Beim Einatmen größer werden, beim Ausatmen etwas weiter drehen. Hüfte zeigt nach vorn."
+},
+"scorpion": {
+"n": "Skorpion in Bauchlage",
+"cues": "Lege dich auf den Bauch, Arme zur Seite gestreckt. Beuge ein Knie und führe den Fuß über den Körper zur gegenüberliegenden Hand, Drehung aus unterem und oberem Rücken. Beide Schultern bleiben am Boden. Zurück und Seite wechseln."
+},
+"inchworm": {
+"n": "Raupe",
+"cues": "Stehe aufrecht, beuge dich vor und setze die Hände auf den Boden, Knie so weit wie nötig gebeugt. Wandere mit den Händen in den Unterarmstütz, dann mit fast gestreckten Beinen die Füße zu den Händen. Aufrichten und wiederholen."
+},
+"gate": {
+"n": "Seitneigung im Knien (Torhaltung)",
+"cues": "Knie dich hin und strecke ein Bein zur Seite, Fuß flach. Lege diese Hand auf das gestreckte Bein und führe den anderen Arm nach oben und darüber hinweg. Brust zeigt nach vorn, in die lange Seite atmen."
+},
+"stepham": {
+"n": "Oberschenkelrückseite im Stehen dehnen",
+"cues": "Lege eine Ferse auf eine niedrige Stufe oder Bank, Bein gestreckt, Zehen nach oben. Rücken lang und aus der Hüfte nach vorn beugen, bis die Oberschenkelrückseite dehnt. Den Rücken nicht runden, um weiter zu kommen."
+},
+"headknee": {
+"n": "Vorbeuge im Sitzen auf einem Bein",
+"cues": "Sitze mit einem gestreckten Bein, der andere Fuß an der Innenseite dieses Oberschenkels. Richte dich auf und beuge dich über das gestreckte Bein zum Schienbein oder Fuß. Mit der Brust führen, Nacken locker."
+},
+"jefferson": {
+"n": "Jefferson Curl (ohne Gewicht)",
+"cues": "Stehe aufrecht, Kinn zur Brust. Rolle dich langsam Wirbel für Wirbel ab, Arme hängen Richtung Zehen. Unten kurz halten, dann langsam aufrollen. Ohne Gewicht, und lange vor Rückenschmerzen aufhören."
+},
+"goodmorning": {
+"n": "Good Mornings ohne Gewicht",
+"cues": "Stehe hüftbreit, Hände locker hinter dem Kopf. Knie leicht beugen und mit flachem Rücken aus der Hüfte nach vorn kippen, bis du die Oberschenkelrückseite spürst. Po anspannen, um dich aufzurichten."
+},
+"rdlreach": {
+"n": "Einbeiniges Kreuzheben mit Strecken",
+"cues": "Stehe auf einem Bein, Knie locker. Kippe nach vorn und strecke beide Hände Richtung Boden, während das andere Bein gestreckt nach hinten geht. Hüfte waagerecht. Kontrolliert zurück in den Stand."
+},
+"legswall": {
+"n": "Beine an der Wand",
+"cues": "Lege dich auf den Rücken, Po nah an einer Wand, Beine gestreckt an der Wand hoch. Arme locker neben dem Körper, langsam atmen. Rutsche etwas von der Wand weg, wenn die Oberschenkelrückseite zu stark zieht."
+},
+"squatstand": {
+"n": "Von der Hocke in den Stand",
+"cues": "Stehe schulterbreit. Beuge dich vor und greife deine Zehen, beuge die Knie und gehe in eine tiefe Hocke, Ellbogen innen an den Knien. Brust heben, dann die Beine strecken, ohne die Zehen loszulassen."
+},
+"lizard": {
+"n": "Eidechse",
+"cues": "Aus dem Ausfallschritt beide Hände innen neben den vorderen Fuß setzen und das hintere Knie absenken. Lass die Hüfte nach vorn unten sinken. Für mehr auf die Unterarme gehen. Weiter atmen."
+},
+"seatedbfly": {
+"n": "Schmetterling im Sitzen",
+"cues": "Sitze aufrecht, Fußsohlen zusammen, Knie fallen zur Seite. Halte die Knöchel und neige dich sanft aus der Hüfte nach vorn. Lass die Knie langsam sinken, ohne sie zu drücken."
+},
+"chairfig4": {
+"n": "Vierer-Dehnung im Sitzen",
+"cues": "Setze dich auf einen Stuhl und lege einen Knöchel auf das gegenüberliegende Knie. Rücken lang und aus der Hüfte nach vorn neigen, bis äußere Hüfte und Po dehnen. Für mehr das obere Knie sanft nach unten drücken."
+},
+"addrock": {
+"n": "Adduktoren-Wippen im Knien",
+"cues": "Im Vierfüßlerstand ein Bein zur Seite strecken, Fuß flach. Hüfte mit flachem Rücken Richtung Ferse schieben, bis die Innenseite des Oberschenkels dehnt. Nach vorn und wiederholen."
+},
+"sidelunge": {
+"n": "Seitlicher Ausfallschritt",
+"cues": "Stehe breitbeinig. Beuge ein Knie und verlagere die Hüfte darüber, das andere Bein bleibt gestreckt, Fuß flach. Setze dich in die Hüfte und spüre die Dehnung innen am gestreckten Bein."
+},
+"lungereach": {
+"n": "Tiefer Ausfallschritt mit Armen nach oben",
+"cues": "Knie im Ausfallschritt, hinteres Knie am Boden. Becken einrollen, hinteren Po anspannen und beide Arme nach oben strecken. Leicht vom hinteren Bein weg neigen, um die Hüftvorderseite zu öffnen."
+},
+"firehydrant": {
+"n": "Hydranten",
+"cues": "Im Vierfüßlerstand ein gebeugtes Knie seitlich anheben und die Hüfte öffnen, ohne den Körper zu kippen. Kontrolliert senken. Rücken flach, Rumpf fest."
+},
+"clam": {
+"n": "Muscheln",
+"cues": "Lege dich auf die Seite, Knie gebeugt, Füße zusammen. Füße bleiben zusammen, öffne das obere Knie wie eine Muschel, ohne die Hüfte nach hinten zu rollen. Langsam schließen."
+},
+"seatedtwist": {
+"n": "Drehsitz",
+"cues": "Sitze mit gestreckten Beinen. Beuge ein Knie und stelle den Fuß über das andere Bein. Umarme das Knie mit dem gegenüberliegenden Arm und drehe die Brust zum gebeugten Bein, die andere Hand hinter dir. Aufrecht sitzen."
+},
+"wideleg": {
+"n": "Vorbeuge mit gegrätschten Beinen",
+"cues": "Stehe mit weit gegrätschten, parallelen Füßen. Beuge aus der Hüfte nach vorn, Hände am Boden oder an den Knöcheln. Kopf hängen lassen, Gewicht über den Fußballen."
+},
+"hipcars": {
+"n": "Hüftkreisen im Vierfüßlerstand",
+"cues": "Im Vierfüßlerstand ein Knie leicht anheben und den größtmöglichen Kreis ziehen, nach vorn, zur Seite und nach hinten. Rücken bleibt ruhig, Bewegung nur aus der Hüfte. Richtung wechseln."
+},
+"gobletpry": {
+"n": "Goblet-Hocke mit Knie-Öffnen",
+"cues": "Gehe in eine tiefe Hocke, Hände vor der Brust zusammen, Ellbogen innen an den Knien. Drücke die Knie mit den Ellbogen sanft auseinander und verlagere das Gewicht von Seite zu Seite. Fersen möglichst unten."
+},
+"tibraise": {
+"n": "Schienbein-Heben",
+"cues": "Lehne dich mit dem Rücken an eine Wand, Fersen etwa 30 cm davor. Hebe Zehen und Fußballen Richtung Schienbein und senke langsam. Spüre die Vorderseite der Schienbeine arbeiten."
+},
+"calfraise": {
+"n": "Einbeiniges Wadenheben",
+"cues": "Stehe auf einem Fuß, an einer Wand leicht festhalten. Gehe so hoch wie möglich auf den Fußballen, kurz halten, dann langsam ganz absenken. Knie gestreckt, aber nicht durchgedrückt."
+},
+"anklecircle": {
+"n": "Fußkreisen",
+"cues": "Sitze oder liege und hebe einen Fuß an. Ziehe mit den Zehen langsame, volle Kreise, so groß wie möglich, dann Richtung wechseln. Bein bleibt ruhig, die Bewegung kommt aus dem Sprunggelenk."
+},
+"shinsit": {
+"n": "Schienbeindehnung im Knien",
+"cues": "Knie mit gestreckten Füßen, Fußrücken flach am Boden. Setze dich auf die Fersen und lehne dich mit den Händen hinter dir etwas zurück, um Schienbeine und Sprunggelenke vorn zu dehnen."
+},
+"toetuck": {
+"n": "Zehendehnung im Knien",
+"cues": "Knie mit aufgestellten Zehen und setze dich Richtung Fersen. Rücken aufrecht, Hände auf den Oberschenkeln. Die Dehnung spürst du unter den Fußsohlen. Nachlassen, wenn es stechend wird."
+},
+"stepcalf": {
+"n": "Ferse von der Stufe absenken",
+"cues": "Stelle dich mit dem Fußballen eines Fußes auf die Kante einer Stufe, Ferse frei, am Geländer festhalten. Senke die Ferse langsam unter die Stufe, bis die Wade tief dehnt. Knie gestreckt."
+},
+"towelfoot": {
+"n": "Fußdehnung mit Handtuch im Sitzen",
+"cues": "Sitze mit einem gestreckten Bein und lege ein Handtuch um den Fußballen. Ziehe sanft, um die Zehen zu dir zu holen, Knie gestreckt. Spüre die Dehnung in Wade und Fußsohle."
 }
 }
 });

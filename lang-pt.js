@@ -1008,6 +1008,186 @@ I18N.add("pt", {
 "foldfwd": {
 "n": "Flexão à frente de pé",
 "cues": "Pés à largura das ancas, joelhos soltos. Incline-se e deixe o tronco pendurado, segurando os cotovelos opostos. Abane suavemente a cabeça para soltar o pescoço."
+},
+"towelbehind": {
+"n": "Alongamento com toalha atrás das costas",
+"cues": "Segure uma toalha com uma mão por cima do ombro e a outra atrás da zona lombar. Aproxime as mãos até sentir alongar a frente do ombro de baixo e a parte de trás do braço de cima. Mantenha as costelas em baixo."
+},
+"wallangel": {
+"n": "Anjos na parede",
+"cues": "Costas, cabeça e glúteos encostados a uma parede, pés um pequeno passo à frente. Braços em forma de baliza contra a parede. Deslize-os para cima o mais possível sem perder o contacto e volte a descer. Mantenha a lombar suavemente encostada."
+},
+"armcircle": {
+"n": "Círculos com os braços",
+"cues": "De pé, braços esticados para os lados. Faça círculos pequenos que vão aumentando aos poucos e depois inverta. Ombros longe das orelhas."
+},
+"neckside": {
+"n": "Alongamento lateral do pescoço",
+"cues": "Sentado ou de pé, direito. Incline a orelha para o ombro e pouse levemente a mão do mesmo lado na cabeça. Estenda a outra mão em direção ao chão até sentir alongar o lado do pescoço. Sem puxar."
+},
+"chintuck": {
+"n": "Recolher o queixo",
+"cues": "Sentado ou de pé, a olhar em frente. Leve o queixo para trás em linha reta, como se fizesse papada, com os olhos na horizontal. Mantenha dois segundos e relaxe. Sinta a nuca a alongar."
+},
+"pronechest": {
+"n": "Abertura do peito de barriga para baixo",
+"cues": "Deite-se de barriga para baixo com um braço esticado para o lado à altura do ombro, palma para baixo. Empurre com a outra mão e role o corpo para longe do braço esticado, dobrando o joelho de cima para se equilibrar. Pare quando sentir alongar o peito e a frente do ombro."
+},
+"tricep": {
+"n": "Alongamento do tríceps acima da cabeça",
+"cues": "Leve um braço acima da cabeça e dobre o cotovelo para a mão cair atrás da cabeça. Com a outra mão, empurre suavemente o cotovelo para trás e para dentro. Costelas em baixo e cabeça erguida."
+},
+"puppy": {
+"n": "Postura do cachorrinho",
+"cues": "Comece em quatro apoios. Avance com as mãos e deixe o peito descer em direção ao chão, com as ancas acima dos joelhos. Pouse a testa e respire para a parte de cima das costas e as axilas."
+},
+"walllat": {
+"n": "Alongamento do grande dorsal na parede",
+"cues": "Fique a um braço de distância de uma parede e pouse as mãos à altura das ancas. Recue com os pés e incline-se a partir das ancas, empurrando o peito para baixo entre os braços. Costas longas, joelhos soltos."
+},
+"sidereach": {
+"n": "Alongamento lateral de pé",
+"cues": "De pé, pés à largura das ancas. Leve um braço para cima e por cima da cabeça, inclinando-se para o lado oposto. Os dois pés bem assentes e as ancas de frente. Respire para o lado alongado e volte devagar."
+},
+"proney": {
+"n": "Elevações em Y de barriga para baixo",
+"cues": "Deite-se de barriga para baixo com os braços acima da cabeça em Y, polegares para cima. Levante os dois braços alguns centímetros apertando as omoplatas para trás e para baixo. Pausa e desça. Testa no chão."
+},
+"deadhang": {
+"n": "Suspensão na barra",
+"cues": "Agarre uma barra de elevações um pouco mais aberta do que os ombros e deixe o corpo pendurado, pés no ar ou a tocar levemente no chão. Relaxe os ombros em direção às orelhas e respire. Desça antes de a pega falhar."
+},
+"cobra": {
+"n": "Cobra",
+"cues": "Deite-se de barriga para baixo com as mãos debaixo dos ombros. Empurre suavemente para levantar o peito enquanto as ancas ficam no chão. Cotovelos soltos e ombros em baixo. Suba só até onde a lombar se sinta confortável."
+},
+"sphinx": {
+"n": "Esfinge",
+"cues": "Deite-se de barriga para baixo e apoie-se nos antebraços, cotovelos debaixo dos ombros. Deixe a barriga relaxar em direção ao chão e alongue-se pelo topo da cabeça. Respire devagar."
+},
+"seatedside": {
+"n": "Inclinação lateral sentado",
+"cues": "Sente-se direito numa cadeira ou no chão. Leve um braço acima da cabeça e incline-se para o lado oposto, com os dois ísquios apoiados. Sinta o alongamento ao longo do lado, da anca até à ponta dos dedos."
+},
+"chairtwist": {
+"n": "Torção sentado na cadeira",
+"cues": "Sente-se direito na parte da frente de uma cadeira, pés assentes. Rode o peito para um lado, segurando as costas da cadeira, e respire. Cresça ao inspirar e rode um pouco mais ao expirar. As ancas ficam viradas para a frente."
+},
+"scorpion": {
+"n": "Escorpião de barriga para baixo",
+"cues": "Deite-se de barriga para baixo com os braços abertos. Dobre um joelho e leve esse pé por cima do corpo em direção à mão oposta, rodando a lombar e a parte de cima das costas. Os dois ombros ficam no chão. Volte e troque de lado."
+},
+"inchworm": {
+"n": "Lagarta",
+"cues": "De pé, incline-se e pouse as mãos no chão, dobrando os joelhos o necessário. Avance com as mãos até à prancha e depois aproxime os pés das mãos com as pernas quase esticadas. Levante-se e repita."
+},
+"gate": {
+"n": "Inclinação lateral de joelhos (postura do portão)",
+"cues": "De joelhos, estique uma perna para o lado com o pé assente. Pouse essa mão na perna esticada e leve o outro braço para cima e por cima em direção a ela. Peito virado para a frente e respire para o lado comprido."
+},
+"stepham": {
+"n": "Alongamento dos isquiotibiais de pé",
+"cues": "Pouse um calcanhar num degrau ou banco baixo, perna esticada e dedos para cima. Costas longas e incline-se a partir das ancas até sentir alongar a parte de trás da coxa. Não arredonde as costas para ir mais longe."
+},
+"headknee": {
+"n": "Flexão à frente sentado numa perna",
+"cues": "Sente-se com uma perna esticada e o outro pé encostado ao interior dessa coxa. Sente-se direito e incline-se sobre a perna esticada, em direção à canela ou ao pé. Guie com o peito e relaxe o pescoço."
+},
+"jefferson": {
+"n": "Jefferson curl (sem peso)",
+"cues": "De pé, queixo ao peito. Enrole-se devagar vértebra a vértebra, deixando os braços cair em direção aos pés. Pausa em baixo e suba devagar. Sem peso, e pare muito antes de sentir dor nas costas."
+},
+"goodmorning": {
+"n": "Good mornings com o peso do corpo",
+"cues": "De pé, pés à largura das ancas, mãos levemente atrás da cabeça. Solte os joelhos e incline-se a partir das ancas com as costas direitas até sentir os isquiotibiais. Aperte os glúteos para voltar a subir."
+},
+"rdlreach": {
+"n": "Peso morto numa perna com alcance",
+"cues": "Apoiado numa perna com o joelho solto. Incline-se para a frente e leve as duas mãos em direção ao chão enquanto a outra perna se estica para trás. Ancas niveladas. Volte à posição de pé com controlo."
+},
+"legswall": {
+"n": "Pernas na parede",
+"cues": "Deite-se de costas com os glúteos perto de uma parede e as pernas esticadas apoiadas nela. Relaxe os braços ao lado do corpo e respire devagar. Afaste-se um pouco da parede se os isquiotibiais estiverem demasiado tensos."
+},
+"squatstand": {
+"n": "Do agachamento à posição de pé",
+"cues": "De pé, pés à largura dos ombros. Incline-se e agarre as pontas dos pés, dobrando os joelhos para descer num agachamento profundo com os cotovelos por dentro dos joelhos. Levante o peito e estique as pernas sem largar os pés."
+},
+"lizard": {
+"n": "Afundo do lagarto",
+"cues": "A partir de um afundo, pouse as duas mãos por dentro do pé da frente e baixe o joelho de trás. Deixe as ancas descer para a frente e para baixo. Para ir mais fundo, apoie-se nos antebraços. Continue a respirar."
+},
+"seatedbfly": {
+"n": "Borboleta sentado",
+"cues": "Sente-se direito com as plantas dos pés juntas e os joelhos a cair para os lados. Segure os tornozelos e incline-se suavemente a partir das ancas. Deixe os joelhos descer devagar, sem os empurrar."
+},
+"chairfig4": {
+"n": "Figura quatro sentado",
+"cues": "Sente-se numa cadeira e pouse um tornozelo sobre o joelho oposto. Costas longas e incline-se a partir das ancas até sentir alongar a anca externa e o glúteo. Pressione suavemente o joelho de cima se quiser mais."
+},
+"addrock": {
+"n": "Balanço dos adutores de joelhos",
+"cues": "Em quatro apoios, estique uma perna para o lado com o pé assente. Leve as ancas para trás em direção ao calcanhar, com as costas direitas, até sentir o interior da coxa. Volte à frente e repita."
+},
+"sidelunge": {
+"n": "Alongamento em afundo lateral",
+"cues": "De pé com os pés afastados. Dobre um joelho e desloque as ancas por cima dele, com a outra perna esticada e o pé assente. Sente-se na anca e sinta alongar o interior da coxa da perna esticada."
+},
+"lungereach": {
+"n": "Afundo baixo com braços para cima",
+"cues": "De joelhos em afundo, joelho de trás no chão. Encaixe a bacia, aperte o glúteo de trás e leve os dois braços para cima. Incline-se muito ligeiramente para o lado contrário à perna de trás para abrir a frente da anca."
+},
+"firehydrant": {
+"n": "Hidrantes",
+"cues": "Em quatro apoios, com um joelho dobrado, levante-o para o lado abrindo a anca sem inclinar o corpo. Desça com controlo. Costas direitas e abdominais ativos."
+},
+"clam": {
+"n": "Conchas",
+"cues": "Deite-se de lado com os joelhos dobrados e os pés juntos. Mantenha os pés encostados e abra o joelho de cima como uma concha, sem rodar as ancas para trás. Desça devagar."
+},
+"seatedtwist": {
+"n": "Torção sentado",
+"cues": "Sente-se com as duas pernas esticadas. Dobre um joelho e passe esse pé por cima da outra perna. Abrace o joelho com o braço oposto e rode o peito em direção à perna dobrada, com a outra mão atrás de si. Sente-se alto."
+},
+"wideleg": {
+"n": "Flexão à frente com pernas afastadas",
+"cues": "De pé com os pés bem afastados e paralelos. Incline-se a partir das ancas, com as mãos no chão ou nos tornozelos. Deixe a cabeça pender e o peso sobre a parte da frente dos pés."
+},
+"hipcars": {
+"n": "Círculos da anca em quatro apoios",
+"cues": "Em quatro apoios, levante ligeiramente um joelho e desenhe o maior círculo possível, para a frente, para o lado e para trás. Costas paradas, o movimento vem só da anca. Inverta o sentido."
+},
+"gobletpry": {
+"n": "Agachamento goblet a abrir os joelhos",
+"cues": "Desça num agachamento profundo com as mãos juntas à frente do peito e os cotovelos por dentro dos joelhos. Use os cotovelos para afastar suavemente os joelhos e passe o peso de um lado para o outro. Calcanhares em baixo, se conseguir."
+},
+"tibraise": {
+"n": "Elevações do tibial",
+"cues": "Encoste as costas a uma parede com os calcanhares a cerca de 30 cm. Levante os dedos e a parte da frente dos pés em direção às canelas e desça devagar. Sinta a frente das canelas a trabalhar."
+},
+"calfraise": {
+"n": "Elevações dos gémeos numa perna",
+"cues": "Apoiado num pé, segure-se levemente a uma parede. Suba o mais alto possível na parte da frente do pé, pausa, e desça devagar até ao fim. Joelho esticado mas sem bloquear."
+},
+"anklecircle": {
+"n": "Círculos com o tornozelo",
+"cues": "Sentado ou deitado, levante um pé. Desenhe com os dedos círculos lentos e completos, o maior possível, e depois inverta. Perna parada para o movimento vir do tornozelo."
+},
+"shinsit": {
+"n": "Alongamento das canelas de joelhos",
+"cues": "De joelhos, pés em ponta e peito dos pés assente no chão. Sente-se nos calcanhares e incline-se um pouco para trás com as mãos atrás de si para alongar a frente das canelas e dos tornozelos."
+},
+"toetuck": {
+"n": "Alongamento dos dedos de joelhos",
+"cues": "De joelhos com os dedos dos pés dobrados por baixo, sente-se em direção aos calcanhares. Costas direitas e mãos nas coxas. Vai sentir o alongamento na planta dos pés. Alivie se for intenso."
+},
+"stepcalf": {
+"n": "Descida do calcanhar no degrau",
+"cues": "Num degrau, com a parte da frente de um pé na beira e o calcanhar de fora, segure-se ao corrimão. Desça devagar o calcanhar abaixo do degrau até sentir um alongamento profundo do gémeo. Joelho esticado."
+},
+"towelfoot": {
+"n": "Alongamento do pé com toalha, sentado",
+"cues": "Sente-se com uma perna esticada e passe uma toalha à volta da parte da frente desse pé. Puxe suavemente para trazer os dedos na sua direção, com o joelho esticado. Sinta o alongamento no gémeo e na planta do pé."
 }
 }
 });

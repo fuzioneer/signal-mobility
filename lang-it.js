@@ -1008,6 +1008,186 @@ I18N.add("it", {
 "foldfwd": {
 "n": "Piegamento in avanti in piedi",
 "cues": "Piedi alla larghezza delle anche, ginocchia morbide. Piegati e lascia pendere il busto, tenendo i gomiti opposti. Muovi dolcemente la testa per sciogliere il collo."
+},
+"towelbehind": {
+"n": "Allungamento con asciugamano dietro la schiena",
+"cues": "Tieni un asciugamano con una mano sopra la spalla e l'altra dietro la zona lombare. Avvicina le mani finché senti allungare la parte anteriore della spalla in basso e la parte posteriore del braccio in alto. Costole basse."
+},
+"wallangel": {
+"n": "Angeli al muro",
+"cues": "Schiena, testa e glutei contro un muro, piedi un piccolo passo avanti. Braccia a forma di porta da calcio contro il muro. Falle scivolare in alto il più possibile senza perdere il contatto, poi torna giù. Zona lombare dolcemente piatta."
+},
+"armcircle": {
+"n": "Cerchi con le braccia",
+"cues": "In piedi, braccia tese ai lati. Fai piccoli cerchi che diventano via via più grandi, poi cambia direzione. Spalle lontane dalle orecchie."
+},
+"neckside": {
+"n": "Allungamento laterale del collo",
+"cues": "Seduto o in piedi, dritto. Inclina l'orecchio verso la spalla e appoggia leggermente la mano dello stesso lato sulla testa. Spingi l'altra mano verso il pavimento finché senti allungare il lato del collo. Senza tirare."
+},
+"chintuck": {
+"n": "Retrazioni del mento",
+"cues": "Seduto o in piedi, sguardo avanti. Porta il mento dritto indietro come per fare un doppio mento, occhi orizzontali. Tieni due secondi, poi rilassa. Senti la nuca allungarsi."
+},
+"pronechest": {
+"n": "Apertura del petto a pancia in giù",
+"cues": "Sdraiati a pancia in giù con un braccio teso di lato all'altezza della spalla, palmo in basso. Spingi con l'altra mano e ruota il corpo lontano dal braccio teso, piegando il ginocchio di sopra per equilibrio. Fermati quando senti allungare petto e parte anteriore della spalla."
+},
+"tricep": {
+"n": "Allungamento dei tricipiti sopra la testa",
+"cues": "Porta un braccio sopra la testa e piega il gomito in modo che la mano scenda dietro la testa. Con l'altra mano spingi delicatamente il gomito indietro e verso l'interno. Costole basse e testa alta."
+},
+"puppy": {
+"n": "Posizione del cucciolo",
+"cues": "Parti a quattro zampe. Cammina in avanti con le mani e lascia scendere il petto verso il pavimento, anche sopra le ginocchia. Appoggia la fronte e respira nella parte alta della schiena e nelle ascelle."
+},
+"walllat": {
+"n": "Allungamento dei dorsali al muro",
+"cues": "Mettiti a un braccio di distanza da un muro e appoggia le mani all'altezza dei fianchi. Arretra con i piedi e piegati dalle anche, spingendo il petto in basso tra le braccia. Schiena lunga, ginocchia morbide."
+},
+"sidereach": {
+"n": "Allungamento laterale in piedi",
+"cues": "In piedi, piedi alla larghezza dei fianchi. Porta un braccio in alto e sopra la testa, inclinandoti dal lato opposto. Entrambi i piedi a terra e anche frontali. Respira nel lato allungato, poi torna lentamente."
+},
+"proney": {
+"n": "Sollevamenti a Y a pancia in giù",
+"cues": "Sdraiati a pancia in giù con le braccia sopra la testa a Y, pollici in su. Solleva entrambe le braccia di qualche centimetro stringendo le scapole indietro e in basso. Pausa, poi abbassa. Fronte a terra."
+},
+"deadhang": {
+"n": "Sospensione alla sbarra",
+"cues": "Afferra una sbarra per trazioni un po' più larga delle spalle e lascia pendere il corpo, piedi sollevati o appena a terra. Rilassa le spalle verso le orecchie e respira. Scendi prima che la presa ceda."
+},
+"cobra": {
+"n": "Cobra",
+"cues": "Sdraiati a pancia in giù con le mani sotto le spalle. Spingi dolcemente sollevando il petto mentre le anche restano a terra. Gomiti morbidi e spalle basse. Sali solo fin dove la zona lombare sta comoda."
+},
+"sphinx": {
+"n": "Sfinge",
+"cues": "Sdraiati a pancia in giù e appoggiati sugli avambracci, gomiti sotto le spalle. Lascia rilassare la pancia verso il pavimento e allungati dalla sommità della testa. Respira lentamente."
+},
+"seatedside": {
+"n": "Flessione laterale da seduto",
+"cues": "Siediti dritto su una sedia o a terra. Porta un braccio sopra la testa e inclinati dal lato opposto, con entrambi gli ischi appoggiati. Senti l'allungamento lungo il fianco, dall'anca alla punta delle dita."
+},
+"chairtwist": {
+"n": "Torsione seduto sulla sedia",
+"cues": "Siediti dritto sulla parte anteriore di una sedia, piedi a terra. Ruota il petto da un lato tenendo lo schienale e respira. Allungati inspirando, ruota un po' di più espirando. Le anche guardano avanti."
+},
+"scorpion": {
+"n": "Scorpione a pancia in giù",
+"cues": "Sdraiati a pancia in giù con le braccia aperte. Piega un ginocchio e porta il piede attraverso il corpo verso la mano opposta, ruotando la zona lombare e la parte alta della schiena. Entrambe le spalle a terra. Torna e cambia lato."
+},
+"inchworm": {
+"n": "Bruco",
+"cues": "In piedi, piegati in avanti e appoggia le mani a terra, piegando le ginocchia quanto serve. Cammina con le mani fino al plank, poi porta i piedi verso le mani con le gambe quasi tese. Alzati e ripeti."
+},
+"gate": {
+"n": "Flessione laterale in ginocchio (posizione del cancello)",
+"cues": "In ginocchio, distendi una gamba di lato con il piede a terra. Appoggia quella mano sulla gamba tesa e porta l'altro braccio in alto e sopra verso di essa. Petto in avanti, respira nel lato lungo."
+},
+"stepham": {
+"n": "Allungamento dei femorali in piedi",
+"cues": "Appoggia un tallone su un gradino o una panca bassa, gamba tesa e punte in su. Schiena lunga e piegati dalle anche finché senti allungare il retro della coscia. Non arrotondare la schiena per andare oltre."
+},
+"headknee": {
+"n": "Piegamento in avanti seduto su una gamba",
+"cues": "Siediti con una gamba tesa e l'altro piede contro l'interno di quella coscia. Siediti dritto, poi piegati in avanti sopra la gamba tesa verso lo stinco o il piede. Guida con il petto e rilassa il collo."
+},
+"jefferson": {
+"n": "Jefferson curl (a corpo libero)",
+"cues": "In piedi, mento al petto. Srotolati lentamente una vertebra alla volta, braccia penzoloni verso le punte dei piedi. Pausa in basso, poi risali lentamente. Senza pesi, e fermati molto prima di sentire dolore alla schiena."
+},
+"goodmorning": {
+"n": "Good morning a corpo libero",
+"cues": "In piedi, piedi alla larghezza dei fianchi, mani leggere dietro la testa. Ammorbidisci le ginocchia e piegati dalle anche con la schiena piatta finché senti i femorali. Stringi i glutei per tornare su."
+},
+"rdlreach": {
+"n": "Stacco su una gamba con allungamento",
+"cues": "In piedi su una gamba con il ginocchio morbido. Piegati in avanti e porta entrambe le mani verso il pavimento mentre l'altra gamba si distende indietro. Anche allineate. Torna in piedi con controllo."
+},
+"legswall": {
+"n": "Gambe al muro",
+"cues": "Sdraiati sulla schiena con i glutei vicino a un muro e le gambe tese appoggiate su di esso. Rilassa le braccia lungo i fianchi e respira lentamente. Allontanati un po' dal muro se i femorali tirano troppo."
+},
+"squatstand": {
+"n": "Dallo squat alla posizione eretta",
+"cues": "In piedi, piedi alla larghezza delle spalle. Piegati e afferra le punte dei piedi, piegando le ginocchia per scendere in uno squat profondo con i gomiti dentro le ginocchia. Solleva il petto, poi distendi le gambe senza lasciare i piedi."
+},
+"lizard": {
+"n": "Affondo della lucertola",
+"cues": "Da un affondo, appoggia entrambe le mani all'interno del piede anteriore e abbassa il ginocchio posteriore. Lascia scendere le anche in avanti e in basso. Per andare più a fondo, scendi sugli avambracci. Continua a respirare."
+},
+"seatedbfly": {
+"n": "Farfalla da seduto",
+"cues": "Siediti dritto con le piante dei piedi unite e le ginocchia che cadono ai lati. Tieni le caviglie e inclinati dolcemente in avanti dalle anche. Lascia scendere le ginocchia piano, senza spingerle."
+},
+"chairfig4": {
+"n": "Figura quattro da seduto",
+"cues": "Siediti su una sedia e appoggia una caviglia sul ginocchio opposto. Schiena lunga e inclinati in avanti dalle anche finché senti allungare l'anca esterna e il gluteo. Premi delicatamente il ginocchio sopra se vuoi di più."
+},
+"addrock": {
+"n": "Oscillazioni degli adduttori in ginocchio",
+"cues": "A quattro zampe, distendi una gamba di lato con il piede a terra. Porta le anche indietro verso il tallone con la schiena piatta finché senti l'interno coscia. Torna avanti e ripeti."
+},
+"sidelunge": {
+"n": "Allungamento in affondo laterale",
+"cues": "In piedi a gambe larghe. Piega un ginocchio e sposta le anche sopra di esso, con l'altra gamba tesa e il piede a terra. Siediti nell'anca e senti allungare l'interno coscia della gamba tesa."
+},
+"lungereach": {
+"n": "Affondo basso con braccia in alto",
+"cues": "In ginocchio in affondo, ginocchio posteriore a terra. Ritrai il bacino, stringi il gluteo dietro e porta entrambe le braccia in alto. Inclinati appena dal lato opposto alla gamba posteriore per aprire la parte anteriore dell'anca."
+},
+"firehydrant": {
+"n": "Idranti",
+"cues": "A quattro zampe, con un ginocchio piegato, sollevalo di lato aprendo l'anca senza inclinare il corpo. Abbassa con controllo. Schiena piatta e addome attivo."
+},
+"clam": {
+"n": "Conchiglie",
+"cues": "Sdraiati su un fianco con le ginocchia piegate e i piedi uniti. Tieni i piedi a contatto e apri il ginocchio di sopra come una conchiglia, senza ruotare le anche indietro. Abbassa lentamente."
+},
+"seatedtwist": {
+"n": "Torsione da seduto",
+"cues": "Siediti con entrambe le gambe tese. Piega un ginocchio e scavalca l'altra gamba con quel piede. Abbraccia il ginocchio con il braccio opposto e ruota il petto verso la gamba piegata, l'altra mano dietro di te. Siediti alto."
+},
+"wideleg": {
+"n": "Piegamento in avanti a gambe larghe",
+"cues": "In piedi con i piedi molto larghi e paralleli. Piegati dalle anche in avanti, mani a terra o sulle caviglie. Lascia pendere la testa e il peso sull'avampiede."
+},
+"hipcars": {
+"n": "Cerchi d'anca a quattro zampe",
+"cues": "A quattro zampe, solleva leggermente un ginocchio e disegna il cerchio più grande possibile, avanti, di lato e indietro. Schiena ferma, movimento solo dall'anca. Cambia direzione."
+},
+"gobletpry": {
+"n": "Squat goblet aprendo le ginocchia",
+"cues": "Scendi in uno squat profondo con le mani unite davanti al petto e i gomiti dentro le ginocchia. Usa i gomiti per aprire delicatamente le ginocchia e sposta il peso da un lato all'altro. Talloni giù se riesci."
+},
+"tibraise": {
+"n": "Sollevamenti del tibiale",
+"cues": "Appoggia la schiena a un muro con i talloni a circa 30 cm. Solleva punte e avampiedi verso gli stinchi e abbassa lentamente. Senti lavorare la parte anteriore degli stinchi."
+},
+"calfraise": {
+"n": "Sollevamenti del polpaccio su una gamba",
+"cues": "In piedi su un piede, tenendoti leggermente a un muro. Sali più in alto possibile sull'avampiede, pausa, poi scendi lentamente fino in fondo. Ginocchio teso ma non bloccato."
+},
+"anklecircle": {
+"n": "Cerchi con la caviglia",
+"cues": "Seduto o sdraiato, solleva un piede. Disegna con le dita cerchi lenti e completi, i più grandi possibile, poi cambia direzione. Gamba ferma, il movimento parte dalla caviglia."
+},
+"shinsit": {
+"n": "Allungamento degli stinchi in ginocchio",
+"cues": "In ginocchio con i piedi a punta e il dorso dei piedi a terra. Siediti sui talloni e inclinati un po' indietro con le mani dietro di te per allungare la parte anteriore di stinchi e caviglie."
+},
+"toetuck": {
+"n": "Allungamento delle dita in ginocchio",
+"cues": "In ginocchio con le dita dei piedi piegate sotto, siediti verso i talloni. Schiena dritta e mani sulle cosce. Sentirai l'allungamento sotto la pianta dei piedi. Allenta se è troppo intenso."
+},
+"stepcalf": {
+"n": "Discesa del tallone dal gradino",
+"cues": "In piedi su un gradino con l'avampiede di un piede sul bordo e il tallone fuori, tenendoti al corrimano. Abbassa lentamente il tallone sotto il gradino finché senti un allungamento profondo del polpaccio. Ginocchio teso."
+},
+"towelfoot": {
+"n": "Allungamento del piede con asciugamano da seduto",
+"cues": "Siediti con una gamba tesa e passa un asciugamano intorno all'avampiede. Tira delicatamente per portare le dita verso di te, con il ginocchio teso. Senti l'allungamento nel polpaccio e sotto il piede."
 }
 }
 });
