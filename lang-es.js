@@ -1,4 +1,4 @@
-/* Signal Mobility translations: es */
+/* Movage translations: es */
 I18N.add("es", {
 "&#x2039;": "&#x2039;",
 "&#x203A;": "&#x203A;",
@@ -267,7 +267,7 @@ I18N.add("es", {
 "Show photo": "Mostrar foto",
 "Show stretch photos (instead of stick figures)": "Mostrar fotos de los estiramientos (en lugar de figuras)",
 "Show the movement": "Mostrar el movimiento",
-"Signal Mobility": "Signal Mobility",
+"Movage": "Movage",
 "Singing bowls": "Cuencos tibetanos",
 "Sleep": "Dormir",
 "Slower": "Más lenta",
@@ -295,7 +295,7 @@ I18N.add("es", {
 "Test date": "Fecha de la prueba",
 "Tested": "Probado el",
 "Tests": "Pruebas",
-"That isn't a Signal Mobility backup.": "Eso no es una copia de seguridad de Signal Mobility.",
+"That isn't a Movage backup.": "Eso no es una copia de seguridad de Movage.",
 "That isn't a valid backup file.": "Eso no es un archivo de copia de seguridad válido.",
 "That's": "Eso es",
 "That's both sides done. Go again if you want to beat them, or tap Use results.": "Ambos lados hechos. Repite si quieres superarlos, o toca Usar resultados.",

@@ -1,11 +1,11 @@
-/* Signal Mobility app: tests, scoring, routines, guided player, history, export. Data stays on this phone. */
+/* Movage app: tests, scoring, routines, guided player, history, export. Data stays on this phone. */
 (function () {
   "use strict";
   if (window.I18N) I18N.translateStatic(document.body);
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.33.0", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.34.0", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -30,7 +30,8 @@
   };
 
   /* ---------- storage ---------- */
-  var KEY = "signal-mobility-v1";
+  var KEY = "signal-mobility-v1"; /* storage key kept from the old name so existing data is not lost */
+  var TAGLINE = "Joint Venture";
   function blank() { return { v: 1, settings: { age: 40, sex: "m", height: 178, voice: true, savePhotos: true, music: "pads", musicVol: 0.5, beeps: true, prep: 5, rest: 10, sideRest: 5, theme: "auto" }, tests: [], sessions: [], routines: [] }; }
   function load() {
     try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; if (x.fb) b.fb = x.fb; return b; } } catch (e) {}
@@ -284,7 +285,7 @@
       ["warm", "cool", "desk"].forEach(function (id) { h += routineCard(findRoutine(id)); });
     }
     if (!isStandalone()) h += installCard();
-    h += '<p class="small muted" style="text-align:center;margin-top:18px">Signal Mobility v' + APP_VERSION + " · " + APP_BUILD + "</p>";
+    h += '<p class="small muted" style="text-align:center;margin-top:18px"><b>Movage</b> · ' + TAGLINE + "<br>v" + APP_VERSION + " · " + APP_BUILD + "</p>";
     $("#v-home").innerHTML = h; offlineUI();
   }
   function sportObj() { var id = S.settings.sport; return id ? SPORTS.filter(function (x) { return x.id === id; })[0] || null : null; }
@@ -1055,7 +1056,7 @@
     try { await POSE.load(); } catch (e) { status((T("Couldn't load body tracking. Check your connection and try again."))); camControls(false); return; }
     status((T("Step into view so your whole body is on screen.")));
     if (!CAM.sess) CAM.sess = new POSE.Session(CAM.k, $("#c-canvas"), { dir: CAM.t.noScore || CAM.t.hi >= CAM.t.lo ? 1 : -1, unit: CAM.t.u, H: S.settings.height || 178,
-      caption: function (sd, v) { return CAM.t.n + (sd === "l" ? ", left" : sd === "r" ? ", right" : "") + ": " + POSE.label(CAM.k, v, CAM.t.u) + "\nSignal Mobility · " + nice(iso()); } });
+      caption: function (sd, v) { return CAM.t.n + (sd === "l" ? ", left" : sd === "r" ? ", right" : "") + ": " + POSE.label(CAM.k, v, CAM.t.u) + "\nMovage · " + nice(iso()); } });
     var v = $("#c-video"), cv = $("#c-canvas"), id = CAM.run = {}, lastFound = true;
     while (CAM.on && CAM.run === id) {
       if (v.readyState >= 2 && !v.paused) {
@@ -1190,9 +1191,10 @@
     if (st) bits.push(TF("{n} day streak", { n: st }));
     if (md) bits.push(TF("{medal} this month", { medal: T(md[2]) }));
     x.textAlign = "center"; x.fillStyle = "#fff"; x.font = font(700, 44);
-    if (bits.length) x.fillText(bits.join("  ·  "), W / 2, 1720);
-    x.font = font(800, 48); x.fillStyle = "#fff"; x.fillText("Signal Mobility", W / 2, 1810);
-    x.font = font(500, 34); x.fillStyle = "rgba(255,255,255,.7)"; x.fillText(T("Tested") + " " + short(lastTestDate() || iso()), W / 2, 1862);
+    if (bits.length) x.fillText(bits.join("  ·  "), W / 2, 1660);
+    x.font = font(800, 56); x.fillStyle = "#fff"; x.fillText("Movage", W / 2, 1790);
+    x.font = font(600, 34); x.fillStyle = "rgba(255,255,255,.85)"; x.fillText(TAGLINE, W / 2, 1836);
+    x.font = font(500, 30); x.fillStyle = "rgba(255,255,255,.6)"; x.fillText(T("Tested") + " " + short(lastTestDate() || iso()), W / 2, 1882);
     return c;
   }
   function rr(x, a, b, w, h, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
@@ -1200,7 +1202,7 @@
     var c = scoreImage(); if (!c) { toast(T("Do a mobility test first to get a score to share.")); return; }
     c.toBlob(function (blob) {
       if (!blob) return;
-      var name = "signal-mobility-score.png", file = null; try { file = new File([blob], name, { type: "image/png" }); } catch (e) {}
+      var name = "movage-score.png", file = null; try { file = new File([blob], name, { type: "image/png" }); } catch (e) {}
       if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
         navigator.share({ files: [file], title: T("My mobility score") }).then(function () { diag("score shared"); }).catch(function (e) { if (e && e.name !== "AbortError") saveImg(); });
       } else saveImg();
@@ -1234,14 +1236,14 @@
 
   /* ---------- SETTINGS, EXPORT, IMPORT ---------- */
   function exportObj() {
-    return { app: "signal-mobility", version: 1, exported: new Date().toISOString(), settings: S.settings, tests: S.tests, sessions: S.sessions, routines: S.routines,
+    return { app: "movage", version: 1, exported: new Date().toISOString(), settings: S.settings, tests: S.tests, sessions: S.sessions, routines: S.routines,
       bodySignal: { collection: (T("mobility")), docs: S.tests.map(function (t) { return { id: "m-" + t.date, data: { date: t.date, v: t.v } }; }) } };
   }
   async function doExport() {
-    var json = JSON.stringify(exportObj(), null, 1), name = "signal-mobility-" + iso() + ".json";
+    var json = JSON.stringify(exportObj(), null, 1), name = "movage-" + iso() + ".json";
     try {
       var file = new File([json], name, { type: "application/json" });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "Signal Mobility backup" }); return; }
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "Movage backup" }); return; }
     } catch (e) { if (e && e.name === "AbortError") return; }
     var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([json], { type: "application/json" })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
   }
@@ -1251,7 +1253,7 @@
   }
   function doImport(text) {
     var x; try { x = JSON.parse(text); } catch (e) { toast((T("That isn't a valid backup file."))); return; }
-    if (!x || x.app !== "signal-mobility") { toast((T("That isn't a Signal Mobility backup."))); return; }
+    if (!x || (x.app !== "movage" && x.app !== "signal-mobility")) { toast((T("That isn't a Movage backup."))); return; }
     var byDate = {}; S.tests.forEach(function (t) { byDate[t.date] = t; }); (x.tests || []).forEach(function (t) { if (t && t.date && t.v) byDate[t.date] = t; });
     S.tests = Object.keys(byDate).map(function (k) { return byDate[k]; });
     var seen = {}; S.sessions.concat(x.sessions || []).forEach(function (s) { if (s && s.t) seen[s.t + "|" + s.id] = s; }); S.sessions = Object.keys(seen).map(function (k) { return seen[k]; });
@@ -1278,10 +1280,10 @@
     start.setHours(+hm[0], +hm[1], 0, 0); for (var k = 0; k < 8 && (r.days.indexOf(start.getDay()) < 0 || start <= now); k++) start.setDate(start.getDate() + 1);
     var p = function (n) { return (n < 10 ? "0" : "") + n; }, loc = function (d) { return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "T" + p(d.getHours()) + p(d.getMinutes()) + "00"; };
     var by = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"], mins0 = Math.max(5, Math.round(routineSecs(rt.items) / 60));
-    var url = location.origin + location.pathname + "?play=" + encodeURIComponent(rt.id), title = "Signal Mobility: " + rt.n;
+    var url = location.origin + location.pathname + "?play=" + encodeURIComponent(rt.id), title = "Movage: " + rt.n;
     var esc2 = function (t) { return String(t).replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n"); };
-    return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Signal Mobility//Reminders//EN", "CALSCALE:GREGORIAN", "BEGIN:VEVENT",
-      "UID:signal-mobility-reminder@" + (location.hostname || "signalmobility"), "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, ""),
+    return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Movage//Reminders//EN", "CALSCALE:GREGORIAN", "BEGIN:VEVENT",
+      "UID:movage-reminder@" + (location.hostname || "movage"), "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, ""),
       "DTSTART:" + loc(start), "DURATION:PT" + mins0 + "M", "RRULE:FREQ=WEEKLY;BYDAY=" + r.days.map(function (d) { return by[d]; }).join(","),
       "SUMMARY:" + esc2(title), "DESCRIPTION:" + esc2(T("Time for your mobility session.") + " " + url), "URL:" + url,
       "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + esc2(title), "TRIGGER:-PT" + (r.lead || 0) + "M", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
@@ -1346,7 +1348,7 @@
     if (!window.STRAVA || !STRAVA.connected() || !STRAVA.get().auto) return;
     var moves = (ids || []).map(function (id) { return BY[id] ? BY[id].n : null; }).filter(Boolean);
     STRAVA.logSession({ name: name, secs: secs, startLocal: STRAVA.localISO(Date.now() - secs * 1000),
-      description: "Signal Mobility · " + moves.length + " " + T("moves") + (moves.length ? "\n" + moves.join(", ") : "") })
+      description: "Movage · " + moves.length + " " + T("moves") + (moves.length ? "\n" + moves.join(", ") : "") })
       .then(function (n) { if (n) toast(T("Logged to Strava")); })
       .catch(function () { toast(T("Couldn't reach Strava. It'll be sent next time you're online.")); });
   }
@@ -1385,11 +1387,11 @@
   function fbMailSend() {
     var type = $("#fm-type").value, text = ($("#fm-text").value || "").trim();
     if (!text) { toast(T("Add a few words first.")); $("#fm-text").focus(); return; }
-    var first = text.split("\n")[0].slice(0, 60), subj = "Signal Mobility " + (type === "bug" ? "bug" : "idea") + ": " + first;
+    var first = text.split("\n")[0].slice(0, 60), subj = "Movage " + (type === "bug" ? "bug" : "idea") + ": " + first;
     var body = text;
     if ($("#fm-info").checked) {
       var st = window.matchMedia && matchMedia("(display-mode: standalone)").matches || navigator.standalone;
-      body += "\n\n----\nApp: Signal Mobility v" + APP_VERSION + " (" + APP_BUILD + ")\nLanguage: " + I18N.lang + "\nPhoto model: " + (S.settings.model === "m" ? "male" : "female") + "\nInstalled to home screen: " + (st ? "yes" : "no") +
+      body += "\n\n----\nApp: Movage v" + APP_VERSION + " (" + APP_BUILD + ")\nLanguage: " + I18N.lang + "\nPhoto model: " + (S.settings.model === "m" ? "male" : "female") + "\nInstalled to home screen: " + (st ? "yes" : "no") +
         "\nScreen: " + screen.width + "x" + screen.height + "\nDevice: " + navigator["user" + "Agent"];
       if (type === "bug" && DIAG.length) body += "\n\nRecent log:\n" + DIAG.slice(-8).join("\n");
     }
@@ -1422,7 +1424,7 @@
     h += ('<div class="card"><h3>' + T("Offline photos") + '</h3><p class="small muted" style="margin:4px 0 10px" id="off-status">' + T("Checking…") + '</p><button class="btn primary block" id="off-btn" data-act="off-save">' + T("Save all photos for offline") + '</button><p class="small muted" style="margin-top:8px">' + T("About 50 to 80 MB. Best done on Wi-Fi. After that, photos load instantly even with no signal.") + '</p></div>');
     h += fbMailCard();
     h += ('<details class="card"><summary class="small" style="color:var(--brand);font-weight:600">' + T("Diagnostics") + '</summary><pre class="small" id="s-diag" style="white-space:pre-wrap;margin:8px 0 0;font-size:11px">') + esc(DIAG.slice(-12).join("\n") || (T("Nothing logged yet."))) + ('</pre><button class="btn" style="margin-top:8px" data-act="diag-copy">' + T("Copy") + '</button></details>');
-    h += ('<div class="card"><button class="btn danger block" data-act="reset">' + T("Delete all data") + '</button></div><p class="small muted" style="text-align:center">Signal Mobility v') + APP_VERSION + ' (' + APP_BUILD + ') · ' + T("body tracking by MediaPipe") + '</p>';
+    h += ('<div class="card"><button class="btn danger block" data-act="reset">' + T("Delete all data") + '</button></div><p class="small muted" style="text-align:center"><b>Movage</b> · ' + TAGLINE + '<br>v') + APP_VERSION + ' (' + APP_BUILD + ') · ' + T("body tracking by MediaPipe") + '</p>';
     openSheet(h, function () { if (window.MUSIC && !P && MUSIC.playing()) MUSIC.stop(800); });
     offlineUI();
     var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
@@ -1501,13 +1503,13 @@
       case "mg-clear": MG_SEL = []; MG_LAST = null; renderRoutines(); break;
       case "settings-open": openSettings(); break;
       case "rm-day": { var rr2 = rem(), dd = +id, ix2 = rr2.days.indexOf(dd); if (ix2 >= 0) { if (rr2.days.length > 1) rr2.days.splice(ix2, 1); } else rr2.days.push(dd); setRem({ days: rr2.days }); remRefresh(); render(); break; }
-      case "rm-ics": { var blob = new Blob([remIcs()], { type: "text/calendar" }), a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "signal-mobility-reminder.ics"; document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 1000); toast(T("Open the file and tap Add to put it in your calendar")); break; }
+      case "rm-ics": { var blob = new Blob([remIcs()], { type: "text/calendar" }), a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "movage-reminder.ics"; document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 1000); toast(T("Open the file and tap Add to put it in your calendar")); break; }
       case "rm-later": { try { localStorage.setItem("sm-nudge-" + iso(), "1"); } catch (e) {} render(); break; }
       case "strava-connect": if (!$("#sv-id").value.trim() || !$("#sv-secret").value.trim()) { toast(T("Enter your Strava Client ID and Client Secret first.")); break; } STRAVA.setConfig({ id: $("#sv-id").value, secret: $("#sv-secret").value }); location.href = STRAVA.authorizeUrl(); break;
       case "strava-code": { STRAVA.setConfig({ id: $("#sv-id").value, secret: $("#sv-secret").value }); var cv = ($("#sv-code").value || "").replace(/^.*[?&]code=([^&]+).*$/, "$1"); if (!cv) break; STRAVA.useCode(cv).then(function () { toast(T("Connected to Strava")); stravaRefresh(); }).catch(function (e) { diag("strava: " + e.message); toast(TF("Couldn't connect to Strava ({error})", { error: e.message })); }); break; }
       case "strava-off": STRAVA.disconnect(); stravaRefresh(); toast(T("Disconnected from Strava")); break;
       case "strava-last": { var ls = S.sessions[S.sessions.length - 1]; if (!ls) { toast(T("Nothing logged yet.")); break; }
-        STRAVA.logSession({ name: ls.n, secs: ls.secs, startLocal: STRAVA.localISO((ls.t || Date.now()) - ls.secs * 1000), description: "Signal Mobility · " + ls.items + " " + T("moves") })
+        STRAVA.logSession({ name: ls.n, secs: ls.secs, startLocal: STRAVA.localISO((ls.t || Date.now()) - ls.secs * 1000), description: "Movage · " + ls.items + " " + T("moves") })
           .then(function () { toast(T("Logged to Strava")); stravaRefresh(); }).catch(function (e) { diag("strava: " + e.message); toast(TF("Couldn't log to Strava ({error})", { error: e.message })); stravaRefresh(); }); break; }
       case "build-save": {
         var nm = prompt((T("Name your routine")), building.n || (T("My routine"))); if (nm == null) break; nm = nm.trim() || (T("My routine"));

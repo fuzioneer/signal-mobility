@@ -1,4 +1,4 @@
-/* Signal Mobility content: zones, tests, norms, stretches and routines. */
+/* Movage content: zones, tests, norms, stretches and routines. */
 (function () {
   var mk = FIG.mk;
   var ZONES = [["shoulders", "Shoulders"], ["overhead", "Overhead"], ["thorax", "Thorax"], ["postchain", "Posterior chain"], ["hips", "Hips"], ["ankles", "Ankles"]];

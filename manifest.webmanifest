@@ -1,6 +1,6 @@
 {
-  "name": "Signal Mobility",
-  "short_name": "Mobility",
+  "name": "Movage: Joint Venture",
+  "short_name": "Movage",
   "description": "Mobility testing with a live camera wireframe, and guided routines.",
   "start_url": "./",
   "scope": "./",
