@@ -21,6 +21,8 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.29.1 (13 Nov 2026): Fixed demo videos stopping when the coach speaks (for example at the halfway call). On iPhone, speech pauses inline videos; the app now restarts the clip straight away unless you have paused the routine.
+- 1.29.0 (13 Nov 2026): Search box in the Stretch library. Type part of a move name, a muscle (hamstrings, lower back), an area, a sport tag or a piece of kit (roller, band). It works with the area and sport chips, ignores accents, and English names also work in other languages. Also fixed the Golf filter chip in non-English languages.
 - 1.28.3 (13 Nov 2026): New 90/90 switches videos (female and male), made by copying the movement from a real demonstration clip: switch the knees to one side and lean in, then switch to the other side and lean in.
 - 1.28.2 (13 Nov 2026): Male Dead bug video remade by copying the movement from a real demonstration clip (motion transfer), so the arms and legs move exactly as they should.
 - 1.28.1 (13 Nov 2026): Male Dead bug photos and video remade so the correct arm and opposite leg move on each side.

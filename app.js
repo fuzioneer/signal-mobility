@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.28.3", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.29.1", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -170,6 +170,20 @@
       .then(function (b) { go(b ? URL.createObjectURL(b) : u); }).catch(function () { go(u); });
   }
   try { new MutationObserver(function () { document.querySelectorAll("video[data-vsrc]:not([data-vdone])").forEach(vidHydrate); }).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
+  /* iPhones pause inline videos when speech or other audio starts (the halfway call, cues). Restart any demo clip that
+     stopped on its own, unless the routine itself is paused or the app is in the background. Called from the player
+     tick, after each spoken cue and when a clip reports a pause. */
+  var VID_KICK_AT = 0;
+  function vidKick() {
+    if (document.hidden) return;
+    var held = typeof P !== "undefined" && P && P.paused;
+    document.querySelectorAll("video[data-vdone]").forEach(function (v) {
+      if (!v.paused || held || !v.src || !v.isConnected) return;
+      var now = Date.now(); if (now - VID_KICK_AT < 400) return; VID_KICK_AT = now;
+      var q = v.play(); if (q && q.catch) q.catch(function () {});
+    });
+  }
+  document.addEventListener("pause", function (e) { if (e.target && e.target.tagName === "VIDEO" && e.target.dataset.vdone) setTimeout(vidKick, 250); }, true);
   setInterval(function () {
     if (reduceMotion || document.hidden) return;
     document.querySelectorAll(".xfade.multi").forEach(function (w) {
@@ -434,25 +448,39 @@
   }
 
   /* ---------- ROUTINES ---------- */
-  var LIB_F = "all", building = null;
+  var LIB_F = "all", LIB_Q = "", building = null;
   var TAGN = { warm: T("Warm-up"), cool: T("Cool-down"), back: T("Back"), run: T("Running"), hyrox: T("Hyrox"), golf: T("Golf"), cycle: T("Cycling"), desk: T("Desk"), bed: T("On a bed"), sleep: T("Sleep") };
   function renderRoutines() {
     var h = ('<div class="sec" style="margin-top:6px"><h2>' + T("Routines") + '</h2><button class="btn ghost" data-act="build">' + T("+ Build your own") + '</button></div>');
     allRoutines().forEach(function (r) { h += routineCard(r); });
     h += ('<div class="sec"><h2>' + T("Stretch library") + '</h2><span class="small muted">') + ST.length + " " + T("moves") + "</span></div>";
-    var F = [["all", (T("All"))]].concat(ZONES).concat([["warm", (T("Warm-up"))], ["cool", (T("Cool-down"))], ["back", (T("Back"))], ["run", (T("Running"))], ["hyrox", (T("Hyrox"))], [(T("golf")), (T("Golf"))], ["cycle", (T("Cycling"))], ["desk", (T("Desk"))], ["bed", (T("On a bed"))], ["sleep", (T("Sleep"))]]);
+    var F = [["all", (T("All"))]].concat(ZONES).concat([["warm", (T("Warm-up"))], ["cool", (T("Cool-down"))], ["back", (T("Back"))], ["run", (T("Running"))], ["hyrox", (T("Hyrox"))], ["golf", (T("Golf"))], ["cycle", (T("Cycling"))], ["desk", (T("Desk"))], ["bed", (T("On a bed"))], ["sleep", (T("Sleep"))]]);
+    h += '<div class="libsearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" class="inp" id="lib-q" placeholder="' + esc(T("Search moves, muscles or kit")) + '" aria-label="' + esc(T("Search the stretch library")) + '" value="' + esc(LIB_Q) + '" autocomplete="off" enterkeyhint="search"></div>';
     h += chipRow(F.map(function (f) { return '<button class="chip' + (LIB_F === f[0] ? " on" : "") + '" data-act="filter" data-id="' + f[0] + '">' + f[1] + "</button>"; }).join(""));
     if (building) h += bodyMap();
     var list = ST.filter(function (s) { return canDo(s) && (LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0) && (!building || !MG_SEL.length || MG_SEL.some(function (m) { return s.m.indexOf(m) >= 0; })); });
     if (building && MG_SEL.length) list.sort(function (a, b) { var c = function (s) { return MG_SEL.filter(function (m) { return s.m.indexOf(m) >= 0; }).length; }; return c(b) - c(a); });
-    if (!list.length) h += ('<p class="muted small" style="margin:10px 2px">' + T("No moves match. Try another area or filter.") + '</p>');
+    h += '<p class="muted small" id="lib-none" style="margin:10px 2px"' + (list.length ? " hidden" : "") + '>' + T("No moves match. Try another area or filter.") + '</p>';
     h += '<div class="lib' + (building ? " building" : "") + '">' + list.map(function (s) {
       var sel = building && building.items.indexOf(s.id) >= 0;
-      return '<button class="lcard' + (sel ? " sel" : "") + '" data-act="stretch" data-id="' + s.id + '"><div class="fig">' + art(s.id, s.pose, { stroke: 8 }) + '</div><span class="check">' + (sel ? building.items.indexOf(s.id) + 1 : "") + "</span><h3>" + esc(s.n) + "</h3><p>" + s.z.map(function (z) { return '<span class="zdot" style="background:' + zc(z) + '"></span>'; }).join("") + (s.reps || (s.d + "s" + (s.s ? (" " + T("each side")) : ""))) + "</p></button>";
+      return '<button class="lcard' + (sel ? " sel" : "") + '" data-act="stretch" data-id="' + s.id + '" data-q="' + esc(libText(s)) + '"><div class="fig">' + art(s.id, s.pose, { stroke: 8 }) + '</div><span class="check">' + (sel ? building.items.indexOf(s.id) + 1 : "") + "</span><h3>" + esc(s.n) + "</h3><p>" + s.z.map(function (z) { return '<span class="zdot" style="background:' + zc(z) + '"></span>'; }).join("") + (s.reps || (s.d + "s" + (s.s ? (" " + T("each side")) : ""))) + "</p></button>";
     }).join("") + "</div>";
     if (building) h += '<div class="buildbar"><div class="grow"><b>' + building.items.length + ' ' + T("selected") + '</b><div class="small" style="opacity:.75">' + mins(routineSecs(building.items)) + ('</div></div><button class="btn" data-act="build-cancel">' + T("Cancel") + '</button><button class="btn primary" data-act="build-save"') + (building.items.length ? "" : " disabled") + ">" + T("Save") + "</button></div>";
     var keep = [].map.call(document.querySelectorAll("#v-routines .chiprow .chips"), function (c) { return c.scrollLeft; });
     $("#v-routines").innerHTML = h; wireRows($("#v-routines"), keep);
+    var q = $("#lib-q"); if (q) { q.addEventListener("input", function () { LIB_Q = q.value; libSearch(); }); libSearch(); }
+  }
+  /* Library search: matches the move name, its cues, areas, tags, muscles and kit, ignoring case and accents. Filters in place so typing keeps focus. */
+  function fold(t) { return String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+  function libText(s) {
+    var mname = {}; MUSCLES.forEach(function (m) { mname[m[0]] = m[1]; });
+    var en = s._en || {}; return fold([s.n, s.cues, s.reps || "", en.n || "", en.cues || ""].concat(s.z.map(function (z) { return ZN[z] || z; }), s.tags.map(function (t) { return TAGN[t] || t; }), s.m.map(function (m) { return mname[m] || m; }), kitFor(s), kitEn(s)).join(" "));
+  }
+  function libSearch() {
+    var words = fold(LIB_Q).split(/\s+/).filter(Boolean), shown = 0;
+    $$("#v-routines .lcard").forEach(function (c) { var t = c.getAttribute("data-q") || ""; var ok = words.every(function (w) { return t.indexOf(w) >= 0; }); c.hidden = !ok; if (ok) shown++; });
+    var none = $("#lib-none"); if (none) none.hidden = shown > 0;
+    var cnt = $("#v-routines .sec .small.muted"); if (cnt && cnt.parentNode.querySelector("h2") && cnt.parentNode.querySelector("h2").textContent === T("Stretch library")) cnt.textContent = (words.length ? shown + " / " + $$("#v-routines .lcard").length : ST.length) + " " + T("moves");
   }
   function openRoutine(id) {
     var r = findRoutine(id); if (!r) return; var ad = adapt(r.items);
@@ -521,7 +549,7 @@
       parts = parts.map(function (p) { return p.trim(); }).filter(Boolean);
       var tok = SPK.tok = (SPK.tok || 0) + 1, utts = [];
       parts.forEach(function (p, pi) { var u = new SpeechSynthesisUtterance(p); utts.push(u);
-        if (pi === parts.length - 1 && window.MUSIC) u.onend = u.onerror = function () { if (tok === SPK.tok) MUSIC.speechEnd(); };
+        if (pi === parts.length - 1 && window.MUSIC) u.onend = u.onerror = function () { if (tok === SPK.tok) MUSIC.speechEnd(); setTimeout(vidKick, 150); };
         if (first) { first = false; u.onstart = function () { var t = performance.now(); if (!interrupt || t - asked < 2000) SPK.lat = Math.round(0.7 * SPK.lat + 0.3 * Math.min(1500, t - asked)); if (onStart) onStart(t); }; } if (v) { u.voice = v; u.lang = v.lang; } else u.lang = I18N.locale; u.rate = S.settings.voiceRate || 0.95; u.pitch = 1; u.volume = 1; });
       /* On iPhone the music has to stop before the coach starts, otherwise iOS cuts the coach off a second or two in. */
       var hold = window.MUSIC && MUSIC.beforeSpeech ? MUSIC.beforeSpeech() : 0;
@@ -768,7 +796,7 @@
     var p = P.dur ? Math.max(0, P.left) / P.dur * 100 : 0;
     $("#p-ring").innerHTML = ringSVG(p, 112, 9, P.phase === "prep" ? "var(--amber)" : "var(--brand)") + '<b aria-hidden="true">' + Math.max(0, Math.ceil(P.left)) + "</b>";
     $("#p-ring").setAttribute("aria-label", TF("{n} seconds left", { n: Math.max(0, Math.ceil(P.left)) }));
-    drawTL();
+    drawTL(); vidKick();
     var ph = $("#p-phase"); ph.textContent = P.paused ? (T("Paused")) : P.phase === "prep" ? (P.st[P.i].first ? (T("Get into position")) : (T("Switch sides"))) : (T("Hold")); ph.className = "phase" + (P.phase === "prep" ? " prep" : "");
   }
   /* Routine timeline: one segment per stage (get ready, then each hold, both sides of a move), sized by its time, filled as you go. */

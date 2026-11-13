@@ -540,7 +540,9 @@ I18N.add("fr", {
 "Send by email": "Envoyer par e-mail",
 "Nothing opens? Email {addr} directly.": "Rien ne s'ouvre ? Écrivez directement à {addr}.",
 "Add a few words first.": "Écrivez quelques mots d'abord.",
-"demo video": "vidéo de démonstration"
+"demo video": "vidéo de démonstration",
+"Search moves, muscles or kit": "Rechercher exercices, muscles ou matériel",
+"Search the stretch library": "Rechercher dans la bibliothèque d'étirements"
 }, {
 "zone": {
 "shoulders": "Épaules",
