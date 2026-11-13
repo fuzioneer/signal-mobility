@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.29.2", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.30.0", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -268,6 +268,7 @@
       g.slice(0, 3).forEach(function (x) { h += '<p><b>' + esc(x.t.n) + ":</b> " + esc(TF(x.side === "left" ? "your left side is {n} points tighter. Give it an extra set." : "your right side is {n} points tighter. Give it an extra set.", { n: x.d })) + "</p>"; });
       h += "</div>";
     }
+    h += qwCard();
     var sp = sportObj();
     if (sp) {
       h += ('<div class="sec"><h2>' + T("Top stretches for") + ' ') + esc(sportShort(sp)) + ('</h2><button class="btn ghost small" data-act="settings-open">' + T("Change") + '</button></div>');
@@ -451,7 +452,7 @@
   var LIB_F = "all", LIB_Q = "", building = null;
   var TAGN = { warm: T("Warm-up"), cool: T("Cool-down"), back: T("Back"), run: T("Running"), hyrox: T("Hyrox"), golf: T("Golf"), cycle: T("Cycling"), desk: T("Desk"), bed: T("On a bed"), sleep: T("Sleep") };
   function renderRoutines() {
-    var h = ('<div class="sec" style="margin-top:6px"><h2>' + T("Routines") + '</h2><button class="btn ghost" data-act="build">' + T("+ Build your own") + '</button></div>');
+    var h = ('<div class="sec" style="margin-top:6px"><h2>' + T("Routines") + '</h2><button class="btn ghost" data-act="build">' + T("+ Build your own") + '</button></div>') + qwCard();
     allRoutines().forEach(function (r) { h += routineCard(r); });
     h += ('<div class="sec"><h2>' + T("Stretch library") + '</h2><span class="small muted">') + ST.length + " " + T("moves") + "</span></div>";
     var F = [["all", (T("All"))]].concat(ZONES).concat([["warm", (T("Warm-up"))], ["cool", (T("Cool-down"))], ["back", (T("Back"))], ["run", (T("Running"))], ["hyrox", (T("Hyrox"))], ["golf", (T("Golf"))], ["cycle", (T("Cycling"))], ["desk", (T("Desk"))], ["bed", (T("On a bed"))], ["sleep", (T("Sleep"))]]);
@@ -478,6 +479,98 @@
     $$("#v-routines .lcard").forEach(function (c) { var t = c.getAttribute("data-q") || ""; var ok = words.every(function (w) { return t.indexOf(w) >= 0; }); c.hidden = !ok; if (ok) shown++; });
     var none = $("#lib-none"); if (none) none.hidden = shown > 0;
     var cnt = $("#v-routines .sec .small.muted"); if (cnt && cnt.parentNode.querySelector("h2") && cnt.parentNode.querySelector("h2").textContent === T("Stretch library")) cnt.textContent = (words.length ? shown + " / " + $$("#v-routines .lcard").length : ST.length) + " " + T("moves");
+  }
+  /* ---------- Quick routine: pick a time, what to work on and when, and the app builds a routine that fits ---------- */
+  var QW = null, QW_TIMES = [5, 10, 20];
+  var SPORT_TAG = { hyrox: "hyrox", running: "run", golf: "golf", cycling: "cycle", office: "desk" };
+  function qwCard() { return '<button class="card qwcard" data-act="qw-open"><div class="qwico">' + ICON.play.replace("<svg", '<svg width="22" height="22"') + '</div><div class="grow"><h3>' + T("Make me a routine") + '</h3><p class="small muted">' + T("Pick 5, 10 or 20 minutes and what to work on") + "</p></div></button>"; }
+  function qwOpen() { var sp = sportObj(); QW = { step: 1, mins: 10, groups: [], muscles: [], sport: sp ? sp.id : "", when: "any", seed: 1, items: null }; openSheet('<div id="qw"></div>'); qwRender(); }
+  function qwCost(s) { return itemSecs(s) + restSecs(true) + (s.s ? restSecs(false) : 0); }
+  function qwSecs(items) { return items.reduce(function (t, id) { return t + (BY[id] ? qwCost(BY[id]) : 0); }, 0); }
+  function qwTargets() { var m = QW.muscles.slice(); QW.groups.forEach(function (g) { var gg = MGROUPS.filter(function (x) { return x[0] === g; })[0]; if (gg) gg[2].forEach(function (k) { if (m.indexOf(k) < 0) m.push(k); }); }); return m; }
+  /* Score every move you can do, then fill the time with the best ones, spreading across body areas so it is not all one stretch. */
+  function qwBuild() {
+    var target = QW.mins * 60, mus = qwTargets(), sp = QW.sport ? SPORTS.filter(function (x) { return x.id === QW.sport; })[0] : null, tag = sp ? SPORT_TAG[sp.id] : null, hurt = fb().hurt;
+    var rnd = seededShuffle(ST.map(function (s, i) { return i; }), QW.seed), jit = {}; ST.forEach(function (s, i) { jit[s.id] = rnd.indexOf(i) / ST.length * 1.5; });
+    var pool = ST.filter(function (s) { return canDo(s) && !hurt[s.id]; }).map(function (s) {
+      var hit = mus.filter(function (m) { return s.m.indexOf(m) >= 0; }).length, sc = jit[s.id];
+      if (mus.length) sc += hit ? 4 + hit * 2 : -6;
+      if (sp) { if (sp.top.indexOf(s.id) >= 0) sc += 6; if (tag && s.tags.indexOf(tag) >= 0) sc += 3; }
+      if (QW.when === "before") { if (s.tags.indexOf("warm") >= 0) sc += 4; if (s.reps) sc += 2; if (s.tags.indexOf("cool") >= 0 || s.tags.indexOf("sleep") >= 0) sc -= 3; }
+      if (QW.when === "after") { if (s.tags.indexOf("cool") >= 0) sc += 4; if (s.reps) sc -= 3; if (s.tags.indexOf("warm") >= 0 && s.tags.indexOf("cool") < 0) sc -= 1; }
+      if (s.tags.indexOf("bed") >= 0 && QW.when !== "after") sc -= 2;
+      return { s: s, sc: sc, hit: hit };
+    });
+    var out = [], used = 0, zc = {};
+    while (pool.length) {
+      pool.forEach(function (p) { p.eff = p.sc - p.s.z.reduce(function (t, z) { return t + (zc[z] || 0) * (mus.length || sp ? 1 : 2.5); }, 0); });
+      pool.sort(function (a, b) { return b.eff - a.eff; });
+      var left = target - used, k = -1;
+      for (var i = 0; i < pool.length; i++) { if (qwCost(pool[i].s) <= left + 20) { k = i; break; } }
+      if (k < 0) break;
+      var p = pool.splice(k, 1)[0]; out.push(p.s); used += qwCost(p.s); p.s.z.forEach(function (z) { zc[z] = (zc[z] || 0) + 1; });
+      if (target - used < 25) break;
+    }
+    /* Order: moving drills first before training, calm floor holds last after training. */
+    var rank = function (s) { var r = 0; if (s.reps) r -= QW.when === "after" ? 0 : 2; if (s.tags.indexOf("sleep") >= 0) r += 2; if (s.tags.indexOf("bed") >= 0) r += 1; return r; };
+    out.sort(function (a, b) { return rank(a) - rank(b); });
+    QW.items = out.map(function (s) { return s.id; });
+  }
+  function qwName() {
+    var bits = [], sp = QW.sport ? SPORTS.filter(function (x) { return x.id === QW.sport; })[0] : null;
+    if (sp) bits.push(sportShort(sp));
+    QW.groups.forEach(function (g) { var gg = MGROUPS.filter(function (x) { return x[0] === g; })[0]; if (gg) bits.push(gg[1]); });
+    var mname = {}; MUSCLES.forEach(function (m) { mname[m[0]] = m[1]; }); QW.muscles.forEach(function (m) { bits.push(mname[m]); });
+    var when = { before: T("before training"), after: T("after training") }[QW.when];
+    var focus = bits.length ? listJoin(bits.slice(0, 3)) : T("Whole body");
+    return TF("{n} min {focus}", { n: QW.mins, focus: focus.charAt(0).toUpperCase() + focus.slice(1) }) + (when ? " · " + when : "");
+  }
+  function qwRender() {
+    var box = $("#qw"); if (!box || !QW) return; var h = '<p class="small muted qwstep">' + TF("Step {n} of 3", { n: Math.min(QW.step, 3) }) + "</p>";
+    if (QW.step === 1) {
+      h += "<h2>" + T("How long have you got?") + '</h2><div class="qwtimes">' + QW_TIMES.map(function (m) { return '<button class="qwtime' + (QW.mins === m ? " on" : "") + '" data-act="qw-time" data-id="' + m + '"><b>' + m + "</b><span>" + T("min") + "</span></button>"; }).join("") + "</div>";
+    } else if (QW.step === 2) {
+      var mname = MUSCLES;
+      h += "<h2>" + T("What do you want to work on?") + '</h2><p class="small muted" style="margin:4px 0 10px">' + T("Pick any areas, a sport, or both. Leave it blank for a whole-body routine.") + "</p>";
+      h += '<p class="small muted bm-lbl">' + T("Chains and areas") + '</p><div class="qwchips">' + MGROUPS.map(function (g) { return '<button class="chip' + (QW.groups.indexOf(g[0]) >= 0 ? " on" : "") + '" data-act="qw-group" data-id="' + g[0] + '">' + g[1] + "</button>"; }).join("") + "</div>";
+      h += '<p class="small muted bm-lbl">' + T("Muscles") + '</p><div class="qwchips">' + mname.map(function (m) { return '<button class="chip' + (QW.muscles.indexOf(m[0]) >= 0 ? " on" : "") + '" data-act="qw-muscle" data-id="' + m[0] + '">' + m[1] + "</button>"; }).join("") + "</div>";
+      h += '<p class="small muted bm-lbl">' + T("Sport you are training for") + '</p><div class="qwchips">' + [["", T("None")]].concat(SPORTS.map(function (s) { return [s.id, sportShort(s).charAt(0).toUpperCase() + sportShort(s).slice(1)]; })).map(function (s) { return '<button class="chip' + (QW.sport === s[0] ? " on" : "") + '" data-act="qw-sport" data-id="' + s[0] + '">' + esc(s[1]) + "</button>"; }).join("") + "</div>";
+    } else if (QW.step === 3) {
+      h += "<h2>" + T("When are you doing it?") + '</h2><div class="qwwhen">' + [["before", T("Before training"), T("Moving drills to warm up")], ["after", T("After training"), T("Longer holds to cool down")], ["any", T("Any time"), T("A mix of both")]].map(function (w) { return '<button class="qwopt' + (QW.when === w[0] ? " on" : "") + '" data-act="qw-when" data-id="' + w[0] + '"><b>' + w[1] + "</b><span>" + w[2] + "</span></button>"; }).join("") + "</div>";
+    } else {
+      if (!QW.items) qwBuild();
+      var secs = qwSecs(QW.items);
+      h = '<p class="small muted qwstep">' + T("Your routine") + "</p><h2>" + esc(qwName()) + '</h2><p class="muted" style="margin:4px 0 12px">' + QW.items.length + " " + T("moves") + " · " + TF("about {t}", { t: mins(secs) }) + "</p>";
+      if (!QW.items.length) h += '<p class="muted">' + T("No moves fit those choices with your equipment. Try fewer areas or another sport.") + "</p>";
+      else {
+        h += '<button class="btn primary big block" data-act="qw-start">' + ICON.play.replace("<svg", '<svg width="20" height="20"') + " " + T("Start") + "</button>";
+        h += '<div class="card flush" style="margin-top:14px">' + QW.items.map(function (sid, i) { var s = BY[sid]; return '<div class="hitem" data-act="stretch" data-id="' + sid + '" style="cursor:pointer"><div class="thumb" style="width:52px;height:52px">' + art(sid, s.pose, { stroke: 9 }) + '</div><div class="grow"><b>' + (i + 1) + ". " + esc(s.n) + '</b><div class="small muted">' + (s.reps || holdSecs(s) + "s") + (s.s ? " " + T("each side") : "") + "</div></div></div>"; }).join("") + "</div>";
+        h += '<div class="row" style="margin-top:8px"><button class="btn" data-act="qw-shuffle">' + T("Shuffle") + '</button><button class="btn" data-act="qw-save">' + T("Save routine") + "</button></div>";
+      }
+      h += '<button class="btn ghost block" style="margin-top:6px" data-act="qw-back">' + T("Change choices") + "</button>";
+      box.innerHTML = h; return;
+    }
+    h += '<div class="row qwnav">' + (QW.step > 1 ? '<button class="btn" data-act="qw-back">' + T("Back") + "</button>" : "") + '<button class="btn primary grow" data-act="qw-next">' + (QW.step === 3 ? T("Build my routine") : T("Next")) + "</button></div>";
+    box.innerHTML = h;
+  }
+  function qwAct(act, id) {
+    if (!QW) return false;
+    var tog = function (arr, v) { var i = arr.indexOf(v); if (i >= 0) arr.splice(i, 1); else arr.push(v); };
+    switch (act) {
+      case "qw-time": QW.mins = parseInt(id, 10); QW.step = 2; break;
+      case "qw-group": tog(QW.groups, id); break;
+      case "qw-muscle": tog(QW.muscles, id); break;
+      case "qw-sport": QW.sport = id; break;
+      case "qw-when": QW.when = id; QW.step = 4; QW.items = null; break;
+      case "qw-next": QW.step = Math.min(4, QW.step + 1); QW.items = null; break;
+      case "qw-back": QW.step = QW.step === 4 ? 3 : Math.max(1, QW.step - 1); break;
+      case "qw-shuffle": QW.seed = (QW.seed * 7 + 13) % 997 || 3; QW.items = null; break;
+      case "qw-start": closeSheet(); play({ id: "quick", n: qwName(), items: QW.items.slice() }); return true;
+      case "qw-save": { var nm = prompt(T("Name your routine"), qwName()); if (nm == null) return true; nm = nm.trim() || qwName(); S.routines.push({ id: "u" + Date.now().toString(36), n: nm, items: QW.items.slice() }); save(); toast(T("Saved") + " " + nm); render(); return true; }
+      default: return false;
+    }
+    qwRender(); var sh = $("#sheet"); if (sh && (act === "qw-next" || act === "qw-back" || act === "qw-time" || act === "qw-when")) sh.scrollTop = 0;
+    return true;
   }
   function openRoutine(id) {
     var r = findRoutine(id); if (!r) return; var ad = adapt(r.items);
@@ -1301,6 +1394,8 @@
     switch (a) {
       case "go-test": go("test"); break;
       case "routine": openRoutine(id); break;
+      case "qw-open": qwOpen(); break;
+      case "qw-time": case "qw-group": case "qw-muscle": case "qw-sport": case "qw-when": case "qw-next": case "qw-back": case "qw-shuffle": case "qw-start": case "qw-save": qwAct(a, id); break;
       case "play": { var r = findRoutine(id); if (!$("#sheet").hidden) closeSheet(); if (r) play(r); break; }
       case "play-one": closeSheet(); play({ id: "single", n: BY[id].n, items: [id] }); break;
       case "stretch":

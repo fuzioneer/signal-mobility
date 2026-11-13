@@ -21,6 +21,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.30.0 (13 Nov 2026): Make me a routine. Pick 5, 10 or 20 minutes, choose chains, areas or muscles and/or a sport, then say whether it's before training, after training or any time. The app builds a routine that fits the time (rests included), skips moves that hurt or need kit you don't have, and spreads it across the body. Start it, shuffle for a different mix, or save it to your routines. On the Today screen and in Routines.
 - 1.29.2 (13 Nov 2026): Library search now matches move names only, so typing 90 shows just the 90/90 moves.
 - 1.29.1 (13 Nov 2026): Fixed demo videos stopping when the coach speaks (for example at the halfway call). On iPhone, speech pauses inline videos; the app now restarts the clip straight away unless you have paused the routine.
 - 1.29.0 (13 Nov 2026): Search box in the Stretch library. Type part of a move name, a muscle (hamstrings, lower back), an area, a sport tag or a piece of kit (roller, band). It works with the area and sport chips, ignores accents, and English names also work in other languages. Also fixed the Golf filter chip in non-English languages.
