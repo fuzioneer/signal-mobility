@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.36.0", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.37.0", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -460,12 +460,15 @@
     var h = ('<div class="sec" style="margin-top:6px"><h2>' + T("Routines") + '</h2><button class="btn ghost" data-act="build">' + T("+ Build your own") + '</button></div>') + qwCard();
     allRoutines().forEach(function (r) { h += routineCard(r); });
     h += ('<div class="sec"><h2>' + T("Stretch library") + '</h2><span class="small muted">') + ST.length + " " + T("moves") + "</span></div>";
-    var F = [["all", (T("All"))]].concat(ZONES).concat([["warm", (T("Warm-up"))], ["cool", (T("Cool-down"))], ["back", (T("Back"))], ["run", (T("Running"))], ["hyrox", (T("Hyrox"))], ["golf", (T("Golf"))], ["cycle", (T("Cycling"))], ["desk", (T("Desk"))], ["bed", (T("On a bed"))], ["sleep", (T("Sleep"))]]);
+    var hasVid = ST.some(function (s) { return vidUrl(s.id); }); if (LIB_F === "video" && !hasVid) LIB_F = "all";
+    var F = [["all", (T("All"))]].concat(hasVid ? [["video", '<span class="chipvid" aria-hidden="true">' + VBADGE + "</span>" + T("With video")]] : []).concat(ZONES).concat([["warm", (T("Warm-up"))], ["cool", (T("Cool-down"))], ["back", (T("Back"))], ["run", (T("Running"))], ["hyrox", (T("Hyrox"))], ["golf", (T("Golf"))], ["cycle", (T("Cycling"))], ["desk", (T("Desk"))], ["bed", (T("On a bed"))], ["sleep", (T("Sleep"))]]);
     h += '<div class="libsearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" class="inp" id="lib-q" placeholder="' + esc(T("Search by move name")) + '" aria-label="' + esc(T("Search the stretch library")) + '" value="' + esc(LIB_Q) + '" autocomplete="off" enterkeyhint="search"></div>';
     h += chipRow(F.map(function (f) { return '<button class="chip' + (LIB_F === f[0] ? " on" : "") + '" data-act="filter" data-id="' + f[0] + '">' + f[1] + "</button>"; }).join(""));
     if (building) h += bodyMap();
-    var list = ST.filter(function (s) { return canDo(s) && (LIB_F === "all" || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0) && (!building || !MG_SEL.length || MG_SEL.some(function (m) { return s.m.indexOf(m) >= 0; })); });
-    if (building && MG_SEL.length) list.sort(function (a, b) { var c = function (s) { return MG_SEL.filter(function (m) { return s.m.indexOf(m) >= 0; }).length; }; return c(b) - c(a); });
+    var list = ST.filter(function (s) { return canDo(s) && (LIB_F === "all" || (LIB_F === "video" && !!vidUrl(s.id)) || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0) && (!building || !MG_SEL.length || MG_SEL.some(function (m) { return s.m.indexOf(m) >= 0; })); });
+    var abc = function (a, b) { return String(a.n).localeCompare(String(b.n), I18N.lang || "en", { sensitivity: "base", numeric: true }); };
+    list.sort(abc);
+    if (building && MG_SEL.length) list.sort(function (a, b) { var c = function (s) { return MG_SEL.filter(function (m) { return s.m.indexOf(m) >= 0; }).length; }; return (c(b) - c(a)) || abc(a, b); });
     if (ST.some(function (s) { return vidUrl(s.id); })) h += '<p class="small muted vlegend">' + VBADGE + " " + T("Moves with this badge have a video demo") + "</p>";
     h += '<p class="muted small" id="lib-none" style="margin:10px 2px"' + (list.length ? " hidden" : "") + '>' + T("No moves match. Try another area or filter.") + '</p>';
     h += '<div class="lib' + (building ? " building" : "") + '">' + list.map(function (s) {

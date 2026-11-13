@@ -591,7 +591,8 @@ I18N.add("it", {
 "{medal} this month": "{medal} questo mese",
 "Do a mobility test first to get a score to share.": "Fai prima un test di mobilità per avere un punteggio da condividere.",
 "Image saved. Open Instagram and add it to your Story.": "Immagine salvata. Apri Instagram e aggiungila alla tua storia.",
-"Share to Instagram": "Condividi su Instagram"
+"Share to Instagram": "Condividi su Instagram",
+"With video": "Con video"
 }, {
 "zone": {
 "shoulders": "Spalle",
