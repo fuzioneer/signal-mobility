@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.47.6 (14 Nov 2026): Deep squat hold now has a demo video, with both the female and male model.
 - 1.47.5 (14 Nov 2026): Cat-cow now has a demo video, with both the female and male model.
 - 1.47.4 (14 Nov 2026): Bodyweight good mornings now has a demo video, with both the female and male model.
 - 1.47.3 (14 Nov 2026): Ankle pogo hops now has a demo video, with both the female and male model.
