@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.47.5 (14 Nov 2026): Cat-cow now has a demo video, with both the female and male model.
 - 1.47.4 (14 Nov 2026): Bodyweight good mornings now has a demo video, with both the female and male model.
 - 1.47.3 (14 Nov 2026): Ankle pogo hops now has a demo video, with both the female and male model.
 - 1.47.2 (14 Nov 2026): Squat to stand videos fixed. The female clip is now a small H.264 file served with the app, so it plays in every browser including Firefox, and the male clip has been remade so he keeps his own short hair.
