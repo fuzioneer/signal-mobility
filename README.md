@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.42.0 (14 Nov 2026): Session image. The finish screen has "Save session image", which makes a 1080x1350 Movage image (logo, routine, date, time, moves, streak, muscles stretched, the moves, @movageapp and www.movage.co.uk) to save or share, and "Open in Strava", which opens the activity just logged so the image can be added there (Strava's API doesn't let apps attach photos).
 - 1.41.0 (14 Nov 2026): Strava activities are now tagged Recovery, and the description starts "Mobility work using Movage App (@movageapp)", followed by the muscles worked (most used first) and the list of moves. If Strava ever refuses the tag, the activity is sent without it rather than failing.
 - 1.40.0 (13 Nov 2026): "Continue with Google" on the Community sign-in screen, alongside the emailed code. A Google sign-up suggests your first name as the nickname. Invite links still work if you sign in with Google first.
 - 1.39.1 (13 Nov 2026): Community tab switched on, connected to the Movage Supabase project (London).

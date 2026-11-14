@@ -445,7 +445,7 @@ I18N.add("it", {
 "Time for your mobility session.": "È ora della tua sessione di mobilità.",
 "Mobility reminders": "Promemoria di mobilità",
 "Remind me to do my mobility": "Ricordami di fare la mobilità",
-"Time": "Ora",
+"Time": "Tempo",
 "How often": "Frequenza",
 "Every day": "Ogni giorno",
 "Weekdays": "Giorni feriali",
@@ -676,7 +676,16 @@ I18N.add("it", {
 "Continue with Google": "Continua con Google",
 "or use your email": "oppure usa la tua email",
 "Google sign-in was cancelled.": "L'accesso con Google è stato annullato.",
-"Google sign-in didn't finish. Try again.": "L'accesso con Google non è stato completato. Riprova."
+"Google sign-in didn't finish. Try again.": "L'accesso con Google non è stato completato. Riprova.",
+"Save session image": "Salva immagine della sessione",
+"Open in Strava": "Apri in Strava",
+"Mobility session": "Sessione di mobilità",
+"Muscles stretched": "Muscoli allungati",
+"Moves": "Movimenti",
+"+{n} more": "+{n} altri",
+"Image saved. Open Strava and add it to your activity.": "Immagine salvata. Apri Strava e aggiungila alla tua attività.",
+"Image saved.": "Immagine salvata.",
+"Still sending to Strava. Try again in a moment.": "Invio a Strava in corso. Riprova tra un momento."
 }, {
 "zone": {
 "shoulders": "Spalle",

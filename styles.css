@@ -449,3 +449,6 @@ body.on-home header.top h1 { position: absolute; width: 1px; height: 1px; overfl
 .gbtn { display: flex; align-items: center; justify-content: center; gap: 10px; background: #fff; color: #1f1f1f; border: 1px solid #dadce0; font-weight: 600; }
 .ordiv { display: flex; align-items: center; gap: 10px; margin: 14px 0 6px; color: var(--muted); font-size: 13px; }
 .ordiv::before, .ordiv::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+.sessshare { display: flex; gap: 10px; margin: 0 0 14px; }
+.sessshare .btn { flex: 1; }

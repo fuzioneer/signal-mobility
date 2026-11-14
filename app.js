@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.41.0", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.42.0", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -936,17 +936,78 @@
     var secs = Math.round(P.worked), r = P.r;
     clearInterval(P.timer); if (P.stop) P.stop();
     var mdBefore = medalFor(monthCount(ym()));
-    if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), cid: cmUuid(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); stravaLog(r.n, secs, r.items); cmSync(); }
+    if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), cid: cmUuid(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); stravaLog(r.n, secs, P.moves && P.moves.length ? P.moves : r.items); cmSync(); }
+    LASTSESS = secs >= 30 ? { n: r.n, secs: secs, moves: (P.moves && P.moves.length ? P.moves : r.items).slice(), t: Date.now() } : null;
     var mdAfter = medalFor(monthCount(ym())), newMedal = mdAfter && (!mdBefore || mdAfter[1] > mdBefore[1]) ? mdAfter : null;
     if (window.MUSIC) setTimeout(function () { if (!P) MUSIC.stop(6000); }, 4000);
     say(secs >= 30 ? pick([(T("And that's it. Great session.")), (T("All done. Nice work today.")), (T("That's the session finished. Well done."))]) : "");
     tlDone();
     $(".player").innerHTML = '<div style="flex:1;display:grid;place-items:center;text-align:center"><div><div class="ring" style="margin:0 auto 16px">' + ringSVG(100, 128, 12) + '<div class="lbl"><div><b>' + streak() + ('</b><span>' + T("day streak") + '</span></div></div></div><h2>' + T("Done") + '</h2><p class="muted" style="margin-top:6px">') + esc(r.n) + " · " + mmss(secs) + (" " + T("of stretching") + "</p></div></div>") +
       (newMedal ? '<div class="card medalwin">' + medalSVG(newMedal, 56) + '<div class="grow"><b>' + TF("{medal} for {month}!", { medal: T(newMedal[2]), month: monthName(ym()) }) + '</b><div class="small muted">' + TF("{n} sessions this month", { n: monthCount(ym()) }) + (nextMedal(monthCount(ym())) ? " · " + TF("{n} more for {medal}", { n: nextMedal(monthCount(ym()))[1] - monthCount(ym()), medal: T(nextMedal(monthCount(ym()))[2]) }) : "") + "</div></div></div>" : "") +
+      (LASTSESS ? '<div class="row sessshare"><button class="btn" data-act="sess-img">' + T("Save session image") + "</button>" + (window.STRAVA && STRAVA.connected() ? '<button class="btn" data-act="sess-strava">' + T("Open in Strava") + "</button>" : "") + "</div>" : "") +
       fbBlock(P.moves) + ('<button class="btn primary big block" data-act="p-close">' + T("Finish") + '</button>');
     LASTMOVES = P.moves.slice(); P = null; msUpdate();
   }
-  var LASTMOVES = [];
+  var LASTMOVES = [], LASTSESS = null;
+  /* ---------- Session image: 1080x1350 (fits Strava and Instagram posts). Strava's API can't attach photos,
+     so this is saved or shared from the finish screen and added to the activity in Strava. ---------- */
+  var LOGO_HD = new Image(); LOGO_HD.src = "img/logo-h-dark.png";
+  function wrapText(x, text, maxW) { var words = String(text).split(" "), lines = [], cur = ""; words.forEach(function (w) { var t = cur ? cur + " " + w : w; if (x.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t; }); if (cur) lines.push(cur); return lines; }
+  function sessionImage(s) {
+    var W = 1080, H = 1350, c = document.createElement("canvas"); c.width = W; c.height = H; var x = c.getContext("2d");
+    var font = function (w, sz) { return w + " " + sz + 'px -apple-system, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif'; };
+    var TEAL = "#46b39f", INK = "#ffffff", MUTED = "rgba(255,255,255,.66)";
+    x.fillStyle = "#0f1412"; x.fillRect(0, 0, W, H);
+    var g = x.createRadialGradient(W * .78, H * .18, 40, W * .78, H * .18, 760); g.addColorStop(0, "rgba(70,179,159,.30)"); g.addColorStop(1, "rgba(70,179,159,0)"); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.strokeStyle = "rgba(70,179,159,.09)"; x.lineWidth = 34; x.beginPath(); x.arc(W * 1.02, H * .9, 520, Math.PI * .95, Math.PI * 1.6); x.stroke(); x.beginPath(); x.arc(-60, H * .05, 380, Math.PI * .05, Math.PI * .6); x.stroke();
+    var L = 80, R = W - 80, y = 70;
+    if (LOGO_HD.complete && LOGO_HD.naturalWidth) { var lh = 96, lw = lh * LOGO_HD.naturalWidth / LOGO_HD.naturalHeight; x.drawImage(LOGO_HD, L, y, lw, lh); }
+    else { x.font = font(800, 64); x.fillStyle = INK; x.textBaseline = "top"; x.fillText("Movage", L, y + 12); }
+    x.textBaseline = "alphabetic"; y = 280;
+    x.fillStyle = TEAL; x.font = font(700, 30); x.fillText(T("Mobility session").toUpperCase(), L, y);
+    x.fillStyle = INK; x.font = font(800, 68); wrapText(x, s.n, R - L).slice(0, 2).forEach(function (ln) { y += 78; x.fillText(ln, L, y); });
+    y += 52; x.fillStyle = MUTED; x.font = font(500, 32);
+    var d = new Date(s.t || Date.now()); x.fillText(d.toLocaleDateString(I18N.lang || "en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }), L, y);
+    var mm = movesAndMuscles(s.moves), st = streak();
+    var tiles = [[mmss(s.secs), T("Time")], [String(mm.moves.length), T("Moves")]]; if (st) tiles.push([String(st), T("day streak")]);
+    y += 50; var tw = (R - L - 24 * (tiles.length - 1)) / tiles.length;
+    tiles.forEach(function (t, i) { var tx = L + i * (tw + 24); x.fillStyle = "rgba(255,255,255,.06)"; rr(x, tx, y, tw, 150, 22); x.fill(); x.fillStyle = INK; x.font = font(800, 60); x.fillText(t[0], tx + 28, y + 80); x.fillStyle = MUTED; x.font = font(600, 26); x.fillText(t[1].toUpperCase(), tx + 28, y + 122); });
+    y += 220; x.fillStyle = TEAL; x.font = font(700, 28); x.fillText(T("Muscles stretched").toUpperCase(), L, y); y += 26;
+    /* Muscle chips: shrink the text until they all fit in 4 rows. */
+    var chipFs = 30, layout;
+    var lay = function (fs) { x.font = font(600, fs); var cx = L, r = 0, pos = []; mm.muscles.forEach(function (m) { var w = x.measureText(m).width + fs * 1.4; if (cx + w > R && cx > L) { cx = L; r++; } pos.push([m, cx, r, w]); cx += w + 12; }); return { pos: pos, rows: r + 1 }; };
+    do { layout = lay(chipFs); chipFs -= 2; } while (layout.rows > 4 && chipFs > 20);
+    var chipH = Math.round((chipFs + 2) * 1.6), rowH = chipH + 12;
+    layout.pos.forEach(function (p) { var cy = y + p[2] * rowH; x.fillStyle = "rgba(70,179,159,.20)"; rr(x, p[1], cy, p[3], chipH, chipH / 2); x.fill(); x.fillStyle = INK; x.fillText(p[0], p[1] + (chipFs + 2) * .7, cy + chipH * .7); });
+    y += layout.rows * rowH + 50;
+    var list = mm.moves, lineH = 42, perCol = Math.floor((1185 - (y + 54)) / lineH) + 1;
+    if (perCol >= 2 && list.length) {
+      x.fillStyle = TEAL; x.font = font(700, 28); x.fillText(T("Moves").toUpperCase(), L, y); y += 14;
+      var cols = list.length > perCol ? 2 : 1, cap = perCol * cols, show = list.length > cap ? list.slice(0, cap - 1) : list, colW = (R - L) / cols;
+      x.font = font(500, 28); x.fillStyle = "rgba(255,255,255,.88)";
+      show.forEach(function (n, i) { var col = Math.floor(i / perCol), row = i % perCol, t = n; if (x.measureText("• " + t).width > colW - 24) { while (x.measureText("• " + t + "…").width > colW - 24 && t.length > 4) t = t.slice(0, -1); t = t.trim() + "…"; } x.fillText("• " + t, L + col * colW, y + 40 + row * lineH); });
+      if (list.length > show.length) { var i2 = show.length; x.fillStyle = MUTED; x.fillText(TF("+{n} more", { n: list.length - show.length }), L + Math.floor(i2 / perCol) * colW, y + 40 + (i2 % perCol) * lineH); }
+    }
+    x.fillStyle = "rgba(255,255,255,.14)"; x.fillRect(L, 1210, R - L, 2);
+    x.font = font(700, 34); x.fillStyle = INK; x.textAlign = "left"; x.fillText("@movageapp", L, 1272);
+    x.textAlign = "right"; x.fillStyle = TEAL; x.fillText("www.movage.co.uk", R, 1272); x.textAlign = "left";
+    return c;
+  }
+  function shareCanvas(c, name, title, savedMsg) {
+    c.toBlob(function (blob) {
+      if (!blob) return;
+      var file = null; try { file = new File([blob], name, { type: "image/png" }); } catch (e) {}
+      var saveImg = function () { var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500); toast(savedMsg); };
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) navigator.share({ files: [file], title: title }).catch(function (e) { if (e && e.name !== "AbortError") saveImg(); });
+      else saveImg();
+    }, "image/png");
+  }
+  function openStravaActivity() {
+    var g = window.STRAVA && STRAVA.get(), last = g && g.last;
+    if (g && g.queued) { toast(T("Still sending to Strava. Try again in a moment.")); if (STRAVA.flush) STRAVA.flush().catch(function () {}); return; }
+    var url = last && last.id && Date.now() - last.at < 6 * 3600 * 1000 ? "https://www.strava.com/activities/" + last.id : "https://www.strava.com/dashboard";
+    window.open(url, "_blank");
+  }
   function fbBlock(moves) {
     var hurt = fb().hurt;
     return '<div class="fbbox"><p class="fbq">' + T("How did that feel?") + '</p><div class="row fbrate"><button class="chip" data-act="fb-rate" data-id="-1">' + T("Too easy") + '</button><button class="chip" data-act="fb-rate" data-id="0">' + T("About right") + '</button><button class="chip" data-act="fb-rate" data-id="1">' + T("Too much") + "</button></div>" +
@@ -1351,10 +1412,14 @@
 
   /* ---------- Strava ---------- */
   /* Strava description: brand line, muscles worked (most used first), then the moves. Strava has no muscle field. */
-  function stravaDesc(ids, count) {
+  /* Moves (unique, in order) and muscles worked, most used first, for a list of move ids or routine items. */
+  function movesAndMuscles(ids) {
     var seen = {}, moves = [], hits = {};
     (ids || []).forEach(function (x) { var id = x && x.id ? x.id : x, s = BY[id]; if (!s || seen[id]) return; seen[id] = 1; moves.push(s.n); (s.m || []).forEach(function (m) { hits[m] = (hits[m] || 0) + 1; }); });
-    var mus = MUSCLES.filter(function (m) { return hits[m[0]]; }).sort(function (a, b) { return hits[b[0]] - hits[a[0]]; }).map(function (m) { return m[1]; });
+    return { moves: moves, muscles: MUSCLES.filter(function (m) { return hits[m[0]]; }).sort(function (a, b) { return hits[b[0]] - hits[a[0]]; }).map(function (m) { return m[1]; }) };
+  }
+  function stravaDesc(ids, count) {
+    var mm = movesAndMuscles(ids), moves = mm.moves, mus = mm.muscles;
     var lines = ["Mobility work using Movage App (@movageapp)"];
     if (mus.length) lines.push(T("Muscles") + ": " + mus.join(", "));
     var n = moves.length || count || 0;
@@ -1499,6 +1564,8 @@
       case "qw-open": qwOpen(); break;
       case "challenge": openChallenge(); break;
       case "share-score": shareScore(); break;
+      case "sess-img": if (LASTSESS) shareCanvas(sessionImage(LASTSESS), "movage-session.png", "Movage", window.STRAVA && STRAVA.connected() ? T("Image saved. Open Strava and add it to your activity.") : T("Image saved.")); break;
+      case "sess-strava": openStravaActivity(); break;
       case "cm-google": case "cm-send": case "cm-verify": case "cm-other-email": case "cm-savenick": case "cm-scope": case "cm-board": case "cm-period": case "cm-verified": case "cm-joinsheet": case "cm-join": case "cm-create": case "cm-invite": case "cm-leave": case "cm-toggle": case "cm-nickedit": case "cm-signout": case "cm-delete": case "cm-retry": cmAct(a, id); break;
       case "qw-time": case "qw-group": case "qw-muscle": case "qw-sport": case "qw-when": case "qw-next": case "qw-back": case "qw-shuffle": case "qw-start": case "qw-save": qwAct(a, id); break;
       case "play": { var r = findRoutine(id); if (!$("#sheet").hidden) closeSheet(); if (r) play(r); break; }
