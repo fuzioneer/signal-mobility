@@ -66,7 +66,15 @@
       }).then(ok);
     },
     myCommunities: function () { return client().then(function (c) { return c.rpc("my_communities"); }).then(ok); },
-    createCommunity: function (name, listed) { return client().then(function (c) { return c.rpc("create_community", { p_name: name, p_listed: listed !== false }); }).then(ok).then(one); },
+    createCommunity: function (name, listed) {
+      return client().then(function (c) {
+        return c.rpc("create_community", { p_name: name, p_listed: listed !== false }).then(function (r) {
+          /* Older database without the clubs update: create it the old way. */
+          if (r && r.error && /create_community|PGRST202|function/i.test(r.error.message || r.error.code || "")) return c.rpc("create_community", { p_name: name });
+          return r;
+        });
+      }).then(ok).then(one);
+    },
     setListed: function (id, listed) { return client().then(function (c) { return c.rpc("set_community_listed", { p_id: id, p_listed: !!listed }); }).then(ok); },
     clubBoard: function (metric, from, to) { return client().then(function (c) { return c.rpc("club_board", { p_metric: metric, p_from: from, p_to: to, p_limit: 50 }); }).then(ok); },
     joinCommunity: function (code) { return client().then(function (c) { return c.rpc("join_community", { p_code: code }); }).then(ok).then(one); },
