@@ -1,5 +1,6 @@
 /* Short looping demo clips that replace the still photo in the player and on the stretch page (generated with Higgsfield, MiniMax H3). Female and male model versions. */
 window.VIDEOS = {
+ "hipcars": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_210209_3e290fab-40a0-4b69-9191-dc6301c1f38d.mp4",
  "downdog": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_203944_dc561494-9e74-4164-88e5-21cb89f670e6.mp4",
  "deepsquat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_181921_e61e7d6b-f45f-499a-9dfd-ebbfc2eaca49.mp4",
  "catcow": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_180417_62bb157b-fe56-4fa9-8493-1d0b1fdc4d62.mp4",
@@ -38,4 +39,9 @@ window.VIDEOS_M = {
  "birddog": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_165342_d9e86a1b-a526-4d72-8e82-7667ce05e36d.mp4",
  "ninety": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_153050_87b438c1-7ebc-4860-9714-e7c0e01f5d43.mp4",
  "askip": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_093933_af0080ae-1efc-4be7-8f10-b1aa78e6d0a8.mp4"
+};
+
+// Playback speed per movement for clips that are easier to follow slowed down (1 = as recorded).
+window.VIDEO_RATE = {
+ "hipcars": 0.5
 };

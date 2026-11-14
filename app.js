@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.47.7", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.47.8", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -168,6 +168,9 @@
     if (v.dataset.vdone) return; v.dataset.vdone = 1; var u = v.dataset.vsrc;
     /* A wide clip (e.g. downward dog, which spans the frame) would lose hands and feet in a square crop, so show it whole. */
     v.addEventListener("loadedmetadata", function () { if (v.videoWidth > v.videoHeight * 1.2) v.classList.add("wide"); });
+    /* Some clips play slower than they were recorded so the movement is easier to follow (see VIDEO_RATE in videos.js). */
+    var vk = v.parentNode && v.parentNode.getAttribute && v.parentNode.getAttribute("data-key"), vr = vk && window.VIDEO_RATE && window.VIDEO_RATE[vk];
+    if (vr) { v.defaultPlaybackRate = vr; v.playbackRate = vr; v.addEventListener("play", function () { if (v.playbackRate !== vr) v.playbackRate = vr; }); }
     var go = function (src) { v.src = src; var p = v.play(); if (p && p.catch) p.catch(function () {}); };
     if (!window.caches) return go(u);
     caches.open("sm-photos").then(function (c) { return c.match(u); }).then(function (r) { return r && r.type !== "opaque" ? r.blob() : null; })
