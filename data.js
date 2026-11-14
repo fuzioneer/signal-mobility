@@ -366,23 +366,46 @@
 
   var PRESETS = [
     { id: "daily", n: "Your daily 10", sub: "Built from your two tightest zones", auto: true, mins: 10 },
-    { id: "warm", n: "Pre-WOD warm-up", sub: "Dynamic, 8 minutes", items: ["catcow", "passthru", "wallslide", "legswing", "downdog", "anklerock", "cossack", "deepsquat"] },
-    { id: "cool", n: "Post-WOD cool-down", sub: "Long holds, about 12 minutes", items: ["childreach", "couch", "pigeon", "hamfloss", "calfwall", "thread", "breath9090"] },
-    { id: "overhead", n: "Overhead day", sub: "Snatch, jerk and overhead squat prep", items: ["tspineroll", "wallslide", "latbench", "passthru", "bander", "ohshold"] },
-    { id: "squat", n: "Squat and clean prep", sub: "Hips and ankles", items: ["anklerock", "heelsup", "ninety", "frog", "kneelhf", "deepsquat"] },
+    { id: "warm", sport: "crossfit", kind: "activate", n: "Pre-WOD warm-up", sub: "Dynamic, 8 minutes", items: ["catcow", "passthru", "wallslide", "legswing", "downdog", "anklerock", "cossack", "deepsquat"] },
+    { id: "cool", sport: "crossfit", kind: "recover", n: "Post-WOD cool-down", sub: "Long holds, about 12 minutes", items: ["childreach", "couch", "pigeon", "hamfloss", "calfwall", "thread", "breath9090"] },
+    { id: "overhead", lift: "overhead", n: "Overhead day", sub: "Snatch, jerk and overhead squat prep", items: ["tspineroll", "wallslide", "latbench", "passthru", "bander", "ohshold"] },
+    { id: "squat", lift: "squat", n: "Squat and clean prep", sub: "Hips and ankles", items: ["anklerock", "heelsup", "ninety", "frog", "kneelhf", "deepsquat"] },
     { id: "back", n: "Back care", sub: "Gentle, for a cranky lower back", items: ["catcow", "birddog", "deadbug", "bridge", "kneelhf", "childreach", "breath9090"] },
     { id: "desk", n: "Desk break", sub: "5 minutes, no kit", items: ["doorway", "crossbody", "kneelhf", "foldfwd", "stickrot"] },
-    { id: "prerun", n: "Before a run", sub: "Dynamic warm-up to get you moving", items: ["legswing", "hipcircle", "lungetwist", "wgs", "anklerock", "bridge", "askip", "pogo"] },
-    { id: "postrun", n: "After a run", sub: "Easy cool-down for calves, hips and hamstrings", items: ["calfwall", "soleus", "standquad", "kneelhf", "hamtowel", "fig4", "crossover", "pigeon", "childreach"] },
-    { id: "hyroxpre", n: "Hyrox warm-up", sub: "Race or training day, about 10 minutes", tag: "hyrox", items: ["catcow", "passthru", "legswing", "hipcircle", "wgs", "lungetwist", "anklerock", "deepsquat", "askip", "pogo"] },
-    { id: "hyroxpost", n: "Hyrox recovery", sub: "After a race or hard session: calves, quads, hips, lats and grip", tag: "hyrox", items: ["calfwall", "soleus", "couch", "pigeon", "hamtowel", "latbench", "doorway", "wrists", "childreach", "breath9090"] },
-    { id: "golfpre", n: "Golf warm-up", sub: "On the tee or range, all standing, about 8 minutes", tag: "golf", items: ["clubhinge", "legswing", "hipcircle", "clubrot", "crossbody", "crossover", "wrists"] },
-    { id: "golfmob", n: "Golf mobility", sub: "At home, for a bigger, freer turn", tag: "golf", items: ["openbook", "quadrot", "thread", "ninety", "kneelhf", "fig4", "sleeper", "supinetwist", "wrists"] },
-    { id: "preride", n: "Before a ride", sub: "Wake up hips, hamstrings and back, about 8 minutes", tag: "cycle", items: ["catcow", "legswing", "hipcircle", "lungetwist", "wgs", "bridge", "anklerock"] },
-    { id: "postride", n: "After a ride", sub: "Open the hips and chest after time in the saddle", tag: "cycle", items: ["kneelhf", "couch", "standquad", "hamtowel", "pigeon", "fig4", "calfwall", "doorway", "childreach"] },
-    { id: "rideposture", n: "Cyclist's posture", sub: "Undo the hunch: chest, upper back and neck", tag: "cycle", items: ["doorway", "tspineroll", "openbook", "thread", "wallslide", "catcow", "breath9090"] },
+    { id: "prerun", sport: "running", kind: "activate", n: "Before a run", sub: "Dynamic warm-up to get you moving", items: ["legswing", "hipcircle", "lungetwist", "wgs", "anklerock", "bridge", "askip", "pogo"] },
+    { id: "postrun", sport: "running", kind: "recover", n: "After a run", sub: "Easy cool-down for calves, hips and hamstrings", items: ["calfwall", "soleus", "standquad", "kneelhf", "hamtowel", "fig4", "crossover", "pigeon", "childreach"] },
+    { id: "hyroxpre", sport: "hyrox", kind: "activate", n: "Hyrox warm-up", sub: "Race or training day, about 10 minutes", tag: "hyrox", items: ["catcow", "passthru", "legswing", "hipcircle", "wgs", "lungetwist", "anklerock", "deepsquat", "askip", "pogo"] },
+    { id: "hyroxpost", sport: "hyrox", kind: "recover", n: "Hyrox recovery", sub: "After a race or hard session: calves, quads, hips, lats and grip", tag: "hyrox", items: ["calfwall", "soleus", "couch", "pigeon", "hamtowel", "latbench", "doorway", "wrists", "childreach", "breath9090"] },
+    { id: "golfpre", sport: "golf", kind: "activate", n: "Golf warm-up", sub: "On the tee or range, all standing, about 8 minutes", tag: "golf", items: ["clubhinge", "legswing", "hipcircle", "clubrot", "crossbody", "crossover", "wrists"] },
+    { id: "golfmob", sport: "golf", kind: "extra", n: "Golf mobility", sub: "At home, for a bigger, freer turn", tag: "golf", items: ["openbook", "quadrot", "thread", "ninety", "kneelhf", "fig4", "sleeper", "supinetwist", "wrists"] },
+    { id: "preride", sport: "cycling", kind: "activate", n: "Before a ride", sub: "Wake up hips, hamstrings and back, about 8 minutes", tag: "cycle", items: ["catcow", "legswing", "hipcircle", "lungetwist", "wgs", "bridge", "anklerock"] },
+    { id: "postride", sport: "cycling", kind: "recover", n: "After a ride", sub: "Open the hips and chest after time in the saddle", tag: "cycle", items: ["kneelhf", "couch", "standquad", "hamtowel", "pigeon", "fig4", "calfwall", "doorway", "childreach"] },
+    { id: "rideposture", sport: "cycling", kind: "extra", n: "Cyclist's posture", sub: "Undo the hunch: chest, upper back and neck", tag: "cycle", items: ["doorway", "tspineroll", "openbook", "thread", "wallslide", "catcow", "breath9090"] },
     { id: "bedhips", n: "Tight hips, in bed", sub: "All lying down, on any mattress", items: ["kneehug", "wipers", "fig4", "happybaby", "butterfly", "edgeflexor", "sidequad", "hamtowel", "supinetwist", "bridge"] },
-    { id: "sleep", n: "Bedtime wind-down", sub: "Slow and calming, about 10 minutes", items: ["childreach", "supinetwist", "fig4", "bandham", "breath9090"] }
+    { id: "sleep", n: "Bedtime wind-down", sub: "Slow and calming, about 10 minutes", items: ["childreach", "supinetwist", "fig4", "bandham", "breath9090"] },
+    /* Sport packs: Activate before training, Recover after. */
+    { id: "golfpost", sport: "golf", kind: "recover", n: "After a round", sub: "Ease the back, hips and lead shoulder", items: ["supinetwist", "childreach", "fig4", "kneelhf", "sleeper", "crossbody", "wrists", "breath9090"] },
+    { id: "liftpre", sport: "lifting", kind: "activate", n: "Strength warm-up", sub: "Get hips, spine and shoulders ready to load", items: ["catcow", "hipcars", "gobletpry", "squatstand", "inchworm", "proney", "passthru", "wallslide"] },
+    { id: "liftpost", sport: "lifting", kind: "recover", n: "After lifting", sub: "Long holds for hips, lats, chest and calves", items: ["couch", "pigeon", "latbench", "doorway", "hamtowel", "childreach", "calfwall", "breath9090"] },
+    { id: "rowpre", sport: "rowing", kind: "activate", n: "Before you row", sub: "Hinge, ankles and upper back for a long stroke", items: ["catcow", "hipcars", "legswing", "rdlreach", "anklerock", "squatstand", "passthru", "openbook"] },
+    { id: "rowpost", sport: "rowing", kind: "recover", n: "After rowing", sub: "Hamstrings, hips, lats and grip", items: ["hamtowel", "pigeon", "couch", "latbench", "childreach", "thread", "wrists", "calfwall"] },
+    { id: "swimpre", sport: "swimming", kind: "activate", n: "Before a swim", sub: "Poolside shoulder and trunk prep", items: ["armcircle", "passthru", "wallangel", "crossbody", "tricep", "openbook", "sidereach", "anklecircle"] },
+    { id: "swimpost", sport: "swimming", kind: "recover", n: "After a swim", sub: "Chest, lats and shoulders, plus ankles for your kick", items: ["doorway", "latbench", "sleeper", "puppy", "thread", "cobra", "toetuck", "childreach"] },
+    { id: "footpre", sport: "football", kind: "activate", n: "Before a match", sub: "Dynamic hips, groin and calves", items: ["legswing", "hipcircle", "lungetwist", "sidelunge", "askip", "wgs", "firehydrant", "pogo"] },
+    { id: "footpost", sport: "football", kind: "recover", n: "After a match", sub: "Quads, hamstrings, groin and calves", items: ["standquad", "kneelhf", "hamtowel", "seatedbfly", "pigeon", "calfwall", "soleus", "childreach"] },
+    { id: "racketpre", sport: "racket", kind: "activate", n: "Before you play", sub: "Shoulders, trunk turn and quick feet", items: ["armcircle", "passthru", "quadrot", "legswing", "sidelunge", "lungetwist", "wrists", "pogo"] },
+    { id: "racketpost", sport: "racket", kind: "recover", n: "After you play", sub: "Hitting shoulder, forearm, hips and calves", items: ["sleeper", "crossbody", "wrists", "thread", "seatedbfly", "standquad", "calfwall", "supinetwist"] },
+    { id: "climbpre", sport: "climbing", kind: "activate", n: "Before you climb", sub: "Fingers, shoulders and open hips", items: ["wrists", "armcircle", "wallangel", "proney", "hipcars", "addrock", "deadhang"] },
+    { id: "climbpost", sport: "climbing", kind: "recover", n: "After climbing", sub: "Forearms, lats, chest and hips", items: ["wrists", "doorway", "latbench", "puppy", "tricep", "frog", "butterfly", "childreach"] },
+    { id: "tripre", sport: "triathlon", kind: "activate", n: "Triathlon warm-up", sub: "Swim shoulders, then legs for the bike and run", items: ["armcircle", "passthru", "openbook", "legswing", "hipcircle", "lungetwist", "anklerock", "askip"] },
+    { id: "tripost", sport: "triathlon", kind: "recover", n: "Triathlon recovery", sub: "Chest and lats, then hips, hamstrings and calves", items: ["doorway", "latbench", "couch", "pigeon", "hamtowel", "calfwall", "soleus", "breath9090"] },
+    /* Before a lift: prep for one movement. */
+    { id: "deadlift", lift: "deadlift", n: "Deadlift prep", sub: "Hinge, hamstrings, upper back and grip", items: ["catcow", "hipcars", "goodmorning", "rdlreach", "hamfloss", "bridge", "tspineroll", "deadhang"] },
+    { id: "bench", lift: "bench", n: "Bench press prep", sub: "Shoulders, chest and upper back", items: ["bander", "wallslide", "tspineroll", "passthru", "doorway", "proney"] },
+    { id: "pullup", lift: "pullup", n: "Pull-up prep", sub: "Lats, shoulders and grip", items: ["armcircle", "wallangel", "walllat", "latbench", "proney", "deadhang", "wrists"] },
+    { id: "lunge", lift: "lunge", n: "Lunge and split squat prep", sub: "Hip flexors, quads, ankles and balance", items: ["legswing", "kneelhf", "lizard", "lungetwist", "anklerock", "rdlreach", "clam"] },
+    { id: "kbswing", lift: "kbswing", n: "Kettlebell swing prep", sub: "A crisp hinge: hamstrings, glutes and back", items: ["catcow", "hipcars", "goodmorning", "hamfloss", "bridge", "rdlreach", "wrists"] },
+    { id: "thruster", lift: "thruster", n: "Thruster and wall ball prep", sub: "Squat depth plus a locked-out overhead", items: ["anklerock", "gobletpry", "deepsquat", "tspineroll", "wallslide", "passthru", "ohshold"] }
   ];
   /* Muscle groups each move stretches, used by the body map in Build your own. */
   var MUSCLES = [["sh", "Shoulders"], ["ch", "Chest"], ["ub", "Upper back"], ["lat", "Lats"], ["lb", "Lower back"], ["core", "Core"], ["fa", "Forearms and wrists"],
@@ -405,11 +428,19 @@
     { id: "golf", n: "Golf", picks: ["golfpre", "golfmob", "desk"], top: ["clubrot", "clubhinge", "openbook", "ninety", "thread", "wrists", "kneelhf", "sleeper"] },
     { id: "lifting", n: "Weightlifting / strength", picks: ["squat", "overhead", "cool"], top: ["ohshold", "anklerock", "heelsup", "latbench", "frog", "couch", "tspineroll", "passthru"] },
     { id: "cycling", n: "Cycling", picks: ["preride", "postride", "rideposture"], top: ["kneelhf", "couch", "hamtowel", "pigeon", "standquad", "catcow", "doorway", "tspineroll"] },
+    { id: "rowing", n: "Rowing and indoor erg", picks: ["rowpre", "rowpost", "deadlift"], top: ["hamtowel", "pigeon", "anklerock", "latbench", "thread", "couch", "rdlreach", "wrists"] },
+    { id: "swimming", n: "Swimming", picks: ["swimpre", "swimpost", "rideposture"], top: ["latbench", "doorway", "sleeper", "passthru", "puppy", "thread", "toetuck", "openbook"] },
+    { id: "triathlon", n: "Triathlon", picks: ["tripre", "tripost", "postrun"], top: ["latbench", "couch", "pigeon", "calfwall", "hamtowel", "doorway", "kneelhf", "soleus"] },
+    { id: "football", n: "Football", picks: ["footpre", "footpost", "bedhips"], top: ["seatedbfly", "kneelhf", "hamtowel", "standquad", "pigeon", "calfwall", "sidelunge", "wgs"] },
+    { id: "racket", n: "Tennis, padel and squash", picks: ["racketpre", "racketpost", "desk"], top: ["sleeper", "crossbody", "wrists", "quadrot", "sidelunge", "calfwall", "thread", "seatedbfly"] },
+    { id: "climbing", n: "Climbing and bouldering", picks: ["climbpre", "climbpost", "pullup"], top: ["wrists", "latbench", "frog", "puppy", "doorway", "deadhang", "butterfly", "proney"] },
     { id: "office", n: "Desk job / general fitness", picks: ["desk", "back", "sleep"], top: ["doorway", "kneelhf", "catcow", "tspineroll", "childreach", "fig4", "crossbody", "foldfwd"] }
   ];
 
   /* Moves in a sport routine also show up under that sport's filter. */
   PRESETS.forEach(function (p) { if (p.tag) p.items.forEach(function (id) { var s = BY[id]; if (s && s.tags.indexOf(p.tag) < 0) s.tags.push(p.tag); }); });
-  window.SMDATA = { MUSCLES: MUSCLES, SPORTS: SPORTS, ZONES: ZONES, AVG_M: AVG_M, TESTS: TESTS, STRETCH: S, BY: BY, PRESETS: PRESETS };
+  /* Lifts for "Before a lift", in display order, each with the routine that preps it. */
+  var LIFTS = [["squat", "Squat and clean"], ["deadlift", "Deadlift"], ["overhead", "Snatch, jerk and overhead"], ["bench", "Bench press"], ["pullup", "Pull-ups"], ["lunge", "Lunges and split squats"], ["kbswing", "Kettlebell swings"], ["thruster", "Thrusters and wall balls"]];
+  window.SMDATA = { LIFTS: LIFTS, MUSCLES: MUSCLES, SPORTS: SPORTS, ZONES: ZONES, AVG_M: AVG_M, TESTS: TESTS, STRETCH: S, BY: BY, PRESETS: PRESETS };
   if (window.I18N) I18N.applyContent(window.SMDATA);
 })();

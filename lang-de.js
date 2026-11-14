@@ -715,7 +715,19 @@ I18N.add("de", {
 "Show on the Top clubs leaderboard": "In der Top-Clubs-Rangliste zeigen",
 "Only the club name and member count are shown, never who's in it.": "Es werden nur Clubname und Mitgliederzahl gezeigt, nie wer dabei ist.",
 "You've left the club.": "Du hast den Club verlassen.",
-"1 member": "1 Mitglied"
+"1 member": "1 Mitglied",
+"For you": "Für dich",
+"By sport": "Nach Sportart",
+"Before a lift": "Vor einer Übung",
+"Activate": "Aktivieren",
+"before you train": "vor dem Training",
+"Recover": "Regenerieren",
+"after you train": "nach dem Training",
+"More for this sport": "Mehr für diese Sportart",
+"Do it just before your warm-up sets. Dynamic moves first, then short holds, so you stay ready to lift.": "Direkt vor deinen Aufwärmsätzen. Erst dynamische Bewegungen, dann kurze Halteübungen, damit du bereit zum Heben bleibst.",
+"Everyday": "Für jeden Tag",
+"Your routines": "Deine Routinen",
+"Pick your sport in Settings to see its routines here, or browse By sport.": "Wähle deine Sportart in den Einstellungen, um ihre Routinen hier zu sehen, oder stöbere unter Nach Sportart."
 }, {
 "zone": {
 "shoulders": "Schultern",
@@ -747,7 +759,13 @@ I18N.add("de", {
 "golf": "Golf",
 "lifting": "Gewichtheben / Kraftsport",
 "cycling": "Radfahren",
-"office": "Bürojob / allgemeine Fitness"
+"office": "Bürojob / allgemeine Fitness",
+"rowing": "Rudern und Ruderergometer",
+"swimming": "Schwimmen",
+"triathlon": "Triathlon",
+"football": "Fußball",
+"racket": "Tennis, Padel und Squash",
+"climbing": "Klettern und Bouldern"
 },
 "preset": {
 "daily": {
@@ -821,6 +839,90 @@ I18N.add("de", {
 "sleep": {
 "n": "Zur Ruhe kommen vor dem Schlafen",
 "sub": "Langsam und beruhigend, etwa 10 Minuten"
+},
+"golfpost": {
+"n": "Nach der Runde",
+"sub": "Entlastet Rücken, Hüften und die vordere Schulter"
+},
+"liftpre": {
+"n": "Kraft-Aufwärmen",
+"sub": "Hüften, Wirbelsäule und Schultern bereit für Gewicht"
+},
+"liftpost": {
+"n": "Nach dem Krafttraining",
+"sub": "Lange Haltepositionen für Hüften, Lat, Brust und Waden"
+},
+"rowpre": {
+"n": "Vor dem Rudern",
+"sub": "Hüftbeuge, Sprunggelenke und oberer Rücken für einen langen Zug"
+},
+"rowpost": {
+"n": "Nach dem Rudern",
+"sub": "Beinbeuger, Hüften, Lat und Griff"
+},
+"swimpre": {
+"n": "Vor dem Schwimmen",
+"sub": "Schultern und Rumpf am Beckenrand vorbereiten"
+},
+"swimpost": {
+"n": "Nach dem Schwimmen",
+"sub": "Brust, Lat und Schultern, dazu Sprunggelenke für den Beinschlag"
+},
+"footpre": {
+"n": "Vor dem Spiel",
+"sub": "Dynamisch für Hüften, Leiste und Waden"
+},
+"footpost": {
+"n": "Nach dem Spiel",
+"sub": "Oberschenkel, Beinbeuger, Leiste und Waden"
+},
+"racketpre": {
+"n": "Vor dem Spielen",
+"sub": "Schultern, Rumpfdrehung und schnelle Füße"
+},
+"racketpost": {
+"n": "Nach dem Spielen",
+"sub": "Schlagschulter, Unterarm, Hüften und Waden"
+},
+"climbpre": {
+"n": "Vor dem Klettern",
+"sub": "Finger, Schultern und offene Hüften"
+},
+"climbpost": {
+"n": "Nach dem Klettern",
+"sub": "Unterarme, Lat, Brust und Hüften"
+},
+"tripre": {
+"n": "Triathlon-Aufwärmen",
+"sub": "Schultern fürs Schwimmen, dann Beine für Rad und Lauf"
+},
+"tripost": {
+"n": "Triathlon-Regeneration",
+"sub": "Brust und Lat, dann Hüften, Beinbeuger und Waden"
+},
+"deadlift": {
+"n": "Kreuzheben-Vorbereitung",
+"sub": "Hüftbeuge, Beinbeuger, oberer Rücken und Griff"
+},
+"bench": {
+"n": "Bankdrücken-Vorbereitung",
+"sub": "Schultern, Brust und oberer Rücken"
+},
+"pullup": {
+"n": "Klimmzug-Vorbereitung",
+"sub": "Lat, Schultern und Griff"
+},
+"lunge": {
+"n": "Ausfallschritt-Vorbereitung",
+"sub": "Hüftbeuger, Oberschenkel, Sprunggelenke und Balance"
+},
+"kbswing": {
+"n": "Kettlebell-Swing-Vorbereitung",
+"sub": "Eine saubere Hüftbeuge: Beinbeuger, Gesäß und Rücken"
+},
+"thruster": {
+"n": "Thruster- und Wall-Ball-Vorbereitung",
+"sub": "Kniebeugentiefe plus fixierte Überkopfposition"
 }
 },
 "test": {
@@ -1313,5 +1415,15 @@ I18N.add("de", {
 "n": "Fußdehnung mit Handtuch im Sitzen",
 "cues": "Sitze mit einem gestreckten Bein und lege ein Handtuch um den Fußballen. Ziehe sanft, um die Zehen zu dir zu holen, Knie gestreckt. Spüre die Dehnung in Wade und Fußsohle."
 }
+},
+"lift": {
+"squat": "Kniebeuge und Umsetzen",
+"deadlift": "Kreuzheben",
+"overhead": "Reißen, Stoßen und Überkopf",
+"bench": "Bankdrücken",
+"pullup": "Klimmzüge",
+"lunge": "Ausfallschritte und Split Squats",
+"kbswing": "Kettlebell-Swings",
+"thruster": "Thrusters und Wall Balls"
 }
 });

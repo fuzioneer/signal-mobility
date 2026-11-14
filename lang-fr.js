@@ -715,7 +715,19 @@ I18N.add("fr", {
 "Show on the Top clubs leaderboard": "Afficher dans le classement Top clubs",
 "Only the club name and member count are shown, never who's in it.": "Seuls le nom du club et le nombre de membres sont affichés, jamais qui en fait partie.",
 "You've left the club.": "Vous avez quitté le club.",
-"1 member": "1 membre"
+"1 member": "1 membre",
+"For you": "Pour vous",
+"By sport": "Par sport",
+"Before a lift": "Avant un mouvement",
+"Activate": "Activer",
+"before you train": "avant l'entraînement",
+"Recover": "Récupérer",
+"after you train": "après l'entraînement",
+"More for this sport": "Plus pour ce sport",
+"Do it just before your warm-up sets. Dynamic moves first, then short holds, so you stay ready to lift.": "Faites-la juste avant vos séries d'échauffement. D'abord des mouvements dynamiques, puis des maintiens courts, pour rester prêt à soulever.",
+"Everyday": "Au quotidien",
+"Your routines": "Vos routines",
+"Pick your sport in Settings to see its routines here, or browse By sport.": "Choisissez votre sport dans Réglages pour voir ses routines ici, ou parcourez Par sport."
 }, {
 "zone": {
 "shoulders": "Épaules",
@@ -747,7 +759,13 @@ I18N.add("fr", {
 "golf": "Golf",
 "lifting": "Haltérophilie / force",
 "cycling": "Vélo",
-"office": "Travail de bureau / forme générale"
+"office": "Travail de bureau / forme générale",
+"rowing": "Aviron et rameur",
+"swimming": "Natation",
+"triathlon": "Triathlon",
+"football": "Football",
+"racket": "Tennis, padel et squash",
+"climbing": "Escalade et bloc"
 },
 "preset": {
 "daily": {
@@ -821,6 +839,90 @@ I18N.add("fr", {
 "sleep": {
 "n": "Détente avant le coucher",
 "sub": "Lent et apaisant, environ 10 minutes"
+},
+"golfpost": {
+"n": "Après un parcours",
+"sub": "Soulagez le dos, les hanches et l'épaule avant"
+},
+"liftpre": {
+"n": "Échauffement force",
+"sub": "Préparez hanches, dos et épaules à la charge"
+},
+"liftpost": {
+"n": "Après la muscu",
+"sub": "Maintiens longs pour hanches, dorsaux, pectoraux et mollets"
+},
+"rowpre": {
+"n": "Avant de ramer",
+"sub": "Charnière, chevilles et haut du dos pour un coup long"
+},
+"rowpost": {
+"n": "Après l'aviron",
+"sub": "Ischios, hanches, dorsaux et prise"
+},
+"swimpre": {
+"n": "Avant de nager",
+"sub": "Préparation des épaules et du buste au bord du bassin"
+},
+"swimpost": {
+"n": "Après la natation",
+"sub": "Pectoraux, dorsaux et épaules, plus les chevilles pour le battement"
+},
+"footpre": {
+"n": "Avant le match",
+"sub": "Hanches, adducteurs et mollets en mouvement"
+},
+"footpost": {
+"n": "Après le match",
+"sub": "Quadriceps, ischios, adducteurs et mollets"
+},
+"racketpre": {
+"n": "Avant de jouer",
+"sub": "Épaules, rotation du buste et appuis rapides"
+},
+"racketpost": {
+"n": "Après avoir joué",
+"sub": "Épaule de frappe, avant-bras, hanches et mollets"
+},
+"climbpre": {
+"n": "Avant de grimper",
+"sub": "Doigts, épaules et hanches ouvertes"
+},
+"climbpost": {
+"n": "Après l'escalade",
+"sub": "Avant-bras, dorsaux, pectoraux et hanches"
+},
+"tripre": {
+"n": "Échauffement triathlon",
+"sub": "Épaules pour nager, puis jambes pour le vélo et la course"
+},
+"tripost": {
+"n": "Récupération triathlon",
+"sub": "Pectoraux et dorsaux, puis hanches, ischios et mollets"
+},
+"deadlift": {
+"n": "Préparation au soulevé de terre",
+"sub": "Charnière, ischios, haut du dos et prise"
+},
+"bench": {
+"n": "Préparation au développé couché",
+"sub": "Épaules, pectoraux et haut du dos"
+},
+"pullup": {
+"n": "Préparation aux tractions",
+"sub": "Dorsaux, épaules et prise"
+},
+"lunge": {
+"n": "Préparation aux fentes",
+"sub": "Fléchisseurs de hanche, quadriceps, chevilles et équilibre"
+},
+"kbswing": {
+"n": "Préparation au swing kettlebell",
+"sub": "Une charnière nette : ischios, fessiers et dos"
+},
+"thruster": {
+"n": "Préparation thrusters et wall balls",
+"sub": "Profondeur de squat et verrouillage au-dessus de la tête"
 }
 },
 "test": {
@@ -1313,5 +1415,15 @@ I18N.add("fr", {
 "n": "Étirement du pied à la serviette, assis",
 "cues": "Assis, une jambe tendue, passez une serviette autour de l'avant du pied. Tirez doucement pour ramener les orteils vers vous, genou tendu. Sentez l'étirement dans le mollet et sous le pied."
 }
+},
+"lift": {
+"squat": "Squat et épaulé",
+"deadlift": "Soulevé de terre",
+"overhead": "Arraché, jeté et overhead",
+"bench": "Développé couché",
+"pullup": "Tractions",
+"lunge": "Fentes et split squats",
+"kbswing": "Swings kettlebell",
+"thruster": "Thrusters et wall balls"
 }
 });

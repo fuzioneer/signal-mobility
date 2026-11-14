@@ -715,7 +715,19 @@ I18N.add("es", {
 "Show on the Top clubs leaderboard": "Mostrar en la clasificación de Mejores clubes",
 "Only the club name and member count are shown, never who's in it.": "Solo se muestran el nombre del club y el número de miembros, nunca quién está en él.",
 "You've left the club.": "Has salido del club.",
-"1 member": "1 miembro"
+"1 member": "1 miembro",
+"For you": "Para ti",
+"By sport": "Por deporte",
+"Before a lift": "Antes de levantar",
+"Activate": "Activar",
+"before you train": "antes de entrenar",
+"Recover": "Recuperar",
+"after you train": "después de entrenar",
+"More for this sport": "Más para este deporte",
+"Do it just before your warm-up sets. Dynamic moves first, then short holds, so you stay ready to lift.": "Hazla justo antes de tus series de calentamiento. Primero movimientos dinámicos y luego posiciones cortas, para seguir listo para levantar.",
+"Everyday": "Para cada día",
+"Your routines": "Tus rutinas",
+"Pick your sport in Settings to see its routines here, or browse By sport.": "Elige tu deporte en Ajustes para ver aquí sus rutinas, o explora Por deporte."
 }, {
 "zone": {
 "shoulders": "Hombros",
@@ -747,7 +759,13 @@ I18N.add("es", {
 "golf": "Golf",
 "lifting": "Halterofilia / fuerza",
 "cycling": "Ciclismo",
-"office": "Trabajo de oficina / forma física general"
+"office": "Trabajo de oficina / forma física general",
+"rowing": "Remo y remoergómetro",
+"swimming": "Natación",
+"triathlon": "Triatlón",
+"football": "Fútbol",
+"racket": "Tenis, pádel y squash",
+"climbing": "Escalada y bloque"
 },
 "preset": {
 "daily": {
@@ -821,6 +839,90 @@ I18N.add("es", {
 "sleep": {
 "n": "Relajación antes de dormir",
 "sub": "Lenta y relajante, unos 10 minutos"
+},
+"golfpost": {
+"n": "Después de una vuelta",
+"sub": "Alivia la espalda, las caderas y el hombro adelantado"
+},
+"liftpre": {
+"n": "Calentamiento de fuerza",
+"sub": "Prepara caderas, columna y hombros para cargar"
+},
+"liftpost": {
+"n": "Después de levantar",
+"sub": "Posiciones largas para caderas, dorsales, pecho y gemelos"
+},
+"rowpre": {
+"n": "Antes de remar",
+"sub": "Bisagra, tobillos y espalda alta para una palada larga"
+},
+"rowpost": {
+"n": "Después de remar",
+"sub": "Isquios, caderas, dorsales y agarre"
+},
+"swimpre": {
+"n": "Antes de nadar",
+"sub": "Preparación de hombros y tronco junto a la piscina"
+},
+"swimpost": {
+"n": "Después de nadar",
+"sub": "Pecho, dorsales y hombros, y tobillos para la patada"
+},
+"footpre": {
+"n": "Antes del partido",
+"sub": "Caderas, aductores y gemelos en movimiento"
+},
+"footpost": {
+"n": "Después del partido",
+"sub": "Cuádriceps, isquios, aductores y gemelos"
+},
+"racketpre": {
+"n": "Antes de jugar",
+"sub": "Hombros, giro del tronco y pies rápidos"
+},
+"racketpost": {
+"n": "Después de jugar",
+"sub": "Hombro de golpeo, antebrazo, caderas y gemelos"
+},
+"climbpre": {
+"n": "Antes de escalar",
+"sub": "Dedos, hombros y caderas abiertas"
+},
+"climbpost": {
+"n": "Después de escalar",
+"sub": "Antebrazos, dorsales, pecho y caderas"
+},
+"tripre": {
+"n": "Calentamiento de triatlón",
+"sub": "Hombros para nadar, luego piernas para la bici y la carrera"
+},
+"tripost": {
+"n": "Recuperación de triatlón",
+"sub": "Pecho y dorsales, luego caderas, isquios y gemelos"
+},
+"deadlift": {
+"n": "Preparación de peso muerto",
+"sub": "Bisagra, isquios, espalda alta y agarre"
+},
+"bench": {
+"n": "Preparación de press de banca",
+"sub": "Hombros, pecho y espalda alta"
+},
+"pullup": {
+"n": "Preparación de dominadas",
+"sub": "Dorsales, hombros y agarre"
+},
+"lunge": {
+"n": "Preparación de zancadas",
+"sub": "Flexores de cadera, cuádriceps, tobillos y equilibrio"
+},
+"kbswing": {
+"n": "Preparación de swing con kettlebell",
+"sub": "Una bisagra limpia: isquios, glúteos y espalda"
+},
+"thruster": {
+"n": "Preparación de thrusters y wall balls",
+"sub": "Profundidad de sentadilla y bloqueo por encima de la cabeza"
 }
 },
 "test": {
@@ -1313,5 +1415,15 @@ I18N.add("es", {
 "n": "Estiramiento de pie con toalla sentado",
 "cues": "Siéntate con una pierna estirada y pasa una toalla por la parte delantera de ese pie. Tira suavemente para llevar los dedos hacia ti, con la rodilla estirada. Nota el estiramiento en el gemelo y la planta del pie."
 }
+},
+"lift": {
+"squat": "Sentadilla y cargada",
+"deadlift": "Peso muerto",
+"overhead": "Arrancada, envión y overhead",
+"bench": "Press de banca",
+"pullup": "Dominadas",
+"lunge": "Zancadas y sentadilla búlgara",
+"kbswing": "Swings con kettlebell",
+"thruster": "Thrusters y wall balls"
 }
 });

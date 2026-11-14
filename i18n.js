@@ -41,6 +41,7 @@
     D.ZONES.forEach(function (z) { var c = C ? (C.zone || {})[z[0]] : null; if (pseudo) z[1] = tr(z[1]); else if (c) z[1] = c; });
     (D.MUSCLES || []).forEach(function (m) { var c = C ? (C.muscle || {})[m[0]] : null; if (pseudo) m[1] = tr(m[1]); else if (c) m[1] = c; });
     (D.SPORTS || []).forEach(function (s) { var c = C ? (C.sport || {})[s.id] : null; if (pseudo) s.n = tr(s.n); else if (c) s.n = c; });
+    (D.LIFTS || []).forEach(function (l) { var c = C ? (C.lift || {})[l[0]] : null; if (pseudo) l[1] = tr(l[1]); else if (c) l[1] = c; });
   };
   /* Translate the fixed text in index.html (tab names, buttons, labels) once the page has loaded. */
   I.translateStatic = function (root) {

@@ -715,7 +715,19 @@ I18N.add("it", {
 "Show on the Top clubs leaderboard": "Mostra nella classifica Top club",
 "Only the club name and member count are shown, never who's in it.": "Vengono mostrati solo il nome del club e il numero di membri, mai chi ne fa parte.",
 "You've left the club.": "Hai lasciato il club.",
-"1 member": "1 membro"
+"1 member": "1 membro",
+"For you": "Per te",
+"By sport": "Per sport",
+"Before a lift": "Prima di un'alzata",
+"Activate": "Attiva",
+"before you train": "prima di allenarti",
+"Recover": "Recupera",
+"after you train": "dopo l'allenamento",
+"More for this sport": "Altro per questo sport",
+"Do it just before your warm-up sets. Dynamic moves first, then short holds, so you stay ready to lift.": "Falla subito prima delle serie di riscaldamento. Prima movimenti dinamici, poi tenute brevi, così resti pronto ad alzare.",
+"Everyday": "Ogni giorno",
+"Your routines": "Le tue routine",
+"Pick your sport in Settings to see its routines here, or browse By sport.": "Scegli il tuo sport nelle Impostazioni per vedere qui le sue routine, oppure sfoglia Per sport."
 }, {
 "zone": {
 "shoulders": "Spalle",
@@ -747,7 +759,13 @@ I18N.add("it", {
 "golf": "Golf",
 "lifting": "Pesistica / forza",
 "cycling": "Ciclismo",
-"office": "Lavoro d'ufficio / forma fisica generale"
+"office": "Lavoro d'ufficio / forma fisica generale",
+"rowing": "Canottaggio e vogatore",
+"swimming": "Nuoto",
+"triathlon": "Triathlon",
+"football": "Calcio",
+"racket": "Tennis, padel e squash",
+"climbing": "Arrampicata e boulder"
 },
 "preset": {
 "daily": {
@@ -821,6 +839,90 @@ I18N.add("it", {
 "sleep": {
 "n": "Relax prima di dormire",
 "sub": "Lenta e calmante, circa 10 minuti"
+},
+"golfpost": {
+"n": "Dopo un giro",
+"sub": "Allenta schiena, anche e spalla avanzata"
+},
+"liftpre": {
+"n": "Riscaldamento forza",
+"sub": "Prepara anche, colonna e spalle al carico"
+},
+"liftpost": {
+"n": "Dopo i pesi",
+"sub": "Tenute lunghe per anche, dorsali, petto e polpacci"
+},
+"rowpre": {
+"n": "Prima di vogare",
+"sub": "Cerniera, caviglie e parte alta della schiena per una passata lunga"
+},
+"rowpost": {
+"n": "Dopo il vogatore",
+"sub": "Femorali, anche, dorsali e presa"
+},
+"swimpre": {
+"n": "Prima di nuotare",
+"sub": "Preparazione di spalle e tronco a bordo vasca"
+},
+"swimpost": {
+"n": "Dopo il nuoto",
+"sub": "Petto, dorsali e spalle, più le caviglie per la gambata"
+},
+"footpre": {
+"n": "Prima della partita",
+"sub": "Anche, inguine e polpacci in movimento"
+},
+"footpost": {
+"n": "Dopo la partita",
+"sub": "Quadricipiti, femorali, inguine e polpacci"
+},
+"racketpre": {
+"n": "Prima di giocare",
+"sub": "Spalle, rotazione del busto e piedi veloci"
+},
+"racketpost": {
+"n": "Dopo aver giocato",
+"sub": "Spalla del colpo, avambraccio, anche e polpacci"
+},
+"climbpre": {
+"n": "Prima di arrampicare",
+"sub": "Dita, spalle e anche aperte"
+},
+"climbpost": {
+"n": "Dopo l'arrampicata",
+"sub": "Avambracci, dorsali, petto e anche"
+},
+"tripre": {
+"n": "Riscaldamento triathlon",
+"sub": "Spalle per il nuoto, poi gambe per bici e corsa"
+},
+"tripost": {
+"n": "Recupero triathlon",
+"sub": "Petto e dorsali, poi anche, femorali e polpacci"
+},
+"deadlift": {
+"n": "Preparazione allo stacco",
+"sub": "Cerniera, femorali, parte alta della schiena e presa"
+},
+"bench": {
+"n": "Preparazione alla panca",
+"sub": "Spalle, petto e parte alta della schiena"
+},
+"pullup": {
+"n": "Preparazione alle trazioni",
+"sub": "Dorsali, spalle e presa"
+},
+"lunge": {
+"n": "Preparazione agli affondi",
+"sub": "Flessori dell'anca, quadricipiti, caviglie ed equilibrio"
+},
+"kbswing": {
+"n": "Preparazione allo swing",
+"sub": "Una cerniera pulita: femorali, glutei e schiena"
+},
+"thruster": {
+"n": "Preparazione thruster e wall ball",
+"sub": "Profondità di squat e blocco sopra la testa"
 }
 },
 "test": {
@@ -1313,5 +1415,15 @@ I18N.add("it", {
 "n": "Allungamento del piede con asciugamano da seduto",
 "cues": "Siediti con una gamba tesa e passa un asciugamano intorno all'avampiede. Tira delicatamente per portare le dita verso di te, con il ginocchio teso. Senti l'allungamento nel polpaccio e sotto il piede."
 }
+},
+"lift": {
+"squat": "Squat e girata",
+"deadlift": "Stacco da terra",
+"overhead": "Strappo, slancio e overhead",
+"bench": "Panca piana",
+"pullup": "Trazioni",
+"lunge": "Affondi e split squat",
+"kbswing": "Swing con kettlebell",
+"thruster": "Thruster e wall ball"
 }
 });

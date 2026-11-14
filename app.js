@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.43.1", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.44.0", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -455,11 +455,44 @@
   }
 
   /* ---------- ROUTINES ---------- */
-  var LIB_F = "all", LIB_Q = "", building = null;
+  var LIB_F = "all", LIB_Q = "", building = null, RT_G = "foryou", RT_SP = null, RT_LF = "squat";
+  /* Routines are grouped: For you (daily, your sport, everyday), By sport (Activate before, Recover after) and Before a lift. */
+  function routineGroups() {
+    var h = '<div class="seg rseg" role="tablist">' + [["foryou", T("For you")], ["sport", T("By sport")], ["lift", T("Before a lift")]].map(function (g) { return '<button role="tab" aria-selected="' + (RT_G === g[0]) + '" class="' + (RT_G === g[0] ? "on" : "") + '" data-act="rgroup" data-id="' + g[0] + '">' + g[1] + "</button>"; }).join("") + "</div>";
+    var byId = function (id) { return findRoutine(id); };
+    var label = function (t, sub) { return '<p class="rlabel"><b>' + t + "</b>" + (sub ? " · " + sub : "") + "</p>"; };
+    if (RT_G === "sport") {
+      var sports = SPORTS.filter(function (s) { return PRESETS.some(function (p) { return p.sport === s.id; }); });
+      var fav = sportObj();
+      if (fav) sports.sort(function (a, b) { return (b.id === fav.id) - (a.id === fav.id); });
+      if (!RT_SP || !sports.some(function (s) { return s.id === RT_SP; })) RT_SP = fav && sports.some(function (s) { return s.id === fav.id; }) ? fav.id : sports[0].id;
+      h += chipRow(sports.map(function (s) { return '<button class="chip' + (RT_SP === s.id ? " on" : "") + '" data-act="rsport" data-id="' + s.id + '">' + esc(s.n) + "</button>"; }).join(""));
+      var mine = PRESETS.filter(function (p) { return p.sport === RT_SP; });
+      mine.filter(function (p) { return p.kind === "activate"; }).forEach(function (p) { h += label(T("Activate"), T("before you train")) + routineCard(byId(p.id)); });
+      mine.filter(function (p) { return p.kind === "recover"; }).forEach(function (p) { h += label(T("Recover"), T("after you train")) + routineCard(byId(p.id)); });
+      var ex = mine.filter(function (p) { return p.kind === "extra"; });
+      if (ex.length) { h += label(T("More for this sport"), ""); ex.forEach(function (p) { h += routineCard(byId(p.id)); }); }
+    } else if (RT_G === "lift") {
+      var lifts = D.LIFTS || [];
+      if (!lifts.some(function (l) { return l[0] === RT_LF; })) RT_LF = lifts[0][0];
+      h += chipRow(lifts.map(function (l) { return '<button class="chip' + (RT_LF === l[0] ? " on" : "") + '" data-act="rlift" data-id="' + l[0] + '">' + esc(l[1]) + "</button>"; }).join(""));
+      PRESETS.filter(function (p) { return p.lift === RT_LF; }).forEach(function (p) { h += routineCard(byId(p.id)); });
+      h += '<p class="small muted rnote">' + T("Do it just before your warm-up sets. Dynamic moves first, then short holds, so you stay ready to lift.") + "</p>";
+    } else {
+      h += routineCard(byId("daily"));
+      var fs = sportObj();
+      if (fs) { var fp = PRESETS.filter(function (p) { return p.sport === fs.id && (p.kind === "activate" || p.kind === "recover"); }); if (fp.length) { h += label(esc(fs.n), ""); fp.forEach(function (p) { h += routineCard(byId(p.id)); }); } }
+      var every = PRESETS.filter(function (p) { return !p.auto && !p.sport && !p.lift; });
+      if (every.length) { h += label(T("Everyday"), ""); every.forEach(function (p) { h += routineCard(byId(p.id)); }); }
+      if (S.routines.length) { h += label(T("Your routines"), ""); allRoutines().filter(function (r) { return r.custom; }).forEach(function (r) { h += routineCard(r); }); }
+      if (!fs) h += '<p class="small muted rnote">' + T("Pick your sport in Settings to see its routines here, or browse By sport.") + "</p>";
+    }
+    return h;
+  }
   var TAGN = { warm: T("Warm-up"), cool: T("Cool-down"), back: T("Back"), run: T("Running"), hyrox: T("Hyrox"), golf: T("Golf"), cycle: T("Cycling"), desk: T("Desk"), bed: T("On a bed"), sleep: T("Sleep") };
   function renderRoutines() {
     var h = ('<div class="sec" style="margin-top:6px"><h2>' + T("Routines") + '</h2><button class="btn ghost" data-act="build">' + T("+ Build your own") + '</button></div>') + qwCard();
-    allRoutines().forEach(function (r) { h += routineCard(r); });
+    h += routineGroups();
     h += ('<div class="sec"><h2>' + T("Stretch library") + '</h2><span class="small muted">') + ST.length + " " + T("moves") + "</span></div>";
     var hasVid = ST.some(function (s) { return vidUrl(s.id); }); if (LIB_F === "video" && !hasVid) LIB_F = "all";
     var F = [["all", (T("All"))]].concat(hasVid ? [["video", '<span class="chipvid" aria-hidden="true">' + VBADGE + "</span>" + T("With video")]] : []).concat(ZONES).concat([["warm", (T("Warm-up"))], ["cool", (T("Cool-down"))], ["back", (T("Back"))], ["run", (T("Running"))], ["hyrox", (T("Hyrox"))], ["golf", (T("Golf"))], ["cycle", (T("Cycling"))], ["desk", (T("Desk"))], ["bed", (T("On a bed"))], ["sleep", (T("Sleep"))]]);
@@ -1575,6 +1608,9 @@
         else openStretch(id);
         break;
       case "filter": LIB_F = id; renderRoutines(); break;
+      case "rgroup": RT_G = id; renderRoutines(); break;
+      case "rsport": RT_SP = id; renderRoutines(); break;
+      case "rlift": RT_LF = id; renderRoutines(); break;
       case "build": building = { items: [] }; LIB_F = "all"; MG_SEL = []; renderRoutines(); toast((T("Pick muscle areas, then tap moves in order"))); setTimeout(function () { var l = $(".bodymap") || $(".lib"); if (l) l.scrollIntoView({ behavior: "smooth" }); }, 50); break;
       case "build-cancel": building = null; MG_SEL = []; renderRoutines(); break;
       case "mg": { var mi = MG_SEL.indexOf(id); if (mi >= 0) { MG_SEL.splice(mi, 1); if (MG_LAST === id) MG_LAST = MG_SEL[MG_SEL.length - 1] || null; } else { MG_SEL.push(id); MG_LAST = id; } var y = window.scrollY; renderRoutines(); window.scrollTo(0, y); break; }

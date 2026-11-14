@@ -715,7 +715,19 @@ I18N.add("pt", {
 "Show on the Top clubs leaderboard": "Mostrar na tabela de Top clubes",
 "Only the club name and member count are shown, never who's in it.": "Só são mostrados o nome do clube e o número de membros, nunca quem está nele.",
 "You've left the club.": "Saiu do clube.",
-"1 member": "1 membro"
+"1 member": "1 membro",
+"For you": "Para si",
+"By sport": "Por desporto",
+"Before a lift": "Antes de um levantamento",
+"Activate": "Ativar",
+"before you train": "antes de treinar",
+"Recover": "Recuperar",
+"after you train": "depois de treinar",
+"More for this sport": "Mais para este desporto",
+"Do it just before your warm-up sets. Dynamic moves first, then short holds, so you stay ready to lift.": "Faça-a mesmo antes das séries de aquecimento. Primeiro movimentos dinâmicos, depois posições curtas, para ficar pronto para levantar.",
+"Everyday": "Para o dia a dia",
+"Your routines": "As suas rotinas",
+"Pick your sport in Settings to see its routines here, or browse By sport.": "Escolha o seu desporto nas Definições para ver aqui as rotinas, ou explore Por desporto."
 }, {
 "zone": {
 "shoulders": "Ombros",
@@ -747,7 +759,13 @@ I18N.add("pt", {
 "golf": "Golfe",
 "lifting": "Halterofilismo / força",
 "cycling": "Ciclismo",
-"office": "Trabalho de escritório / forma física geral"
+"office": "Trabalho de escritório / forma física geral",
+"rowing": "Remo e remo indoor",
+"swimming": "Natação",
+"triathlon": "Triatlo",
+"football": "Futebol",
+"racket": "Ténis, padel e squash",
+"climbing": "Escalada e bouldering"
 },
 "preset": {
 "daily": {
@@ -821,6 +839,90 @@ I18N.add("pt", {
 "sleep": {
 "n": "Relaxar antes de dormir",
 "sub": "Lenta e calmante, cerca de 10 minutos"
+},
+"golfpost": {
+"n": "Depois de uma volta",
+"sub": "Alivie as costas, as ancas e o ombro da frente"
+},
+"liftpre": {
+"n": "Aquecimento de força",
+"sub": "Prepare ancas, coluna e ombros para a carga"
+},
+"liftpost": {
+"n": "Depois dos pesos",
+"sub": "Posições longas para ancas, dorsais, peito e gémeos"
+},
+"rowpre": {
+"n": "Antes de remar",
+"sub": "Dobradiça, tornozelos e parte alta das costas para uma remada longa"
+},
+"rowpost": {
+"n": "Depois de remar",
+"sub": "Isquiotibiais, ancas, dorsais e pega"
+},
+"swimpre": {
+"n": "Antes de nadar",
+"sub": "Preparação de ombros e tronco junto à piscina"
+},
+"swimpost": {
+"n": "Depois de nadar",
+"sub": "Peito, dorsais e ombros, mais tornozelos para a pernada"
+},
+"footpre": {
+"n": "Antes do jogo",
+"sub": "Ancas, virilhas e gémeos em movimento"
+},
+"footpost": {
+"n": "Depois do jogo",
+"sub": "Quadríceps, isquiotibiais, virilhas e gémeos"
+},
+"racketpre": {
+"n": "Antes de jogar",
+"sub": "Ombros, rotação do tronco e pés rápidos"
+},
+"racketpost": {
+"n": "Depois de jogar",
+"sub": "Ombro do batimento, antebraço, ancas e gémeos"
+},
+"climbpre": {
+"n": "Antes de escalar",
+"sub": "Dedos, ombros e ancas abertas"
+},
+"climbpost": {
+"n": "Depois de escalar",
+"sub": "Antebraços, dorsais, peito e ancas"
+},
+"tripre": {
+"n": "Aquecimento de triatlo",
+"sub": "Ombros para nadar, depois pernas para a bicicleta e a corrida"
+},
+"tripost": {
+"n": "Recuperação de triatlo",
+"sub": "Peito e dorsais, depois ancas, isquiotibiais e gémeos"
+},
+"deadlift": {
+"n": "Preparação do peso morto",
+"sub": "Dobradiça, isquiotibiais, parte alta das costas e pega"
+},
+"bench": {
+"n": "Preparação do supino",
+"sub": "Ombros, peito e parte alta das costas"
+},
+"pullup": {
+"n": "Preparação das elevações",
+"sub": "Dorsais, ombros e pega"
+},
+"lunge": {
+"n": "Preparação dos afundos",
+"sub": "Flexores da anca, quadríceps, tornozelos e equilíbrio"
+},
+"kbswing": {
+"n": "Preparação do swing",
+"sub": "Uma dobradiça limpa: isquiotibiais, glúteos e costas"
+},
+"thruster": {
+"n": "Preparação de thrusters e wall balls",
+"sub": "Profundidade de agachamento e bloqueio acima da cabeça"
 }
 },
 "test": {
@@ -1313,5 +1415,15 @@ I18N.add("pt", {
 "n": "Alongamento do pé com toalha, sentado",
 "cues": "Sente-se com uma perna esticada e passe uma toalha à volta da parte da frente desse pé. Puxe suavemente para trazer os dedos na sua direção, com o joelho esticado. Sinta o alongamento no gémeo e na planta do pé."
 }
+},
+"lift": {
+"squat": "Agachamento e clean",
+"deadlift": "Peso morto",
+"overhead": "Snatch, jerk e overhead",
+"bench": "Supino",
+"pullup": "Elevações",
+"lunge": "Afundos e split squats",
+"kbswing": "Swings com kettlebell",
+"thruster": "Thrusters e wall balls"
 }
 });
