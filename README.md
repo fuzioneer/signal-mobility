@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.47.1 (14 Nov 2026): Squat to stand now has a demo video, with both the female and male model, made from our own reference models.
 - 1.47.0 (14 Nov 2026): Accessibility and tidier movement sheets. Every photo and logo now has descriptive alt text for screen readers (for example "Cat-cow, demonstrated by a woman"), translated into all six languages. Movements that have a demo video no longer show the extra "Show the movement" photo toggle, since the video already shows it.
 - 1.46.0 (14 Nov 2026): Step through movements. When you open a movement from the stretch library (or any list of movements), left and right arrows under the picture take you to the previous or next movement in that list, with a "3 of 24" counter. It follows your current filter or search, and you can also swipe left or right on the picture.
 - 1.45.2 (14 Nov 2026): Updates arrive straight away. The app now always checks for newer files instead of reusing GitHub Pages' 10-minute copies, looks for a new version whenever it comes back to the front, and reloads itself once when a new version takes over (never in the middle of a routine).
