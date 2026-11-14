@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.45.0", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.45.1", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -1094,7 +1094,8 @@
   var LASTMOVES = [], LASTSESS = null;
   /* ---------- Session image: 1080x1350 (fits Strava and Instagram posts). Strava's API can't attach photos,
      so this is saved or shared from the finish screen and added to the activity in Strava. ---------- */
-  var LOGO_HD = new Image(); LOGO_HD.src = "img/logo-h-dark.png";
+  var LOGO_HD = new Image(); LOGO_HD.src = "img/logo-h-dark-hd.png";
+  var LOGO_LO = new Image(); LOGO_LO.src = "img/logo-h-dark.png";
   function wrapText(x, text, maxW) { var words = String(text).split(" "), lines = [], cur = ""; words.forEach(function (w) { var t = cur ? cur + " " + w : w; if (x.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t; }); if (cur) lines.push(cur); return lines; }
   function sessionImage(s) {
     var W = 1080, H = 1350, c = document.createElement("canvas"); c.width = W; c.height = H; var x = c.getContext("2d");
@@ -1103,33 +1104,47 @@
     x.fillStyle = "#0f1412"; x.fillRect(0, 0, W, H);
     var g = x.createRadialGradient(W * .78, H * .18, 40, W * .78, H * .18, 760); g.addColorStop(0, "rgba(70,179,159,.30)"); g.addColorStop(1, "rgba(70,179,159,0)"); x.fillStyle = g; x.fillRect(0, 0, W, H);
     x.strokeStyle = "rgba(70,179,159,.09)"; x.lineWidth = 34; x.beginPath(); x.arc(W * 1.02, H * .9, 520, Math.PI * .95, Math.PI * 1.6); x.stroke(); x.beginPath(); x.arc(-60, H * .05, 380, Math.PI * .05, Math.PI * .6); x.stroke();
-    var L = 80, R = W - 80, y = 70;
-    if (LOGO_HD.complete && LOGO_HD.naturalWidth) { var lh = 96, lw = lh * LOGO_HD.naturalWidth / LOGO_HD.naturalHeight; x.drawImage(LOGO_HD, L, y, lw, lh); }
-    else { x.font = font(800, 64); x.fillStyle = INK; x.textBaseline = "top"; x.fillText("Movage", L, y + 12); }
-    x.textBaseline = "alphabetic"; y = 280;
-    x.fillStyle = TEAL; x.font = font(700, 30); x.fillText(T("Mobility session").toUpperCase(), L, y);
-    x.fillStyle = INK; x.font = font(800, 68); wrapText(x, s.n, R - L).slice(0, 2).forEach(function (ln) { y += 78; x.fillText(ln, L, y); });
-    y += 52; x.fillStyle = MUTED; x.font = font(500, 32);
-    var d = new Date(s.t || Date.now()); x.fillText(d.toLocaleDateString(I18N.lang || "en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }), L, y);
+    var L = 80, R = W - 80, TOP = 78, BOTTOM = 1176;
     var mm = movesAndMuscles(s.moves), st = streak();
-    var tiles = [[mmss(s.secs), T("Time")], [String(mm.moves.length), T("Moves")]]; if (st) tiles.push([String(st), T("day streak")]);
-    y += 50; var tw = (R - L - 24 * (tiles.length - 1)) / tiles.length;
-    tiles.forEach(function (t, i) { var tx = L + i * (tw + 24); x.fillStyle = "rgba(255,255,255,.06)"; rr(x, tx, y, tw, 150, 22); x.fill(); x.fillStyle = INK; x.font = font(800, 60); x.fillText(t[0], tx + 28, y + 80); x.fillStyle = MUTED; x.font = font(600, 26); x.fillText(t[1].toUpperCase(), tx + 28, y + 122); });
-    y += 220; x.fillStyle = TEAL; x.font = font(700, 28); x.fillText(T("Muscles stretched").toUpperCase(), L, y); y += 26;
-    /* Muscle chips: shrink the text until they all fit in 4 rows. */
+    /* Measure every block first, then share the spare height evenly between them, so the image never looks top-heavy or cramped. */
+    x.font = font(800, 72); var titleLines = wrapText(x, s.n, R - L).slice(0, 2);
     var chipFs = 30, layout;
-    var lay = function (fs) { x.font = font(600, fs); var cx = L, r = 0, pos = []; mm.muscles.forEach(function (m) { var w = x.measureText(m).width + fs * 1.4; if (cx + w > R && cx > L) { cx = L; r++; } pos.push([m, cx, r, w]); cx += w + 12; }); return { pos: pos, rows: r + 1 }; };
+    var lay = function (fs) { x.font = font(600, fs); var cx = L, r = 0, pos = []; mm.muscles.forEach(function (m) { var w = x.measureText(m).width + fs * 1.4; if (cx + w > R && cx > L) { cx = L; r++; } pos.push([m, cx, r, w]); cx += w + 12; }); return { pos: pos, rows: mm.muscles.length ? r + 1 : 0 }; };
     do { layout = lay(chipFs); chipFs -= 2; } while (layout.rows > 4 && chipFs > 20);
     var chipH = Math.round((chipFs + 2) * 1.6), rowH = chipH + 12;
-    layout.pos.forEach(function (p) { var cy = y + p[2] * rowH; x.fillStyle = "rgba(70,179,159,.20)"; rr(x, p[1], cy, p[3], chipH, chipH / 2); x.fill(); x.fillStyle = INK; x.fillText(p[0], p[1] + (chipFs + 2) * .7, cy + chipH * .7); });
-    y += layout.rows * rowH + 50;
-    var list = mm.moves, lineH = 42, perCol = Math.floor((1185 - (y + 54)) / lineH) + 1;
-    if (perCol >= 2 && list.length) {
-      x.fillStyle = TEAL; x.font = font(700, 28); x.fillText(T("Moves").toUpperCase(), L, y); y += 14;
-      var cols = list.length > perCol ? 2 : 1, cap = perCol * cols, show = list.length > cap ? list.slice(0, cap - 1) : list, colW = (R - L) / cols;
-      x.font = font(500, 28); x.fillStyle = "rgba(255,255,255,.88)";
-      show.forEach(function (n, i) { var col = Math.floor(i / perCol), row = i % perCol, t = n; if (x.measureText("• " + t).width > colW - 24) { while (x.measureText("• " + t + "…").width > colW - 24 && t.length > 4) t = t.slice(0, -1); t = t.trim() + "…"; } x.fillText("• " + t, L + col * colW, y + 40 + row * lineH); });
-      if (list.length > show.length) { var i2 = show.length; x.fillStyle = MUTED; x.fillText(TF("+{n} more", { n: list.length - show.length }), L + Math.floor(i2 / perCol) * colW, y + 40 + (i2 % perCol) * lineH); }
+    /* Move names without their bracketed extras, e.g. "Kneeling side bend (gate pose)" -> "Kneeling side bend". */
+    var list = mm.moves.map(function (n) { return n.replace(/\s*\([^)]*\)\s*/g, " ").trim(); }), lineH = 44, cols = list.length > 5 ? 2 : 1;
+    var maxRows = 6, perCol = Math.min(maxRows, Math.ceil(list.length / cols)), cap = perCol * cols, show = list.length > cap ? list.slice(0, cap - 1) : list;
+    var LOGO_H = 88, hHead = 34 + titleLines.length * 82 + 50, hTiles = 176, hChips = layout.rows ? 54 + layout.rows * rowH - 12 : 0, hMoves = list.length ? 54 + perCol * lineH : 0;
+    var blocks = [hHead, hTiles, hChips, hMoves].filter(function (h) { return h > 0; });
+    var used = LOGO_H + blocks.reduce(function (a, b) { return a + b; }, 0), gap = Math.max(40, Math.min(110, (BOTTOM - TOP - used) / blocks.length));
+    var y = TOP;
+    var logo = LOGO_HD.complete && LOGO_HD.naturalWidth ? LOGO_HD : (LOGO_LO.complete && LOGO_LO.naturalWidth ? LOGO_LO : null);
+    if (logo) x.drawImage(logo, L, y, LOGO_H * logo.naturalWidth / logo.naturalHeight, LOGO_H);
+    else { x.font = font(800, 64); x.fillStyle = INK; x.textBaseline = "top"; x.fillText("Movage", L, y + 12); }
+    x.textBaseline = "alphabetic"; y += LOGO_H + gap;
+    x.fillStyle = TEAL; x.font = font(700, 30); x.fillText(T("Mobility session").toUpperCase(), L, y + 26);
+    x.fillStyle = INK; x.font = font(800, 72); titleLines.forEach(function (ln, i) { x.fillText(ln, L, y + 34 + 70 + i * 82); });
+    x.fillStyle = MUTED; x.font = font(500, 32);
+    var d = new Date(s.t || Date.now()), loc = I18N.lang && I18N.lang !== "en" ? I18N.lang : "en-GB";
+    x.fillText(d.toLocaleDateString(loc, { weekday: "long", day: "numeric", month: "long", year: "numeric" }), L, y + hHead);
+    y += hHead + gap;
+    var tiles = [[mmss(s.secs), T("Time")], [String(mm.moves.length), T("Moves")]]; if (st) tiles.push([String(st), T("day streak")]);
+    var tw = (R - L - 24 * (tiles.length - 1)) / tiles.length;
+    x.textAlign = "center";
+    tiles.forEach(function (t, i) { var tx = L + i * (tw + 24), cx = tx + tw / 2; x.fillStyle = "rgba(255,255,255,.06)"; rr(x, tx, y, tw, hTiles, 24); x.fill(); x.fillStyle = INK; x.font = font(800, 64); x.fillText(t[0], cx, y + 96); x.fillStyle = MUTED; x.font = font(600, 25); x.fillText(t[1].toUpperCase(), cx, y + 140); });
+    x.textAlign = "left"; y += hTiles + gap;
+    if (layout.rows) {
+      x.fillStyle = TEAL; x.font = font(700, 28); x.fillText(T("Muscles stretched").toUpperCase(), L, y + 24); var cy0 = y + 54;
+      x.font = font(600, chipFs + 2);
+      layout.pos.forEach(function (p) { var cy = cy0 + p[2] * rowH; x.fillStyle = "rgba(70,179,159,.20)"; rr(x, p[1], cy, p[3], chipH, chipH / 2); x.fill(); x.fillStyle = INK; x.fillText(p[0], p[1] + (chipFs + 2) * .7, cy + chipH * .68); });
+      y += hChips + gap;
+    }
+    if (list.length) {
+      x.fillStyle = TEAL; x.font = font(700, 28); x.fillText(T("Moves").toUpperCase(), L, y + 24);
+      var colW = (R - L) / cols; x.font = font(500, 29); x.fillStyle = "rgba(255,255,255,.88)";
+      show.forEach(function (n, i) { var col = Math.floor(i / perCol), row = i % perCol, t = n; if (x.measureText("• " + t).width > colW - 24) { while (x.measureText("• " + t + "…").width > colW - 24 && t.length > 4) t = t.slice(0, -1); t = t.trim() + "…"; } x.fillText("• " + t, L + col * colW, y + 54 + 32 + row * lineH); });
+      if (list.length > show.length) { var i2 = show.length; x.fillStyle = MUTED; x.fillText(TF("+{n} more", { n: list.length - show.length }), L + Math.floor(i2 / perCol) * colW, y + 54 + 32 + (i2 % perCol) * lineH); }
     }
     x.fillStyle = "rgba(255,255,255,.14)"; x.fillRect(L, 1210, R - L, 2);
     x.font = font(700, 34); x.fillStyle = INK; x.textAlign = "left"; x.fillText("@movageapp", L, 1272);
