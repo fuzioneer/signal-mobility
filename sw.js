@@ -1,5 +1,5 @@
 /* Movage service worker: app shell offline, pose model cached after first use. */
-const VER = "sm-1.45.1";
+const VER = "sm-1.45.2";
 const SHELL = ["./", "index.html", "styles.css", "app.js", "data.js", "figure.js", "pose.js", "music.js", "clips.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "img/logo-h-light.png", "img/logo-h-dark.png", "img/logo-h-dark-hd.png", "img/logo-s-light.png", "img/logo-s-dark.png", "img/logo-s-white.png", "photos.js", "videos.js", "i18n.js", "strava.js", "cloud-config.js", "cloud.js", "lang-es.js", "lang-fr.js", "lang-de.js", "lang-it.js", "lang-pt.js"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(VER).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VER && k !== "sm-cdn" && k !== "sm-photos").map(k => caches.delete(k)))).then(() => self.clients.claim())); });
@@ -18,7 +18,8 @@ self.addEventListener("fetch", e => {
     return;
   }
   if (u.origin === location.origin) {
-    e.respondWith(fetch(e.request).then(r => { const cp = r.clone(); caches.open(VER).then(c => c.put(e.request, cp)); return r; }).catch(() => caches.match(e.request).then(h => h || caches.match("index.html"))));
+    /* Always check GitHub Pages for a newer copy (it lets browsers reuse files for 10 minutes otherwise); unchanged files come back as a quick 304. */
+    e.respondWith(fetch(new Request(e.request.url, { cache: "no-cache", credentials: "same-origin" })).then(r => { const cp = r.clone(); caches.open(VER).then(c => c.put(e.request, cp)); return r; }).catch(() => caches.match(e.request).then(h => h || caches.match("index.html"))));
   }
 });
 /* Tapping a reminder notification opens the app on that routine. */
