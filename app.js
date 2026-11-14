@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.46.0", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.47.0", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -155,6 +155,7 @@
   }
   function bigPhoto(key, cls, alt) {
     var set = photoSet(key); if (!set.length) return "";
+    alt = altFor(key) || alt;
     var vu = vidUrl(key);
     if (vu) return '<div class="xfade vid" data-key="' + esc(key) + '"><video class="photo ' + cls + ' on" data-vsrc="' + esc(vu) + '" poster="' + esc(set[0]) + '" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc((alt || "") + ", " + T("demo video")) + '"></video></div>';
     return '<div class="xfade' + (set.length > 1 ? " multi" : "") + '" data-key="' + esc(key) + '">' + set.map(function (u, i) {
@@ -195,7 +196,14 @@
   /* Small play badge on thumbnails of moves that have a looping demo video for the chosen model. */
   var VBADGE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="M10 8.2v7.6l6-3.8z"/></svg>';
   function vbadge(key) { return vidUrl(key) ? '<span class="vbadge" role="img" aria-label="' + esc(T("Video demo")) + '" title="' + esc(T("Video demo")) + '">' + VBADGE + "</span>" : ""; }
-  function art(key, pose, opts) { var u = photoUrl(key); return (u ? '<img class="photo" loading="lazy" decoding="async" alt="" src="' + esc(u) + '">' : fig(pose, opts)) + (opts && opts.nobadge ? "" : vbadge(key)); }
+  /* Alt text for a movement or test photo: what it shows and who is demonstrating it. */
+  function altFor(key) {
+    var isTest = key.indexOf("t_") === 0, t = isTest ? TESTS.filter(function (x) { return x.id === key.slice(2); })[0] : null, s = isTest ? null : BY[key];
+    var name = t ? t.n : s ? s.n : ""; if (!name) return "";
+    var who = S.settings.model === "m" ? T("demonstrated by a man") : T("demonstrated by a woman");
+    return isTest ? TF("{name} test, {who}", { name: name, who: who }) : TF("{name}, {who}", { name: name, who: who });
+  }
+  function art(key, pose, opts) { var u = photoUrl(key); return (u ? '<img class="photo" loading="lazy" decoding="async" alt="' + esc(altFor(key)) + '" src="' + esc(u) + '">' : fig(pose, opts)) + (opts && opts.nobadge ? "" : vbadge(key)); }
   var stops = [];
   function stopAnims() { stops.forEach(function (f) { f(); }); stops = []; }
   function animateIn(root) { $$("[data-anim]", root).forEach(function (el) { var s = el.getAttribute("data-anim").split(":"), src = s[0] === "t" ? TESTS.filter(function (t) { return t.id === s[1]; })[0] : BY[s[1]]; if (src) stops.push(FIG.animate(el, src.pose, src.pose2, 1500)); }); }
@@ -546,7 +554,7 @@
       h += '<div class="sec"><h2>' + (z[0] ? '<span class="zdot" style="background:' + zc(z[0]) + '"></span>' : "") + z[1] + '</h2><span class="pctpill" data-zone="' + (z[0] || "") + '"></span></div>';
       ts.forEach(function (t) {
         h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + art("t_" + t.id, t.pose, { stroke: 8 }) + '</div><div><h3>' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? (T("Not scored. A check of your squat position.")) : (t.sides ? (T("Both sides")) : (T("One result"))) + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
-        h += ('<details><summary>' + T("How to do it") + '</summary><div class="how"><p>') + esc(t.how) + '</p>' + (photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(t.n) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
+        h += ('<details><summary>' + T("How to do it") + '</summary><div class="how"><p>') + esc(t.how) + '</p>' + (photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(altFor("t_" + t.id)) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
         h += '<div class="inputs">' + fieldsFor(t).map(function (f) { return '<label class="field">' + f[1] + '<input type="number" inputmode="decimal" step="any" data-k="' + f[0] + '" value="' + (isNum(draft.v[f[0]]) ? draft.v[f[0]] : "") + '"></label>'; }).join("");
         if (t.cam) h += '<button class="btn" data-act="cam" data-id="' + t.id + '" style="flex:none">' + ICON.cam.replace("<svg", '<svg width="20" height="20"') + (" " + T("Camera") + "</button>");
         h += "</div></div>";
@@ -771,7 +779,9 @@
     if (nav !== undefined) SNAV = nav;
     var s = BY[id];
     var pu = photoUrl(id);
-    var h = (pu ? '<div class="bigfig photo-wrap">' + bigPhoto(id, "", s.n) + ('</div><details class="small" style="margin:-6px 0 12px"><summary style="color:var(--brand);font-weight:600">' + T("Show the movement") + '</summary><div class="bigfig" data-anim="s:') + id + '" style="margin-top:8px"></div></details>' : '<div class="bigfig" data-anim="s:' + id + '"></div>') + stretchNavBar(id) + '<h2>' + esc(s.n) + '</h2><p style="margin:6px 0">' + s.z.map(function (z) { return '<span class="tag"><span class="zdot" style="background:' + zc(z) + '"></span>' + ZN[z] + "</span>"; }).join("") + s.tags.map(function (t) { return '<span class="tag">' + esc(TAGN[t] || t) + "</span>"; }).join("") + "</p>";
+    /* A demo video already shows the movement, so the drawn figure is only offered for still photos. */
+    var hasVid = !!vidUrl(id);
+    var h = (pu && hasVid ? '<div class="bigfig photo-wrap">' + bigPhoto(id, "", s.n) + "</div>" : pu ? '<div class="bigfig photo-wrap">' + bigPhoto(id, "", s.n) + ('</div><details class="small" style="margin:-6px 0 12px"><summary style="color:var(--brand);font-weight:600">' + T("Show the movement") + '</summary><div class="bigfig" data-anim="s:') + id + '" style="margin-top:8px"></div></details>' : '<div class="bigfig" data-anim="s:' + id + '"></div>') + stretchNavBar(id) + '<h2>' + esc(s.n) + '</h2><p style="margin:6px 0">' + s.z.map(function (z) { return '<span class="tag"><span class="zdot" style="background:' + zc(z) + '"></span>' + ZN[z] + "</span>"; }).join("") + s.tags.map(function (t) { return '<span class="tag">' + esc(TAGN[t] || t) + "</span>"; }).join("") + "</p>";
     h += '<p class="muted" style="margin-bottom:6px">' + (s.reps ? esc(s.reps) + (T(", about") + " ") : (T("Hold") + " ")) + holdSecs(s) + " " + T("seconds") + (s.s ? (" " + T("each side")) : "") + ".</p><p>" + esc(s.cues) + "</p>";
     h += '<div class="row" style="margin-top:16px"><button class="btn primary grow" data-act="play-one" data-id="' + id + '">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + (" " + T("Do it now") + "</button></div>");
     openSheet(h);
@@ -1355,7 +1365,7 @@
     if (!got) { toast((T("No readings captured yet."))); return; }
     toast((T("Added to your test. Tap Save test when you're done.")));
     if (TAB !== "test") go("test"); else renderTest();
-    if (snaps.length && !shared) openSheet(("<h2>" + T("Best positions") + "</h2><p class=\"muted\" style=\"margin:4px 0 12px\">" + T("Save them to Photos to keep a visual record.") + "</p><div class=\"snaps\">") + snaps.map(function (s) { return '<img alt="Tracked position" src="' + s.img + '">'; }).join("") + ('</div><button class="btn primary block" style="margin-top:12px" data-act="save-photos">' + T("Save to Photos") + '</button>'));
+    if (snaps.length && !shared) openSheet(("<h2>" + T("Best positions") + "</h2><p class=\"muted\" style=\"margin:4px 0 12px\">" + T("Save them to Photos to keep a visual record.") + "</p><div class=\"snaps\">") + snaps.map(function (s) { return '<img alt="' + esc(s.n ? TF("Your tracked position for {name}", { name: s.n }) : T("Your tracked position")) + '" src="' + s.img + '">'; }).join("") + ('</div><button class="btn primary block" style="margin-top:12px" data-act="save-photos">' + T("Save to Photos") + '</button>'));
     var card = $('[data-test="' + t.id + '"]'); if (card) card.scrollIntoView({ block: "center" });
   }
   var LASTSNAPS = [];
@@ -1719,7 +1729,7 @@
   /* Tap a large photo to see it full screen; tap anywhere (or the cross) to close. Moves with several photos get arrows and swipe. */
   var lbList = [], lbIdx = 0, lbCap = "";
   function lbShow() {
-    var n = lbList.length; $("#lb-img").src = lbList[lbIdx];
+    var n = lbList.length; $("#lb-img").src = lbList[lbIdx]; $("#lb-img").alt = lbCap || T("Photo");
     $("#lb-cap").textContent = lbCap + (n > 1 ? "  (" + (lbIdx + 1) + " of " + n + ")" : "");
     $("#lb-prev").hidden = $("#lb-next").hidden = n < 2;
   }
@@ -1989,7 +1999,7 @@
     /* Signed in at start-up (cmBoot) but the board hasn't been fetched yet: fetch it now. */
     if (CM.stage === "main" && CM.rows === null && !CM.inflight) { cmRefresh(); return; }
     var h = "", st = CM.stage;
-    var intro = '<div class="card cmhero"><img class="lg-l" src="img/logo-s-light.png" alt=""><img class="lg-d" src="img/logo-s-dark.png" alt=""><h2>' + T("Move together") + '</h2><p class="muted">' + T("Start or join a club, see who's putting the time in, and compare mobility scores with friends, your gym or everyone on Movage.") + "</p></div>";
+    var intro = '<div class="card cmhero"><img class="lg-l" src="img/logo-s-light.png" alt="Movage"><img class="lg-d" src="img/logo-s-dark.png" alt="Movage"><h2>' + T("Move together") + '</h2><p class="muted">' + T("Start or join a club, see who's putting the time in, and compare mobility scores with friends, your gym or everyone on Movage.") + "</p></div>";
     if (st === "off") h = intro + '<div class="card"><p>' + T("Community leaderboards are coming soon.") + "</p></div>";
     else if (st === "loading") h = '<div class="card"><p class="muted">' + T("Loading the community…") + "</p></div>";
     else if (st === "error") h = '<div class="card"><p>' + esc(CM.err) + '</p><button class="btn block" data-act="cm-retry" style="margin-top:12px">' + T("Try again") + "</button></div>";

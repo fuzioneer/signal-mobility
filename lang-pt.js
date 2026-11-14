@@ -779,7 +779,13 @@ I18N.add("pt", {
 "Tap again to remove this goal": "Toque de novo para remover este objetivo",
 "Previous movement": "Movimento anterior",
 "Next movement": "Movimento seguinte",
-"{n} of {total}": "{n} de {total}"
+"{n} of {total}": "{n} de {total}",
+"demonstrated by a man": "demonstrado por um homem",
+"demonstrated by a woman": "demonstrado por uma mulher",
+"{name} test, {who}": "Teste {name}, {who}",
+"{name}, {who}": "{name}, {who}",
+"Your tracked position for {name}": "A sua posição registada em {name}",
+"Your tracked position": "A sua posição registada"
 }, {
 "zone": {
 "shoulders": "Ombros",
