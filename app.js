@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.44.0", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.45.0", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -32,9 +32,9 @@
   /* ---------- storage ---------- */
   var KEY = "signal-mobility-v1"; /* storage key kept from the old name so existing data is not lost */
   var TAGLINE = "Joint Venture";
-  function blank() { return { v: 1, settings: { age: 40, sex: "m", height: 178, voice: true, savePhotos: true, music: "pads", musicVol: 0.5, beeps: true, prep: 5, rest: 10, sideRest: 5, theme: "auto" }, tests: [], sessions: [], routines: [] }; }
+  function blank() { return { v: 1, settings: { age: 40, sex: "m", height: 178, voice: true, savePhotos: true, music: "pads", musicVol: 0.5, beeps: true, prep: 5, rest: 10, sideRest: 5, theme: "auto" }, tests: [], sessions: [], routines: [], goals: [] }; }
   function load() {
-    try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; if (x.fb) b.fb = x.fb; if (x.cloud) b.cloud = x.cloud; return b; } } catch (e) {}
+    try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; b.goals = Array.isArray(x.goals) ? x.goals : []; if (x.fb) b.fb = x.fb; if (x.cloud) b.cloud = x.cloud; return b; } } catch (e) {}
     return blank();
   }
   var S = load();
@@ -241,6 +241,115 @@
   function render() { ({ home: renderHome, test: renderTest, routines: renderRoutines, history: renderHistory, community: renderCommunity })[TAB](); }
   $$("nav.tabs button").forEach(function (b) { b.addEventListener("click", function () { go(b.getAttribute("data-tab")); }); });
 
+  /* ---------- GOALS: targets tied to test results, with a date to hit them by ---------- */
+  var GOALS = [
+    { id: "toes", key: "toetouch", target: 0, z: "postchain", n: "Touch your toes", sub: "Reach your toes on the standing toe touch (0 cm or past)" },
+    { id: "overhead", key: "wallflex", target: 0, z: "overhead", n: "Arms fully overhead", sub: "Thumbs touch the wall on the wall overhead reach" },
+    { id: "scratch", key: "backscratch", target: 0, z: "shoulders", n: "Fingers meet behind your back", sub: "Back scratch reaches 0 cm on both sides" },
+    { id: "squat", key: "cam_shin", target: 35, z: "ankles", n: "Heels-down deep squat", sub: "35° of ankle bend (shin lean) on both sides" },
+    { id: "slr", key: "slr", target: 80, z: "postchain", n: "Looser hamstrings", sub: "80° straight leg raise on both legs" },
+    { id: "hipir", key: "hipir", target: 35, z: "hips", n: "Free-turning hips", sub: "35° hip internal rotation on both sides" },
+    { id: "thomas", key: "thomas", target: 0, z: "hips", n: "Open hip flexors", sub: "Thigh level or lower on the Thomas test, both sides" },
+    { id: "rotate", key: "trot", target: 45, z: "thorax", n: "Rotate further", sub: "45° seated thoracic rotation each way" }
+  ];
+  var GOAL_W = 8;
+  function testById(id) { return TESTS.filter(function (t) { return t.id === id; })[0]; }
+  function goalTpl(g) { return GOALS.filter(function (x) { return x.id === g.tpl; })[0]; }
+  function goalBetterUp(g) { if (g.kind === "score") return true; var t = testById(g.key); return !t || t.hi > t.lo; }
+  /* The worse side counts, so a goal is only met when both sides get there. */
+  function goalVal(key, v) {
+    var t = testById(key); if (!t) return null;
+    if (!t.sides) return isNum(v[key]) ? v[key] : null;
+    var xs = [v[key + "_l"], v[key + "_r"]].filter(isNum); if (!xs.length) return null;
+    return t.hi > t.lo ? Math.min.apply(null, xs) : Math.max.apply(null, xs);
+  }
+  function goalNow(g) { var v = latest().v; if (g.kind === "score") { var o = score(v).overall; return isNum(o) ? Math.round(o) : null; } return goalVal(g.key, v); }
+  function goalMet(g, now) { return isNum(now) && (goalBetterUp(g) ? now >= g.target : now <= g.target); }
+  function goalPct(g, now) {
+    if (goalMet(g, now) || g.done) return 100; if (!isNum(now)) return 0;
+    var s = isNum(g.start) ? g.start : now, span = g.target - s; if (!span) return 0;
+    return Math.max(0, Math.min(99, Math.round((now - s) / span * 100)));
+  }
+  function goalUnit(g) { if (g.kind === "score") return ""; var t = testById(g.key); return t ? (t.u === "°" ? "°" : " " + t.u) : ""; }
+  function goalName(g) { if (g.kind === "score") return TF("Reach a mobility score of {n}", { n: g.target }); var t = goalTpl(g); return t ? T(t.n) : ""; }
+  function goalSub(g) { if (g.kind === "score") return T("Your overall score out of 100"); var t = goalTpl(g); return t ? T(t.sub) : ""; }
+  function goalWhen(g) {
+    if (g.done) return TF("Reached {date}", { date: short(g.done) });
+    var d = daysBetween(iso(), g.by);
+    if (d < 0) return T("Past your target date. Keep going, or set a new date.");
+    if (d >= 14) return TF("{n} weeks left", { n: Math.round(d / 7) });
+    return d === 1 ? T("1 day left") : TF("{n} days left", { n: d });
+  }
+  function fmtGoal(g, x) { return isNum(x) ? (Math.round(x * 10) / 10) + goalUnit(g) : "–"; }
+  function goalActive() { return (S.goals || []).filter(function (g) { return !g.done; }); }
+  function goalsCard() {
+    var gs = (S.goals || []).slice().sort(function (a, b) { return (a.done ? 1 : 0) - (b.done ? 1 : 0); });
+    if (!gs.length) return '<button class="card goalnew" data-act="goal-new"><span class="goalplus" aria-hidden="true">+</span><span class="grow"><b>' + T("Set a mobility goal") + '</b><span class="small muted">' + T("Like touching your toes in 8 weeks. Your tests track it.") + "</span></span>" + ICON.chev + "</button>";
+    var h = '<div class="sec"><h2>' + T("Your goals") + "</h2>" + (goalActive().length < 3 ? '<button class="btn ghost small" data-act="goal-new">' + T("+ Add") + "</button>" : "") + '</div><div class="card goals">';
+    gs.forEach(function (g) {
+      var now = goalNow(g), p = goalPct(g, now), met = g.done || goalMet(g, now);
+      h += '<button class="goalrow' + (met ? " met" : "") + '" data-act="goal-open" data-id="' + esc(g.id) + '"><span class="grow"><b>' + esc(goalName(g)) + '</b><span class="gbar"><i style="width:' + p + '%"></i></span><span class="small muted">' + (isNum(now) ? TF("Now {now}, goal {target}", { now: fmtGoal(g, now), target: fmtGoal(g, g.target) }) : T("Take the test to see where you are")) + " · " + esc(goalWhen(g)) + "</span></span>" + (met ? '<span class="gtick" aria-label="' + esc(T("Reached")) + '">' + ICON.check + "</span>" : '<span class="gpct">' + p + "%</span>") + "</button>";
+    });
+    return h + "</div>";
+  }
+  function goalNewSheet() {
+    var v = latest().v, taken = {}; (S.goals || []).forEach(function (g) { if (!g.done) taken[g.kind === "score" ? "score" : g.tpl] = 1; });
+    var cur = score(v).overall, sTarget = isNum(cur) ? Math.min(100, Math.ceil((Math.round(cur) + 5) / 5) * 5) : 70;
+    var h = "<h2>" + T("Set a goal") + '</h2><p class="small muted" style="margin:4px 0 10px">' + T("Pick a target and a date. Each time you test, Movage tracks how close you are. Up to 3 goals at once.") + "</p>";
+    h += '<p class="small" style="margin:8px 0 6px"><b>' + T("Reach it in") + "</b></p>" + '<div class="chips">' + [4, 8, 12].map(function (w) { return '<button class="chip' + (GOAL_W === w ? " on" : "") + '" data-act="goal-weeks" data-id="' + w + '">' + TF("{n} weeks", { n: w }) + "</button>"; }).join("") + "</div>";
+    var row = function (id, name, sub, now) { var dis = taken[id]; return '<button class="card goalopt"' + (dis ? " disabled" : "") + ' data-act="goal-pick" data-id="' + id + '"><span class="grow"><b>' + esc(name) + '</b><span class="small muted">' + esc(sub) + "</span>" + (now ? '<span class="small">' + esc(now) + "</span>" : "") + "</span>" + (dis ? '<span class="small muted">' + T("Set") + "</span>" : ICON.chev) + "</button>"; };
+    h += row("score", TF("Reach a mobility score of {n}", { n: sTarget }), T("Your overall score out of 100"), isNum(cur) ? TF("You're at {n} now", { n: Math.round(cur) }) : "");
+    GOALS.forEach(function (t) {
+      var now = goalVal(t.key, v), g = { tpl: t.id, key: t.key, target: t.target };
+      h += row(t.id, T(t.n), T(t.sub), isNum(now) ? (goalMet(g, now) ? T("Already there") : TF("You're at {n} now", { n: fmtGoal(g, now) })) : "");
+    });
+    return h;
+  }
+  function goalCreate(id) {
+    if (goalActive().length >= 3) { toast(T("You can have 3 goals at once. Finish or remove one first.")); return; }
+    var g = { id: "g" + Date.now().toString(36), set: iso(), by: addDays(iso(), GOAL_W * 7) };
+    if (id === "score") { var cur = score(latest().v).overall; g.kind = "score"; g.target = isNum(cur) ? Math.min(100, Math.ceil((Math.round(cur) + 5) / 5) * 5) : 70; }
+    else { var t = GOALS.filter(function (x) { return x.id === id; })[0]; if (!t) return; g.kind = "test"; g.tpl = t.id; g.key = t.key; g.target = t.target; }
+    var now = goalNow(g);
+    if (goalMet(g, now)) { toast(T("You're already there. Pick a bigger goal.")); return; }
+    g.start = isNum(now) ? now : null;
+    S.goals = (S.goals || []).concat([g]); save(); closeSheet(); render();
+    toast(TF("Goal set: {name}. You've got {n} weeks.", { name: goalName(g), n: GOAL_W }));
+  }
+  /* A short routine for the goal's zone (score goals use your two tightest zones, like the daily 10). */
+  function goalItems(g) {
+    var t = goalTpl(g); if (!t) return dailyItems().items;
+    var pool = seededShuffle(ST.filter(function (s) { return s.z.indexOf(t.z) >= 0 && s.id !== "breath9090" && canDo(s); }), Math.floor(Date.now() / 864e5));
+    var out = [], secs = 0; pool.forEach(function (s) { if (secs < 420 && secs + itemSecs(s) <= 500) { out.push(s.id); secs += itemSecs(s); } });
+    out.push("breath9090"); return out;
+  }
+  function goalOpen(id) {
+    var g = (S.goals || []).filter(function (x) { return x.id === id; })[0]; if (!g) return;
+    var now = goalNow(g), p = goalPct(g, now), met = g.done || goalMet(g, now);
+    var h = "<h2>" + esc(goalName(g)) + '</h2><p class="small muted" style="margin:4px 0 12px">' + esc(goalSub(g)) + "</p>";
+    h += '<div class="card"><span class="gbar big"><i style="width:' + p + '%"></i></span><div class="gstats"><div><span class="small muted">' + T("Start") + "</span><b>" + fmtGoal(g, g.start) + '</b></div><div><span class="small muted">' + T("Now") + "</span><b>" + fmtGoal(g, now) + '</b></div><div><span class="small muted">' + T("Goal") + "</span><b>" + fmtGoal(g, g.target) + '</b></div></div><p class="small muted" style="margin-top:8px">' + esc(goalWhen(g)) + (g.done ? "" : " · " + TF("Target date {date}", { date: short(g.by) })) + "</p></div>";
+    if (!met) h += '<button class="btn primary block" data-act="goal-train" data-id="' + esc(g.id) + '" style="margin-top:6px">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + " " + T("Train for it") + '</button><button class="btn block" data-act="goal-retest" style="margin-top:8px">' + T("Retest to check progress") + "</button>";
+    h += '<button class="btn ghost block" data-act="goal-del" data-id="' + esc(g.id) + '" style="margin-top:8px">' + T("Remove goal") + "</button>";
+    openSheet(h);
+  }
+  /* After a test: mark goals that are now met and celebrate them. */
+  function goalCheck() {
+    var hit = [];
+    (S.goals || []).forEach(function (g) { if (!g.done && goalMet(g, goalNow(g))) { g.done = iso(); hit.push(g); } });
+    if (hit.length) { save(); setTimeout(function () { toast(TF("Goal reached: {name}. Brilliant work!", { name: goalName(hit[0]) })); }, 1800); }
+  }
+  function goalAct(a, id) {
+    switch (a) {
+      case "goal-new": openSheet(goalNewSheet()); break;
+      case "goal-weeks": GOAL_W = parseInt(id, 10) || 8; openSheet(goalNewSheet()); break;
+      case "goal-pick": goalCreate(id); break;
+      case "goal-retest": closeSheet(); go("test"); break;
+      case "goal-open": goalOpen(id); break;
+      case "goal-train": { var g = (S.goals || []).filter(function (x) { return x.id === id; })[0]; if (!g) return; closeSheet(); play({ id: "goal", n: TF("Goal: {name}", { name: goalName(g) }), items: goalItems(g) }); break; }
+      case "goal-del": if (twice("gd" + id, T("Tap again to remove this goal"))) { S.goals = (S.goals || []).filter(function (x) { return x.id !== id; }); save(); closeSheet(); render(); } break;
+    }
+  }
+
   /* ---------- HOME ---------- */
   function renderHome() {
     var L = latest(), sc = score(L.v), last = lastTestDate(), av = avgFor(), d = dailyItems(), st = streak(), today = sessionDays()[iso()];
@@ -266,6 +375,7 @@
     h += '<p class="small muted" style="margin-bottom:12px">' + d.items.map(function (id) { return esc(BY[id].n); }).join(" · ") + "</p>";
     h += '<button class="btn primary big block" data-act="play" data-id="daily">' + ICON.play.replace("<svg", '<svg width="20" height="20"') + (today ? (" " + T("Go again")) : (" " + T("Start,") + " ") + mins(routineSecs(d.items))) + "</button></div>";
     h += '<div class="stat3"><div><b>' + st + ('</b><span>' + T("day streak") + '</span></div><div><b>') + Math.round(weekSecs() / 60) + ('</b><span>' + T("mins this week") + '</span></div><div><b>') + S.sessions.length + ("</b><span>" + T("sessions") + "</span></div></div>");
+    h += goalsCard();
     h += chCard();
     var g = gaps(L.v);
     if (g.length) {
@@ -449,7 +559,7 @@
     if (!keys.length) { toast((T("Enter at least one result first."))); return; }
     var v = {}; keys.forEach(function (k) { v[k] = draft.v[k]; });
     var cam = keys.filter(function (k) { return draft.cam && draft.cam[k]; });
-    S.tests = S.tests.filter(function (x) { return x.date !== draft.date; }); S.tests.push({ date: draft.date, v: v, t: Date.now(), cam: cam }); save(); cmSync();
+    S.tests = S.tests.filter(function (x) { return x.date !== draft.date; }); S.tests.push({ date: draft.date, v: v, t: Date.now(), cam: cam }); save(); goalCheck(); cmSync();
     var sc = score(v); toast((T("Saved.") + " ") + (isNum(sc.overall) ? (T("Score") + " ") + sc.overall + "." : ""));
     draft = null; go("home");
   }
@@ -1336,7 +1446,7 @@
 
   /* ---------- SETTINGS, EXPORT, IMPORT ---------- */
   function exportObj() {
-    return { app: "movage", version: 1, exported: new Date().toISOString(), settings: S.settings, tests: S.tests, sessions: S.sessions, routines: S.routines,
+    return { app: "movage", version: 1, exported: new Date().toISOString(), settings: S.settings, tests: S.tests, sessions: S.sessions, routines: S.routines, goals: S.goals,
       bodySignal: { collection: (T("mobility")), docs: S.tests.map(function (t) { return { id: "m-" + t.date, data: { date: t.date, v: t.v } }; }) } };
   }
   async function doExport() {
@@ -1358,6 +1468,7 @@
     S.tests = Object.keys(byDate).map(function (k) { return byDate[k]; });
     var seen = {}; S.sessions.concat(x.sessions || []).forEach(function (s) { if (s && s.t) seen[s.t + "|" + s.id] = s; }); S.sessions = Object.keys(seen).map(function (k) { return seen[k]; });
     var rs = {}; S.routines.concat(x.routines || []).forEach(function (r) { if (r && r.id) rs[r.id] = r; }); S.routines = Object.keys(rs).map(function (k) { return rs[k]; });
+    var gs = {}; S.goals.concat(Array.isArray(x.goals) ? x.goals : []).forEach(function (g) { if (g && g.id && g.target != null) gs[g.id] = g; }); S.goals = Object.keys(gs).map(function (k) { return gs[k]; });
     if (x.settings) S.settings = Object.assign(S.settings, x.settings);
     save(); applyTheme(); closeSheet(); render(); toast((T("Restored") + " ") + (x.tests || []).length + (" " + T("tests and") + " ") + (x.sessions || []).length + " sessions.");
   }
@@ -1609,6 +1720,7 @@
         break;
       case "filter": LIB_F = id; renderRoutines(); break;
       case "rgroup": RT_G = id; renderRoutines(); break;
+      case "goal-new": case "goal-weeks": case "goal-pick": case "goal-retest": case "goal-open": case "goal-train": case "goal-del": goalAct(a, id); break;
       case "rsport": RT_SP = id; renderRoutines(); break;
       case "rlift": RT_LF = id; renderRoutines(); break;
       case "build": building = { items: [] }; LIB_F = "all"; MG_SEL = []; renderRoutines(); toast((T("Pick muscle areas, then tap moves in order"))); setTimeout(function () { var l = $(".bodymap") || $(".lib"); if (l) l.scrollIntoView({ behavior: "smooth" }); }, 50); break;

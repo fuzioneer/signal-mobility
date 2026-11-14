@@ -345,7 +345,7 @@ main, #sheet-body { zoom: var(--ts); }
 
 /* Quick routine builder */
 .qwcard { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; cursor: pointer; border: 1px solid var(--line); }
-.qwico { width: 44px; height: 44px; border-radius: 12px; background: var(--brand); color: #fff; display: grid; place-items: center; flex: none; }
+.qwico { width: 44px; height: 44px; border-radius: 12px; background: var(--brand); color: var(--brand-ink); display: grid; place-items: center; flex: none; }
 .qwico svg { fill: currentColor; }
 .qwstep { text-transform: uppercase; letter-spacing: .06em; font-weight: 700; margin-bottom: 4px; }
 .qwtimes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
@@ -460,3 +460,24 @@ body.on-home header.top h1 { position: absolute; width: 1px; height: 1px; overfl
 .rlabel { margin: 14px 2px 6px; font-size: 14px; color: var(--muted); }
 .rlabel b { color: var(--ink); font-weight: 750; }
 .rnote { margin: 8px 2px 4px; }
+/* Goals */
+.goalnew { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.goalnew .grow b, .goalopt .grow b { display: block; }
+.goalnew .grow .small, .goalopt .grow .small { display: block; margin-top: 2px; }
+.goalplus { width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--brand-soft); color: var(--brand); display: grid; place-items: center; font-size: 24px; font-weight: 700; }
+.goals { padding: 4px 14px; }
+.goalrow { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 0; border: 0; border-bottom: 1px solid var(--line); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.goalrow:last-child { border-bottom: 0; }
+.goalrow .grow b { display: block; }
+.goalrow .grow .small { display: block; }
+.gbar { display: block; height: 8px; border-radius: 99px; background: var(--soft); overflow: hidden; margin: 7px 0 6px; }
+.gbar i { display: block; height: 100%; border-radius: 99px; background: var(--brand); transition: width .4s; }
+.gbar.big { height: 12px; margin: 4px 0 12px; }
+.gpct { font-weight: 750; font-size: 15px; min-width: 42px; text-align: right; }
+.gtick { width: 30px; height: 30px; border-radius: 50%; background: var(--brand); color: var(--brand-ink); display: grid; place-items: center; flex: none; }
+.gtick svg { width: 18px; height: 18px; }
+.goalrow.met .gbar i { background: var(--good, var(--brand)); }
+.gstats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+.gstats b { display: block; font-size: 22px; margin-top: 2px; }
+.goalopt { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer; margin-top: 8px; }
+.goalopt[disabled] { opacity: .5; cursor: default; }
