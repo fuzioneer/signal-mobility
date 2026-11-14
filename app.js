@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.45.2", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.46.0", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -219,6 +219,17 @@
     if (sheetClose) { var f = sheetClose; sheetClose = null; f(); }
   }
   $("#scrim").addEventListener("click", closeSheet);
+  /* Swipe left or right on a movement's picture to step through the list it was opened from. */
+  (function () {
+    var x0 = null, y0 = 0, body = $("#sheet-body");
+    body.addEventListener("touchstart", function (e) { var t = e.touches[0]; x0 = e.target.closest(".bigfig") ? t.clientX : null; y0 = t.clientY; }, { passive: true });
+    body.addEventListener("touchend", function (e) {
+      if (x0 === null) return; var t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
+      if (Math.abs(dx) < 60 || Math.abs(dy) > 50) return;
+      var bs = body.querySelectorAll(".snavb"); var b = bs[dx < 0 ? 1 : 0];
+      if (b && !b.disabled) b.click();
+    }, { passive: true });
+  })();
   /* Swipe the sheet's top bar down to close it; Escape closes it too. */
   (function () {
     var bar = $("#sheet-bar"), sh = $("#sheet"), y0 = null, dy = 0;
@@ -734,10 +745,33 @@
     if (r.custom) h += '<div class="row" style="margin-top:8px"><button class="btn" data-act="edit-routine" data-id="' + esc(r.id) + '">' + T("Edit") + '</button><button class="btn danger" data-act="del-routine" data-id="' + esc(r.id) + '">' + T("Delete") + '</button></div>';
     openSheet(h);
   }
-  function openStretch(id) {
+  /* The list a movement was opened from, so the sheet can step to the previous or next one. */
+  var SNAV = null;
+  function stretchNavFrom(el) {
+    var box = el && (el.closest(".lib, .picks, .card, .sec") || el.parentElement);
+    if (!box) return null;
+    var seen = {}, list = [];
+    Array.prototype.forEach.call(box.querySelectorAll('[data-act="stretch"]'), function (b) {
+      var sid = b.getAttribute("data-id");
+      if (!sid || !BY[sid] || seen[sid] || b.hidden || b.offsetParent === null) return;
+      seen[sid] = 1; list.push(sid);
+    });
+    return list.length > 1 ? list : null;
+  }
+  function stretchNavBar(id) {
+    if (!SNAV) return "";
+    var i = SNAV.indexOf(id); if (i < 0) return "";
+    var prev = i > 0 ? SNAV[i - 1] : null, next = i < SNAV.length - 1 ? SNAV[i + 1] : null;
+    var btn = function (dir, sid, label) {
+      return '<button class="btn snavb" data-act="stretch-nav" data-id="' + (sid || "") + '"' + (sid ? "" : " disabled") + ' aria-label="' + esc(label + (sid ? ": " + BY[sid].n : "")) + '">' + (dir < 0 ? "‹" : "›") + "</button>";
+    };
+    return '<div class="snav">' + btn(-1, prev, T("Previous movement")) + '<span class="small muted">' + TF("{n} of {total}", { n: i + 1, total: SNAV.length }) + "</span>" + btn(1, next, T("Next movement")) + "</div>";
+  }
+  function openStretch(id, nav) {
+    if (nav !== undefined) SNAV = nav;
     var s = BY[id];
     var pu = photoUrl(id);
-    var h = (pu ? '<div class="bigfig photo-wrap">' + bigPhoto(id, "", s.n) + ('</div><details class="small" style="margin:-6px 0 12px"><summary style="color:var(--brand);font-weight:600">' + T("Show the movement") + '</summary><div class="bigfig" data-anim="s:') + id + '" style="margin-top:8px"></div></details>' : '<div class="bigfig" data-anim="s:' + id + '"></div>') + '<h2>' + esc(s.n) + '</h2><p style="margin:6px 0">' + s.z.map(function (z) { return '<span class="tag"><span class="zdot" style="background:' + zc(z) + '"></span>' + ZN[z] + "</span>"; }).join("") + s.tags.map(function (t) { return '<span class="tag">' + esc(TAGN[t] || t) + "</span>"; }).join("") + "</p>";
+    var h = (pu ? '<div class="bigfig photo-wrap">' + bigPhoto(id, "", s.n) + ('</div><details class="small" style="margin:-6px 0 12px"><summary style="color:var(--brand);font-weight:600">' + T("Show the movement") + '</summary><div class="bigfig" data-anim="s:') + id + '" style="margin-top:8px"></div></details>' : '<div class="bigfig" data-anim="s:' + id + '"></div>') + stretchNavBar(id) + '<h2>' + esc(s.n) + '</h2><p style="margin:6px 0">' + s.z.map(function (z) { return '<span class="tag"><span class="zdot" style="background:' + zc(z) + '"></span>' + ZN[z] + "</span>"; }).join("") + s.tags.map(function (t) { return '<span class="tag">' + esc(TAGN[t] || t) + "</span>"; }).join("") + "</p>";
     h += '<p class="muted" style="margin-bottom:6px">' + (s.reps ? esc(s.reps) + (T(", about") + " ") : (T("Hold") + " ")) + holdSecs(s) + " " + T("seconds") + (s.s ? (" " + T("each side")) : "") + ".</p><p>" + esc(s.cues) + "</p>";
     h += '<div class="row" style="margin-top:16px"><button class="btn primary grow" data-act="play-one" data-id="' + id + '">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + (" " + T("Do it now") + "</button></div>");
     openSheet(h);
@@ -1731,8 +1765,9 @@
       case "play-one": closeSheet(); play({ id: "single", n: BY[id].n, items: [id] }); break;
       case "stretch":
         if (building && el.classList.contains("lcard")) { var ix = building.items.indexOf(id); if (ix >= 0) building.items.splice(ix, 1); else building.items.push(id); renderRoutines(); }
-        else openStretch(id);
+        else openStretch(id, stretchNavFrom(el));
         break;
+      case "stretch-nav": if (id && BY[id]) openStretch(id); break;
       case "filter": LIB_F = id; renderRoutines(); break;
       case "rgroup": RT_G = id; renderRoutines(); break;
       case "goal-new": case "goal-weeks": case "goal-pick": case "goal-retest": case "goal-open": case "goal-train": case "goal-del": goalAct(a, id); break;

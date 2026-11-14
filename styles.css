@@ -481,3 +481,7 @@ body.on-home header.top h1 { position: absolute; width: 1px; height: 1px; overfl
 .gstats b { display: block; font-size: 22px; margin-top: 2px; }
 .goalopt { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer; margin-top: 8px; }
 .goalopt[disabled] { opacity: .5; cursor: default; }
+/* Previous / next movement in the movement sheet */
+.snav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 2px 0 10px; }
+.snavb { width: 52px; height: 44px; padding: 0; font-size: 30px; line-height: 1; border-radius: 14px; }
+.snavb[disabled] { opacity: .35; }

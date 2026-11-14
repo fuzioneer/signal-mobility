@@ -776,7 +776,10 @@ I18N.add("fr", {
 "Remove goal": "Supprimer l'objectif",
 "Goal reached: {name}. Brilliant work!": "Objectif atteint : {name}. Bravo !",
 "Goal: {name}": "Objectif : {name}",
-"Tap again to remove this goal": "Touchez à nouveau pour supprimer cet objectif"
+"Tap again to remove this goal": "Touchez à nouveau pour supprimer cet objectif",
+"Previous movement": "Mouvement précédent",
+"Next movement": "Mouvement suivant",
+"{n} of {total}": "{n} sur {total}"
 }, {
 "zone": {
 "shoulders": "Épaules",
