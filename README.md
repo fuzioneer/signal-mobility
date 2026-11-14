@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.47.10 (14 Nov 2026): Standing side bend now has a demo video, with both the female and male model, and hip circles on all fours now has its male video too (half speed, like the female one).
 - 1.47.9 (14 Nov 2026): Pigeon pose now has a demo video, with both the female and male model.
 - 1.47.8 (14 Nov 2026): Hip circles on all fours now has a demo video (five reps), played at half speed so the circle is easy to follow. Clips can now have their own playback speed.
 - 1.47.7 (14 Nov 2026): Downward dog with foot pedals now has a demo video, with both the female and male model. Wide clips are now shown in full instead of being cropped square, so hands and feet stay in view.
