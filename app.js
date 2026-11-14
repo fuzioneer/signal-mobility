@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.43.0", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.43.1", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -1764,13 +1764,13 @@
   }
   function cmRefresh() {
     if (CM.stage !== "main") return renderCommunity();
-    var my = ++CM.req; CM.rows = null; CM.err = ""; renderCommunity();
+    var my = ++CM.req; CM.rows = null; CM.err = ""; CM.inflight = true; renderCommunity();
     if (CM.board === "clubs" && CM.scope) CM.board = "time";
     var r = cmRange(CM.period), p;
     if (CM.board === "clubs") { var cr = cmRange(CM.clubMetric === "month" ? "month" : "week"); p = CLOUD.clubBoard(CM.clubMetric === "score" ? "score" : "time", cr[0], cr[1]); }
     else p = CM.board === "time" ? CLOUD.timeBoard(CM.scope, r[0], r[1]) : CLOUD.scoreBoard(CM.scope, CM.verifiedOnly);
     p.then(function (rows) { if (my !== CM.req) return; CM.rows = rows || []; }, function (e) { if (my !== CM.req) return; CM.rows = []; CM.err = cmErr(e); if (/not a member/.test(String(e && e.message))) { CM.scope = null; cmComms(); } })
-      .then(function () { if (my === CM.req) renderCommunity(); });
+      .then(function () { if (my === CM.req) { CM.inflight = false; renderCommunity(); } });
   }
   function cmJoin(code) {
     CM.busy = true; renderCommunity();
@@ -1788,6 +1788,8 @@
     if (TAB !== "community") return;
     var el = $("#v-community"); if (!el) return;
     if (CM.stage === null) { cmLoad(); return; }
+    /* Signed in at start-up (cmBoot) but the board hasn't been fetched yet: fetch it now. */
+    if (CM.stage === "main" && CM.rows === null && !CM.inflight) { cmRefresh(); return; }
     var h = "", st = CM.stage;
     var intro = '<div class="card cmhero"><img class="lg-l" src="img/logo-s-light.png" alt=""><img class="lg-d" src="img/logo-s-dark.png" alt=""><h2>' + T("Move together") + '</h2><p class="muted">' + T("Start or join a club, see who's putting the time in, and compare mobility scores with friends, your gym or everyone on Movage.") + "</p></div>";
     if (st === "off") h = intro + '<div class="card"><p>' + T("Community leaderboards are coming soon.") + "</p></div>";
