@@ -36,7 +36,10 @@ Deno.serve(async (req) => {
   const res = await fetch("https://api.smtp2go.com/v3/email/send", {
     method: "POST",
     headers: { "Content-Type": "application/json", "X-Smtp2go-Api-Key": key, "accept": "application/json" },
-    body: JSON.stringify({ sender: FROM, to: [TO], subject, text_body: text, html_body: html }),
+    // Reply-To is the person who signed up, so hitting Reply goes straight to them.
+    // Only set it for a plain, valid address so nothing odd can end up in a mail header.
+    body: JSON.stringify({ sender: FROM, to: [TO], subject, text_body: text, html_body: html,
+      ...(/^[^\s@<>",;:]+@[^\s@<>",;:]+\.[^\s@<>",;:]+$/.test(r.email || "") ? { custom_headers: [{ header: "Reply-To", value: r.email }] } : {}) }),
   });
   const out = await res.json().catch(() => ({}));
   if (!res.ok || (out?.data?.succeeded ?? 0) < 1) {

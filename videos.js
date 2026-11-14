@@ -1,5 +1,6 @@
 /* Short looping demo clips that replace the still photo in the player and on the stretch page (generated with Higgsfield, MiniMax H3). Female and male model versions. */
 window.VIDEOS = {
+ "downdog": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_203944_dc561494-9e74-4164-88e5-21cb89f670e6.mp4",
  "deepsquat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_181921_e61e7d6b-f45f-499a-9dfd-ebbfc2eaca49.mp4",
  "catcow": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_180417_62bb157b-fe56-4fa9-8493-1d0b1fdc4d62.mp4",
  "goodmorning": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_175255_b8ca3e8b-f7b8-44dc-b8b7-685cfbc90dd3.mp4",
@@ -19,6 +20,7 @@ window.VIDEOS = {
  "askip": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_093902_e741dd33-5a4e-461b-9fd8-ffb93613106b.mp4"
 };
 window.VIDEOS_M = {
+ "downdog": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_203945_ae82cf5a-861b-4795-b167-196242ef3b3b.mp4",
  "deepsquat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_181922_01d7b775-5f7b-479a-8556-84a8a2d139e8.mp4",
  "catcow": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_180419_5f56a276-7f57-4264-a9a7-6a773d019bd2.mp4",
  "goodmorning": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_175257_74d43cc5-64ea-49ea-aded-e5d8c8fef440.mp4",

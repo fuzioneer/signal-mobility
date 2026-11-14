@@ -336,6 +336,7 @@ main, #sheet-body { zoom: var(--ts); }
 
 .xfade.vid video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .player .pfig .figwrap .xfade.vid video { object-fit: contain; }
+.xfade.vid video.wide { object-fit: contain; background: var(--soft); }
 
 /* Stretch library search */
 .libsearch { position: relative; margin: 8px 0 4px; }
