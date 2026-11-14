@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.40.0", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.41.0", APP_BUILD = "13 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -1350,11 +1350,20 @@
   setInterval(remTick, 60000); document.addEventListener("visibilitychange", function () { if (!document.hidden) { remTick(); if (TAB === "home") render(); } });
 
   /* ---------- Strava ---------- */
+  /* Strava description: brand line, muscles worked (most used first), then the moves. Strava has no muscle field. */
+  function stravaDesc(ids, count) {
+    var seen = {}, moves = [], hits = {};
+    (ids || []).forEach(function (x) { var id = x && x.id ? x.id : x, s = BY[id]; if (!s || seen[id]) return; seen[id] = 1; moves.push(s.n); (s.m || []).forEach(function (m) { hits[m] = (hits[m] || 0) + 1; }); });
+    var mus = MUSCLES.filter(function (m) { return hits[m[0]]; }).sort(function (a, b) { return hits[b[0]] - hits[a[0]]; }).map(function (m) { return m[1]; });
+    var lines = ["Mobility work using Movage App (@movageapp)"];
+    if (mus.length) lines.push(T("Muscles") + ": " + mus.join(", "));
+    var n = moves.length || count || 0;
+    if (n) lines.push(n + " " + T("moves") + (moves.length ? ": " + moves.join(", ") : ""));
+    return lines.join("\n");
+  }
   function stravaLog(name, secs, ids) {
     if (!window.STRAVA || !STRAVA.connected() || !STRAVA.get().auto) return;
-    var moves = (ids || []).map(function (id) { return BY[id] ? BY[id].n : null; }).filter(Boolean);
-    STRAVA.logSession({ name: name, secs: secs, startLocal: STRAVA.localISO(Date.now() - secs * 1000),
-      description: "Movage · " + moves.length + " " + T("moves") + (moves.length ? "\n" + moves.join(", ") : "") })
+    STRAVA.logSession({ name: name, secs: secs, startLocal: STRAVA.localISO(Date.now() - secs * 1000), description: stravaDesc(ids) })
       .then(function (n) { if (n) toast(T("Logged to Strava")); })
       .catch(function () { toast(T("Couldn't reach Strava. It'll be sent next time you're online.")); });
   }
@@ -1516,7 +1525,8 @@
       case "strava-code": { STRAVA.setConfig({ id: $("#sv-id").value, secret: $("#sv-secret").value }); var cv = ($("#sv-code").value || "").replace(/^.*[?&]code=([^&]+).*$/, "$1"); if (!cv) break; STRAVA.useCode(cv).then(function () { toast(T("Connected to Strava")); stravaRefresh(); }).catch(function (e) { diag("strava: " + e.message); toast(TF("Couldn't connect to Strava ({error})", { error: e.message })); }); break; }
       case "strava-off": STRAVA.disconnect(); stravaRefresh(); toast(T("Disconnected from Strava")); break;
       case "strava-last": { var ls = S.sessions[S.sessions.length - 1]; if (!ls) { toast(T("Nothing logged yet.")); break; }
-        STRAVA.logSession({ name: ls.n, secs: ls.secs, startLocal: STRAVA.localISO((ls.t || Date.now()) - ls.secs * 1000), description: "Movage · " + ls.items + " " + T("moves") })
+        var lr = /\(part\)$/.test(ls.n) ? null : PRESETS.concat(S.routines || []).filter(function (r) { return r.id === ls.id; })[0];
+        STRAVA.logSession({ name: ls.n, secs: ls.secs, startLocal: STRAVA.localISO((ls.t || Date.now()) - ls.secs * 1000), description: stravaDesc(lr ? lr.items : [], ls.items) })
           .then(function () { toast(T("Logged to Strava")); stravaRefresh(); }).catch(function (e) { diag("strava: " + e.message); toast(TF("Couldn't log to Strava ({error})", { error: e.message })); stravaRefresh(); }); break; }
       case "build-save": {
         var nm = prompt((T("Name your routine")), building.n || (T("My routine"))); if (nm == null) break; nm = nm.trim() || (T("My routine"));

@@ -44,8 +44,14 @@
       /* Strava has no Mobility sport type, so Mobility logs as a Workout with "Mobility" in the title. */
       var type = st.type || "Mobility", mob = type === "Mobility", label = window.T ? T("Mobility") : "Mobility";
       var body = new URLSearchParams({ name: mob && a.name.indexOf(label) !== 0 ? label + ": " + a.name : a.name, sport_type: mob ? "Workout" : type, start_date_local: a.startLocal, elapsed_time: String(Math.max(60, Math.round(a.secs))), description: a.description || "" });
-      return fetch(API + "/api/v3/activities", { method: "POST", headers: { Authorization: "Bearer " + t, "Content-Type": "application/x-www-form-urlencoded" }, body: body.toString() });
-    }).then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error((j && j.message) || ("HTTP " + r.status)); return j.id; }); });
+      /* Every Movage session is tagged Recovery on Strava. If Strava ever refuses the tag, post again without it. */
+      var post = function (b) { return fetch(API + "/api/v3/activities", { method: "POST", headers: { Authorization: "Bearer " + t, "Content-Type": "application/x-www-form-urlencoded" }, body: b.toString() }).then(function (r) { return r.json().then(function (j) { return { r: r, j: j }; }, function () { return { r: r, j: null }; }); }); };
+      var tagged = new URLSearchParams(body); tagged.set("tags[Recovery]", "true");
+      return post(tagged).then(function (x) {
+        if (!x.r.ok && x.r.status >= 400 && x.r.status < 500 && x.r.status !== 401 && /tag/i.test(JSON.stringify(x.j || ""))) { log("strava: Recovery tag refused, sent without it"); return post(body); }
+        return x;
+      });
+    }).then(function (x) { var r = x.r, j = x.j; if (!r.ok) throw new Error((j && j.message) || ("HTTP " + r.status)); return j.id; });
   }
   /* Queue so a session finished with no signal is sent next time. */
   function logSession(a) {
