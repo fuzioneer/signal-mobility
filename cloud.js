@@ -66,7 +66,9 @@
       }).then(ok);
     },
     myCommunities: function () { return client().then(function (c) { return c.rpc("my_communities"); }).then(ok); },
-    createCommunity: function (name) { return client().then(function (c) { return c.rpc("create_community", { p_name: name }); }).then(ok).then(one); },
+    createCommunity: function (name, listed) { return client().then(function (c) { return c.rpc("create_community", { p_name: name, p_listed: listed !== false }); }).then(ok).then(one); },
+    setListed: function (id, listed) { return client().then(function (c) { return c.rpc("set_community_listed", { p_id: id, p_listed: !!listed }); }).then(ok); },
+    clubBoard: function (metric, from, to) { return client().then(function (c) { return c.rpc("club_board", { p_metric: metric, p_from: from, p_to: to, p_limit: 50 }); }).then(ok); },
     joinCommunity: function (code) { return client().then(function (c) { return c.rpc("join_community", { p_code: code }); }).then(ok).then(one); },
     leaveCommunity: function (id) { return client().then(function (c) { return c.rpc("leave_community", { p_id: id }); }).then(ok); },
     timeBoard: function (community, from, to) { return client().then(function (c) { return c.rpc("time_board", { p_community: community || null, p_from: from, p_to: to, p_limit: 50 }); }).then(ok); },

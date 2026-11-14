@@ -422,7 +422,7 @@ body.on-home header.top h1 { position: absolute; width: 1px; height: 1px; overfl
 .cmcode { font-size: 22px; letter-spacing: .25em; text-align: center; font-weight: 700; }
 .cmcheck { display: flex; gap: 10px; align-items: center; margin-top: 12px; font-size: 15px; }
 .cmcheck input { width: 20px; height: 20px; accent-color: var(--brand); }
-.seg { display: grid; grid-template-columns: 1fr 1fr; background: var(--soft); border: 1px solid var(--line); border-radius: 12px; padding: 3px; margin: 10px 0 6px; }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--soft); border: 1px solid var(--line); border-radius: 12px; padding: 3px; margin: 10px 0 6px; }
 .seg button { appearance: none; border: 0; background: none; border-radius: 9px; padding: 9px; font-weight: 700; font-size: 15px; color: var(--muted); }
 .seg button.on { background: var(--card); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
 .cmsub { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
@@ -432,6 +432,9 @@ body.on-home header.top h1 { position: absolute; width: 1px; height: 1px; overfl
 .cmrow.me { background: var(--brand-soft); margin: 0 -12px; padding-left: 16px; padding-right: 16px; border-radius: 10px; }
 .cmrank { width: 26px; text-align: center; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
 .cmname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.cmmem { display: block; font-size: 13px; font-weight: 400; color: var(--muted); }
+.cmclub[data-act] { cursor: pointer; }
+.seg button { white-space: nowrap; }
 .cmval { display: flex; align-items: center; gap: 6px; font-variant-numeric: tabular-nums; font-weight: 600; }
 .cmtick { display: inline-grid; place-items: center; width: 20px; height: 20px; }
 .cmtick.on { background: var(--good); color: #fff; border-radius: 50%; }

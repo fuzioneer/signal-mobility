@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.42.0", APP_BUILD = "13 Nov 2026";
+  var APP_VERSION = "1.43.0", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -1566,7 +1566,7 @@
       case "share-score": shareScore(); break;
       case "sess-img": if (LASTSESS) shareCanvas(sessionImage(LASTSESS), "movage-session.png", "Movage", window.STRAVA && STRAVA.connected() ? T("Image saved. Open Strava and add it to your activity.") : T("Image saved.")); break;
       case "sess-strava": openStravaActivity(); break;
-      case "cm-google": case "cm-send": case "cm-verify": case "cm-other-email": case "cm-savenick": case "cm-scope": case "cm-board": case "cm-period": case "cm-verified": case "cm-joinsheet": case "cm-join": case "cm-create": case "cm-invite": case "cm-leave": case "cm-toggle": case "cm-nickedit": case "cm-signout": case "cm-delete": case "cm-retry": cmAct(a, id); break;
+      case "cm-google": case "cm-send": case "cm-verify": case "cm-other-email": case "cm-savenick": case "cm-scope": case "cm-board": case "cm-period": case "cm-verified": case "cm-clubmetric": case "cm-listed": case "cm-joinsheet": case "cm-join": case "cm-create": case "cm-invite": case "cm-leave": case "cm-toggle": case "cm-nickedit": case "cm-signout": case "cm-delete": case "cm-retry": cmAct(a, id); break;
       case "qw-time": case "qw-group": case "qw-muscle": case "qw-sport": case "qw-when": case "qw-next": case "qw-back": case "qw-shuffle": case "qw-start": case "qw-save": qwAct(a, id); break;
       case "play": { var r = findRoutine(id); if (!$("#sheet").hidden) closeSheet(); if (r) play(r); break; }
       case "play-one": closeSheet(); play({ id: "single", n: BY[id].n, items: [id] }); break;
@@ -1686,7 +1686,7 @@
   /* ---------- Community: accounts, communities and leaderboards (through the CLOUD adapter, Supabase) ----------
      Opt-in. People sign in with an emailed code, pick a nickname and choose what to share. Only time from the
      guided player counts. A score gets a tick when every result in it was measured with the camera. */
-  var CM = { stage: null, email: "", board: "time", period: "week", scope: null, verifiedOnly: false, comms: [], rows: null, prof: null, busy: false, err: "", pendingJoin: null, arm: "", req: 0 };
+  var CM = { stage: null, email: "", board: "time", period: "week", clubMetric: "week", scope: null, verifiedOnly: false, comms: [], rows: null, prof: null, busy: false, err: "", pendingJoin: null, arm: "", req: 0 };
   function cmOn() { return !!(window.CLOUD && CLOUD.configured()); }
   function cmUuid() {
     if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -1694,9 +1694,9 @@
   }
   function cmErr(e) {
     var m = String((e && (e.message || e.error_description)) || e || "");
-    var map = [["set a nickname first", T("Choose a nickname first.")], ["no community with that code", T("No community has that code. Check it and try again.")],
-      ["community limit reached", T("You can create up to 10 communities.")], ["membership limit reached", T("You can be in up to 20 communities.")],
-      ["not a member", T("You're not in that community any more.")], ["profiles_nickname_ci", T("That nickname is taken. Try another.")]];
+    var map = [["set a nickname first", T("Choose a nickname first.")], ["no community with that code", T("No club has that code. Check it and try again.")], ["only the club owner", T("Only the club owner can change this.")],
+      ["community limit reached", T("You can create up to 10 clubs.")], ["membership limit reached", T("You can be in up to 20 clubs.")],
+      ["not a member", T("You're not in that club any more.")], ["profiles_nickname_ci", T("That nickname is taken. Try another.")]];
     for (var i = 0; i < map.length; i++) if (m.indexOf(map[i][0]) >= 0) return map[i][1];
     if (/rate limit|too many|security purposes/i.test(m)) return T("Too many attempts. Wait a minute and try again.");
     if (/token|otp|expired|invalid/i.test(m)) return T("That code didn't work. Check it, or ask for a new one.");
@@ -1765,8 +1765,10 @@
   function cmRefresh() {
     if (CM.stage !== "main") return renderCommunity();
     var my = ++CM.req; CM.rows = null; CM.err = ""; renderCommunity();
-    var r = cmRange(CM.period);
-    var p = CM.board === "time" ? CLOUD.timeBoard(CM.scope, r[0], r[1]) : CLOUD.scoreBoard(CM.scope, CM.verifiedOnly);
+    if (CM.board === "clubs" && CM.scope) CM.board = "time";
+    var r = cmRange(CM.period), p;
+    if (CM.board === "clubs") { var cr = cmRange(CM.clubMetric === "month" ? "month" : "week"); p = CLOUD.clubBoard(CM.clubMetric === "score" ? "score" : "time", cr[0], cr[1]); }
+    else p = CM.board === "time" ? CLOUD.timeBoard(CM.scope, r[0], r[1]) : CLOUD.scoreBoard(CM.scope, CM.verifiedOnly);
     p.then(function (rows) { if (my !== CM.req) return; CM.rows = rows || []; }, function (e) { if (my !== CM.req) return; CM.rows = []; CM.err = cmErr(e); if (/not a member/.test(String(e && e.message))) { CM.scope = null; cmComms(); } })
       .then(function () { if (my === CM.req) renderCommunity(); });
   }
@@ -1787,7 +1789,7 @@
     var el = $("#v-community"); if (!el) return;
     if (CM.stage === null) { cmLoad(); return; }
     var h = "", st = CM.stage;
-    var intro = '<div class="card cmhero"><img class="lg-l" src="img/logo-s-light.png" alt=""><img class="lg-d" src="img/logo-s-dark.png" alt=""><h2>' + T("Move together") + '</h2><p class="muted">' + T("Join a community, see who's putting the time in, and compare mobility scores with friends, your gym or everyone on Movage.") + "</p></div>";
+    var intro = '<div class="card cmhero"><img class="lg-l" src="img/logo-s-light.png" alt=""><img class="lg-d" src="img/logo-s-dark.png" alt=""><h2>' + T("Move together") + '</h2><p class="muted">' + T("Start or join a club, see who's putting the time in, and compare mobility scores with friends, your gym or everyone on Movage.") + "</p></div>";
     if (st === "off") h = intro + '<div class="card"><p>' + T("Community leaderboards are coming soon.") + "</p></div>";
     else if (st === "loading") h = '<div class="card"><p class="muted">' + T("Loading the community…") + "</p></div>";
     else if (st === "error") h = '<div class="card"><p>' + esc(CM.err) + '</p><button class="btn block" data-act="cm-retry" style="margin-top:12px">' + T("Try again") + "</button></div>";
@@ -1811,28 +1813,34 @@
     } else if (st === "main") {
       var scopeChips = '<button class="chip' + (!CM.scope ? " on" : "") + '" data-act="cm-scope" data-id="">' + T("Everyone") + "</button>" +
         CM.comms.map(function (c) { return '<button class="chip' + (CM.scope === c.id ? " on" : "") + '" data-act="cm-scope" data-id="' + c.id + '">' + esc(c.name) + "</button>"; }).join("") +
-        '<button class="chip clear" data-act="cm-joinsheet">' + T("+ Join or create") + "</button>";
+        '<button class="chip clear" data-act="cm-joinsheet">' + T("+ Club") + "</button>";
       h += chipRow(scopeChips);
-      h += '<div class="seg cmseg" role="tablist"><button role="tab" aria-selected="' + (CM.board === "time") + '" class="' + (CM.board === "time" ? "on" : "") + '" data-act="cm-board" data-id="time">' + T("Time") + '</button><button role="tab" aria-selected="' + (CM.board === "score") + '" class="' + (CM.board === "score" ? "on" : "") + '" data-act="cm-board" data-id="score">' + T("Score") + "</button></div>";
+      h += '<div class="seg cmseg" role="tablist"><button role="tab" aria-selected="' + (CM.board === "time") + '" class="' + (CM.board === "time" ? "on" : "") + '" data-act="cm-board" data-id="time">' + T("Time") + '</button><button role="tab" aria-selected="' + (CM.board === "score") + '" class="' + (CM.board === "score" ? "on" : "") + '" data-act="cm-board" data-id="score">' + T("Score") + "</button>" + (!CM.scope ? '<button role="tab" aria-selected="' + (CM.board === "clubs") + '" class="' + (CM.board === "clubs" ? "on" : "") + '" data-act="cm-board" data-id="clubs">' + T("Top clubs") + "</button>" : "") + "</div>";
       if (CM.board === "time") h += '<div class="chips cmsub">' + [["day", T("Today")], ["week", T("This week")], ["month", T("This month")]].map(function (p) { return '<button class="chip' + (CM.period === p[0] ? " on" : "") + '" data-act="cm-period" data-id="' + p[0] + '">' + p[1] + "</button>"; }).join("") + "</div>";
+      else if (CM.board === "clubs") h += '<div class="chips cmsub">' + [["week", T("Time this week")], ["month", T("Time this month")], ["score", T("Average score")]].map(function (p) { return '<button class="chip' + (CM.clubMetric === p[0] ? " on" : "") + '" data-act="cm-clubmetric" data-id="' + p[0] + '">' + p[1] + "</button>"; }).join("") + "</div>";
       else h += '<div class="chips cmsub"><button class="chip' + (CM.verifiedOnly ? " on" : "") + '" data-act="cm-verified" aria-pressed="' + CM.verifiedOnly + '"><span class="cmtick">' + ICON.check + "</span>" + T("Camera-verified only") + "</button></div>";
       h += '<div class="card cmboard">';
       if (CM.rows === null) h += '<p class="muted">' + T("Loading…") + "</p>";
       else if (CM.err) h += "<p>" + esc(CM.err) + "</p>";
-      else if (!CM.rows.length) h += '<p class="muted">' + (CM.board === "time" ? T("No time logged in this period yet. Finish a guided routine to get on the board.") : (CM.verifiedOnly ? T("No camera-verified scores yet.") : T("No scores shared yet. Save a mobility test to add yours."))) + "</p>";
+      else if (!CM.rows.length) h += '<p class="muted">' + (CM.board === "clubs" ? T("No clubs on the board yet. Start a club, invite a friend and finish a routine to get on it.") : CM.board === "time" ? T("No time logged in this period yet. Finish a guided routine to get on the board.") : (CM.verifiedOnly ? T("No camera-verified scores yet.") : T("No scores shared yet. Save a mobility test to add yours."))) + "</p>";
+      else if (CM.board === "clubs") h += CM.rows.map(function (r) {
+        var val = CM.clubMetric === "score" ? "<b>" + Math.round(Number(r.value)) + "</b>" : cmHm(Number(r.value));
+        var open = r.id ? ' data-act="cm-scope" data-id="' + esc(r.id) + '" role="button" tabindex="0"' : "";
+        return '<div class="cmrow cmclub' + (r.is_mine ? " me" : "") + '"' + open + '><span class="cmrank">' + r.rank + '</span><span class="cmname">' + esc(r.name) + (r.is_mine ? ' <span class="small muted">(' + T("your club") + ")</span>" : "") + '<span class="cmmem">' + TF("{n} members", { n: r.members }) + '</span></span><span class="cmval">' + val + "</span></div>";
+      }).join("");
       else h += CM.rows.map(function (r) {
         var val = CM.board === "time" ? cmHm(r.secs) : '<b>' + r.overall + "</b>" + (r.verified ? '<span class="cmtick on" role="img" aria-label="' + esc(T("Camera verified")) + '" title="' + esc(T("Camera verified")) + '">' + ICON.check + "</span>" : '<span class="cmtick"></span>');
         return '<div class="cmrow' + (r.is_me ? " me" : "") + '"><span class="cmrank">' + r.rank + '</span><span class="cmname">' + esc(r.nickname) + (r.is_me ? ' <span class="small muted">(' + T("you") + ")</span>" : "") + '</span><span class="cmval">' + val + "</span></div>";
       }).join("");
       h += "</div>";
-      h += '<p class="small muted cmnote">' + (CM.board === "time" ? T("Only time from the guided player counts. Sessions from the 31 days before you joined are included.") : T("Your latest score from your most recent tests. A tick means every result in it was measured with the camera.")) + "</p>";
+      h += '<p class="small muted cmnote">' + (CM.board === "clubs" ? (CM.clubMetric === "score" ? T("Clubs with 2 or more members. The average of members who show their mobility score.") : T("Clubs with 2 or more members. Adds up guided time from every member who shows their time.")) + " " + T("Only club names and member counts are shown.") : CM.board === "time" ? T("Only time from the guided player counts. Sessions from the 31 days before you joined are included.") : T("Your latest score from your most recent tests. A tick means every result in it was measured with the camera.")) + "</p>";
       var cur = CM.scope && CM.comms.filter(function (c) { return c.id === CM.scope; })[0];
-      if (cur) h += '<div class="card cmcomm"><div class="grow"><h3>' + esc(cur.name) + '</h3><p class="small muted">' + TF("{n} members", { n: cur.members }) + " · " + T("Invite code") + ' <b class="cmcodebig">' + esc(cur.code) + '</b></p></div><div class="row" style="margin-top:12px;gap:8px"><button class="btn primary" data-act="cm-invite" data-id="' + cur.id + '">' + T("Invite") + '</button><button class="btn ghost" data-act="cm-leave" data-id="' + cur.id + '">' + (CM.arm === "leave" ? T("Tap again to leave") : T("Leave")) + "</button></div></div>";
+      if (cur) h += '<div class="card cmcomm"><div class="grow"><h3>' + esc(cur.name) + '</h3><p class="small muted">' + (Number(cur.members) === 1 ? T("1 member") : TF("{n} members", { n: cur.members })) + " · " + T("Invite code") + ' <b class="cmcodebig">' + esc(cur.code) + '</b></p></div><div class="row" style="margin-top:12px;gap:8px"><button class="btn primary" data-act="cm-invite" data-id="' + cur.id + '">' + T("Invite") + '</button><button class="btn ghost" data-act="cm-leave" data-id="' + cur.id + '">' + (CM.arm === "leave" ? T("Tap again to leave") : T("Leave")) + "</button></div>" + (cur.is_owner ? '<div style="margin-top:12px">' + cmToggle("listed", cur.listed !== false, T("Show on Top clubs"), T("Everyone on Movage can see the club name and member count.")).replace('data-act="cm-toggle" data-id="listed"', 'data-act="cm-listed" data-id="' + cur.id + '"') + "</div>" : "") + "</div>";
       var me = CM.prof || {};
       h += '<div class="sec"><h2>' + T("Your profile") + '</h2></div><div class="card cmprof"><p>' + TF("Signed in as {name}", { name: "<b>" + esc(me.nickname || "") + "</b>" }) + '</p><button class="btn ghost" data-act="cm-nickedit" style="margin:8px 0">' + T("Change nickname") + "</button>" +
         cmToggle("share_time", me.share_time, T("Show my mobility time"), "") + cmToggle("share_score", me.share_score, T("Show my mobility score"), "") +
         '<div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap"><button class="btn" data-act="cm-signout">' + T("Sign out") + '</button><button class="btn danger" data-act="cm-delete"' + cmBusy() + ">" + (CM.arm === "delete" ? T("Tap again to delete for good") : T("Delete my account")) + "</button></div>" +
-        '<p class="small muted" style="margin-top:8px">' + T("Deleting your account removes your nickname, communities, shared time and score from Movage's servers. Your history on this phone stays.") + "</p></div>";
+        '<p class="small muted" style="margin-top:8px">' + T("Deleting your account removes your nickname, clubs, shared time and score from Movage's servers. Your history on this phone stays.") + "</p></div>";
     }
     var keep = [].map.call(document.querySelectorAll("#v-community .chiprow .chips"), function (c) { return c.scrollLeft; });
     el.innerHTML = h; wireRows(el, keep);
@@ -1880,14 +1888,21 @@
       case "cm-board": CM.board = id; cmRefresh(); break;
       case "cm-period": CM.period = id; cmRefresh(); break;
       case "cm-verified": CM.verifiedOnly = !CM.verifiedOnly; cmRefresh(); break;
+      case "cm-clubmetric": CM.clubMetric = id; cmRefresh(); break;
+      case "cm-listed": {
+        var lc = CM.comms.filter(function (x) { return x.id === id; })[0]; if (!lc) return;
+        var nl = lc.listed === false; lc.listed = nl; renderCommunity();
+        CLOUD.setListed(id, nl).then(function () { toast(nl ? T("Your club is on the Top clubs board.") : T("Your club is hidden from Top clubs.")); }, function (e) { lc.listed = !nl; renderCommunity(); toast(cmErr(e)); });
+        break;
+      }
       case "cm-joinsheet":
-        openSheet('<h2>' + T("Join or create a community") + '</h2><div class="card" style="margin-top:12px"><h3>' + T("Join with a code") + '</h3><p class="small muted" style="margin:4px 0 10px">' + T("Ask a member for their 6-letter invite code.") + '</p><input class="inp cmcode" id="cm-joincode" maxlength="6" autocapitalize="characters" autocomplete="off" placeholder="ABC234" style="width:100%"><button class="btn primary block" data-act="cm-join" style="margin-top:10px">' + T("Join") + "</button></div>" +
-          '<div class="card"><h3>' + T("Start a new community") + '</h3><p class="small muted" style="margin:4px 0 10px">' + T("For your gym, club, team or friends. You'll get a code to share.") + '</p><input class="inp" id="cm-newname" maxlength="40" placeholder="' + esc(T("Community name")) + '" style="width:100%"><button class="btn block" data-act="cm-create" style="margin-top:10px">' + T("Create") + "</button></div>");
+        openSheet('<h2>' + T("Join or create a club") + '</h2><div class="card" style="margin-top:12px"><h3>' + T("Join with a code") + '</h3><p class="small muted" style="margin:4px 0 10px">' + T("Ask a club member for their 6-letter invite code.") + '</p><input class="inp cmcode" id="cm-joincode" maxlength="6" autocapitalize="characters" autocomplete="off" placeholder="ABC234" style="width:100%"><button class="btn primary block" data-act="cm-join" style="margin-top:10px">' + T("Join") + "</button></div>" +
+          '<div class="card"><h3>' + T("Start a new club") + '</h3><p class="small muted" style="margin:4px 0 10px">' + T("For your gym, run club, team or friends. You'll get an invite code to share, and your club gets its own leaderboard.") + '</p><input class="inp" id="cm-newname" maxlength="40" placeholder="' + esc(T("Club name")) + '" style="width:100%"><label class="cmcheck"><input type="checkbox" id="cm-newlisted" checked> ' + T("Show on the Top clubs leaderboard") + '</label><p class="small muted" style="margin:2px 0 0">' + T("Only the club name and member count are shown, never who's in it.") + '</p><button class="btn block" data-act="cm-create" style="margin-top:10px">' + T("Create") + "</button></div>");
         break;
       case "cm-join": { var jc = val("#cm-joincode").toUpperCase(); if (!/^[A-Z2-9]{6}$/.test(jc)) { toast(T("Invite codes are 6 letters and numbers.")); return; } cmJoin(jc); break; }
       case "cm-create": {
         var nm = val("#cm-newname"); if (nm.length < 2 || nm.length > 40 || /[<>]/.test(nm)) { toast(T("Names are 2 to 40 characters.")); return; }
-        CLOUD.createCommunity(nm).then(function (c) { closeSheet(); toast(TF("{name} is ready. Share the code {code} to invite people.", { name: c.name, code: c.code })); CM.scope = c.id; return cmComms().then(cmRefresh); }, function (e) { toast(cmErr(e)); });
+        var nlst = $("#cm-newlisted"); CLOUD.createCommunity(nm, nlst ? nlst.checked : true).then(function (c) { closeSheet(); toast(TF("{name} is ready. Share the code {code} to invite people.", { name: c.name, code: c.code })); CM.scope = c.id; return cmComms().then(cmRefresh); }, function (e) { toast(cmErr(e)); });
         break;
       }
       case "cm-invite": {
@@ -1900,7 +1915,7 @@
       }
       case "cm-leave":
         if (CM.arm !== "leave") { CM.arm = "leave"; renderCommunity(); return; }
-        CM.arm = ""; CLOUD.leaveCommunity(id).then(function () { toast(T("You've left the community.")); CM.scope = null; return cmComms().then(cmRefresh); }, function (e) { toast(cmErr(e)); });
+        CM.arm = ""; CLOUD.leaveCommunity(id).then(function () { toast(T("You've left the club.")); CM.scope = null; return cmComms().then(cmRefresh); }, function (e) { toast(cmErr(e)); });
         break;
       case "cm-toggle": {
         var np = Object.assign({}, CM.prof); np[id] = !np[id];
