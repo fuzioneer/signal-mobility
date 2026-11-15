@@ -124,8 +124,11 @@ nav.tabs button.on { color: var(--brand); }
 .tcard .thead { display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 12px 14px; align-items: center; }
 .tcard .thumb { width: 64px; height: 64px; }
 .tcard details { border-top: 1px solid var(--line); }
-.tcard summary { padding: 10px 14px; font-size: 14px; color: var(--brand); font-weight: 600; cursor: pointer; list-style: none; }
+.tcard summary { display: flex; align-items: center; gap: 6px; padding: 10px 14px; font-size: 14px; color: var(--brand); font-weight: 600; cursor: pointer; list-style: none; }
 .tcard summary::-webkit-details-marker { display: none; }
+/* Chevron after "How to do it": points down when closed, flips up when open. */
+.tcard summary::after { content: ""; width: 8px; height: 8px; margin-left: 2px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform .2s; }
+.tcard details[open] > summary::after { transform: translateY(2px) rotate(-135deg); }
 .tcard .how { padding: 0 14px 12px; font-size: 14px; color: var(--muted); display: grid; grid-template-columns: 1fr 120px; gap: 12px; align-items: start; }
 .tcard .how .fig { background: var(--soft); border-radius: 10px; aspect-ratio: 1; }
 .tcard .how .fig svg { width: 100%; height: 100%; }
