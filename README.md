@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.48.0 (15 Nov 2026): Mobility tests can now show a demo video in "How to do it", starting with the back scratch test, with both the female and male model.
 - 1.47.12 (15 Nov 2026): Mobility test "How to do it" instructions now use the full width of the card instead of being squeezed to the left.
 - 1.47.11 (15 Nov 2026): Thread the needle now has a demo video, with both the female and male model, played at 75% speed so the movement is easier to follow.
 - 1.47.10 (14 Nov 2026): Standing side bend now has a demo video, with both the female and male model, and hip circles on all fours now has its male video too (half speed, like the female one).
