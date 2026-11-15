@@ -797,7 +797,9 @@ I18N.add("de", {
 "for all {n} tests, plus a 5 minute warm-up. You can stop part way and save what you've done.": "für alle {n} Tests, plus 5 Minuten Aufwärmen. Du kannst zwischendurch aufhören und speichern, was du gemacht hast.",
 "Start guided test": "Geführten Test starten",
 "Start test": "Test starten",
-"{n} done": "{n} erledigt"
+"{n} done": "{n} erledigt",
+"Do Test": "Test machen",
+"Do the {name} test with the camera": "Den Test {name} mit der Kamera machen"
 }, {
 "zone": {
 "shoulders": "Schultern",

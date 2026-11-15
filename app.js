@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.49.0", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.49.1", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -599,7 +599,7 @@
     var mins = Math.round(order.reduce(function (a, x) { return a + testSecs(x); }, 0) / 60);
     h = '<div class="card gtintro"><p><b>' + TF("The full test takes about {m} minutes", { m: mins }) + '</b> ' + TF("for all {n} tests, plus a 5 minute warm-up. You can stop part way and save what you've done.", { n: order.length }) + '</p>' +
       '<button class="btn primary block" data-act="gt-start">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + " " + (Object.keys(draft.v).length ? T("Start guided test") : T("Start test")) + '</button></div>';
-    h += ('<p class="muted">' + T("Warm up for 5 minutes first. Tap") + ' <b>' + T("Camera") + '</b> ' + T("on any test to measure it with live body tracking, or type a result in. Distances in cm are estimated from your height (")) + (S.settings.height || 178) + (' ' + T("cm, change it in Settings).") + '</p>');
+    h += ('<p class="muted">' + T("Warm up for 5 minutes first. Tap") + ' <b>' + T("Do Test") + '</b> ' + T("on any test to measure it with live body tracking, or type a result in. Distances in cm are estimated from your height (")) + (S.settings.height || 178) + (' ' + T("cm, change it in Settings).") + '</p>');
     h += '<div class="card row"><label class="field" style="flex:1">' + T("Test date") + '<input type="date" id="t-date" value="' + draft.date + '" max="' + iso() + ('"></label><div class="grow" style="text-align:right"><span class="small muted">' + T("Score so far") + '</span><div style="font-size:28px;font-weight:780" id="t-live">–</div></div></div>');
     ZONES.concat([[null, (T("Squat check"))]]).forEach(function (z) {
       var ts = TESTS.filter(function (t) { return t.z === z[0]; }); if (!ts.length) return;
@@ -632,7 +632,7 @@
         h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + art("t_" + t.id, t.pose, { stroke: 8 }) + '</div><div><h3>' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? (T("Not scored. A check of your squat position.")) : (t.sides ? (T("Both sides")) : (T("One result"))) + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
         h += ('<details' + (open ? " open" : "") + '><summary>' + T("How to do it") + '</summary><div class="how"><p>') + esc(t.how) + '</p>' + (vidUrl("t_" + t.id) && photoUrl("t_" + t.id) ? '<div class="xfade vid howvid" data-key="t_' + esc(t.id) + '"><video class="photo howphoto on" data-vsrc="' + esc(vidUrl("t_" + t.id)) + '" poster="' + esc(photoUrl("t_" + t.id)) + '" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(altFor("t_" + t.id) + ", " + T("demo video")) + '"></video></div>' : photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(altFor("t_" + t.id)) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
         h += '<div class="inputs">' + fieldsFor(t).map(function (f) { return '<label class="field">' + f[1] + '<input type="number" inputmode="decimal" step="any" data-k="' + f[0] + '" value="' + (isNum(draft.v[f[0]]) ? draft.v[f[0]] : "") + '"></label>'; }).join("");
-        if (t.cam) h += '<button class="btn" data-act="cam" data-id="' + t.id + '" style="flex:none">' + ICON.cam.replace("<svg", '<svg width="20" height="20"') + (" " + T("Camera") + "</button>");
+        if (t.cam) h += '<button class="btn" data-act="cam" data-id="' + t.id + '" style="flex:none" aria-label="' + esc(TF("Do the {name} test with the camera", { name: t.n })) + '">' + ICON.cam.replace("<svg", '<svg width="20" height="20" aria-hidden="true"') + (" " + T("Do Test") + "</button>");
         h += "</div></div>";
         return h;
   }
