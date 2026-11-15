@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.53.1 (15 Nov 2026): Seated thoracic rotation is now done sitting on a chair instead of cross-legged on the floor, with new instructions, photos, camera setup diagram and stick figure.
 - 1.53.0 (15 Nov 2026): Quick test option on the Test tab: 6 tests, one per scored zone (shoulder flexion, back scratch, seated thoracic rotation, standing toe touch, 90/90 hip rotation, knee to wall), about 8 minutes, guided one at a time with its own progress bar.
 - 1.52.0 (15 Nov 2026): Removed the wall overhead reach test (it overlapped with shoulder flexion), so the test is now 12 moves and the overhead zone is scored from shoulder flexion alone. The "Arms fully overhead" goal now targets 170° shoulder flexion on both sides, and any existing wall reach goals move over automatically.
 - 1.51.1 (15 Nov 2026): Shoulder flexion test video for the male model, with a matching new photo.

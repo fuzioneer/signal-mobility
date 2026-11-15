@@ -1074,7 +1074,7 @@ I18N.add("fr", {
 },
 "trot": {
 "n": "Rotation thoracique assise",
-"how": "Asseyez-vous en tailleur face à la caméra, un manche à balai ou une serviette roulée sur les épaules. Restez immobile face à la caméra 2 secondes pour qu'elle mesure la largeur de vos épaules, puis tournez le plus loin possible de chaque côté, hanches immobiles. Tenez 2 secondes à chaque extrémité."
+"how": "Asseyez-vous bien droit sur une chaise sans accoudoirs, face à la caméra, pieds à plat et genoux serrés. Posez un manche à balai ou une serviette roulée sur vos épaules. Restez immobile face à la caméra 2 secondes pour qu'elle mesure la largeur de vos épaules, puis tournez le plus loin possible de chaque côté, hanches et genoux toujours vers l'avant. Tenez 2 secondes à chaque extrémité."
 },
 "slr": {
 "n": "Élévation de jambe tendue",

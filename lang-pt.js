@@ -1074,7 +1074,7 @@ I18N.add("pt", {
 },
 "trot": {
 "n": "Rotação torácica sentado",
-"how": "Sente-se de pernas cruzadas de frente para a câmara, com um cabo de vassoura ou uma toalha enrolada sobre os ombros. Fique quieto a olhar em frente 2 segundos para a câmara aprender a largura dos ombros e depois rode o mais que conseguir para cada lado com as ancas quietas. Mantenha 2 segundos em cada extremo."
+"how": "Sente-se direito numa cadeira sem braços, de frente para a câmara, pés assentes e joelhos juntos. Apoie um cabo de vassoura ou uma toalha enrolada sobre os ombros. Fique quieto a olhar em frente durante 2 segundos para a câmara aprender a largura dos seus ombros e depois rode o mais que puder para cada lado, com as ancas e os joelhos virados para a frente. Mantenha 2 segundos em cada extremo."
 },
 "slr": {
 "n": "Elevação da perna esticada",

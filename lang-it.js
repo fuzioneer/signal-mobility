@@ -1074,7 +1074,7 @@ I18N.add("it", {
 },
 "trot": {
 "n": "Rotazione toracica da seduto",
-"how": "Siediti a gambe incrociate di fronte alla fotocamera, con un manico di scopa o un asciugamano arrotolato sulle spalle. Stai fermo guardando avanti per 2 secondi così la fotocamera impara la larghezza delle spalle, poi ruota il più possibile da ogni lato con le anche ferme. Tieni 2 secondi a ogni estremità."
+"how": "Siediti dritto su una sedia senza braccioli, di fronte alla fotocamera, piedi appoggiati e ginocchia unite. Appoggia un manico di scopa o un asciugamano arrotolato sulle spalle. Resta fermo guardando avanti per 2 secondi, così la fotocamera impara la larghezza delle tue spalle, poi ruota il più possibile da ogni lato, con anche e ginocchia rivolte in avanti. Tieni 2 secondi a ogni estremità."
 },
 "slr": {
 "n": "Sollevamento della gamba tesa",

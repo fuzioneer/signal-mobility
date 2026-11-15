@@ -1074,7 +1074,7 @@ I18N.add("de", {
 },
 "trot": {
 "n": "Brustwirbelsäulen-Rotation im Sitzen",
-"how": "Setz dich im Schneidersitz vor die Kamera, einen Besenstiel oder ein gerolltes Handtuch über den Schultern. Schau 2 Sekunden still nach vorn, damit die Kamera deine Schulterbreite erkennt, und dreh dich dann mit ruhiger Hüfte so weit wie möglich zu jeder Seite. An jedem Ende 2 Sekunden halten."
+"how": "Setz dich aufrecht auf einen Stuhl ohne Armlehnen, mit Blick zur Kamera, Füße flach und Knie zusammen. Leg einen Besenstiel oder ein gerolltes Handtuch über die Schultern. Halte 2 Sekunden still nach vorne, damit die Kamera deine Schulterbreite lernen kann, dann drehe dich so weit wie möglich zu jeder Seite, Hüfte und Knie zeigen weiter nach vorne. Halte jedes Ende 2 Sekunden."
 },
 "slr": {
 "n": "Gestrecktes Beinheben",

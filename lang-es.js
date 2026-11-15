@@ -1074,7 +1074,7 @@ I18N.add("es", {
 },
 "trot": {
 "n": "Rotación torácica sentado",
-"how": "Siéntate con las piernas cruzadas frente a la cámara, con un palo de escoba o una toalla enrollada sobre los hombros. Quédate quieto mirando al frente 2 segundos para que la cámara aprenda la anchura de tus hombros y luego gira todo lo que puedas hacia cada lado con la cadera quieta. Mantén 2 segundos en cada extremo."
+"how": "Siéntate erguido en una silla sin reposabrazos, frente a la cámara, con los pies apoyados y las rodillas juntas. Apoya un palo de escoba o una toalla enrollada sobre los hombros. Quédate quieto mirando al frente 2 segundos para que la cámara aprenda la anchura de tus hombros y luego gira todo lo que puedas hacia cada lado, con la cadera y las rodillas mirando al frente. Mantén 2 segundos en cada extremo."
 },
 "slr": {
 "n": "Elevación de pierna recta",
