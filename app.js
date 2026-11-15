@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.54.1", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.54.2", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -635,7 +635,7 @@
   }
   function testCard(t, open) {
         var h = "";
-        h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + art("t_" + t.id, t.pose, { stroke: 8 }) + '</div><div><h3>' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? (T("Not scored. A check of your squat position.")) : (t.sides ? (T("Both sides")) : (T("One result"))) + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
+        h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + art("t_" + t.id, t.pose, { stroke: 8 }) + '</div><div><h3 role="button" tabindex="0" aria-label="' + esc(TF("Show the {name} picture or video", { name: t.n })) + '">' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? (T("Not scored. A check of your squat position.")) : (t.sides ? (T("Both sides")) : (T("One result"))) + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
         var su = window.SETUP_IMG && window.SETUP_IMG[t.id];
         h += ('<details' + (open ? " open" : "") + '><summary>' + T("How to do it") + '</summary><div class="how"><p>') + esc(t.how) + '</p>' +
           (su && S.settings.photos !== false ? '<figure class="setupfig"><img class="howsetup" loading="lazy" src="' + esc(su) + '" alt="' + esc(TF("Camera setup for {name}: where to put your phone", { name: t.n })) + '"><figcaption>' + T("Camera setup") + "</figcaption></figure>" : "") +(vidUrl("t_" + t.id) && photoUrl("t_" + t.id) ? '<div class="xfade vid howvid" data-key="t_' + esc(t.id) + '"><video class="photo howphoto on" data-vsrc="' + esc(vidUrl("t_" + t.id)) + '" poster="' + esc(photoUrl("t_" + t.id)) + '" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(altFor("t_" + t.id) + ", " + T("demo video")) + '"></video></div>' : photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(altFor("t_" + t.id)) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
@@ -1854,9 +1854,13 @@
   $("#lightbox").addEventListener("click", closeLightbox);
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("#lightbox").hidden) closeLightbox(); });
   document.addEventListener("click", function (e) {
-    var vb = e.target.closest(".vbadge[data-key]");
+    /* A test's name does the same as tapping its picture next to it. */
+    var tn = e.target.closest(".tcard .thead h3");
+    if (tn) { var th = tn.closest(".thead"), vk = th.querySelector(".thumb .vbadge[data-key]"), pim = th.querySelector(".thumb img");
+      if (vk) { e.preventDefault(); openVideoFull(vk.getAttribute("data-key")); } else if (pim) { e.preventDefault(); openLightbox(pim.currentSrc || pim.src, pim.getAttribute("alt")); } return; }
+    var vb = e.target.closest(".vbadge[data-key]") || (e.target.closest(".tcard .thead .thumb") && e.target.closest(".tcard .thead .thumb").querySelector(".vbadge[data-key]"));
     if (vb) { e.preventDefault(); e.stopPropagation(); openVideoFull(vb.getAttribute("data-key")); return; }
-    var big = e.target.closest(".xfade") || e.target.closest(".photo-wrap img, img.pphoto, img.howphoto, .snaps img");
+    var big = e.target.closest(".xfade") || e.target.closest(".photo-wrap img, img.pphoto, img.howphoto, .snaps img, .tcard .thead .thumb img");
     if (big && big.classList.contains("vid") && !big.closest("#cam") && !e.target.closest("[data-act]")) { e.preventDefault(); openVideoFull(big.getAttribute("data-key")); return; }
     if (big && big.classList.contains("xfade") && !e.target.closest("[data-act]")) {
       e.preventDefault(); var all = [].slice.call(big.querySelectorAll("img")), on = big.querySelector("img.on") || all[0];

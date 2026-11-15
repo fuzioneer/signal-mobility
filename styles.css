@@ -558,3 +558,7 @@ details.rfix[open] > summary::after { transform: rotate(-135deg); }
 .svshare input { width: 22px; height: 22px; accent-color: #fc4c02; flex: none; }
 .svshare span { display: flex; flex-direction: column; gap: 2px; text-align: left; }
 .svshare small { font-size: 13px; }
+
+/* Test name and thumbnail open the picture or video (1.54.2) */
+.tcard .thead h3[role=button], .tcard .thead .thumb img { cursor: pointer; }
+.tcard .thead h3[role=button]:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }

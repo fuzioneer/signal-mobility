@@ -812,7 +812,8 @@ I18N.add("es", {
 "The quick test checks one move per zone, so you still get a full score. Do the full test every few months for the detail.": "El test rápido revisa un movimiento por zona, así que sigues obteniendo una puntuación completa. Haz el test completo cada pocos meses para ver el detalle.",
 "Share to Strava": "Compartir en Strava",
 "Untick if you don't want this session posted to Strava.": "Desmárcalo si no quieres publicar esta sesión en Strava.",
-"Tick \"Share to Strava\" by default when a routine finishes": "Marcar «Compartir en Strava» por defecto al terminar una rutina"
+"Tick \"Share to Strava\" by default when a routine finishes": "Marcar «Compartir en Strava» por defecto al terminar una rutina",
+"Show the {name} picture or video": "Ver la foto o el vídeo de {name}"
 }, {
 "zone": {
 "shoulders": "Hombros",
