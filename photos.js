@@ -306,7 +306,7 @@ window.PHOTOS_M = {
  "toetuck": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_204321_c0fdd5c2-b0b1-49e3-966f-6ad451c6f109.png",
  "stepcalf": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_204322_cf249ec1-7277-4129-8425-1c3f555445d2.png",
  "towelfoot": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_204321_0d499d13-b3e9-4804-ba69-b90bc5205ac2.png",
- "t_trot": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_195020_e7fd23e4-d3b5-4900-8f16-d85253af7799.png",
+ "t_trot": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_195145_f4680a77-0a46-4f13-88df-11fbe8ad791d.png",
  "t_k2w": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_222212_5c1ab7dd-c225-4188-8932-072bc7000f79.png",
  "t_cam_shin": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_222212_5c1ab7dd-c225-4188-8932-072bc7000f79.png",
  "t_squat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_221923_73f0a5b3-25f1-4aa0-b7b9-bc3db6793736.png",
