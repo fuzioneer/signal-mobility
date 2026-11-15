@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.50.3 (15 Nov 2026): Shoulder flexion test now has a demo video (female model; male to follow). Tall clips are now shown in full instead of being cropped square.
 - 1.50.2 (15 Nov 2026): Back scratch camera setup diagram now shows the phone at chest height, matching the spoken setup.
 - 1.50.1 (15 Nov 2026): Corrected camera setup diagram for shoulder external rotation.
 - 1.50.0 (15 Nov 2026): Every mobility test now has a camera setup diagram in "How to do it", showing the person as a silhouette in a simple room outline and where to put the phone, how high and how far away.
