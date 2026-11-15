@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.53.0 (15 Nov 2026): Quick test option on the Test tab: 6 tests, one per scored zone (shoulder flexion, back scratch, seated thoracic rotation, standing toe touch, 90/90 hip rotation, knee to wall), about 8 minutes, guided one at a time with its own progress bar.
 - 1.52.0 (15 Nov 2026): Removed the wall overhead reach test (it overlapped with shoulder flexion), so the test is now 12 moves and the overhead zone is scored from shoulder flexion alone. The "Arms fully overhead" goal now targets 170° shoulder flexion on both sides, and any existing wall reach goals move over automatically.
 - 1.51.1 (15 Nov 2026): Shoulder flexion test video for the male model, with a matching new photo.
 - 1.51.0 (15 Nov 2026): every mobility test now links to a routine that works on that range of motion ("Routine to improve this" at the bottom of each test card). The 13 routines also sit in a collapsible "Improve a test result" group on Routines, For you.

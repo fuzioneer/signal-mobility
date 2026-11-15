@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.52.0", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.53.0", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -586,12 +586,12 @@
   }
   function renderTest() {
     if (!draft) draft = draftFor(iso());
-    var order = testOrder(), h;
+    var order = testOrder(GT && GT.quick), h;
     if (GT) {
       /* Guided test: one test at a time, in the same order as the list, with a progress bar like the routine player. */
       if (GT.i >= order.length) GT.i = order.length - 1; if (GT.i < 0) GT.i = 0;
       var gt = order[GT.i], left = order.slice(GT.i).reduce(function (a, x) { return a + testSecs(x); }, 0);
-      h = '<div class="card gtop"><div class="gtrow"><b>' + TF("Test {n} of {total}", { n: GT.i + 1, total: order.length }) + '</b><button class="btn small" data-act="gt-exit">' + T("Exit") + '</button></div>' +
+      h = '<div class="card gtop"><div class="gtrow"><b>' + (GT.quick ? T("Quick test") + " · " : "") + TF("Test {n} of {total}", { n: GT.i + 1, total: order.length }) + '</b><button class="btn small" data-act="gt-exit">' + T("Exit") + '</button></div>' +
         '<div class="gtbar" role="progressbar" aria-valuemin="0" aria-valuemax="' + order.length + '" aria-valuenow="' + GT.i + '" aria-label="' + esc(T("Test progress")) + '"><i style="width:' + Math.round(GT.i / order.length * 100) + '%"></i></div>' +
         '<p class="small muted">' + esc(zoneName(gt.z)) + " · " + TF("about {m} min left", { m: Math.max(1, Math.round(left / 60)) }) + ' · <span id="gt-done"></span></p></div>';
       h += testCard(gt, true);
@@ -601,7 +601,9 @@
     }
     var mins = Math.round(order.reduce(function (a, x) { return a + testSecs(x); }, 0) / 60);
     h = '<div class="card gtintro"><p><b>' + TF("The full test takes about {m} minutes", { m: mins }) + '</b> ' + TF("for all {n} tests, plus a 5 minute warm-up. You can stop part way and save what you've done.", { n: order.length }) + '</p>' +
-      '<button class="btn primary block" data-act="gt-start">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + " " + (Object.keys(draft.v).length ? T("Start guided test") : T("Start test")) + '</button></div>';
+      '<button class="btn primary block" data-act="gt-start">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + " " + (Object.keys(draft.v).length ? T("Start guided test") : T("Start test")) + '</button>' +
+      '<button class="btn block gtquick" data-act="gt-quick">' + ICON.next.replace("<svg", '<svg width="18" height="18" aria-hidden="true"') + " <span>" + T("Quick test") + "</span><small>" + TF("{n} tests, about {m} min", { n: QUICK_TESTS.length, m: Math.round(testOrder(true).reduce(function (a, x) { return a + testSecs(x); }, 0) / 60) }) + "</small></button>" +
+      '<p class="small muted gtqnote">' + T("The quick test checks one move per zone, so you still get a full score. Do the full test every few months for the detail.") + "</p></div>";
     h += ('<p class="muted">' + T("Warm up for 5 minutes first. Tap") + ' <b>' + T("Do Test") + '</b> ' + T("on any test to measure it with live body tracking, or type a result in. Distances in cm are estimated from your height (")) + (S.settings.height || 178) + (' ' + T("cm, change it in Settings).") + '</p>');
     h += '<div class="card row"><label class="field" style="flex:1">' + T("Test date") + '<input type="date" id="t-date" value="' + draft.date + '" max="' + iso() + ('"></label><div class="grow tscore"><span class="small muted">' + T("Score so far") + '</span><div style="font-size:28px;font-weight:780" id="t-live">–</div></div></div>');
     ZONES.concat([[null, (T("Squat check"))]]).forEach(function (z) {
@@ -614,13 +616,15 @@
     testWire();
   }
   /* Tests in list order: zone by zone, then the squat check. */
-  function testOrder() { var o = []; ZONES.concat([[null]]).forEach(function (z) { TESTS.forEach(function (t) { if (t.z === z[0]) o.push(t); }); }); return o; }
+  function testOrder(quick) { var o = []; ZONES.concat([[null]]).forEach(function (z) { TESTS.forEach(function (t) { if (t.z === z[0] && (!quick || QUICK_TESTS.indexOf(t.id) >= 0)) o.push(t); }); }); return o; }
+  /* Quick test: one test per scored zone, so it still gives a full overall score in about half the time. */
+  var QUICK_TESTS = ["cam_shflex", "backscratch", "trot", "toetouch", "pigeon", "k2w"];
   /* Rough time per test, including reading the steps and setting up the phone: both sides take longer. */
   function testSecs(t) { return t.noScore ? 60 : t.sides ? 90 : 50; }
   function zoneName(z) { if (!z) return T("Squat check"); var m = ZONES.filter(function (x) { return x[0] === z; })[0]; return m ? m[1] : ""; }
   function testDone(t) { return fieldsFor(t).some(function (f) { return isNum(draft.v[f[0]]); }); }
   function gtLabel() {
-    var b = $("#gt-next"), order = testOrder(), t = GT && order[GT.i]; if (!t) return;
+    var b = $("#gt-next"), order = testOrder(GT && GT.quick), t = GT && order[GT.i]; if (!t) return;
     if (b) b.textContent = testDone(t) ? T("Next") : T("Skip");
     var d = $("#gt-done"), n = order.filter(testDone).length; if (d) d.textContent = TF("{n} done", { n: n });
   }
@@ -1894,6 +1898,7 @@
       case "del-routine": if (twice("dr" + id, (T("Tap Delete again to confirm")))) { S.routines = S.routines.filter(function (r) { return r.id !== id; }); save(); closeSheet(); render(); } break;
       case "save-test": saveTest(); break;
       case "gt-start": GT = { i: 0 }; renderTest(); window.scrollTo(0, 0); break;
+      case "gt-quick": GT = { i: 0, quick: true }; renderTest(); window.scrollTo(0, 0); break;
       case "gt-next": if (GT) { GT.i++; renderTest(); window.scrollTo(0, 0); } break;
       case "gt-prev": if (GT && GT.i > 0) { GT.i--; renderTest(); window.scrollTo(0, 0); } break;
       case "gt-exit": GT = null; renderTest(); window.scrollTo(0, 0); break;

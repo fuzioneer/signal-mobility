@@ -806,7 +806,10 @@ I18N.add("it", {
 "Open the routine to improve {name}": "Apri la routine per migliorare {name}",
 "Improve a test result": "Migliora un risultato del test",
 "{n} routines, one for each mobility test": "{n} routine, una per ogni test di mobilità",
-"170° shoulder flexion on both sides": "170° di flessione della spalla su entrambi i lati"
+"170° shoulder flexion on both sides": "170° di flessione della spalla su entrambi i lati",
+"Quick test": "Test rapido",
+"{n} tests, about {m} min": "{n} test, circa {m} min",
+"The quick test checks one move per zone, so you still get a full score. Do the full test every few months for the detail.": "Il test rapido controlla un movimento per zona, quindi ottieni comunque un punteggio completo. Fai il test completo ogni pochi mesi per i dettagli."
 }, {
 "zone": {
 "shoulders": "Spalle",

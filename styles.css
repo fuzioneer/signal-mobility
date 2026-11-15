@@ -545,3 +545,10 @@ details.rfix > summary { list-style: none; cursor: pointer; display: flex; align
 details.rfix > summary::-webkit-details-marker { display: none; }
 details.rfix > summary::after { content: ""; width: 8px; height: 8px; margin-right: 6px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); transition: transform .2s; color: var(--muted); }
 details.rfix[open] > summary::after { transform: rotate(-135deg); }
+
+/* Quick test button under Start test (1.53.0) */
+.gtintro .gtquick { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.gtintro .gtquick span { flex: 1; text-align: left; font-weight: 700; }
+.gtintro .gtquick small { color: var(--muted); font-weight: 600; }
+.gtintro .gtquick svg { color: var(--brand); flex: none; }
+.gtintro .gtqnote { margin: 8px 2px 0; }
