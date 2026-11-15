@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.48.0", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.48.1", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -567,7 +567,7 @@
     });
     h += ('<div class="savebar"><button class="btn primary big block" data-act="save-test">' + T("Save test") + '</button></div>');
     $("#v-test").innerHTML = h;
-    $$("#v-test details").forEach(function (d) { d.addEventListener("toggle", function () { if (d.open) animateIn(d); }); });
+    $$("#v-test details").forEach(function (d) { d.addEventListener("toggle", function () { if (d.open) { animateIn(d); /* A video hidden in a closed section doesn't autoplay on iPhone, so start it when the section opens. */ $$("video", d).forEach(function (v) { try { v.muted = true; var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} }); } }); });
     $("#t-date").addEventListener("change", function (e) { var keep = draft.v; draft = draftFor(e.target.value || iso()); if (!S.tests.some(function (x) { return x.date === draft.date; })) draft.v = keep; renderTest(); });
     $$("#v-test input[data-k]").forEach(function (inp) { inp.addEventListener("input", function () { var x = parseFloat(inp.value); if (isNum(x)) draft.v[inp.getAttribute("data-k")] = x; else delete draft.v[inp.getAttribute("data-k")]; if (draft.cam) delete draft.cam[inp.getAttribute("data-k")]; liveScore(); }); });
     liveScore();
@@ -1286,7 +1286,7 @@
     CAM = { on: true, id: id, k: t.cam, t: t, facing: "user", sess: null, stream: null, file: false, lastSay: 0, seen: false, lostAt: 0, lostSaid: 0, done: {}, trotCued: false };
     var el = $("#cam"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn(); unlockAudio();
     el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="c-close" aria-label="' + T("Close") + '">' + ICON.close + "</button><h2>" + esc(t.n) + '</h2><button class="icon-btn" data-act="c-voice" aria-label="' + T("Voice") + '">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div>' +
-      '<div class="stage" id="c-stage"><video id="c-video" playsinline muted></video><canvas id="c-canvas"></canvas><div class="guide" id="c-guide"><div><div class="fig" data-anim="t:' + id + '"></div><p style="max-width:320px">' + esc(CAMHINT[t.cam] || t.how) + '</p><p class="small" style="opacity:.7;margin-top:10px">' + (t.cam === "er" || t.cam === "slr" ? (T("Prop the phone at floor level about 2 to 3 metres away.")) : (T("Prop the phone at hip height about 2 to 3 metres away."))) + (" " + T("Good light, fitted clothes.")) + (t.u === "cm" ? (" " + T("The cm reading is an estimate scaled to your height (")) + (S.settings.height || 178) + " cm)." : "") + '</p></div></div><div class="status" id="c-status" hidden></div></div>' +
+      '<div class="stage" id="c-stage"><video id="c-video" playsinline muted></video><canvas id="c-canvas"></canvas><div class="guide" id="c-guide"><div>' + (vidUrl("t_" + id) ? '<div class="xfade vid camvid" data-key="t_' + esc(id) + '"><video class="photo on" data-vsrc="' + esc(vidUrl("t_" + id)) + '"' + (photoUrl("t_" + id) ? ' poster="' + esc(photoUrl("t_" + id)) + '"' : "") + ' autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(altFor("t_" + id) + ", " + T("demo video")) + '"></video></div>' : '<div class="fig" data-anim="t:' + id + '"></div>') + '<p style="max-width:320px">' + esc(CAMHINT[t.cam] || t.how) + '</p><p class="small" style="opacity:.7;margin-top:10px">' + (t.cam === "er" || t.cam === "slr" ? (T("Prop the phone at floor level about 2 to 3 metres away.")) : (T("Prop the phone at hip height about 2 to 3 metres away."))) + (" " + T("Good light, fitted clothes.")) + (t.u === "cm" ? (" " + T("The cm reading is an estimate scaled to your height (")) + (S.settings.height || 178) + " cm)." : "") + '</p></div></div><div class="status" id="c-status" hidden></div></div>' +
       '<div class="readout" id="c-read"></div>' +
       '<div class="camctl" id="c-ctl"><button class="btn primary" data-act="c-start">' + ICON.cam.replace("<svg", '<svg width="18" height="18"') + (' ' + T("Start camera") + '</button><label class="btn">' + T("Use a video") + '<input type="file" accept="video/*" id="c-file" hidden></label></div>');
     animateIn(el); readout();
