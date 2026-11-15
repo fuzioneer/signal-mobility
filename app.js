@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.48.1", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.48.2", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -200,7 +200,29 @@
   }, 4500);
   /* Small play badge on thumbnails of moves that have a looping demo video for the chosen model. */
   var VBADGE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="M10 8.2v7.6l6-3.8z"/></svg>';
-  function vbadge(key) { return vidUrl(key) ? '<span class="vbadge" role="img" aria-label="' + esc(T("Video demo")) + '" title="' + esc(T("Video demo")) + '">' + VBADGE + "</span>" : ""; }
+  function vbadge(key) { return vidUrl(key) ? '<span class="vbadge" role="button" tabindex="0" data-key="' + esc(key) + '" aria-label="' + esc(T("Play video full screen")) + '" title="' + esc(T("Play video full screen")) + '">' + VBADGE + "</span>" : ""; }
+  /* Full screen demo video: opened from the play badge on a thumbnail, or by tapping a big video. Loops until closed. */
+  function openVideoFull(key) {
+    var u = vidUrl(key); if (!u) return;
+    var el = $("#vfull");
+    if (!el) {
+      el = document.createElement("div"); el.id = "vfull"; el.className = "vfull"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true");
+      document.body.appendChild(el);
+      el.addEventListener("click", function (e) { if (!e.target.closest("video") || e.target.closest(".vf-close")) closeVideoFull(); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape" && $("#vfull") && !$("#vfull").hidden) closeVideoFull(); });
+    }
+    var ps = photoSet(key), tt = key.indexOf("t_") === 0 ? TESTS.filter(function (x) { return x.id === key.slice(2); })[0] : null;
+    var name = (tt ? tt.n : BY[key] && BY[key].n) || T("Demo video");
+    el.setAttribute("aria-label", name);
+    el.innerHTML = '<button class="icon-btn vf-close" aria-label="' + esc(T("Close")) + '">&#x2715;</button>' +
+      '<div class="vf-box" data-key="' + esc(key) + '"><video data-vsrc="' + esc(u) + '"' + (ps.length ? ' poster="' + esc(ps[0]) + '"' : "") + ' autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(name + ", " + T("demo video")) + '"></video></div>' +
+      '<p class="vf-cap">' + esc(name) + "</p>";
+    el.hidden = false; document.body.style.overflow = "hidden";
+    var v = el.querySelector("video"); vidHydrate(v);
+    try { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {}
+    setTimeout(function () { var c = el.querySelector(".vf-close"); if (c) c.focus(); }, 30);
+  }
+  function closeVideoFull() { var el = $("#vfull"); if (!el) return; var v = el.querySelector("video"); if (v) { try { v.pause(); } catch (e) {} } el.innerHTML = ""; el.hidden = true; if ($("#sheet").hidden && $("#player").hidden && $("#cam").hidden) document.body.style.overflow = ""; }
   /* Alt text for a movement or test photo: what it shows and who is demonstrating it. */
   function altFor(key) {
     var isTest = key.indexOf("t_") === 0, t = isTest ? TESTS.filter(function (x) { return x.id === key.slice(2); })[0] : null, s = isTest ? null : BY[key];
@@ -1757,8 +1779,10 @@
   $("#lightbox").addEventListener("click", closeLightbox);
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("#lightbox").hidden) closeLightbox(); });
   document.addEventListener("click", function (e) {
+    var vb = e.target.closest(".vbadge[data-key]");
+    if (vb) { e.preventDefault(); e.stopPropagation(); openVideoFull(vb.getAttribute("data-key")); return; }
     var big = e.target.closest(".xfade") || e.target.closest(".photo-wrap img, img.pphoto, img.howphoto, .snaps img");
-    if (big && big.classList.contains("vid") && !e.target.closest("[data-act]")) { e.preventDefault(); var ps = photoSet(big.getAttribute("data-key")); if (ps.length) openLightbox(ps[0], "", ps, 0); return; }
+    if (big && big.classList.contains("vid") && !big.closest("#cam") && !e.target.closest("[data-act]")) { e.preventDefault(); openVideoFull(big.getAttribute("data-key")); return; }
     if (big && big.classList.contains("xfade") && !e.target.closest("[data-act]")) {
       e.preventDefault(); var all = [].slice.call(big.querySelectorAll("img")), on = big.querySelector("img.on") || all[0];
       openLightbox(on.src, (on.getAttribute("alt") || "").replace(/ \(position.*\)$/, ""), all.map(function (im) { return im.src; }), all.indexOf(on)); return;

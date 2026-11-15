@@ -785,7 +785,9 @@ I18N.add("es", {
 "{name} test, {who}": "Test de {name}, {who}",
 "{name}, {who}": "{name}, {who}",
 "Your tracked position for {name}": "Tu posición registrada en {name}",
-"Your tracked position": "Tu posición registrada"
+"Your tracked position": "Tu posición registrada",
+"Play video full screen": "Ver el vídeo a pantalla completa",
+"Demo video": "Vídeo de demostración"
 }, {
 "zone": {
 "shoulders": "Hombros",

@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.48.2 (15 Nov 2026): Tap the play badge on any thumbnail, or tap a demo video, to watch it full screen. It loops until you close it with the X, a tap outside the video, or Escape.
 - 1.48.1 (15 Nov 2026): Tapping Camera on a test that has a demo video now shows the looping clip instead of the stick figure. Test videos in "How to do it" now start playing when the section is opened on iPhone.
 - 1.48.0 (15 Nov 2026): Mobility tests can now show a demo video in "How to do it", starting with the back scratch test, with both the female and male model.
 - 1.47.12 (15 Nov 2026): Mobility test "How to do it" instructions now use the full width of the card instead of being squeezed to the left.
