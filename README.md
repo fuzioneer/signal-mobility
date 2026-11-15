@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.50.0 (15 Nov 2026): Every mobility test now has a camera setup diagram in "How to do it", showing the person as a silhouette in a simple room outline and where to put the phone, how high and how far away.
 - 1.49.5 (15 Nov 2026): New female shoulder external rotation video, with her other hand resting on her stomach throughout.
 - 1.49.4 (15 Nov 2026): Shoulder external rotation test now has corrected one-arm photos (the far hand rests on the stomach) and a half-speed demo video with both models. The numbers in the test result boxes and the Score so far figure are now centred.
 - 1.49.3 (15 Nov 2026): Save test is now a small button in the top bar next to Settings, shown only on the Test tab, instead of the large bar at the bottom. The shoulder external rotation test has new photos showing one arm, the one nearest the camera.

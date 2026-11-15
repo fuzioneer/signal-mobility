@@ -388,3 +388,20 @@ window.PHOTOEXTRA_M = {
   ]
  }
 };
+
+/* Camera setup diagrams for each mobility test: where to put the phone, shown in "How to do it". Same for both models. */
+window.SETUP_IMG = {
+ "backscratch": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_175256_1cf155a5-101a-4695-bad7-4a27820abe1f.png",
+ "cam_shflex": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180300_60c78cb2-8791-4850-80f5-6b790dfd1a1f.png",
+ "wallflex": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180259_2ca2059e-589b-4f1f-919c-c95fdb774b9d.png",
+ "er": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180343_a759538f-940c-477f-847d-973b929a5c70.png",
+ "trot": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180300_33662a97-f891-49f1-a1ae-9b79e101d6b6.png",
+ "slr": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180259_e13d4c69-599a-46b2-9a2d-90e3d3e01143.png",
+ "toetouch": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180343_6225cbb4-ea87-4306-adf7-026599a2c75e.png",
+ "hipir": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180300_afcea3e7-863b-435c-96c3-5712af587e24.png",
+ "thomas": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180343_a13c1e9a-0c1e-4e6e-8dc8-096fac60e282.png",
+ "pigeon": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180259_918c3f6c-c970-4fee-8cc1-2220990dda82.png",
+ "cam_shin": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180344_5b175bcd-1256-43dc-98d7-a7e67648570d.png",
+ "k2w": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180300_41f1f396-4279-47c8-8120-3d3f5ebb8ab6.png",
+ "squat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180300_23257f3f-28cd-4cf0-8c55-0a8fd40c50ee.png"
+};

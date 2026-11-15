@@ -799,7 +799,9 @@ I18N.add("es", {
 "Start test": "Empezar la prueba",
 "{n} done": "{n} hechas",
 "Do Test": "Hacer la prueba",
-"Do the {name} test with the camera": "Hacer la prueba {name} con la cámara"
+"Do the {name} test with the camera": "Hacer la prueba {name} con la cámara",
+"Camera setup": "Colocación de la cámara",
+"Camera setup for {name}: where to put your phone": "Colocación de la cámara para {name}: dónde poner el móvil"
 }, {
 "zone": {
 "shoulders": "Hombros",

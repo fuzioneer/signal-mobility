@@ -799,7 +799,9 @@ I18N.add("it", {
 "Start test": "Inizia il test",
 "{n} done": "{n} fatti",
 "Do Test": "Fai il test",
-"Do the {name} test with the camera": "Fai il test {name} con la fotocamera"
+"Do the {name} test with the camera": "Fai il test {name} con la fotocamera",
+"Camera setup": "Posizione della fotocamera",
+"Camera setup for {name}: where to put your phone": "Posizione della fotocamera per {name}: dove mettere il telefono"
 }, {
 "zone": {
 "shoulders": "Spalle",
