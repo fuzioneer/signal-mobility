@@ -187,3 +187,9 @@ $$;
 -- fb_create (new p_area argument) and added fb_set_area for the team to move posts.
 alter table public.feedback_items add column if not exists area text not null default 'general'
   check (area in ('today', 'routines', 'test', 'history', 'community', 'general'));
+
+-- Team-only "test" items (added 15 Nov 2026, migration feedback_test_kind): kind may also be 'test'.
+-- Only admins can create them, and fb_list, fb_vote, fb_comments and fb_comment hide them from everyone
+-- else. No alert email is sent for them, and they don't get an automatic vote.
+alter table public.feedback_items drop constraint if exists feedback_items_kind_check;
+alter table public.feedback_items add constraint feedback_items_kind_check check (kind in ('bug', 'feature', 'test'));
