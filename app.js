@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.48.3", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.49.0", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -574,7 +574,7 @@
   }
 
   /* ---------- TEST ---------- */
-  var draft = null;
+  var draft = null, GT = null; /* GT: guided test position {i}, or null for the full list */
   function draftFor(date) { var t = S.tests.filter(function (x) { return x.date === date; })[0], cam = {}; (t && t.cam || []).forEach(function (k) { cam[k] = 1; }); return { date: date, v: Object.assign({}, t ? t.v : {}), cam: cam }; }
   function fieldsFor(t) {
     if (t.id === "squat") return [["squat_knee", (T("Knee angle °"))], ["squat_shin", (T("Shin lean °"))], ["squat_torso", (T("Torso lean °"))]];
@@ -583,29 +583,62 @@
   }
   function renderTest() {
     if (!draft) draft = draftFor(iso());
-    var h = ('<p class="muted">' + T("Warm up for 5 minutes first. Tap") + ' <b>' + T("Camera") + '</b> ' + T("on any test to measure it with live body tracking, or type a result in. Distances in cm are estimated from your height (")) + (S.settings.height || 178) + (' ' + T("cm, change it in Settings).") + '</p>');
+    var order = testOrder(), h;
+    if (GT) {
+      /* Guided test: one test at a time, in the same order as the list, with a progress bar like the routine player. */
+      if (GT.i >= order.length) GT.i = order.length - 1; if (GT.i < 0) GT.i = 0;
+      var gt = order[GT.i], left = order.slice(GT.i).reduce(function (a, x) { return a + testSecs(x); }, 0);
+      h = '<div class="card gtop"><div class="gtrow"><b>' + TF("Test {n} of {total}", { n: GT.i + 1, total: order.length }) + '</b><button class="btn small" data-act="gt-exit">' + T("Exit") + '</button></div>' +
+        '<div class="gtbar" role="progressbar" aria-valuemin="0" aria-valuemax="' + order.length + '" aria-valuenow="' + GT.i + '" aria-label="' + esc(T("Test progress")) + '"><i style="width:' + Math.round(GT.i / order.length * 100) + '%"></i></div>' +
+        '<p class="small muted">' + esc(zoneName(gt.z)) + " · " + TF("about {m} min left", { m: Math.max(1, Math.round(left / 60)) }) + ' · <span id="gt-done"></span></p></div>';
+      h += testCard(gt, true);
+      h += '<div class="savebar gtnav"><button class="btn" data-act="gt-prev"' + (GT.i === 0 ? " disabled" : "") + '>' + T("Back") + '</button>' +
+        (GT.i < order.length - 1 ? '<button class="btn primary" data-act="gt-next" id="gt-next"></button>' : '<button class="btn primary" data-act="save-test">' + T("Save test") + '</button>') + '</div>';
+      $("#v-test").innerHTML = h; testWire(); gtLabel(); return;
+    }
+    var mins = Math.round(order.reduce(function (a, x) { return a + testSecs(x); }, 0) / 60);
+    h = '<div class="card gtintro"><p><b>' + TF("The full test takes about {m} minutes", { m: mins }) + '</b> ' + TF("for all {n} tests, plus a 5 minute warm-up. You can stop part way and save what you've done.", { n: order.length }) + '</p>' +
+      '<button class="btn primary block" data-act="gt-start">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + " " + (Object.keys(draft.v).length ? T("Start guided test") : T("Start test")) + '</button></div>';
+    h += ('<p class="muted">' + T("Warm up for 5 minutes first. Tap") + ' <b>' + T("Camera") + '</b> ' + T("on any test to measure it with live body tracking, or type a result in. Distances in cm are estimated from your height (")) + (S.settings.height || 178) + (' ' + T("cm, change it in Settings).") + '</p>');
     h += '<div class="card row"><label class="field" style="flex:1">' + T("Test date") + '<input type="date" id="t-date" value="' + draft.date + '" max="' + iso() + ('"></label><div class="grow" style="text-align:right"><span class="small muted">' + T("Score so far") + '</span><div style="font-size:28px;font-weight:780" id="t-live">–</div></div></div>');
     ZONES.concat([[null, (T("Squat check"))]]).forEach(function (z) {
       var ts = TESTS.filter(function (t) { return t.z === z[0]; }); if (!ts.length) return;
       h += '<div class="sec"><h2>' + (z[0] ? '<span class="zdot" style="background:' + zc(z[0]) + '"></span>' : "") + z[1] + '</h2><span class="pctpill" data-zone="' + (z[0] || "") + '"></span></div>';
-      ts.forEach(function (t) {
-        h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + art("t_" + t.id, t.pose, { stroke: 8 }) + '</div><div><h3>' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? (T("Not scored. A check of your squat position.")) : (t.sides ? (T("Both sides")) : (T("One result"))) + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
-        h += ('<details><summary>' + T("How to do it") + '</summary><div class="how"><p>') + esc(t.how) + '</p>' + (vidUrl("t_" + t.id) && photoUrl("t_" + t.id) ? '<div class="xfade vid howvid" data-key="t_' + esc(t.id) + '"><video class="photo howphoto on" data-vsrc="' + esc(vidUrl("t_" + t.id)) + '" poster="' + esc(photoUrl("t_" + t.id)) + '" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(altFor("t_" + t.id) + ", " + T("demo video")) + '"></video></div>' : photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(altFor("t_" + t.id)) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
-        h += '<div class="inputs">' + fieldsFor(t).map(function (f) { return '<label class="field">' + f[1] + '<input type="number" inputmode="decimal" step="any" data-k="' + f[0] + '" value="' + (isNum(draft.v[f[0]]) ? draft.v[f[0]] : "") + '"></label>'; }).join("");
-        if (t.cam) h += '<button class="btn" data-act="cam" data-id="' + t.id + '" style="flex:none">' + ICON.cam.replace("<svg", '<svg width="20" height="20"') + (" " + T("Camera") + "</button>");
-        h += "</div></div>";
-      });
+      ts.forEach(function (t) { h += testCard(t); });
     });
     h += ('<div class="savebar"><button class="btn primary big block" data-act="save-test">' + T("Save test") + '</button></div>');
     $("#v-test").innerHTML = h;
-    $$("#v-test details").forEach(function (d) { d.addEventListener("toggle", function () { if (d.open) { animateIn(d); /* A video hidden in a closed section doesn't autoplay on iPhone, so start it when the section opens. */ $$("video", d).forEach(function (v) { try { v.muted = true; var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} }); } }); });
     $("#t-date").addEventListener("change", function (e) { var keep = draft.v; draft = draftFor(e.target.value || iso()); if (!S.tests.some(function (x) { return x.date === draft.date; })) draft.v = keep; renderTest(); });
-    $$("#v-test input[data-k]").forEach(function (inp) { inp.addEventListener("input", function () { var x = parseFloat(inp.value); if (isNum(x)) draft.v[inp.getAttribute("data-k")] = x; else delete draft.v[inp.getAttribute("data-k")]; if (draft.cam) delete draft.cam[inp.getAttribute("data-k")]; liveScore(); }); });
+    testWire();
+  }
+  /* Tests in list order: zone by zone, then the squat check. */
+  function testOrder() { var o = []; ZONES.concat([[null]]).forEach(function (z) { TESTS.forEach(function (t) { if (t.z === z[0]) o.push(t); }); }); return o; }
+  /* Rough time per test, including reading the steps and setting up the phone: both sides take longer. */
+  function testSecs(t) { return t.noScore ? 60 : t.sides ? 90 : 50; }
+  function zoneName(z) { if (!z) return T("Squat check"); var m = ZONES.filter(function (x) { return x[0] === z; })[0]; return m ? m[1] : ""; }
+  function testDone(t) { return fieldsFor(t).some(function (f) { return isNum(draft.v[f[0]]); }); }
+  function gtLabel() {
+    var b = $("#gt-next"), order = testOrder(), t = GT && order[GT.i]; if (!t) return;
+    if (b) b.textContent = testDone(t) ? T("Next") : T("Skip");
+    var d = $("#gt-done"), n = order.filter(testDone).length; if (d) d.textContent = TF("{n} done", { n: n });
+  }
+  function testWire() {
+    $$("#v-test details").forEach(function (d) { d.addEventListener("toggle", function () { if (d.open) { animateIn(d); /* A video hidden in a closed section doesn't autoplay on iPhone, so start it when the section opens. */ $$("video", d).forEach(function (v) { try { v.muted = true; var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} }); } }); });
+    $$("#v-test input[data-k]").forEach(function (inp) { inp.addEventListener("input", function () { var x = parseFloat(inp.value); if (isNum(x)) draft.v[inp.getAttribute("data-k")] = x; else delete draft.v[inp.getAttribute("data-k")]; if (draft.cam) delete draft.cam[inp.getAttribute("data-k")]; liveScore(); if (GT) gtLabel(); }); });
     liveScore();
+  }
+  function testCard(t, open) {
+        var h = "";
+        h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + art("t_" + t.id, t.pose, { stroke: 8 }) + '</div><div><h3>' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? (T("Not scored. A check of your squat position.")) : (t.sides ? (T("Both sides")) : (T("One result"))) + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
+        h += ('<details' + (open ? " open" : "") + '><summary>' + T("How to do it") + '</summary><div class="how"><p>') + esc(t.how) + '</p>' + (vidUrl("t_" + t.id) && photoUrl("t_" + t.id) ? '<div class="xfade vid howvid" data-key="t_' + esc(t.id) + '"><video class="photo howphoto on" data-vsrc="' + esc(vidUrl("t_" + t.id)) + '" poster="' + esc(photoUrl("t_" + t.id)) + '" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(altFor("t_" + t.id) + ", " + T("demo video")) + '"></video></div>' : photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(altFor("t_" + t.id)) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
+        h += '<div class="inputs">' + fieldsFor(t).map(function (f) { return '<label class="field">' + f[1] + '<input type="number" inputmode="decimal" step="any" data-k="' + f[0] + '" value="' + (isNum(draft.v[f[0]]) ? draft.v[f[0]] : "") + '"></label>'; }).join("");
+        if (t.cam) h += '<button class="btn" data-act="cam" data-id="' + t.id + '" style="flex:none">' + ICON.cam.replace("<svg", '<svg width="20" height="20"') + (" " + T("Camera") + "</button>");
+        h += "</div></div>";
+        return h;
   }
   function liveScore() {
     var sc = score(draft.v);
-    $("#t-live").textContent = isNum(sc.overall) ? sc.overall : "–";
+    if ($("#t-live")) $("#t-live").textContent = isNum(sc.overall) ? sc.overall : "–";
     $$("#v-test [data-zone]").forEach(function (el) { var z = el.getAttribute("data-zone"); el.textContent = z && isNum(sc.zones[z]) ? sc.zones[z] + "%" : ""; el.hidden = !el.textContent; });
     TESTS.forEach(function (t) { var el = $('[data-tp="' + t.id + '"]'); if (el) { var p = testPct(t, draft.v); el.textContent = isNum(p) ? p + "%" : (T("not done")); } });
   }
@@ -616,7 +649,7 @@
     var cam = keys.filter(function (k) { return draft.cam && draft.cam[k]; });
     S.tests = S.tests.filter(function (x) { return x.date !== draft.date; }); S.tests.push({ date: draft.date, v: v, t: Date.now(), cam: cam }); save(); goalCheck(); cmSync();
     var sc = score(v); toast((T("Saved.") + " ") + (isNum(sc.overall) ? (T("Score") + " ") + sc.overall + "." : ""));
-    draft = null; go("home");
+    draft = null; GT = null; go("home");
   }
 
   /* ---------- ROUTINES ---------- */
@@ -1850,6 +1883,10 @@
       case "edit-routine": { var rr = S.routines.filter(function (r) { return r.id === id; })[0]; closeSheet(); if (rr) { building = { id: rr.id, n: rr.n, items: rr.items.slice() }; go("routines"); } break; }
       case "del-routine": if (twice("dr" + id, (T("Tap Delete again to confirm")))) { S.routines = S.routines.filter(function (r) { return r.id !== id; }); save(); closeSheet(); render(); } break;
       case "save-test": saveTest(); break;
+      case "gt-start": GT = { i: 0 }; renderTest(); window.scrollTo(0, 0); break;
+      case "gt-next": if (GT) { GT.i++; renderTest(); window.scrollTo(0, 0); } break;
+      case "gt-prev": if (GT && GT.i > 0) { GT.i--; renderTest(); window.scrollTo(0, 0); } break;
+      case "gt-exit": GT = null; renderTest(); window.scrollTo(0, 0); break;
       case "cam": openCam(id); break;
       case "c-start": camStart(); break;
       case "c-close": closeCam(); break;

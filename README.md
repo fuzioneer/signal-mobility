@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.49.0 (15 Nov 2026): Mobility test page now says how long the full test takes (worked out from the tests, plus a 5 minute warm-up), and has a Start test button. The guided test takes you through each test one at a time with a progress bar, how many are done and the time left, with Back, Skip or Next, and Save test at the end. Exit returns to the full list and keeps your results.
 - 1.48.3 (15 Nov 2026): The full screen video shows the movement photo and a loading spinner straight away, then fades the clip in as soon as it plays, instead of a blank screen. Opening it from a video that is already playing reuses that video, so it starts instantly.
 - 1.48.2 (15 Nov 2026): Tap the play badge on any thumbnail, or tap a demo video, to watch it full screen. It loops until you close it with the X, a tap outside the video, or Escape.
 - 1.48.1 (15 Nov 2026): Tapping Camera on a test that has a demo video now shows the looping clip instead of the stick figure. Test videos in "How to do it" now start playing when the section is opened on iPhone.

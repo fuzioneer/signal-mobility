@@ -28,7 +28,7 @@ I18N.add("it", {
 "All saved": "Tutto salvato",
 "And that's it. Great session.": "Ed è tutto. Ottima sessione.",
 "Anterior chain": "Catena anteriore",
-"Back": "Schiena",
+"Back": "Indietro",
 "Back flat against the wall, heels, bum and head touching. Lift both arms overhead with your thumbs together, and reach back towards the wall. Hold it for a couple of seconds.": "Schiena piatta contro il muro, talloni, glutei e testa a contatto. Alza entrambe le braccia sopra la testa con i pollici uniti e allungale verso il muro. Tieni per un paio di secondi.",
 "Back view of the body": "Vista posteriore del corpo",
 "Background music": "Musica di sottofondo",
@@ -787,7 +787,17 @@ I18N.add("it", {
 "Your tracked position for {name}": "La tua posizione rilevata per {name}",
 "Your tracked position": "La tua posizione rilevata",
 "Play video full screen": "Guarda il video a schermo intero",
-"Demo video": "Video dimostrativo"
+"Demo video": "Video dimostrativo",
+"Test {n} of {total}": "Test {n} di {total}",
+"Exit": "Esci",
+"Test progress": "Avanzamento del test",
+"about {m} min left": "circa {m} min rimanenti",
+"Skip": "Salta",
+"The full test takes about {m} minutes": "Il test completo dura circa {m} minuti",
+"for all {n} tests, plus a 5 minute warm-up. You can stop part way and save what you've done.": "per tutti i {n} test, più 5 minuti di riscaldamento. Puoi fermarti a metà e salvare quello che hai fatto.",
+"Start guided test": "Inizia il test guidato",
+"Start test": "Inizia il test",
+"{n} done": "{n} fatti"
 }, {
 "zone": {
 "shoulders": "Spalle",

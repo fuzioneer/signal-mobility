@@ -28,7 +28,7 @@ I18N.add("pt", {
 "All saved": "Tudo guardado",
 "And that's it. Great session.": "E pronto. Ótima sessão.",
 "Anterior chain": "Cadeia anterior",
-"Back": "Costas",
+"Back": "Voltar",
 "Back flat against the wall, heels, bum and head touching. Lift both arms overhead with your thumbs together, and reach back towards the wall. Hold it for a couple of seconds.": "Costas encostadas à parede, com calcanhares, glúteos e cabeça a tocar. Levante os dois braços acima da cabeça com os polegares juntos e estique-os em direção à parede. Mantenha uns segundos.",
 "Back view of the body": "Vista posterior do corpo",
 "Background music": "Música de fundo",
@@ -787,7 +787,17 @@ I18N.add("pt", {
 "Your tracked position for {name}": "A sua posição registada em {name}",
 "Your tracked position": "A sua posição registada",
 "Play video full screen": "Ver o vídeo em ecrã inteiro",
-"Demo video": "Vídeo de demonstração"
+"Demo video": "Vídeo de demonstração",
+"Test {n} of {total}": "Teste {n} de {total}",
+"Exit": "Sair",
+"Test progress": "Progresso do teste",
+"about {m} min left": "faltam cerca de {m} min",
+"Skip": "Saltar",
+"The full test takes about {m} minutes": "O teste completo demora cerca de {m} minutos",
+"for all {n} tests, plus a 5 minute warm-up. You can stop part way and save what you've done.": "para os {n} testes, mais 5 minutos de aquecimento. Pode parar a meio e guardar o que já fez.",
+"Start guided test": "Iniciar teste guiado",
+"Start test": "Iniciar teste",
+"{n} done": "{n} feitos"
 }, {
 "zone": {
 "shoulders": "Ombros",

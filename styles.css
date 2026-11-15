@@ -506,3 +506,15 @@ body.on-home header.top h1 { position: absolute; width: 1px; height: 1px; overfl
 .snav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 2px 0 10px; }
 .snavb { width: 52px; height: 44px; padding: 0; font-size: 30px; line-height: 1; border-radius: 14px; }
 .snavb[disabled] { opacity: .35; }
+
+/* Guided mobility test */
+.gtintro p { margin: 0 0 12px; }
+.gtintro .btn svg { vertical-align: -3px; }
+.gtop { display: grid; gap: 10px; }
+.gtrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.gtbar { height: 6px; background: var(--soft); border-radius: 3px; overflow: hidden; }
+.gtbar i { display: block; height: 100%; background: var(--brand); border-radius: 3px; transition: width .3s; }
+.gtop .small { margin: 0; }
+.savebar.gtnav { display: flex; gap: 10px; }
+.savebar.gtnav .btn { flex: 1; }
+.savebar.gtnav .btn.primary { flex: 2; }
