@@ -168,3 +168,16 @@ revoke all on function public.feedback_notify() from public, anon, authenticated
 drop trigger if exists feedback_notify on public.feedback_items;
 create trigger feedback_notify after insert on public.feedback_items
   for each row execute function public.feedback_notify();
+
+-- Admins by email (added 15 Nov 2026): whoever signs in with one of these addresses gets the
+-- status dropdown and "Movage team" comments, even if they create their account later.
+create table if not exists public.feedback_admin_emails (email text primary key check (email = lower(email)));
+alter table public.feedback_admin_emails enable row level security;
+revoke all on public.feedback_admin_emails from anon, authenticated;
+insert into public.feedback_admin_emails (email) values ('support@movage.co.uk') on conflict do nothing;
+
+create or replace function public.fb_is_admin()
+returns boolean language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.feedback_admins where user_id = auth.uid())
+      or exists (select 1 from public.feedback_admin_emails a join auth.users u on lower(u.email) = a.email where u.id = auth.uid());
+$$;
