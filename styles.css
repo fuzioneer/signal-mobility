@@ -562,3 +562,18 @@ details.rfix[open] > summary::after { transform: rotate(-135deg); }
 /* Test name and thumbnail open the picture or video (1.54.2) */
 .tcard .thead h3[role=button], .tcard .thead .thumb img { cursor: pointer; }
 .tcard .thead h3[role=button]:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+
+/* Favourites (1.55.0) */
+.shead { display: flex; align-items: flex-start; gap: 10px; }
+.shead h2 { flex: 1; }
+.favbtn { flex: none; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); display: grid; place-items: center; cursor: pointer; color: var(--muted); transition: transform .15s; }
+.favbtn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; }
+.favbtn.on { color: #e5484d; border-color: #e5484d55; }
+.favbtn.on svg { fill: currentColor; }
+.favbtn:active { transform: scale(.9); }
+.favmark { position: absolute; top: 8px; left: 8px; width: 24px; height: 24px; border-radius: 50%; background: var(--card); display: grid; place-items: center; color: #e5484d; box-shadow: 0 1px 3px #0003; }
+.favmark svg { width: 14px; height: 14px; fill: currentColor; }
+.favmark.inline { position: static; box-shadow: none; background: none; margin-right: 2px; }
+.favmark.inline svg { width: 16px; height: 16px; }
+.favlbl svg, .chipfav svg { width: 13px; height: 13px; fill: #e5484d; vertical-align: -1px; margin-right: 5px; }
+.lcard { position: relative; }

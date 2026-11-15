@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.55.0 (15 Nov 2026): Favourites. A heart button on every routine and stretch sheet. Favourite routines appear at the top of Routines, For you, and favourite stretches get their own Favourites filter in the stretch library. Hearts show on the cards, and favourites are kept in backups.
 - 1.54.2 (15 Nov 2026): Tapping a test's name now does the same as tapping its picture: the full screen video if it has one, otherwise the photo. Tapping the picture itself also opens the photo now for tests without a video.
 - 1.54.1 (15 Nov 2026): Demo videos for the seated thoracic rotation test (female and male), done on a chair.
 - 1.54.0 (15 Nov 2026): "Share to Strava" tick box on the finish screen when Strava is connected. It is ticked by default (the Settings option now sets that default) and the session is only sent if it stays ticked, when you close the screen, leave the app, or after 3 minutes.

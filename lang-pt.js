@@ -813,7 +813,13 @@ I18N.add("pt", {
 "Share to Strava": "Partilhar no Strava",
 "Untick if you don't want this session posted to Strava.": "Desmarque se não quiser publicar esta sessão no Strava.",
 "Tick \"Share to Strava\" by default when a routine finishes": "Marcar «Partilhar no Strava» por defeito ao terminar uma rotina",
-"Show the {name} picture or video": "Ver a foto ou o vídeo de {name}"
+"Show the {name} picture or video": "Ver a foto ou o vídeo de {name}",
+"Favourites": "Favoritos",
+"Favourite": "Favorito",
+"Added to favourites": "Adicionado aos favoritos",
+"Removed from favourites": "Removido dos favoritos",
+"Add {name} to favourites": "Adicionar {name} aos favoritos",
+"Remove {name} from favourites": "Remover {name} dos favoritos"
 }, {
 "zone": {
 "shoulders": "Ombros",

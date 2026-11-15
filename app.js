@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.54.2", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.55.0", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -34,7 +34,7 @@
   var TAGLINE = "Joint Venture";
   function blank() { return { v: 1, settings: { age: 40, sex: "m", height: 178, voice: true, savePhotos: true, music: "pads", musicVol: 0.5, beeps: true, prep: 5, rest: 10, sideRest: 5, theme: "auto" }, tests: [], sessions: [], routines: [], goals: [] }; }
   function load() {
-    try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; b.goals = (Array.isArray(x.goals) ? x.goals : []).map(migGoal); if (x.fb) b.fb = x.fb; if (x.cloud) b.cloud = x.cloud; return b; } } catch (e) {}
+    try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; b.goals = (Array.isArray(x.goals) ? x.goals : []).map(migGoal); if (x.fb) b.fb = x.fb; if (x.cloud) b.cloud = x.cloud; if (x.favs) b.favs = { r: x.favs.r || [], s: x.favs.s || [] }; return b; } } catch (e) {}
     return blank();
   }
   /* The wall overhead reach test was dropped in 1.52.0: goals set on it move to shoulder flexion. */
@@ -573,7 +573,7 @@
   function routineCard(r) {
     if (!r) return "";
     var secs = routineSecs(r.items);
-    return '<div class="card rcard" data-act="routine" data-id="' + esc(r.id) + '"><div class="thumb">' + art(r.items[0], BY[r.items[0]].pose, { stroke: 8, nobadge: true }) + '</div><div class="grow"><h3>' + esc(r.n) + "</h3><p>" + esc(r.sub) + " · " + r.items.length + (" " + T("moves ·") + " ") + mins(secs) + "</p></div>" + ICON.chev + "</div>";
+    return '<div class="card rcard" data-act="routine" data-id="' + esc(r.id) + '"><div class="thumb">' + art(r.items[0], BY[r.items[0]].pose, { stroke: 8, nobadge: true }) + '</div><div class="grow"><h3>' + esc(r.n) + "</h3><p>" + esc(r.sub) + " · " + r.items.length + (" " + T("moves ·") + " ") + mins(secs) + "</p></div>" + (isFav("r", r.id) ? '<span class="favmark inline" aria-label="' + esc(T("Favourite")) + '">' + HEART + "</span>" : "") + ICON.chev + "</div>";
   }
 
   /* ---------- TEST ---------- */
@@ -689,6 +689,8 @@
       PRESETS.filter(function (p) { return p.lift === RT_LF; }).forEach(function (p) { h += routineCard(byId(p.id)); });
       h += '<p class="small muted rnote">' + T("Do it just before your warm-up sets. Dynamic moves first, then short holds, so you stay ready to lift.") + "</p>";
     } else {
+      var fr = favs("r").map(findRoutine).filter(Boolean);
+      if (fr.length) { h += label('<span class="favlbl">' + HEART + "</span>" + T("Favourites"), ""); fr.forEach(function (r) { h += routineCard(r); }); }
       h += routineCard(byId("daily"));
       var fs = sportObj();
       if (fs) { var fp = PRESETS.filter(function (p) { return p.sport === fs.id && (p.kind === "activate" || p.kind === "recover"); }); if (fp.length) { h += label(esc(fs.n), ""); fp.forEach(function (p) { h += routineCard(byId(p.id)); }); } }
@@ -707,11 +709,12 @@
     h += routineGroups();
     h += ('<div class="sec"><h2>' + T("Stretch library") + '</h2><span class="small muted">') + ST.length + " " + T("moves") + "</span></div>";
     var hasVid = ST.some(function (s) { return vidUrl(s.id); }); if (LIB_F === "video" && !hasVid) LIB_F = "all";
-    var F = [["all", (T("All"))]].concat(hasVid ? [["video", '<span class="chipvid" aria-hidden="true">' + VBADGE + "</span>" + T("With video")]] : []).concat(ZONES).concat([["warm", (T("Warm-up"))], ["cool", (T("Cool-down"))], ["back", (T("Back"))], ["run", (T("Running"))], ["hyrox", (T("Hyrox"))], ["golf", (T("Golf"))], ["cycle", (T("Cycling"))], ["desk", (T("Desk"))], ["bed", (T("On a bed"))], ["sleep", (T("Sleep"))]]);
+    var hasFav = favs("s").some(function (id) { return BY[id]; }); if (LIB_F === "fav" && !hasFav) LIB_F = "all";
+    var F = [["all", (T("All"))]].concat(hasFav ? [["fav", '<span class="chipfav" aria-hidden="true">' + HEART + "</span>" + T("Favourites")]] : []).concat(hasVid ? [["video", '<span class="chipvid" aria-hidden="true">' + VBADGE + "</span>" + T("With video")]] : []).concat(ZONES).concat([["warm", (T("Warm-up"))], ["cool", (T("Cool-down"))], ["back", (T("Back"))], ["run", (T("Running"))], ["hyrox", (T("Hyrox"))], ["golf", (T("Golf"))], ["cycle", (T("Cycling"))], ["desk", (T("Desk"))], ["bed", (T("On a bed"))], ["sleep", (T("Sleep"))]]);
     h += '<div class="libsearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" class="inp" id="lib-q" placeholder="' + esc(T("Search by move name")) + '" aria-label="' + esc(T("Search the stretch library")) + '" value="' + esc(LIB_Q) + '" autocomplete="off" enterkeyhint="search"></div>';
     h += chipRow(F.map(function (f) { return '<button class="chip' + (LIB_F === f[0] ? " on" : "") + '" data-act="filter" data-id="' + f[0] + '">' + f[1] + "</button>"; }).join(""));
     if (building) h += bodyMap();
-    var list = ST.filter(function (s) { return canDo(s) && (LIB_F === "all" || (LIB_F === "video" && !!vidUrl(s.id)) || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0) && (!building || !MG_SEL.length || MG_SEL.some(function (m) { return s.m.indexOf(m) >= 0; })); });
+    var list = ST.filter(function (s) { return canDo(s) && (LIB_F === "all" || (LIB_F === "video" && !!vidUrl(s.id)) || (LIB_F === "fav" && isFav("s", s.id)) || s.z.indexOf(LIB_F) >= 0 || s.tags.indexOf(LIB_F) >= 0) && (!building || !MG_SEL.length || MG_SEL.some(function (m) { return s.m.indexOf(m) >= 0; })); });
     var abc = function (a, b) { return String(a.n).localeCompare(String(b.n), I18N.lang || "en", { sensitivity: "base", numeric: true }); };
     list.sort(abc);
     if (building && MG_SEL.length) list.sort(function (a, b) { var c = function (s) { return MG_SEL.filter(function (m) { return s.m.indexOf(m) >= 0; }).length; }; return (c(b) - c(a)) || abc(a, b); });
@@ -719,7 +722,7 @@
     h += '<p class="muted small" id="lib-none" style="margin:10px 2px"' + (list.length ? " hidden" : "") + '>' + T("No moves match. Try another area or filter.") + '</p>';
     h += '<div class="lib' + (building ? " building" : "") + '">' + list.map(function (s) {
       var sel = building && building.items.indexOf(s.id) >= 0;
-      return '<button class="lcard' + (sel ? " sel" : "") + '" data-act="stretch" data-id="' + s.id + '" data-q="' + esc(libText(s)) + '"><div class="fig">' + art(s.id, s.pose, { stroke: 8 }) + '</div><span class="check">' + (sel ? building.items.indexOf(s.id) + 1 : "") + "</span><h3>" + esc(s.n) + "</h3><p>" + s.z.map(function (z) { return '<span class="zdot" style="background:' + zc(z) + '"></span>'; }).join("") + (s.reps || (s.d + "s" + (s.s ? (" " + T("each side")) : ""))) + "</p></button>";
+      return '<button class="lcard' + (sel ? " sel" : "") + '" data-act="stretch" data-id="' + s.id + '" data-q="' + esc(libText(s)) + '"><div class="fig">' + art(s.id, s.pose, { stroke: 8 }) + '</div><span class="check">' + (sel ? building.items.indexOf(s.id) + 1 : "") + "</span>" + (isFav("s", s.id) ? '<span class="favmark" aria-label="' + esc(T("Favourite")) + '">' + HEART + "</span>" : "") + "<h3>" + esc(s.n) + "</h3><p>" + s.z.map(function (z) { return '<span class="zdot" style="background:' + zc(z) + '"></span>'; }).join("") + (s.reps || (s.d + "s" + (s.s ? (" " + T("each side")) : ""))) + "</p></button>";
     }).join("") + "</div>";
     if (building) h += '<div class="buildbar"><div class="grow"><b>' + building.items.length + ' ' + T("selected") + '</b><div class="small" style="opacity:.75">' + mins(routineSecs(building.items)) + ('</div></div><button class="btn" data-act="build-cancel">' + T("Cancel") + '</button><button class="btn primary" data-act="build-save"') + (building.items.length ? "" : " disabled") + ">" + T("Save") + "</button></div>";
     var keep = [].map.call(document.querySelectorAll("#v-routines .chiprow .chips"), function (c) { return c.scrollLeft; });
@@ -827,9 +830,22 @@
     qwRender(); var sh = $("#sheet"); if (sh && (act === "qw-next" || act === "qw-back" || act === "qw-time" || act === "qw-when")) sh.scrollTop = 0;
     return true;
   }
+  /* ---------- Favourites: routines (r) and stretches (s), by id. ---------- */
+  var HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.4-4.5-9.4-9.1C1.3 8.2 3.3 4.5 6.9 4.5c2 0 3.7 1.1 5.1 2.9 1.4-1.8 3.1-2.9 5.1-2.9 3.6 0 5.6 3.7 4.3 6.9-2 4.6-9.4 9.1-9.4 9.1z"/></svg>';
+  function favs(k) { if (!S.favs) S.favs = { r: [], s: [] }; return S.favs[k] || (S.favs[k] = []); }
+  function isFav(k, id) { return favs(k).indexOf(id) >= 0; }
+  function favLabel(on, name) { return on ? TF("Remove {name} from favourites", { name: name }) : TF("Add {name} to favourites", { name: name }); }
+  function favBtn(k, id, name) { var on = isFav(k, id); return '<button class="favbtn' + (on ? " on" : "") + '" data-act="fav" data-kind="' + k + '" data-id="' + esc(id) + '" data-name="' + esc(name) + '" aria-pressed="' + on + '" aria-label="' + esc(favLabel(on, name)) + '">' + HEART + "</button>"; }
+  function toggleFav(el) {
+    var k = el.getAttribute("data-kind"), id = el.getAttribute("data-id"), list = favs(k), i = list.indexOf(id), on = i < 0;
+    if (on) list.push(id); else list.splice(i, 1);
+    save(); el.classList.toggle("on", on); el.setAttribute("aria-pressed", on); el.setAttribute("aria-label", favLabel(on, el.getAttribute("data-name") || ""));
+    toast(on ? T("Added to favourites") : T("Removed from favourites"));
+    if ($("#v-routines") && !$("#v-routines").hidden) renderRoutines();
+  }
   function openRoutine(id) {
     var r = findRoutine(id); if (!r) return; var ad = adapt(r.items);
-    var h = '<h2>' + esc(r.n) + '</h2><p class="muted" style="margin:4px 0 14px">' + esc(r.sub) + " · " + mins(routineSecs(ad.items)) + "</p>";
+    var h = '<div class="shead"><h2>' + esc(r.n) + "</h2>" + favBtn("r", r.id, r.n) + '</div><p class="muted" style="margin:4px 0 14px">' + esc(r.sub) + " · " + mins(routineSecs(ad.items)) + "</p>";
     if (ad.notes.length) h += '<div class="adnote small">' + ad.notes.map(function (n) { return "<div>" + esc(adaptNote(n)) + "</div>"; }).join("") + "</div>";
     h += '<button class="btn primary big block" data-act="play" data-id="' + esc(r.id) + '">' + ICON.play.replace("<svg", '<svg width="20" height="20"') + (" " + T("Start") + "</button>");
     h += '<div class="card flush" style="margin-top:14px">' + ad.items.map(function (sid, i) { var s = BY[sid]; return '<div class="hitem" data-act="stretch" data-id="' + sid + '" style="cursor:pointer"><div class="thumb" style="width:52px;height:52px">' + art(sid, s.pose, { stroke: 9 }) + '</div><div class="grow"><b>' + (i + 1) + ". " + esc(s.n) + '</b><div class="small muted">' + (s.reps || s.d + "s") + (s.s ? (" " + T("each side")) : "") + "</div></div></div>"; }).join("") + "</div>";
@@ -864,7 +880,7 @@
     var pu = photoUrl(id);
     /* A demo video already shows the movement, so the drawn figure is only offered for still photos. */
     var hasVid = !!vidUrl(id);
-    var h = (pu && hasVid ? '<div class="bigfig photo-wrap">' + bigPhoto(id, "", s.n) + "</div>" : pu ? '<div class="bigfig photo-wrap">' + bigPhoto(id, "", s.n) + ('</div><details class="small" style="margin:-6px 0 12px"><summary style="color:var(--brand);font-weight:600">' + T("Show the movement") + '</summary><div class="bigfig" data-anim="s:') + id + '" style="margin-top:8px"></div></details>' : '<div class="bigfig" data-anim="s:' + id + '"></div>') + stretchNavBar(id) + '<h2>' + esc(s.n) + '</h2><p style="margin:6px 0">' + s.z.map(function (z) { return '<span class="tag"><span class="zdot" style="background:' + zc(z) + '"></span>' + ZN[z] + "</span>"; }).join("") + s.tags.map(function (t) { return '<span class="tag">' + esc(TAGN[t] || t) + "</span>"; }).join("") + "</p>";
+    var h = (pu && hasVid ? '<div class="bigfig photo-wrap">' + bigPhoto(id, "", s.n) + "</div>" : pu ? '<div class="bigfig photo-wrap">' + bigPhoto(id, "", s.n) + ('</div><details class="small" style="margin:-6px 0 12px"><summary style="color:var(--brand);font-weight:600">' + T("Show the movement") + '</summary><div class="bigfig" data-anim="s:') + id + '" style="margin-top:8px"></div></details>' : '<div class="bigfig" data-anim="s:' + id + '"></div>') + stretchNavBar(id) + '<div class="shead"><h2>' + esc(s.n) + "</h2>" + favBtn("s", id, s.n) + '</div><p style="margin:6px 0">' + s.z.map(function (z) { return '<span class="tag"><span class="zdot" style="background:' + zc(z) + '"></span>' + ZN[z] + "</span>"; }).join("") + s.tags.map(function (t) { return '<span class="tag">' + esc(TAGN[t] || t) + "</span>"; }).join("") + "</p>";
     h += '<p class="muted" style="margin-bottom:6px">' + (s.reps ? esc(s.reps) + (T(", about") + " ") : (T("Hold") + " ")) + holdSecs(s) + " " + T("seconds") + (s.s ? (" " + T("each side")) : "") + ".</p><p>" + esc(s.cues) + "</p>";
     h += '<div class="row" style="margin-top:16px"><button class="btn primary grow" data-act="play-one" data-id="' + id + '">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + (" " + T("Do it now") + "</button></div>");
     openSheet(h);
@@ -1589,7 +1605,7 @@
 
   /* ---------- SETTINGS, EXPORT, IMPORT ---------- */
   function exportObj() {
-    return { app: "movage", version: 1, exported: new Date().toISOString(), settings: S.settings, tests: S.tests, sessions: S.sessions, routines: S.routines, goals: S.goals,
+    return { app: "movage", version: 1, exported: new Date().toISOString(), settings: S.settings, tests: S.tests, sessions: S.sessions, routines: S.routines, goals: S.goals, favs: S.favs || { r: [], s: [] },
       bodySignal: { collection: (T("mobility")), docs: S.tests.map(function (t) { return { id: "m-" + t.date, data: { date: t.date, v: t.v } }; }) } };
   }
   async function doExport() {
@@ -1613,6 +1629,7 @@
     var rs = {}; S.routines.concat(x.routines || []).forEach(function (r) { if (r && r.id) rs[r.id] = r; }); S.routines = Object.keys(rs).map(function (k) { return rs[k]; });
     var gs = {}; S.goals.concat(Array.isArray(x.goals) ? x.goals : []).forEach(function (g) { if (g && g.id && g.target != null) gs[g.id] = g; }); S.goals = Object.keys(gs).map(function (k) { return migGoal(gs[k]); });
     if (x.settings) S.settings = Object.assign(S.settings, x.settings);
+    if (x.favs) ["r", "s"].forEach(function (k) { (x.favs[k] || []).forEach(function (id) { if (!isFav(k, id)) favs(k).push(id); }); });
     save(); applyTheme(); closeSheet(); render(); toast((T("Restored") + " ") + (x.tests || []).length + (" " + T("tests and") + " ") + (x.sessions || []).length + " sessions.");
   }
   /* ---------- Reminders ----------
@@ -1920,6 +1937,7 @@
       case "edit-routine": { var rr = S.routines.filter(function (r) { return r.id === id; })[0]; closeSheet(); if (rr) { building = { id: rr.id, n: rr.n, items: rr.items.slice() }; go("routines"); } break; }
       case "del-routine": if (twice("dr" + id, (T("Tap Delete again to confirm")))) { S.routines = S.routines.filter(function (r) { return r.id !== id; }); save(); closeSheet(); render(); } break;
       case "save-test": saveTest(); break;
+      case "fav": toggleFav(el); break;
       case "gt-start": GT = { i: 0 }; renderTest(); window.scrollTo(0, 0); break;
       case "gt-quick": GT = { i: 0, quick: true }; renderTest(); window.scrollTo(0, 0); break;
       case "gt-next": if (GT) { GT.i++; renderTest(); window.scrollTo(0, 0); } break;
