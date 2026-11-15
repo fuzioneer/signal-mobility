@@ -10,9 +10,6 @@
     { id: "cam_shflex", z: "overhead", n: "Shoulder flexion", u: "°", sides: true, lo: 130, hi: 180, cam: "shflex",
       how: "Stand side-on to the camera. Ribs down, lower back neutral. Raise a straight arm overhead as far as it goes, hold 2 seconds, lower. Turn round for the other side. 180° is fully overhead.",
       pose: mk("stand", { na: [97, 97] }), pose2: mk("stand", { na: [270, 270] }) },
-    { id: "wallflex", z: "overhead", n: "Wall overhead reach", u: "cm", sides: false, lo: 30, hi: 0, cam: "wallflex",
-      how: "Stand side-on to the camera with heels, bum, upper back and head against a wall, lower back flat. Raise straight arms overhead, thumbs together, and reach back towards the wall. Hold 2 seconds. The camera estimates thumbs-to-wall distance (0 = touching).",
-      pose: mk("stand", { hip: [76, 102], na: [100, 100], fa: [100, 100], prop: [{ t: "wall", x: 58 }] }) },
     { id: "backscratch", z: "shoulders", n: "Back scratch", u: "cm", sides: true, lo: -25, hi: 5, cam: "backscratch",
       how: "Stand with your back to the camera, whole upper body in view. Reach one hand over the shoulder and the other up behind your back, fingers pointing at each other. Hold 2 seconds, then swap hands. A gap reads minus, an overlap plus. 'Right' means right hand on top.",
       pose: mk("stand", { na: [100, 260], fa: [250, 80] }) },
@@ -408,7 +405,6 @@
     { id: "thruster", lift: "thruster", n: "Thruster and wall ball prep", sub: "Squat depth plus a locked-out overhead", items: ["anklerock", "gobletpry", "deepsquat", "tspineroll", "wallslide", "passthru", "ohshold"] },
     /* One routine per mobility test, opened from the test card. */
     { id: "fix_cam_shflex", test: "cam_shflex", n: "Improve shoulder flexion", sub: "Get your arms higher overhead", items: ["wallslide", "latbench", "puppy", "tspineroll", "walllat", "passthru"] },
-    { id: "fix_wallflex", test: "wallflex", n: "Improve your overhead reach", sub: "Lats, chest and upper back", items: ["wallangel", "latbench", "puppy", "tspineroll", "openbook", "deadhang"] },
     { id: "fix_backscratch", test: "backscratch", n: "Improve your back scratch", sub: "Shoulder rotation both ways", items: ["sleeper", "towelbehind", "tricep", "crossbody", "doorway", "thread"] },
     { id: "fix_er", test: "er", n: "Improve shoulder external rotation", sub: "Open up the front of the shoulder", items: ["sleeper", "bander", "doorway", "wallangel", "proney", "pronechest"] },
     { id: "fix_trot", test: "trot", n: "Improve your upper back rotation", sub: "Twist further through the mid back", items: ["openbook", "thread", "quadrot", "stickrot", "seatedtwist", "catcow"] },

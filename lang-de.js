@@ -805,7 +805,8 @@ I18N.add("de", {
 "Routine to improve this": "Routine zum Verbessern",
 "Open the routine to improve {name}": "Routine öffnen, um {name} zu verbessern",
 "Improve a test result": "Ein Testergebnis verbessern",
-"{n} routines, one for each mobility test": "{n} Routinen, eine für jeden Mobilitätstest"
+"{n} routines, one for each mobility test": "{n} Routinen, eine für jeden Mobilitätstest",
+"170° shoulder flexion on both sides": "170° Schulterflexion auf beiden Seiten"
 }, {
 "zone": {
 "shoulders": "Schultern",
@@ -1005,10 +1006,6 @@ I18N.add("de", {
 "fix_cam_shflex": {
 "n": "Schulterflexion verbessern",
 "sub": "Die Arme höher über den Kopf bringen"
-},
-"fix_wallflex": {
-"n": "Deine Überkopf-Reichweite verbessern",
-"sub": "Latissimus, Brust und oberer Rücken"
 },
 "fix_backscratch": {
 "n": "Deinen Rückenkratz-Test verbessern",

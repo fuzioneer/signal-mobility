@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.51.1", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.52.0", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -34,9 +34,11 @@
   var TAGLINE = "Joint Venture";
   function blank() { return { v: 1, settings: { age: 40, sex: "m", height: 178, voice: true, savePhotos: true, music: "pads", musicVol: 0.5, beeps: true, prep: 5, rest: 10, sideRest: 5, theme: "auto" }, tests: [], sessions: [], routines: [], goals: [] }; }
   function load() {
-    try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; b.goals = Array.isArray(x.goals) ? x.goals : []; if (x.fb) b.fb = x.fb; if (x.cloud) b.cloud = x.cloud; return b; } } catch (e) {}
+    try { var x = JSON.parse(localStorage.getItem(KEY)); if (x && x.v) { var b = blank(); b.settings = Object.assign(b.settings, x.settings || {}); b.tests = x.tests || []; b.sessions = x.sessions || []; b.routines = x.routines || []; b.goals = (Array.isArray(x.goals) ? x.goals : []).map(migGoal); if (x.fb) b.fb = x.fb; if (x.cloud) b.cloud = x.cloud; return b; } } catch (e) {}
     return blank();
   }
+  /* The wall overhead reach test was dropped in 1.52.0: goals set on it move to shoulder flexion. */
+  function migGoal(g) { if (g && g.key === "wallflex") { g.key = "cam_shflex"; g.target = 170; g.start = null; } return g; }
   var S = load();
   function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast((T("Couldn't save. Storage may be full."))); } }
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {});
@@ -300,7 +302,7 @@
   /* ---------- GOALS: targets tied to test results, with a date to hit them by ---------- */
   var GOALS = [
     { id: "toes", key: "toetouch", target: 0, z: "postchain", n: "Touch your toes", sub: "Reach your toes on the standing toe touch (0 cm or past)" },
-    { id: "overhead", key: "wallflex", target: 0, z: "overhead", n: "Arms fully overhead", sub: "Thumbs touch the wall on the wall overhead reach" },
+    { id: "overhead", key: "cam_shflex", target: 170, z: "overhead", n: "Arms fully overhead", sub: "170° shoulder flexion on both sides" },
     { id: "scratch", key: "backscratch", target: 0, z: "shoulders", n: "Fingers meet behind your back", sub: "Back scratch reaches 0 cm on both sides" },
     { id: "squat", key: "cam_shin", target: 35, z: "ankles", n: "Heels-down deep squat", sub: "35° of ankle bend (shin lean) on both sides" },
     { id: "slr", key: "slr", target: 80, z: "postchain", n: "Looser hamstrings", sub: "80° straight leg raise on both legs" },
@@ -1604,7 +1606,7 @@
     S.tests = Object.keys(byDate).map(function (k) { return byDate[k]; });
     var seen = {}; S.sessions.concat(x.sessions || []).forEach(function (s) { if (s && s.t) seen[s.t + "|" + s.id] = s; }); S.sessions = Object.keys(seen).map(function (k) { return seen[k]; });
     var rs = {}; S.routines.concat(x.routines || []).forEach(function (r) { if (r && r.id) rs[r.id] = r; }); S.routines = Object.keys(rs).map(function (k) { return rs[k]; });
-    var gs = {}; S.goals.concat(Array.isArray(x.goals) ? x.goals : []).forEach(function (g) { if (g && g.id && g.target != null) gs[g.id] = g; }); S.goals = Object.keys(gs).map(function (k) { return gs[k]; });
+    var gs = {}; S.goals.concat(Array.isArray(x.goals) ? x.goals : []).forEach(function (g) { if (g && g.id && g.target != null) gs[g.id] = g; }); S.goals = Object.keys(gs).map(function (k) { return migGoal(gs[k]); });
     if (x.settings) S.settings = Object.assign(S.settings, x.settings);
     save(); applyTheme(); closeSheet(); render(); toast((T("Restored") + " ") + (x.tests || []).length + (" " + T("tests and") + " ") + (x.sessions || []).length + " sessions.");
   }
