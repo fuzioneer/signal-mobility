@@ -181,3 +181,9 @@ returns boolean language sql stable security definer set search_path = public as
   select exists (select 1 from public.feedback_admins where user_id = auth.uid())
       or exists (select 1 from public.feedback_admin_emails a join auth.users u on lower(u.email) = a.email where u.id = auth.uid());
 $$;
+
+-- Sections (added 15 Nov 2026): each post says which part of the app it's about.
+-- Applied as migration feedback_sections, which also replaced fb_list (now returns area),
+-- fb_create (new p_area argument) and added fb_set_area for the team to move posts.
+alter table public.feedback_items add column if not exists area text not null default 'general'
+  check (area in ('today', 'routines', 'test', 'history', 'community', 'general'));
