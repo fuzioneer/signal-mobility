@@ -828,7 +828,8 @@ I18N.add("de", {
 "Good evening, {name}": "Guten Abend, {name}",
 "First name": "Vorname",
 "Used in your Today greeting": "Für deine Begrüßung auf Heute",
-"Shown on the Today page when you're signed in.": "Wird auf der Seite Heute angezeigt, wenn du angemeldet bist."
+"Shown on the Today page when you're signed in.": "Wird auf der Seite Heute angezeigt, wenn du angemeldet bist.",
+"Fingertips touch the floor on the standing toe touch (0 cm)": "Fingerspitzen berühren den Boden beim Zehenberührungstest (0 cm)"
 }, {
 "zone": {
 "shoulders": "Schultern",
@@ -934,7 +935,7 @@ I18N.add("de", {
 "sub": "Gegen den Rundrücken: Brust, oberer Rücken und Nacken"
 },
 "bedhips": {
-"n": "Steife Hüfte, im Bett",
+"n": "Steife Hüfte",
 "sub": "Alles im Liegen, auf jeder Matratze"
 },
 "sleep": {
@@ -1101,7 +1102,7 @@ I18N.add("de", {
 },
 "toetouch": {
 "n": "Zehen berühren im Stehen",
-"how": "Stell dich seitlich zur Kamera auf eine Stufe oder stabile Kiste, Zehen an der Kante (damit du darüber hinaus reichen kannst). Füße zusammen, Knie gestreckt, nach unten reichen und 2 Sekunden halten. Über die Zehen hinaus zählt plus, davor minus."
+"how": "Stell dich seitlich zur Kamera auf einen ebenen Boden, Füße zusammen, Knie gestreckt. Reiche so weit wie möglich Richtung Boden und halte 2 Sekunden. Fingerspitzen am Boden sind 0. Bleibt ein Abstand, zählt er als Minuswert, zum Beispiel -10 cm."
 },
 "hipir": {
 "n": "Hüft-Innenrotation",

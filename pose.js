@@ -63,7 +63,8 @@
     if (k === "toetouch") {
       var bestF = P[19].v >= P[20].v ? 19 : 20, bestT = P[31].v >= P[32].v ? 31 : 32, sd2 = bestF === 19 ? "l" : "r", Q2 = parts(P, sd2);
       if (!vis(P[bestF], P[bestT], Q2.h, Q2.a) || P[bestF].y < hp.y) return out;
-      out.c = (P[bestF].y - P[bestT].y) / cmPer(dist(Q2.h, Q2.a), "leg", H);
+      /* Done on the floor: the toe marker sits at floor level, so fingertips at or below it count as touching (0). */
+      out.c = Math.min(0, (P[bestF].y - P[bestT].y) / cmPer(dist(Q2.h, Q2.a), "leg", H));
       return out;
     }
     ["l", "r"].forEach(function (sd) {
@@ -112,7 +113,7 @@
     if (v == null) return "–";
     if (k === "squat") return "Knee " + Math.round(v.knee) + "°, shin " + Math.round(v.shin) + "°, torso " + Math.round(v.torso) + "°" + (v.below ? (window.T ? T(", hips below knees") : ", hips below knees") : "");
     unit = unit || "°"; var r = Math.round(v);
-    return (r > 0 && (k === "thomas" || k === "backscratch" || k === "toetouch") ? "+" : "") + r + (unit === "cm" ? " cm" : "°");
+    return (r > 0 && (k === "thomas" || k === "backscratch") ? "+" : "") + r + (unit === "cm" ? " cm" : "°");
   }
   function draw(ctx, img, P, w, h, mirror) {
     ctx.save(); if (mirror) { ctx.translate(w, 0); ctx.scale(-1, 1); }

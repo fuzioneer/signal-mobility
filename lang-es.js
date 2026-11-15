@@ -828,7 +828,8 @@ I18N.add("es", {
 "Good evening, {name}": "Buenas noches, {name}",
 "First name": "Nombre",
 "Used in your Today greeting": "Se usa en tu saludo de Hoy",
-"Shown on the Today page when you're signed in.": "Se muestra en la página Hoy cuando has iniciado sesión."
+"Shown on the Today page when you're signed in.": "Se muestra en la página Hoy cuando has iniciado sesión.",
+"Fingertips touch the floor on the standing toe touch (0 cm)": "La punta de los dedos toca el suelo en el test de tocar los pies (0 cm)"
 }, {
 "zone": {
 "shoulders": "Hombros",
@@ -934,7 +935,7 @@ I18N.add("es", {
 "sub": "Deshaz la joroba: pecho, parte alta de la espalda y cuello"
 },
 "bedhips": {
-"n": "Caderas rígidas, en la cama",
+"n": "Caderas rígidas",
 "sub": "Todo tumbado, en cualquier colchón"
 },
 "sleep": {
@@ -1101,7 +1102,7 @@ I18N.add("es", {
 },
 "toetouch": {
 "n": "Tocar los pies de pie",
-"how": "De lado a la cámara sobre un escalón o una caja firme, con los dedos en el borde (para poder pasar de ellos). Pies juntos, rodillas estiradas, baja y mantén 2 segundos. Pasar de los dedos es positivo; no llegar, negativo."
+"how": "De lado a la cámara sobre un suelo plano, con los pies juntos y las rodillas estiradas. Baja hacia el suelo todo lo que puedas y mantén 2 segundos. Tocar el suelo con la punta de los dedos es 0. Si te quedas corto, la distancia al suelo es un número negativo, por ejemplo -10 cm."
 },
 "hipir": {
 "n": "Rotación interna de cadera",

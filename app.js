@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.56.1", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.57.0", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -301,7 +301,7 @@
 
   /* ---------- GOALS: targets tied to test results, with a date to hit them by ---------- */
   var GOALS = [
-    { id: "toes", key: "toetouch", target: 0, z: "postchain", n: "Touch your toes", sub: "Reach your toes on the standing toe touch (0 cm or past)" },
+    { id: "toes", key: "toetouch", target: 0, z: "postchain", n: "Touch your toes", sub: "Fingertips touch the floor on the standing toe touch (0 cm)" },
     { id: "overhead", key: "cam_shflex", target: 170, z: "overhead", n: "Arms fully overhead", sub: "170° shoulder flexion on both sides" },
     { id: "scratch", key: "backscratch", target: 0, z: "shoulders", n: "Fingers meet behind your back", sub: "Back scratch reaches 0 cm on both sides" },
     { id: "squat", key: "cam_shin", target: 35, z: "ankles", n: "Heels-down deep squat", sub: "35° of ankle bend (shin lean) on both sides" },

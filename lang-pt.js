@@ -828,7 +828,8 @@ I18N.add("pt", {
 "Good evening, {name}": "Boa noite, {name}",
 "First name": "Nome próprio",
 "Used in your Today greeting": "Usado na sua saudação de Hoje",
-"Shown on the Today page when you're signed in.": "Aparece na página Hoje quando tem sessão iniciada."
+"Shown on the Today page when you're signed in.": "Aparece na página Hoje quando tem sessão iniciada.",
+"Fingertips touch the floor on the standing toe touch (0 cm)": "As pontas dos dedos tocam no chão no teste de tocar nos pés (0 cm)"
 }, {
 "zone": {
 "shoulders": "Ombros",
@@ -934,7 +935,7 @@ I18N.add("pt", {
 "sub": "Desfaça a corcunda: peito, parte superior das costas e pescoço"
 },
 "bedhips": {
-"n": "Ancas rígidas, na cama",
+"n": "Ancas rígidas",
 "sub": "Tudo deitado, em qualquer colchão"
 },
 "sleep": {
@@ -1101,7 +1102,7 @@ I18N.add("pt", {
 },
 "toetouch": {
 "n": "Tocar nos pés de pé",
-"how": "De lado para a câmara num degrau ou numa caixa firme, com os dedos na borda (para poder ir além deles). Pés juntos, joelhos esticados, desça e mantenha 2 segundos. Além dos dedos conta positivo, antes deles negativo."
+"how": "Fique de lado para a câmara num chão plano, pés juntos e joelhos esticados. Desça em direção ao chão o mais que conseguir e mantenha 2 segundos. As pontas dos dedos no chão contam 0. Se ficar aquém, a distância ao chão é um número negativo, por exemplo -10 cm."
 },
 "hipir": {
 "n": "Rotação interna da anca",

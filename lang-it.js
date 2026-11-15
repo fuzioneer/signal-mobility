@@ -828,7 +828,8 @@ I18N.add("it", {
 "Good evening, {name}": "Buonasera, {name}",
 "First name": "Nome",
 "Used in your Today greeting": "Usato nel saluto di Oggi",
-"Shown on the Today page when you're signed in.": "Mostrato nella pagina Oggi quando hai effettuato l'accesso."
+"Shown on the Today page when you're signed in.": "Mostrato nella pagina Oggi quando hai effettuato l'accesso.",
+"Fingertips touch the floor on the standing toe touch (0 cm)": "La punta delle dita tocca il pavimento nel test del tocco delle punte (0 cm)"
 }, {
 "zone": {
 "shoulders": "Spalle",
@@ -934,7 +935,7 @@ I18N.add("it", {
 "sub": "Contro la schiena curva: petto, parte alta della schiena e collo"
 },
 "bedhips": {
-"n": "Anche rigide, a letto",
+"n": "Anche rigide",
 "sub": "Tutto sdraiati, su qualsiasi materasso"
 },
 "sleep": {
@@ -1101,7 +1102,7 @@ I18N.add("it", {
 },
 "toetouch": {
 "n": "Tocco delle punte in piedi",
-"how": "Di lato alla fotocamera su un gradino o una scatola stabile, con le dita dei piedi sul bordo (così puoi andare oltre). Piedi uniti, ginocchia tese, scendi e tieni 2 secondi. Oltre le dita vale più, prima vale meno."
+"how": "Mettiti di lato alla fotocamera su un pavimento piano, piedi uniti e ginocchia tese. Scendi verso il pavimento il più possibile e tieni 2 secondi. Punta delle dita a terra vale 0. Se resti più in alto, la distanza dal pavimento è un numero negativo, per esempio -10 cm."
 },
 "hipir": {
 "n": "Rotazione interna dell'anca",

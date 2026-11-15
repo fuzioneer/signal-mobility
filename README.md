@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.57.0 (15 Nov 2026): Standing toe touch is now done on a flat floor, not on a box or step: new instructions, photos and camera setup diagram, scored from -30 cm up to 0 (fingertips touching the floor), and the camera reading stops at 0. "Tight hips, in bed" renamed "Tight Hips".
 - 1.56.1 (15 Nov 2026): Demo videos for the straight leg raise test (female and male).
 - 1.56.0 (15 Nov 2026): Today page opens with Good morning, Good afternoon or Good evening, followed by your first name when you are signed in. First name is a new field in Settings, filled in from your Google account the first time you sign in with Google.
 - 1.55.0 (15 Nov 2026): Favourites. A heart button on every routine and stretch sheet. Favourite routines appear at the top of Routines, For you, and favourite stretches get their own Favourites filter in the stretch library. Hearts show on the cards, and favourites are kept in backups.

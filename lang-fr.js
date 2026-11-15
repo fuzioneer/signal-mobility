@@ -828,7 +828,8 @@ I18N.add("fr", {
 "Good evening, {name}": "Bonsoir {name}",
 "First name": "Prénom",
 "Used in your Today greeting": "Utilisé pour vous saluer sur Aujourd'hui",
-"Shown on the Today page when you're signed in.": "Affiché sur la page Aujourd'hui quand vous êtes connecté."
+"Shown on the Today page when you're signed in.": "Affiché sur la page Aujourd'hui quand vous êtes connecté.",
+"Fingertips touch the floor on the standing toe touch (0 cm)": "Le bout des doigts touche le sol au test de flexion avant debout (0 cm)"
 }, {
 "zone": {
 "shoulders": "Épaules",
@@ -934,7 +935,7 @@ I18N.add("fr", {
 "sub": "Corrigez le dos rond : poitrine, haut du dos et nuque"
 },
 "bedhips": {
-"n": "Hanches raides, au lit",
+"n": "Hanches raides",
 "sub": "Tout allongé, sur n'importe quel matelas"
 },
 "sleep": {
@@ -1101,7 +1102,7 @@ I18N.add("fr", {
 },
 "toetouch": {
 "n": "Toucher des orteils debout",
-"how": "De profil par rapport à la caméra, sur une marche ou une caisse solide, orteils au bord (pour pouvoir dépasser). Pieds joints, genoux tendus, descendez et tenez 2 secondes. Au-delà des orteils, c'est positif ; avant, négatif."
+"how": "De profil par rapport à la caméra sur un sol plat, pieds joints et genoux tendus. Descendez vers le sol aussi loin que possible et tenez 2 secondes. Le bout des doigts au sol vaut 0. S'il reste un écart, il compte en négatif, par exemple -10 cm."
 },
 "hipir": {
 "n": "Rotation interne de hanche",
