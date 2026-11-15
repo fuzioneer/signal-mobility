@@ -243,7 +243,7 @@ window.PHOTOS_M = {
  "edgeflexor": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_223436_aa302601-d41f-440e-a285-6c929896428c.png",
  "sidequad": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_223518_2c3c51d4-3c73-47fb-8699-3fb8a59ff821.png",
  "hamtowel": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_223558_be5c4e1f-3d48-4f58-a0e7-f7bf3db0a93d.png",
- "t_cam_shflex": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_223640_eeeac0ef-0cb8-4760-b167-ddd372d1037b.png",
+ "t_cam_shflex": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_185051_f19b1cd6-0469-4cc6-9c74-31cc2e7b9560.png",
  "t_wallflex": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_223723_45e37e26-a5af-4017-8dc9-6f2260550279.png",
  "t_backscratch": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_223804_fb64e7f8-6622-4099-b5b6-60919a3814af.png",
  "t_er": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_174617_9057fb4b-f17e-4b79-872d-c7ee45f147f3.png",

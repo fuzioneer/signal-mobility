@@ -27,6 +27,7 @@ window.VIDEOS = {
  "askip": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_093902_e741dd33-5a4e-461b-9fd8-ffb93613106b.mp4"
 };
 window.VIDEOS_M = {
+ "t_cam_shflex": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_185118_1681b2c1-ee32-4326-9204-d12596781700.mp4",
  "t_er": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_174813_f59181e6-f73d-42ab-a375-7bcf3935b57a.mp4",
  "t_backscratch": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_165031_df4d96a6-9286-4236-9955-114e691c9391.mp4",
  "thread": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_160734_3a5fab27-4282-48cd-af3d-b583c39d57aa.mp4",
