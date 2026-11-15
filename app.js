@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.49.3", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.49.4", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -601,7 +601,7 @@
     h = '<div class="card gtintro"><p><b>' + TF("The full test takes about {m} minutes", { m: mins }) + '</b> ' + TF("for all {n} tests, plus a 5 minute warm-up. You can stop part way and save what you've done.", { n: order.length }) + '</p>' +
       '<button class="btn primary block" data-act="gt-start">' + ICON.play.replace("<svg", '<svg width="18" height="18"') + " " + (Object.keys(draft.v).length ? T("Start guided test") : T("Start test")) + '</button></div>';
     h += ('<p class="muted">' + T("Warm up for 5 minutes first. Tap") + ' <b>' + T("Do Test") + '</b> ' + T("on any test to measure it with live body tracking, or type a result in. Distances in cm are estimated from your height (")) + (S.settings.height || 178) + (' ' + T("cm, change it in Settings).") + '</p>');
-    h += '<div class="card row"><label class="field" style="flex:1">' + T("Test date") + '<input type="date" id="t-date" value="' + draft.date + '" max="' + iso() + ('"></label><div class="grow" style="text-align:right"><span class="small muted">' + T("Score so far") + '</span><div style="font-size:28px;font-weight:780" id="t-live">–</div></div></div>');
+    h += '<div class="card row"><label class="field" style="flex:1">' + T("Test date") + '<input type="date" id="t-date" value="' + draft.date + '" max="' + iso() + ('"></label><div class="grow tscore"><span class="small muted">' + T("Score so far") + '</span><div style="font-size:28px;font-weight:780" id="t-live">–</div></div></div>');
     ZONES.concat([[null, (T("Squat check"))]]).forEach(function (z) {
       var ts = TESTS.filter(function (t) { return t.z === z[0]; }); if (!ts.length) return;
       h += '<div class="sec"><h2>' + (z[0] ? '<span class="zdot" style="background:' + zc(z[0]) + '"></span>' : "") + z[1] + '</h2><span class="pctpill" data-zone="' + (z[0] || "") + '"></span></div>';

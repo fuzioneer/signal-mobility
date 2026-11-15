@@ -525,3 +525,8 @@ body.on-home header.top h1 { position: absolute; width: 1px; height: 1px; overfl
 /* Small Save test button in the header, shown only on the Test tab. */
 header.top .hsave { flex: none; min-height: 36px; padding: 0 14px; font-size: 14px; margin-right: 8px; border-radius: 999px; }
 header.top .hsave[hidden] { display: none; }
+
+/* Test page: results and the live score sit in the middle of their boxes. */
+.tcard .inputs input[type=number] { text-align: center; -moz-appearance: textfield; }
+.tcard .inputs input[type=number]::-webkit-outer-spin-button, .tcard .inputs input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.tscore { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
