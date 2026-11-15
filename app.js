@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.48.2", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.48.3", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -215,11 +215,20 @@
     var name = (tt ? tt.n : BY[key] && BY[key].n) || T("Demo video");
     el.setAttribute("aria-label", name);
     el.innerHTML = '<button class="icon-btn vf-close" aria-label="' + esc(T("Close")) + '">&#x2715;</button>' +
-      '<div class="vf-box" data-key="' + esc(key) + '"><video data-vsrc="' + esc(u) + '"' + (ps.length ? ' poster="' + esc(ps[0]) + '"' : "") + ' autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(name + ", " + T("demo video")) + '"></video></div>' +
+      '<div class="vf-box" data-key="' + esc(key) + '">' + (ps.length ? '<img class="vf-poster" alt="" src="' + esc(ps[0]) + '">' : "") + '<span class="vf-spin" aria-hidden="true"></span>' +
+      '<video autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(name + ", " + T("demo video")) + '"></video></div>' +
       '<p class="vf-cap">' + esc(name) + "</p>";
     el.hidden = false; document.body.style.overflow = "hidden";
-    var v = el.querySelector("video"); vidHydrate(v);
-    try { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {}
+    var v = el.querySelector("video"), box = el.querySelector(".vf-box");
+    /* The photo shows straight away with a spinner, and the clip fades in over it once it is actually playing, so the
+       window is never blank. If the same clip is already playing on the page (the movement sheet), reuse what it has
+       already downloaded and carry on from the same moment, so it starts at once. */
+    v.addEventListener("playing", function () { box.classList.add("ready"); }, { once: true });
+    var vr = window.VIDEO_RATE && window.VIDEO_RATE[key];
+    if (vr) { v.defaultPlaybackRate = vr; v.playbackRate = vr; v.addEventListener("play", function () { if (v.playbackRate !== vr) v.playbackRate = vr; }); }
+    var live = null; $$('.xfade.vid[data-key="' + key + '"] video').forEach(function (x) { if (!live && x.currentSrc && x.readyState >= 2) live = x; });
+    if (live) { v.src = live.currentSrc; v.addEventListener("loadedmetadata", function () { try { v.currentTime = live.currentTime || 0; } catch (e) {} }, { once: true }); try { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} }
+    else { v.setAttribute("data-vsrc", u); vidHydrate(v); }
     setTimeout(function () { var c = el.querySelector(".vf-close"); if (c) c.focus(); }, 30);
   }
   function closeVideoFull() { var el = $("#vfull"); if (!el) return; var v = el.querySelector("video"); if (v) { try { v.pause(); } catch (e) {} } el.innerHTML = ""; el.hidden = true; if ($("#sheet").hidden && $("#player").hidden && $("#cam").hidden) document.body.style.overflow = ""; }
