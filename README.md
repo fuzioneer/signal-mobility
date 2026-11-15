@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.54.0 (15 Nov 2026): "Share to Strava" tick box on the finish screen when Strava is connected. It is ticked by default (the Settings option now sets that default) and the session is only sent if it stays ticked, when you close the screen, leave the app, or after 3 minutes.
 - 1.53.2 (15 Nov 2026): New male photo for the seated thoracic rotation test.
 - 1.53.1 (15 Nov 2026): Seated thoracic rotation is now done sitting on a chair instead of cross-legged on the floor, with new instructions, photos, camera setup diagram and stick figure.
 - 1.53.0 (15 Nov 2026): Quick test option on the Test tab: 6 tests, one per scored zone (shoulder flexion, back scratch, seated thoracic rotation, standing toe touch, 90/90 hip rotation, knee to wall), about 8 minutes, guided one at a time with its own progress bar.

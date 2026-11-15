@@ -552,3 +552,9 @@ details.rfix[open] > summary::after { transform: rotate(-135deg); }
 .gtintro .gtquick small { color: var(--muted); font-weight: 600; }
 .gtintro .gtquick svg { color: var(--brand); flex: none; }
 .gtintro .gtqnote { margin: 8px 2px 0; }
+
+/* Share to Strava tick box on the finish screen (1.54.0) */
+.svshare { display: flex; align-items: center; gap: 12px; cursor: pointer; margin-bottom: 10px; }
+.svshare input { width: 22px; height: 22px; accent-color: #fc4c02; flex: none; }
+.svshare span { display: flex; flex-direction: column; gap: 2px; text-align: left; }
+.svshare small { font-size: 13px; }

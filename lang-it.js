@@ -809,7 +809,10 @@ I18N.add("it", {
 "170° shoulder flexion on both sides": "170° di flessione della spalla su entrambi i lati",
 "Quick test": "Test rapido",
 "{n} tests, about {m} min": "{n} test, circa {m} min",
-"The quick test checks one move per zone, so you still get a full score. Do the full test every few months for the detail.": "Il test rapido controlla un movimento per zona, quindi ottieni comunque un punteggio completo. Fai il test completo ogni pochi mesi per i dettagli."
+"The quick test checks one move per zone, so you still get a full score. Do the full test every few months for the detail.": "Il test rapido controlla un movimento per zona, quindi ottieni comunque un punteggio completo. Fai il test completo ogni pochi mesi per i dettagli.",
+"Share to Strava": "Condividi su Strava",
+"Untick if you don't want this session posted to Strava.": "Togli la spunta se non vuoi pubblicare questa sessione su Strava.",
+"Tick \"Share to Strava\" by default when a routine finishes": "Spunta «Condividi su Strava» di default al termine di una routine"
 }, {
 "zone": {
 "shoulders": "Spalle",

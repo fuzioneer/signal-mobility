@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.53.2", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.54.0", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -1206,7 +1206,7 @@
     var secs = Math.round(P.worked), r = P.r;
     clearInterval(P.timer); if (P.stop) P.stop();
     var mdBefore = medalFor(monthCount(ym()));
-    if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), cid: cmUuid(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); stravaLog(r.n, secs, P.moves && P.moves.length ? P.moves : r.items); cmSync(); }
+    if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), cid: cmUuid(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); stravaHold(r.n, secs, P.moves && P.moves.length ? P.moves : r.items); cmSync(); }
     LASTSESS = secs >= 30 ? { n: r.n, secs: secs, moves: (P.moves && P.moves.length ? P.moves : r.items).slice(), t: Date.now() } : null;
     var mdAfter = medalFor(monthCount(ym())), newMedal = mdAfter && (!mdBefore || mdAfter[1] > mdBefore[1]) ? mdAfter : null;
     if (window.MUSIC) setTimeout(function () { if (!P) MUSIC.stop(6000); }, 4000);
@@ -1214,6 +1214,7 @@
     tlDone();
     $(".player").innerHTML = '<div style="flex:1;display:grid;place-items:center;text-align:center"><div><div class="ring" style="margin:0 auto 16px">' + ringSVG(100, 128, 12) + '<div class="lbl"><div><b>' + streak() + ('</b><span>' + T("day streak") + '</span></div></div></div><h2>' + T("Done") + '</h2><p class="muted" style="margin-top:6px">') + esc(r.n) + " · " + mmss(secs) + (" " + T("of stretching") + "</p></div></div>") +
       (newMedal ? '<div class="card medalwin">' + medalSVG(newMedal, 56) + '<div class="grow"><b>' + TF("{medal} for {month}!", { medal: T(newMedal[2]), month: monthName(ym()) }) + '</b><div class="small muted">' + TF("{n} sessions this month", { n: monthCount(ym()) }) + (nextMedal(monthCount(ym())) ? " · " + TF("{n} more for {medal}", { n: nextMedal(monthCount(ym()))[1] - monthCount(ym()), medal: T(nextMedal(monthCount(ym()))[2]) }) : "") + "</div></div></div>" : "") +
+      (SVPEND ? '<label class="card svshare"><input type="checkbox" id="sv-share"' + (SVPEND.on ? " checked" : "") + '><span><b>' + T("Share to Strava") + '</b><small class="muted">' + T("Untick if you don't want this session posted to Strava.") + "</small></span></label>" : "") +
       (LASTSESS ? '<div class="row sessshare"><button class="btn" data-act="sess-img">' + T("Save session image") + "</button>" + (window.STRAVA && STRAVA.connected() ? '<button class="btn" data-act="sess-strava">' + T("Open in Strava") + "</button>" : "") + "</div>" : "") +
       fbBlock(P.moves) + ('<button class="btn primary big block" data-act="p-close">' + T("Finish") + '</button>');
     LASTMOVES = P.moves.slice(); P = null; msUpdate();
@@ -1299,7 +1300,7 @@
       '<p class="fbq" style="margin-top:12px">' + T("Did anything hurt? Tap it and I'll swap it for an easier move next time.") + '</p><div class="chips fbhurt">' + moves.filter(function (v, i, a) { return a.indexOf(v) === i; }).map(function (id) { return '<button class="chip' + (hurt[id] ? " on" : "") + '" data-act="fb-hurt" data-id="' + id + '">' + esc(BY[id].n) + "</button>"; }).join("") + "</div></div>";
   }
   function closePlayer() {
-    cdClear();
+    cdClear(); stravaCommit();
     if (P) { clearInterval(P.timer); if (P.stop) P.stop(); var secs = Math.round(P.worked); if (secs >= 60) { S.sessions.push({ date: iso(), t: Date.now(), cid: cmUuid(), id: P.r.id, n: P.r.n + " (part)", secs: secs, items: P.i }); save(); stravaLog(P.r.n, secs, P.r.items.slice(0, P.i + 1)); cmSync(); } P = null; }
     try { speechSynthesis.cancel(); } catch (e) {}
     if (window.MUSIC) { MUSIC.stop(1500); MUSIC.setQuiet(false); }
@@ -1718,6 +1719,24 @@
       .then(function (n) { if (n) toast(T("Logged to Strava")); })
       .catch(function () { toast(T("Couldn't reach Strava. It'll be sent next time you're online.")); });
   }
+  /* Finished routines wait on the finish screen with a "Share to Strava" tick box (ticked by default, from the
+     Settings auto option). The session is sent when the screen is closed, the app goes to the background,
+     or after 3 minutes, unless the box was unticked. */
+  var SVPEND = null;
+  function stravaHold(name, secs, ids) {
+    SVPEND = null;
+    if (!window.STRAVA || !STRAVA.connected()) return;
+    SVPEND = { on: STRAVA.get().auto, name: name, secs: secs, startLocal: STRAVA.localISO(Date.now() - secs * 1000), description: stravaDesc(ids), timer: setTimeout(stravaCommit, 180000) };
+  }
+  function stravaCommit() {
+    var p = SVPEND; if (!p) return; SVPEND = null; clearTimeout(p.timer);
+    var box = $("#sv-share"); if (box) p.on = box.checked;
+    if (!p.on) return;
+    STRAVA.logSession({ name: p.name, secs: p.secs, startLocal: p.startLocal, description: p.description })
+      .then(function (sent) { if (sent) toast(T("Logged to Strava")); })
+      .catch(function () { toast(T("Couldn't reach Strava. It'll be sent next time you're online.")); });
+  }
+  document.addEventListener("visibilitychange", function () { if (document.hidden) stravaCommit(); });
   function stravaCard() {
     if (!window.STRAVA) return "";
     var v = STRAVA.get(), host = location.hostname || "your-site.github.io";
@@ -1725,7 +1744,7 @@
     h += '<div class="row"><label class="field">' + T("Client ID") + '<input id="sv-id" inputmode="numeric" autocomplete="off" value="' + esc(v.id) + '"></label><label class="field">' + T("Client Secret") + '<input id="sv-secret" type="password" autocomplete="off" value="' + esc(v.secret) + '"></label></div>';
     if (v.connected) {
       h += '<p style="margin-top:10px"><b>' + esc(TF("Connected as {name}", { name: v.athlete || "Strava" })) + "</b>" + (v.queued ? ' <span class="small muted">· ' + esc(TF("{n} waiting to send", { n: v.queued })) + "</span>" : "") + "</p>";
-      h += '<label class="row" style="margin-top:8px"><input type="checkbox" id="sv-auto"' + (v.auto ? " checked" : "") + "> " + T("Log every finished session automatically") + "</label>";
+      h += '<label class="row" style="margin-top:8px"><input type="checkbox" id="sv-auto"' + (v.auto ? " checked" : "") + "> " + T("Tick \"Share to Strava\" by default when a routine finishes") + "</label>";
       h += '<div class="row" style="margin-top:10px"><label class="field">' + T("Strava activity type") + '<select id="sv-type">' + [["Mobility", T("Mobility")], ["Yoga", T("Yoga")], ["Workout", T("Workout")], ["Pilates", T("Pilates")]].map(function (o) { return '<option value="' + o[0] + '"' + (v.type === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" + (v.type === "Mobility" ? '<p class="small muted" style="margin-top:6px">' + T("Strava has no Mobility type yet, so these log as a Workout titled \"Mobility: routine name\".") + "</p>" : "");
       h += '<div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap"><button class="btn" data-act="strava-last">' + T("Send last session") + '</button><button class="btn danger" data-act="strava-off">' + T("Disconnect") + "</button></div>";
       if (v.last) h += '<p class="small muted" style="margin-top:8px">' + esc(TF("Last logged: {name}", { name: v.last.name })) + "</p>";
@@ -1853,7 +1872,7 @@
       case "challenge": openChallenge(); break;
       case "share-score": shareScore(); break;
       case "sess-img": if (LASTSESS) shareCanvas(sessionImage(LASTSESS), "movage-session.png", "Movage", window.STRAVA && STRAVA.connected() ? T("Image saved. Open Strava and add it to your activity.") : T("Image saved.")); break;
-      case "sess-strava": openStravaActivity(); break;
+      case "sess-strava": stravaCommit(); setTimeout(openStravaActivity, 400); break;
       case "cm-google": case "cm-send": case "cm-verify": case "cm-other-email": case "cm-savenick": case "cm-scope": case "cm-board": case "cm-period": case "cm-verified": case "cm-clubmetric": case "cm-listed": case "cm-joinsheet": case "cm-join": case "cm-create": case "cm-invite": case "cm-leave": case "cm-toggle": case "cm-nickedit": case "cm-signout": case "cm-delete": case "cm-retry": cmAct(a, id); break;
       case "qw-time": case "qw-group": case "qw-muscle": case "qw-sport": case "qw-when": case "qw-next": case "qw-back": case "qw-shuffle": case "qw-start": case "qw-save": qwAct(a, id); break;
       case "play": { var r = findRoutine(id); if (!$("#sheet").hidden) closeSheet(); if (r) play(r); break; }
