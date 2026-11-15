@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.49.3 (15 Nov 2026): Save test is now a small button in the top bar next to Settings, shown only on the Test tab, instead of the large bar at the bottom. The shoulder external rotation test has new photos showing one arm, the one nearest the camera.
 - 1.49.2 (15 Nov 2026): "How to do it" on each test now has an arrow showing it opens, which flips when it is open.
 - 1.49.1 (15 Nov 2026): The test camera button now reads "Do Test" next to the camera icon.
 - 1.49.0 (15 Nov 2026): Mobility test page now says how long the full test takes (worked out from the tests, plus a 5 minute warm-up), and has a Start test button. The guided test takes you through each test one at a time with a progress bar, how many are done and the time left, with Back, Skip or Next, and Save test at the end. Exit returns to the full list and keeps your results.

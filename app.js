@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.49.2", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.49.3", APP_BUILD = "14 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -290,6 +290,7 @@
     $$("nav.tabs button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-tab") === tab); });
     $$(".view").forEach(function (v) { v.classList.toggle("on", v.id === "v-" + tab); });
     $("#title").textContent = TITLES[tab]; document.body.classList.toggle("on-home", tab === "home");
+    var hs = $("#btn-savetest"); if (hs) { hs.hidden = tab !== "test"; hs.textContent = T("Save test"); }
     render(); window.scrollTo(0, 0);
     try { sessionStorage.setItem("sm-tab", tab); } catch (e) {}
   }
@@ -606,7 +607,6 @@
       h += '<div class="sec"><h2>' + (z[0] ? '<span class="zdot" style="background:' + zc(z[0]) + '"></span>' : "") + z[1] + '</h2><span class="pctpill" data-zone="' + (z[0] || "") + '"></span></div>';
       ts.forEach(function (t) { h += testCard(t); });
     });
-    h += ('<div class="savebar"><button class="btn primary big block" data-act="save-test">' + T("Save test") + '</button></div>');
     $("#v-test").innerHTML = h;
     $("#t-date").addEventListener("change", function (e) { var keep = draft.v; draft = draftFor(e.target.value || iso()); if (!S.tests.some(function (x) { return x.date === draft.date; })) draft.v = keep; renderTest(); });
     testWire();

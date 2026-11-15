@@ -521,3 +521,7 @@ body.on-home header.top h1 { position: absolute; width: 1px; height: 1px; overfl
 .savebar.gtnav { display: flex; gap: 10px; }
 .savebar.gtnav .btn { flex: 1; }
 .savebar.gtnav .btn.primary { flex: 2; }
+
+/* Small Save test button in the header, shown only on the Test tab. */
+header.top .hsave { flex: none; min-height: 36px; padding: 0 14px; font-size: 14px; margin-right: 8px; border-radius: 999px; }
+header.top .hsave[hidden] { display: none; }
