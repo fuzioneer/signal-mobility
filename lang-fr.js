@@ -801,7 +801,11 @@ I18N.add("fr", {
 "Do Test": "Faire le test",
 "Do the {name} test with the camera": "Faire le test {name} avec la caméra",
 "Camera setup": "Installation de la caméra",
-"Camera setup for {name}: where to put your phone": "Installation de la caméra pour {name} : où placer votre téléphone"
+"Camera setup for {name}: where to put your phone": "Installation de la caméra pour {name} : où placer votre téléphone",
+"Routine to improve this": "Routine pour progresser",
+"Open the routine to improve {name}": "Ouvrir la routine pour améliorer {name}",
+"Improve a test result": "Améliorer un résultat du test",
+"{n} routines, one for each mobility test": "{n} routines, une pour chaque test de mobilité"
 }, {
 "zone": {
 "shoulders": "Épaules",
@@ -997,6 +1001,58 @@ I18N.add("fr", {
 "thruster": {
 "n": "Préparation thrusters et wall balls",
 "sub": "Profondeur de squat et verrouillage au-dessus de la tête"
+},
+"fix_cam_shflex": {
+"n": "Améliorer la flexion de l'épaule",
+"sub": "Monter les bras plus haut au-dessus de la tête"
+},
+"fix_wallflex": {
+"n": "Améliorer votre amplitude au-dessus de la tête",
+"sub": "Dorsaux, poitrine et haut du dos"
+},
+"fix_backscratch": {
+"n": "Améliorer le test de la main dans le dos",
+"sub": "La rotation de l'épaule dans les deux sens"
+},
+"fix_er": {
+"n": "Améliorer la rotation externe de l'épaule",
+"sub": "Ouvrir l'avant de l'épaule"
+},
+"fix_trot": {
+"n": "Améliorer la rotation du haut du dos",
+"sub": "Tourner davantage depuis le milieu du dos"
+},
+"fix_slr": {
+"n": "Améliorer l'élévation de la jambe tendue",
+"sub": "Ischio-jambiers et arrière de la jambe"
+},
+"fix_toetouch": {
+"n": "Améliorer la flexion pour toucher vos pieds",
+"sub": "Ischio-jambiers, mollets et bas du dos"
+},
+"fix_hipir": {
+"n": "Améliorer la rotation interne de la hanche",
+"sub": "Tourner les hanches vers l'intérieur avec contrôle"
+},
+"fix_thomas": {
+"n": "Améliorer vos fléchisseurs de hanche",
+"sub": "Ouvrir l'avant des hanches"
+},
+"fix_pigeon": {
+"n": "Améliorer votre rotation de hanche 90/90",
+"sub": "Les deux rotations de hanche, vers l'intérieur et l'extérieur"
+},
+"fix_cam_shin": {
+"n": "Améliorer la flexion de cheville",
+"sub": "Mollets et chevilles, pour avancer davantage le tibia"
+},
+"fix_k2w": {
+"n": "Améliorer le test genou au mur",
+"sub": "Flexion dorsale de cheville, mollets et soléaire"
+},
+"fix_squat": {
+"n": "Améliorer votre squat profond",
+"sub": "Hanches et chevilles pour un squat plus profond"
 }
 },
 "test": {

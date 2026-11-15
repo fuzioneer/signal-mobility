@@ -801,7 +801,11 @@ I18N.add("es", {
 "Do Test": "Hacer la prueba",
 "Do the {name} test with the camera": "Hacer la prueba {name} con la cámara",
 "Camera setup": "Colocación de la cámara",
-"Camera setup for {name}: where to put your phone": "Colocación de la cámara para {name}: dónde poner el móvil"
+"Camera setup for {name}: where to put your phone": "Colocación de la cámara para {name}: dónde poner el móvil",
+"Routine to improve this": "Rutina para mejorarlo",
+"Open the routine to improve {name}": "Abrir la rutina para mejorar {name}",
+"Improve a test result": "Mejora un resultado del test",
+"{n} routines, one for each mobility test": "{n} rutinas, una para cada test de movilidad"
 }, {
 "zone": {
 "shoulders": "Hombros",
@@ -997,6 +1001,58 @@ I18N.add("es", {
 "thruster": {
 "n": "Preparación de thrusters y wall balls",
 "sub": "Profundidad de sentadilla y bloqueo por encima de la cabeza"
+},
+"fix_cam_shflex": {
+"n": "Mejora la flexión de hombro",
+"sub": "Sube más los brazos por encima de la cabeza"
+},
+"fix_wallflex": {
+"n": "Mejora tu alcance por encima de la cabeza",
+"sub": "Dorsales, pecho y espalda alta"
+},
+"fix_backscratch": {
+"n": "Mejora tu rascado de espalda",
+"sub": "Rotación de hombro en ambos sentidos"
+},
+"fix_er": {
+"n": "Mejora la rotación externa de hombro",
+"sub": "Abre la parte delantera del hombro"
+},
+"fix_trot": {
+"n": "Mejora la rotación de la espalda alta",
+"sub": "Gira más desde la zona media de la espalda"
+},
+"fix_slr": {
+"n": "Mejora tu elevación de pierna recta",
+"sub": "Isquiotibiales y parte trasera de la pierna"
+},
+"fix_toetouch": {
+"n": "Mejora tu toque de pies",
+"sub": "Isquiotibiales, gemelos y zona lumbar"
+},
+"fix_hipir": {
+"n": "Mejora la rotación interna de cadera",
+"sub": "Gira las caderas hacia dentro con control"
+},
+"fix_thomas": {
+"n": "Mejora tus flexores de cadera",
+"sub": "Abre la parte delantera de las caderas"
+},
+"fix_pigeon": {
+"n": "Mejora tu rotación de cadera 90/90",
+"sub": "Las dos rotaciones de cadera, hacia dentro y hacia fuera"
+},
+"fix_cam_shin": {
+"n": "Mejora la flexión de tobillo",
+"sub": "Gemelos y tobillos, para inclinar más la espinilla"
+},
+"fix_k2w": {
+"n": "Mejora tu rodilla a la pared",
+"sub": "Flexión dorsal de tobillo, gemelos y sóleo"
+},
+"fix_squat": {
+"n": "Mejora tu sentadilla profunda",
+"sub": "Caderas y tobillos para una sentadilla más profunda"
 }
 },
 "test": {

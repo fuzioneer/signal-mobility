@@ -405,7 +405,21 @@
     { id: "pullup", lift: "pullup", n: "Pull-up prep", sub: "Lats, shoulders and grip", items: ["armcircle", "wallangel", "walllat", "latbench", "proney", "deadhang", "wrists"] },
     { id: "lunge", lift: "lunge", n: "Lunge and split squat prep", sub: "Hip flexors, quads, ankles and balance", items: ["legswing", "kneelhf", "lizard", "lungetwist", "anklerock", "rdlreach", "clam"] },
     { id: "kbswing", lift: "kbswing", n: "Kettlebell swing prep", sub: "A crisp hinge: hamstrings, glutes and back", items: ["catcow", "hipcars", "goodmorning", "hamfloss", "bridge", "rdlreach", "wrists"] },
-    { id: "thruster", lift: "thruster", n: "Thruster and wall ball prep", sub: "Squat depth plus a locked-out overhead", items: ["anklerock", "gobletpry", "deepsquat", "tspineroll", "wallslide", "passthru", "ohshold"] }
+    { id: "thruster", lift: "thruster", n: "Thruster and wall ball prep", sub: "Squat depth plus a locked-out overhead", items: ["anklerock", "gobletpry", "deepsquat", "tspineroll", "wallslide", "passthru", "ohshold"] },
+    /* One routine per mobility test, opened from the test card. */
+    { id: "fix_cam_shflex", test: "cam_shflex", n: "Improve shoulder flexion", sub: "Get your arms higher overhead", items: ["wallslide", "latbench", "puppy", "tspineroll", "walllat", "passthru"] },
+    { id: "fix_wallflex", test: "wallflex", n: "Improve your overhead reach", sub: "Lats, chest and upper back", items: ["wallangel", "latbench", "puppy", "tspineroll", "openbook", "deadhang"] },
+    { id: "fix_backscratch", test: "backscratch", n: "Improve your back scratch", sub: "Shoulder rotation both ways", items: ["sleeper", "towelbehind", "tricep", "crossbody", "doorway", "thread"] },
+    { id: "fix_er", test: "er", n: "Improve shoulder external rotation", sub: "Open up the front of the shoulder", items: ["sleeper", "bander", "doorway", "wallangel", "proney", "pronechest"] },
+    { id: "fix_trot", test: "trot", n: "Improve your upper back rotation", sub: "Twist further through the mid back", items: ["openbook", "thread", "quadrot", "stickrot", "seatedtwist", "catcow"] },
+    { id: "fix_slr", test: "slr", n: "Improve your straight leg raise", sub: "Hamstrings and the back of the leg", items: ["hamfloss", "hamtowel", "pike", "rdlreach", "legswall", "downdog"] },
+    { id: "fix_toetouch", test: "toetouch", n: "Improve your toe touch", sub: "Hamstrings, calves and lower back", items: ["foldfwd", "elephant", "jefferson", "squatstand", "hamfloss", "inchworm"] },
+    { id: "fix_hipir", test: "hipir", n: "Improve hip internal rotation", sub: "Turn the hips inward with control", items: ["wipers", "ninety", "hipcars", "fig4", "frog", "chairfig4"] },
+    { id: "fix_thomas", test: "thomas", n: "Improve your hip flexors", sub: "Open up the front of the hips", items: ["couch", "kneelhf", "edgeflexor", "lizard", "standquad", "sidequad"] },
+    { id: "fix_pigeon", test: "pigeon", n: "Improve your 90/90 hip rotation", sub: "Both hip rotations, in and out", items: ["ninety", "pigeon", "wipers", "fig4", "butterfly", "hipcircle"] },
+    { id: "fix_cam_shin", test: "cam_shin", n: "Improve your ankle bend", sub: "Calves and ankles, for a deeper shin lean", items: ["anklerock", "calfwall", "soleus", "shinsit", "stepcalf", "deepsquat"] },
+    { id: "fix_k2w", test: "k2w", n: "Improve your knee to wall", sub: "Ankle dorsiflexion, calves and soleus", items: ["anklerock", "calfwall", "soleus", "heelsup", "gobletpry", "tibraise"] },
+    { id: "fix_squat", test: "squat", n: "Improve your deep squat", sub: "Hips and ankles for a deeper squat", items: ["deepsquat", "gobletpry", "anklerock", "frog", "cossack", "squatstand"] }
   ];
   /* Muscle groups each move stretches, used by the body map in Build your own. */
   var MUSCLES = [["sh", "Shoulders"], ["ch", "Chest"], ["ub", "Upper back"], ["lat", "Lats"], ["lb", "Lower back"], ["core", "Core"], ["fa", "Forearms and wrists"],

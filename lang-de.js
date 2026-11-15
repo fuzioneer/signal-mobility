@@ -801,7 +801,11 @@ I18N.add("de", {
 "Do Test": "Test machen",
 "Do the {name} test with the camera": "Den Test {name} mit der Kamera machen",
 "Camera setup": "Kamera-Aufbau",
-"Camera setup for {name}: where to put your phone": "Kamera-Aufbau für {name}: wo dein Handy stehen sollte"
+"Camera setup for {name}: where to put your phone": "Kamera-Aufbau für {name}: wo dein Handy stehen sollte",
+"Routine to improve this": "Routine zum Verbessern",
+"Open the routine to improve {name}": "Routine öffnen, um {name} zu verbessern",
+"Improve a test result": "Ein Testergebnis verbessern",
+"{n} routines, one for each mobility test": "{n} Routinen, eine für jeden Mobilitätstest"
 }, {
 "zone": {
 "shoulders": "Schultern",
@@ -997,6 +1001,58 @@ I18N.add("de", {
 "thruster": {
 "n": "Thruster- und Wall-Ball-Vorbereitung",
 "sub": "Kniebeugentiefe plus fixierte Überkopfposition"
+},
+"fix_cam_shflex": {
+"n": "Schulterflexion verbessern",
+"sub": "Die Arme höher über den Kopf bringen"
+},
+"fix_wallflex": {
+"n": "Deine Überkopf-Reichweite verbessern",
+"sub": "Latissimus, Brust und oberer Rücken"
+},
+"fix_backscratch": {
+"n": "Deinen Rückenkratz-Test verbessern",
+"sub": "Schulterrotation in beide Richtungen"
+},
+"fix_er": {
+"n": "Schulter-Außenrotation verbessern",
+"sub": "Die Vorderseite der Schulter öffnen"
+},
+"fix_trot": {
+"n": "Rotation im oberen Rücken verbessern",
+"sub": "Weiter aus dem mittleren Rücken drehen"
+},
+"fix_slr": {
+"n": "Gestrecktes Beinheben verbessern",
+"sub": "Beinbeuger und Rückseite des Beins"
+},
+"fix_toetouch": {
+"n": "Deine Zehenberührung verbessern",
+"sub": "Beinbeuger, Waden und unterer Rücken"
+},
+"fix_hipir": {
+"n": "Hüft-Innenrotation verbessern",
+"sub": "Die Hüften kontrolliert nach innen drehen"
+},
+"fix_thomas": {
+"n": "Deine Hüftbeuger verbessern",
+"sub": "Die Vorderseite der Hüften öffnen"
+},
+"fix_pigeon": {
+"n": "Deine 90/90-Hüftrotation verbessern",
+"sub": "Beide Hüftrotationen, nach innen und außen"
+},
+"fix_cam_shin": {
+"n": "Deine Sprunggelenksbeugung verbessern",
+"sub": "Waden und Sprunggelenke für mehr Schienbeinneigung"
+},
+"fix_k2w": {
+"n": "Dein Knie-zur-Wand-Ergebnis verbessern",
+"sub": "Dorsalflexion, Waden und Soleus"
+},
+"fix_squat": {
+"n": "Deine tiefe Kniebeuge verbessern",
+"sub": "Hüften und Sprunggelenke für eine tiefere Kniebeuge"
 }
 },
 "test": {

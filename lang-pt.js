@@ -801,7 +801,11 @@ I18N.add("pt", {
 "Do Test": "Fazer o teste",
 "Do the {name} test with the camera": "Fazer o teste {name} com a câmara",
 "Camera setup": "Posição da câmara",
-"Camera setup for {name}: where to put your phone": "Posição da câmara para {name}: onde pôr o telemóvel"
+"Camera setup for {name}: where to put your phone": "Posição da câmara para {name}: onde pôr o telemóvel",
+"Routine to improve this": "Rotina para melhorar",
+"Open the routine to improve {name}": "Abrir a rotina para melhorar {name}",
+"Improve a test result": "Melhore um resultado do teste",
+"{n} routines, one for each mobility test": "{n} rotinas, uma para cada teste de mobilidade"
 }, {
 "zone": {
 "shoulders": "Ombros",
@@ -997,6 +1001,58 @@ I18N.add("pt", {
 "thruster": {
 "n": "Preparação de thrusters e wall balls",
 "sub": "Profundidade de agachamento e bloqueio acima da cabeça"
+},
+"fix_cam_shflex": {
+"n": "Melhore a flexão do ombro",
+"sub": "Leve os braços mais alto acima da cabeça"
+},
+"fix_wallflex": {
+"n": "Melhore o seu alcance acima da cabeça",
+"sub": "Dorsais, peito e parte superior das costas"
+},
+"fix_backscratch": {
+"n": "Melhore o teste de coçar as costas",
+"sub": "Rotação do ombro nos dois sentidos"
+},
+"fix_er": {
+"n": "Melhore a rotação externa do ombro",
+"sub": "Abra a parte da frente do ombro"
+},
+"fix_trot": {
+"n": "Melhore a rotação da parte superior das costas",
+"sub": "Rode mais a partir do meio das costas"
+},
+"fix_slr": {
+"n": "Melhore a elevação da perna estendida",
+"sub": "Isquiotibiais e parte de trás da perna"
+},
+"fix_toetouch": {
+"n": "Melhore o toque nos pés",
+"sub": "Isquiotibiais, gémeos e lombar"
+},
+"fix_hipir": {
+"n": "Melhore a rotação interna da anca",
+"sub": "Rode as ancas para dentro com controlo"
+},
+"fix_thomas": {
+"n": "Melhore os flexores da anca",
+"sub": "Abra a parte da frente das ancas"
+},
+"fix_pigeon": {
+"n": "Melhore a rotação da anca 90/90",
+"sub": "As duas rotações da anca, para dentro e para fora"
+},
+"fix_cam_shin": {
+"n": "Melhore a flexão do tornozelo",
+"sub": "Gémeos e tornozelos, para inclinar mais a canela"
+},
+"fix_k2w": {
+"n": "Melhore o teste joelho à parede",
+"sub": "Dorsiflexão do tornozelo, gémeos e sóleo"
+},
+"fix_squat": {
+"n": "Melhore o seu agachamento profundo",
+"sub": "Ancas e tornozelos para um agachamento mais profundo"
 }
 },
 "test": {

@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.50.3", APP_BUILD = "14 Nov 2026";
+  var APP_VERSION = "1.51.0", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -635,7 +635,11 @@
           (su && S.settings.photos !== false ? '<figure class="setupfig"><img class="howsetup" loading="lazy" src="' + esc(su) + '" alt="' + esc(TF("Camera setup for {name}: where to put your phone", { name: t.n })) + '"><figcaption>' + T("Camera setup") + "</figcaption></figure>" : "") +(vidUrl("t_" + t.id) && photoUrl("t_" + t.id) ? '<div class="xfade vid howvid" data-key="t_' + esc(t.id) + '"><video class="photo howphoto on" data-vsrc="' + esc(vidUrl("t_" + t.id)) + '" poster="' + esc(photoUrl("t_" + t.id)) + '" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(altFor("t_" + t.id) + ", " + T("demo video")) + '"></video></div>' : photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(altFor("t_" + t.id)) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
         h += '<div class="inputs">' + fieldsFor(t).map(function (f) { return '<label class="field">' + f[1] + '<input type="number" inputmode="decimal" step="any" data-k="' + f[0] + '" value="' + (isNum(draft.v[f[0]]) ? draft.v[f[0]] : "") + '"></label>'; }).join("");
         if (t.cam) h += '<button class="btn" data-act="cam" data-id="' + t.id + '" style="flex:none" aria-label="' + esc(TF("Do the {name} test with the camera", { name: t.n })) + '">' + ICON.cam.replace("<svg", '<svg width="20" height="20" aria-hidden="true"') + (" " + T("Do Test") + "</button>");
-        h += "</div></div>";
+        h += "</div>";
+        /* Each test links to a routine that works on the same range of motion. */
+        var fix = findRoutine("fix_" + t.id);
+        if (fix) h += '<button class="btn tfix" data-act="routine" data-id="' + esc(fix.id) + '" aria-label="' + esc(TF("Open the routine to improve {name}", { name: t.n })) + '">' + ICON.play.replace("<svg", '<svg width="16" height="16" aria-hidden="true"') + '<span>' + T("Routine to improve this") + '</span><small>' + mins(routineSecs(adapt(fix.items).items)) + "</small></button>";
+        h += "</div>";
         return h;
   }
   function liveScore() {
@@ -682,7 +686,9 @@
       h += routineCard(byId("daily"));
       var fs = sportObj();
       if (fs) { var fp = PRESETS.filter(function (p) { return p.sport === fs.id && (p.kind === "activate" || p.kind === "recover"); }); if (fp.length) { h += label(esc(fs.n), ""); fp.forEach(function (p) { h += routineCard(byId(p.id)); }); } }
-      var every = PRESETS.filter(function (p) { return !p.auto && !p.sport && !p.lift; });
+      var every = PRESETS.filter(function (p) { return !p.auto && !p.sport && !p.lift && !p.test; });
+      var tf = PRESETS.filter(function (p) { return p.test; });
+      if (tf.length) { h += '<details class="rfix"><summary>' + label(T("Improve a test result"), TF("{n} routines, one for each mobility test", { n: tf.length })) + "</summary>"; tf.forEach(function (p) { h += routineCard(byId(p.id)); }); h += "</details>"; }
       if (every.length) { h += label(T("Everyday"), ""); every.forEach(function (p) { h += routineCard(byId(p.id)); }); }
       if (S.routines.length) { h += label(T("Your routines"), ""); allRoutines().filter(function (r) { return r.custom; }).forEach(function (r) { h += routineCard(r); }); }
       if (!fs) h += '<p class="small muted rnote">' + T("Pick your sport in Settings to see its routines here, or browse By sport.") + "</p>";

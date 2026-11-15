@@ -801,7 +801,11 @@ I18N.add("it", {
 "Do Test": "Fai il test",
 "Do the {name} test with the camera": "Fai il test {name} con la fotocamera",
 "Camera setup": "Posizione della fotocamera",
-"Camera setup for {name}: where to put your phone": "Posizione della fotocamera per {name}: dove mettere il telefono"
+"Camera setup for {name}: where to put your phone": "Posizione della fotocamera per {name}: dove mettere il telefono",
+"Routine to improve this": "Routine per migliorare",
+"Open the routine to improve {name}": "Apri la routine per migliorare {name}",
+"Improve a test result": "Migliora un risultato del test",
+"{n} routines, one for each mobility test": "{n} routine, una per ogni test di mobilità"
 }, {
 "zone": {
 "shoulders": "Spalle",
@@ -997,6 +1001,58 @@ I18N.add("it", {
 "thruster": {
 "n": "Preparazione thruster e wall ball",
 "sub": "Profondità di squat e blocco sopra la testa"
+},
+"fix_cam_shflex": {
+"n": "Migliora la flessione della spalla",
+"sub": "Porta le braccia più in alto sopra la testa"
+},
+"fix_wallflex": {
+"n": "Migliora la tua estensione sopra la testa",
+"sub": "Dorsali, petto e parte alta della schiena"
+},
+"fix_backscratch": {
+"n": "Migliora il test della mano dietro la schiena",
+"sub": "Rotazione della spalla in entrambe le direzioni"
+},
+"fix_er": {
+"n": "Migliora la rotazione esterna della spalla",
+"sub": "Apri la parte anteriore della spalla"
+},
+"fix_trot": {
+"n": "Migliora la rotazione della parte alta della schiena",
+"sub": "Ruota di più dalla parte centrale della schiena"
+},
+"fix_slr": {
+"n": "Migliora l'elevazione a gamba tesa",
+"sub": "Femorali e parte posteriore della gamba"
+},
+"fix_toetouch": {
+"n": "Migliora il tocco delle punte",
+"sub": "Femorali, polpacci e zona lombare"
+},
+"fix_hipir": {
+"n": "Migliora la rotazione interna dell'anca",
+"sub": "Ruota le anche verso l'interno con controllo"
+},
+"fix_thomas": {
+"n": "Migliora i flessori dell'anca",
+"sub": "Apri la parte anteriore delle anche"
+},
+"fix_pigeon": {
+"n": "Migliora la rotazione d'anca 90/90",
+"sub": "Entrambe le rotazioni dell'anca, interna ed esterna"
+},
+"fix_cam_shin": {
+"n": "Migliora la flessione della caviglia",
+"sub": "Polpacci e caviglie, per inclinare di più la tibia"
+},
+"fix_k2w": {
+"n": "Migliora il test ginocchio al muro",
+"sub": "Dorsiflessione della caviglia, polpacci e soleo"
+},
+"fix_squat": {
+"n": "Migliora il tuo squat profondo",
+"sub": "Anche e caviglie per uno squat più profondo"
 }
 },
 "test": {

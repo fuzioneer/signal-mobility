@@ -535,3 +535,13 @@ header.top .hsave[hidden] { display: none; }
 .tcard .how .setupfig { grid-column: 1 / -1; margin: 0; }
 .tcard .how .setupfig img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; background: #f4f6f5; display: block; }
 .tcard .how .setupfig figcaption { font-size: 12.5px; color: var(--muted); text-align: center; margin-top: 6px; }
+
+/* Routine link at the bottom of each test card (1.51.0) */
+.tcard .tfix { display: flex; align-items: center; gap: 8px; width: calc(100% - 28px); margin: 0 14px 14px; justify-content: flex-start; text-align: left; }
+.tcard .tfix span { flex: 1; font-weight: 700; }
+.tcard .tfix small { color: var(--muted); font-weight: 600; }
+.tcard .tfix svg { color: var(--brand); flex: none; }
+details.rfix > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+details.rfix > summary::-webkit-details-marker { display: none; }
+details.rfix > summary::after { content: ""; width: 8px; height: 8px; margin-right: 6px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); transition: transform .2s; color: var(--muted); }
+details.rfix[open] > summary::after { transform: rotate(-135deg); }
