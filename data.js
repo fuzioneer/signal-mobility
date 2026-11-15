@@ -378,7 +378,7 @@
     { id: "preride", sport: "cycling", kind: "activate", n: "Before a ride", sub: "Wake up hips, hamstrings and back, about 8 minutes", tag: "cycle", items: ["catcow", "legswing", "hipcircle", "lungetwist", "wgs", "bridge", "anklerock"] },
     { id: "postride", sport: "cycling", kind: "recover", n: "After a ride", sub: "Open the hips and chest after time in the saddle", tag: "cycle", items: ["kneelhf", "couch", "standquad", "hamtowel", "pigeon", "fig4", "calfwall", "doorway", "childreach"] },
     { id: "rideposture", sport: "cycling", kind: "extra", n: "Cyclist's posture", sub: "Undo the hunch: chest, upper back and neck", tag: "cycle", items: ["doorway", "tspineroll", "openbook", "thread", "wallslide", "catcow", "breath9090"] },
-    { id: "bedhips", n: "Tight Hips", sub: "All lying down, on any mattress", items: ["kneehug", "wipers", "fig4", "happybaby", "butterfly", "edgeflexor", "sidequad", "hamtowel", "supinetwist", "bridge"] },
+    { id: "bedhips", bed: true, n: "Tight Hips", sub: "All lying down, on any mattress", items: ["kneehug", "wipers", "fig4", "happybaby", "butterfly", "edgeflexor", "sidequad", "hamtowel", "supinetwist", "bridge"] },
     { id: "sleep", n: "Bedtime wind-down", sub: "Slow and calming, about 10 minutes", items: ["childreach", "supinetwist", "fig4", "bandham", "breath9090"] },
     /* Sport packs: Activate before training, Recover after. */
     { id: "golfpost", sport: "golf", kind: "recover", n: "After a round", sub: "Ease the back, hips and lead shoulder", items: ["supinetwist", "childreach", "fig4", "kneelhf", "sleeper", "crossbody", "wrists", "breath9090"] },

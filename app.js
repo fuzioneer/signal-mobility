@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.57.0", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.57.1", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -125,7 +125,7 @@
   }
   function presetItems(p) { if (p.auto) return dailyItems().items; return p.items; }
   function allRoutines() {
-    return PRESETS.map(function (p) { return { id: p.id, n: p.n, sub: p.sub, items: presetItems(p), auto: p.auto }; })
+    return PRESETS.map(function (p) { return { id: p.id, n: p.n, sub: p.sub, items: presetItems(p), auto: p.auto, bed: p.bed }; })
       .concat(S.routines.map(function (r) { return { id: r.id, n: r.n, sub: (T("Your routine")), items: r.items, custom: true }; }));
   }
   function findRoutine(id) { return allRoutines().filter(function (r) { return r.id === id; })[0]; }
@@ -851,7 +851,7 @@
     if ($("#v-routines") && $("#v-routines").classList.contains("on")) renderRoutines();
   }
   function openRoutine(id) {
-    var r = findRoutine(id); if (!r) return; var ad = adapt(r.items);
+    var r = findRoutine(id); if (!r) return; var ad = adapt(r.items, r.bed);
     var h = '<div class="shead"><h2>' + esc(r.n) + "</h2>" + favBtn("r", r.id, r.n) + '</div><p class="muted" style="margin:4px 0 14px">' + esc(r.sub) + " · " + mins(routineSecs(ad.items)) + "</p>";
     if (ad.notes.length) h += '<div class="adnote small">' + ad.notes.map(function (n) { return "<div>" + esc(adaptNote(n)) + "</div>"; }).join("") + "</div>";
     h += '<button class="btn primary big block" data-act="play" data-id="' + esc(r.id) + '">' + ICON.play.replace("<svg", '<svg width="20" height="20"') + (" " + T("Start") + "</button>");
@@ -1032,7 +1032,7 @@
   }
   function play(routine) {
     unlockAudio(); if (window.MUSIC && musicOn()) MUSIC.arm(S.settings.music, S.settings.musicVol); cdLoad(cdMode()); /* music starts with the first hold, not during the get-ready countdown */
-    var ad = adapt(routine.items); if (ad.notes.length) toast(ad.notes.map(adaptNote).join(". "));
+    var ad = adapt(routine.items, routine.bed); if (ad.notes.length) toast(ad.notes.map(adaptNote).join(". "));
     P = { r: routine, st: steps(ad.items), moves: ad.items.slice(), i: 0, phase: "prep", left: restSecs(true), total: 0, paused: false, worked: 0, last: performance.now(), stop: null, spoke: {} };
     var el = $("#player"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn();
     el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="p-close" aria-label="' + T("End session") + '">' + ICON.close + '</button><h2>' + esc(routine.n) + '</h2><button class="icon-btn" data-act="p-music" aria-label="' + T("Background music") + '">' + (musicOn() ? ICON.music : ICON.musicOff) + '</button><button class="icon-btn" data-act="p-voice" aria-label="' + T("Voice") + '">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div><div class="tline" id="p-tl" role="progressbar" aria-valuemin="0"><div class="tlbar" id="p-tlbar" aria-hidden="true"></div><div class="tlmeta"><span id="p-tlstage"></span><span id="p-tltime"></span></div></div>' +
@@ -1069,7 +1069,7 @@
     "a door frame or wall edge": ["door", "wall"], "a stair or step": ["step"], "a towel or belt": ["towel"], "a pillow or two": ["pillow", "furniture"], "something sturdy to hold": ["wall", "door", "furniture"],
     "the edge of the bed": ["furniture"], "a broomstick, towel or band": ["stick", "towel", "band"], "a sofa, bed or chair": ["furniture"], "a band or towel": ["band", "towel"], "a wall or sofa": ["wall", "furniture"], "a bench, sofa, bed or chair": ["furniture"] };
   function eqOn() { return !!S.settings.eqOn && Array.isArray(S.settings.eq); }
-  function canDo(s) { if (!eqOn()) return true; var have = S.settings.eq; return kitEn(s).every(function (k) { var need = EQREQ[k]; return !need || need.some(function (e) { return have.indexOf(e) >= 0; }); }); }
+  function canDo(s, onBed) { if (!eqOn()) return true; var have = onBed ? S.settings.eq.concat(["furniture"]) : S.settings.eq; return kitEn(s).every(function (k) { var need = EQREQ[k]; return !need || need.some(function (e) { return have.indexOf(e) >= 0; }); }); }
   function missingKit(s) { var have = S.settings.eq || []; return kitEn(s).filter(function (k) { var need = EQREQ[k]; return need && !need.some(function (e) { return have.indexOf(e) >= 0; }); }).map(T); }
 
   /* Easier and harder alternatives, used for swaps in the player, for moves that hurt and for missing equipment. */
@@ -1086,12 +1086,13 @@
   /* Personal adjustments from session feedback: hold length scale and moves flagged as painful. */
   function fb() { if (!S.fb) S.fb = { scale: 1, hurt: {} }; return S.fb; }
   /* Swap or drop moves that hurt last time or need kit you don't have. Returns the items to use and notes on what changed. */
-  function adapt(items) {
+  /* onBed: the routine is done on a bed, so the bed counts as the furniture those moves need. */
+  function adapt(items, onBed) {
     var out = [], notes = [], hurt = fb().hurt;
     items.forEach(function (id) {
-      var s = BY[id]; if (!s) return; var why = hurt[id] ? "hurt" : !canDo(s) ? "kit" : null;
+      var s = BY[id]; if (!s) return; var why = hurt[id] ? "hurt" : !canDo(s, onBed) ? "kit" : null;
       if (!why) return out.push(id);
-      var alt = [altOf(id, "easy"), altOf(id, "hard")].filter(function (a) { return a && !hurt[a] && canDo(BY[a]) && items.indexOf(a) < 0 && out.indexOf(a) < 0; })[0];
+      var alt = [altOf(id, "easy"), altOf(id, "hard")].filter(function (a) { return a && !hurt[a] && canDo(BY[a], onBed) && items.indexOf(a) < 0 && out.indexOf(a) < 0; })[0];
       if (alt) out.push(alt);
       notes.push({ from: id, to: alt || null, why: why });
     });

@@ -308,7 +308,10 @@ nav.tabs button.on { color: var(--brand); }
 .fbq { font-weight: 700; font-size: 15px; }
 .fbrate { gap: 8px; margin-top: 8px; flex-wrap: wrap; }
 .fbhurt { flex-wrap: wrap; margin: 8px 0 0; padding: 0; }
-.adnote { background: var(--amber-soft, #fdf3dc); border-radius: 12px; padding: 10px 12px; margin: -4px 0 12px; line-height: 1.4; }
+.adnote { background: var(--amber-soft, #fdf3dc); color: #5a4310; border-radius: 12px; padding: 10px 12px; margin: -4px 0 12px; line-height: 1.4; }
+/* Dark mode: the swap note was light text on a light box (1.57.1). */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .adnote { background: #3a2f17; color: #f3dfb0; } }
+:root[data-theme="dark"] .adnote { background: #3a2f17; color: #f3dfb0; }
 .adnote div + div { margin-top: 4px; }
 .eqchip { display: inline-flex; align-items: center; gap: 6px; }
 .eqchip .eqi { flex: 0 0 18px; }
