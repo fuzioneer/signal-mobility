@@ -583,3 +583,7 @@ details.rfix[open] > summary::after { transform: rotate(-135deg); }
 
 /* Today greeting (1.56.0) */
 .greet { font-size: 26px; line-height: 1.2; font-weight: 800; letter-spacing: -.01em; margin: 6px 2px 14px; }
+
+/* Finish screen scrolls when it is taller than the screen (1.57.3) */
+.player.pfin { overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.player.pfin > * { flex-shrink: 0; }

@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.57.2", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.57.3", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -1236,7 +1236,8 @@
     if (window.MUSIC) setTimeout(function () { if (!P) MUSIC.stop(6000); }, 4000);
     say(secs >= 30 ? pick([(T("And that's it. Great session.")), (T("All done. Nice work today.")), (T("That's the session finished. Well done."))]) : "");
     tlDone();
-    $(".player").innerHTML = '<div style="flex:1;display:grid;place-items:center;text-align:center"><div><div class="ring" style="margin:0 auto 16px">' + ringSVG(100, 128, 12) + '<div class="lbl"><div><b>' + streak() + ('</b><span>' + T("day streak") + '</span></div></div></div><h2>' + T("Done") + '</h2><p class="muted" style="margin-top:6px">') + esc(r.n) + " · " + mmss(secs) + (" " + T("of stretching") + "</p></div></div>") +
+    $(".player").classList.add("pfin");
+    $(".player").innerHTML ='<div style="flex:1;display:grid;place-items:center;text-align:center"><div><div class="ring" style="margin:0 auto 16px">' + ringSVG(100, 128, 12) + '<div class="lbl"><div><b>' + streak() + ('</b><span>' + T("day streak") + '</span></div></div></div><h2>' + T("Done") + '</h2><p class="muted" style="margin-top:6px">') + esc(r.n) + " · " + mmss(secs) + (" " + T("of stretching") + "</p></div></div>") +
       (newMedal ? '<div class="card medalwin">' + medalSVG(newMedal, 56) + '<div class="grow"><b>' + TF("{medal} for {month}!", { medal: T(newMedal[2]), month: monthName(ym()) }) + '</b><div class="small muted">' + TF("{n} sessions this month", { n: monthCount(ym()) }) + (nextMedal(monthCount(ym())) ? " · " + TF("{n} more for {medal}", { n: nextMedal(monthCount(ym()))[1] - monthCount(ym()), medal: T(nextMedal(monthCount(ym()))[2]) }) : "") + "</div></div></div>" : "") +
       (SVPEND ? '<label class="card svshare"><input type="checkbox" id="sv-share"' + (SVPEND.on ? " checked" : "") + '><span><b>' + T("Share to Strava") + '</b><small class="muted">' + T("Untick if you don't want this session posted to Strava.") + "</small></span></label>" : "") +
       (LASTSESS ? '<div class="row sessshare"><button class="btn" data-act="sess-img">' + T("Save session image") + "</button>" + (window.STRAVA && STRAVA.connected() ? '<button class="btn" data-act="sess-strava">' + T("Open in Strava") + "</button>" : "") + "</div>" : "") +
