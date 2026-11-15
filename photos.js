@@ -391,7 +391,7 @@ window.PHOTOEXTRA_M = {
 
 /* Camera setup diagrams for each mobility test: where to put the phone, shown in "How to do it". Same for both models. */
 window.SETUP_IMG = {
- "backscratch": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_175256_1cf155a5-101a-4695-bad7-4a27820abe1f.png",
+ "backscratch": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_181030_1f1b189d-c3c4-4995-9805-8925bb2c405b.png",
  "cam_shflex": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180300_60c78cb2-8791-4850-80f5-6b790dfd1a1f.png",
  "wallflex": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180259_2ca2059e-589b-4f1f-919c-c95fdb774b9d.png",
  "er": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_180749_043f8bf7-0efb-4b9d-b7fc-ec31cd48a4bb.png",
