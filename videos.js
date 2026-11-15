@@ -1,6 +1,6 @@
 /* Short looping demo clips that replace the still photo in the player and on the stretch page (generated with Higgsfield, MiniMax H3). Female and male model versions. */
 window.VIDEOS = {
- "t_er": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_174810_857259a2-a0e7-4997-88b4-b15595264e0c.mp4",
+ "t_er": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_175530_0022aaee-57ef-4fe0-b908-bbe7a03c8840.mp4",
  "t_backscratch": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_165030_4d1ac10b-4ad4-448e-be36-c41d5f2df391.mp4",
  "thread": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_160733_5e9d9f62-3179-4249-bd5d-33ca979d0eef.mp4",
  "crossover": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261114_214419_9cec4657-950d-400f-9d5f-aa4c2b1886a4.mp4",
