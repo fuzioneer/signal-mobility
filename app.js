@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.55.0", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.56.0", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -409,9 +409,16 @@
   }
 
   /* ---------- HOME ---------- */
+  /* "Good morning/afternoon/evening", with the first name once they're signed in (registered). */
+  function greeting() {
+    var hr = new Date().getHours(), part = hr < 12 ? "morning" : hr < 18 ? "afternoon" : "evening";
+    var signedIn = window.CLOUD && CLOUD.hasSession && CLOUD.hasSession(), nm = signedIn ? (S.settings.firstName || "") : "";
+    var txt = nm ? TF({ morning: "Good morning, {name}", afternoon: "Good afternoon, {name}", evening: "Good evening, {name}" }[part], { name: nm }) : T({ morning: "Good morning", afternoon: "Good afternoon", evening: "Good evening" }[part]);
+    return '<h1 class="greet">' + esc(txt) + "</h1>";
+  }
   function renderHome() {
     var L = latest(), sc = score(L.v), last = lastTestDate(), av = avgFor(), d = dailyItems(), st = streak(), today = sessionDays()[iso()];
-    var h = "", due = remDue(), snoozed = false; try { snoozed = !!localStorage.getItem("sm-nudge-" + iso()); } catch (e) {}
+    var h = greeting(), due = remDue(), snoozed = false; try { snoozed = !!localStorage.getItem("sm-nudge-" + iso()); } catch (e) {}
     if (due && due.nudge && !snoozed) { var drt = remRoutine(due); h += '<div class="card nudge remnudge"><div class="grow"><h3>' + T("Time for your mobility") + '</h3><p class="muted" style="margin-top:4px">' + esc(drt.n) + " · " + mins(routineSecs(drt.items)) + '</p><div class="row" style="margin-top:12px;gap:8px"><button class="btn primary" data-act="play" data-id="' + esc(drt.id) + '">' + T("Start") + '</button><button class="btn" data-act="rm-later">' + T("Not today") + "</button></div></div></div>"; }
     if (!last) {
       h += ('<div class="card nudge"><div class="grow"><h3>' + T("Start with a mobility test") + '</h3><p class="muted" style="margin-top:4px">' + T("About 15 minutes. It scores six zones so the app can build your daily routine around what's tightest. Camera tracking works for 5 of the tests.") + '</p><button class="btn primary" style="margin-top:12px" data-act="go-test">' + T("Take the test") + '</button></div></div>');
@@ -841,7 +848,7 @@
     if (on) list.push(id); else list.splice(i, 1);
     save(); el.classList.toggle("on", on); el.setAttribute("aria-pressed", on); el.setAttribute("aria-label", favLabel(on, el.getAttribute("data-name") || ""));
     toast(on ? T("Added to favourites") : T("Removed from favourites"));
-    if ($("#v-routines") && !$("#v-routines").hidden) renderRoutines();
+    if ($("#v-routines") && $("#v-routines").classList.contains("on")) renderRoutines();
   }
   function openRoutine(id) {
     var r = findRoutine(id); if (!r) return; var ad = adapt(r.items);
@@ -1803,7 +1810,7 @@
   function stravaRefresh() { var c = $("#strava-slot"); if (c) { c.innerHTML = stravaCard(); stravaWire(); } }
   function openSettings() {
     var s = S.settings;
-    var h = ('<h2>' + T("Settings") + '</h2>') + '<div class="card" style="margin-top:12px"><label class="field">' + T("Language") + '<select id="s-lang">' + I18N.LANGS.map(function (o) { return '<option value="' + o[0] + '"' + (I18N.lang === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><p class="small muted" style="margin-top:6px">' + T("Changes the app, the coach's voice and all stretch instructions. The app restarts to apply it.") + '</p></div>' + ('<div class="card" style="margin-top:12px"><div class="row"><label class="field">' + T("Age") + '<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="') + (s.age || "") + '"></label><label class="field">' + T("Height (cm)") + '<input type="number" inputmode="numeric" id="s-height" min="120" max="230" value="' + (s.height || 178) + ('"></label><label class="field">' + T("Sex") + '<select id="s-sex"><option value="m"') + (s.sex === "m" ? " selected" : "") + '>' + T("Male") + '</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">" + T("Female") + "</option></select></label></div>" +
+    var h = ('<h2>' + T("Settings") + '</h2>') + '<div class="card" style="margin-top:12px"><label class="field">' + T("Language") + '<select id="s-lang">' + I18N.LANGS.map(function (o) { return '<option value="' + o[0] + '"' + (I18N.lang === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><p class="small muted" style="margin-top:6px">' + T("Changes the app, the coach's voice and all stretch instructions. The app restarts to apply it.") + '</p></div>' + ('<div class="card" style="margin-top:12px"><label class="field">' + T("First name") + '<input type="text" id="s-fname" maxlength="30" autocomplete="given-name" autocapitalize="words" value="' + esc(s.firstName || "") + '" placeholder="' + esc(T("Used in your Today greeting")) + '"></label><p class="small muted" style="margin:4px 0 10px">' + T("Shown on the Today page when you're signed in.") + '</p><div class="row"><label class="field">' + T("Age") + '<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="') + (s.age || "") + '"></label><label class="field">' + T("Height (cm)") + '<input type="number" inputmode="numeric" id="s-height" min="120" max="230" value="' + (s.height || 178) + ('"></label><label class="field">' + T("Sex") + '<select id="s-sex"><option value="m"') + (s.sex === "m" ? " selected" : "") + '>' + T("Male") + '</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">" + T("Female") + "</option></select></label></div>" +
       ('<p class="small muted" style="margin-top:8px">' + T("Age and sex set the typical-score markers (currently available for men only). Height scales the camera's cm estimates.") + '</p></div>');
     h += ('<div class="card"><div class="row"><label class="field">' + T("Time between exercises") + '<select id="s-rest">') + [5, 10, 15, 20, 30, 45, 60].map(function (n) { return '<option value="' + n + '"' + ((s.rest == null ? 10 : s.rest) === n ? " selected" : "") + ">" + n + " " + T("seconds") + "</option>"; }).join("") + ('</select></label><label class="field">' + T("Time to switch sides") + '<select id="s-siderest">') + [3, 5, 10, 15].map(function (n) { return '<option value="' + n + '"' + ((s.sideRest == null ? 5 : s.sideRest) === n ? " selected" : "") + ">" + n + " " + T("seconds") + "</option>"; }).join("") + ('</select></label></div><div class="row" style="margin-top:10px"><label class="field">' + T("Final 3, 2, 1 countdown") + '<select id="s-cd">') + (I18N.lang === "en" ? [["m", (T("Voice (male, British)"))], ["f", (T("Voice (female, American)"))]] : [["voice", T("Coach's voice")]]).concat([["beeps", (T("Beeps"))], ["off", (T("Off"))]]).map(function (o) { return '<option value="' + o[0] + '"' + (cdMode() === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + ('</select></label><button class="btn" style="align-self:flex-end" data-act="cd-test">' + T("Hear it") + '</button></div><p class="small muted" style="margin-top:6px">' + T("Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.") + '</p><div class="row" style="margin-top:10px"><label class="field">' + T("Theme") + '<select id="s-theme">') + [["auto", (T("Match phone"))], ["light", (T("Light"))], ["dark", (T("Dark"))]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
       ('<div class="row" style="margin-top:10px"><label class="field">' + T("Favourite sport (optional)") + '<select id="s-sport"><option value="">' + T("None") + '</option>') + SPORTS.map(function (o) { return '<option value="' + o.id + '"' + (s.sport === o.id ? " selected" : "") + ">" + esc(o.n) + "</option>"; }).join("") + ('</select></label></div><p class="small muted" style="margin-top:6px">' + T("Sets the top stretches and routines shown on Today.") + '</p>') +
@@ -1829,8 +1836,8 @@
     h += ('<div class="card"><button class="btn danger block" data-act="reset">' + T("Delete all data") + '</button></div><p class="small muted" style="text-align:center"><b>Movage</b> · ' + TAGLINE + '<br>v') + APP_VERSION + ' (' + APP_BUILD + ') · ' + T("body tracking by MediaPipe") + '</p>';
     openSheet(h, function () { if (window.MUSIC && !P && MUSIC.playing()) MUSIC.stop(800); });
     offlineUI();
-    var sync = function () { S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
-    ["#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-sport", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
+    var sync = function () { S.settings.firstName = $("#s-fname").value.replace(/[<>]/g, "").trim().slice(0, 30); S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
+    ["#s-fname", "#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-sport", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
     stravaWire(); remWire();
     $("#s-model").addEventListener("change", function (e) { S.settings.model = e.target.value; save(); render(); offlineUI(); toast(T("Photos updated. Tap Save all photos for offline to keep this model's photos on your phone.")); });
     $("#s-text").addEventListener("change", function (e) { S.settings.textSize = e.target.value; save(); applyTextSize(); });
@@ -2074,10 +2081,16 @@
     }
     return job.catch(function (e) { diag("community sync: " + (e && e.message)); }).then(function () { save(); CM_SYNCING = false; });
   }
+  /* First name for the Today greeting: taken from a Google account the first time, then editable in Settings. */
+  function nameFromAccount(u) {
+    if (S.settings.firstName || !CLOUD.suggestedName) return;
+    var n = CLOUD.suggestedName(u); if (!n) return;
+    S.settings.firstName = n; save(); if ($("#v-home") && $("#v-home").classList.contains("on")) renderHome();
+  }
   /* At start-up, only phones that have signed in before load anything. */
   function cmBoot() {
     if (!cmOn() || !CLOUD.hasSession()) return;
-    CLOUD.user().then(function (u) { if (!u) return; return CLOUD.profile().then(function (p) { if (!p) return; CM.prof = p; if (!CM.stage) { CM.stage = "main"; cmComms(); } cmBackfill(); return cmSync(); }); }).catch(function (e) { diag("community: " + (e && e.message)); });
+    CLOUD.user().then(function (u) { if (!u) return; nameFromAccount(u); return CLOUD.profile().then(function (p) { if (!p) return; CM.prof = p; if (!CM.stage) { CM.stage = "main"; cmComms(); } cmBackfill(); return cmSync(); }); }).catch(function (e) { diag("community: " + (e && e.message)); });
     window.addEventListener("online", function () { cmSync(); });
   }
   function cmComms() { return CLOUD.myCommunities().then(function (c) { CM.comms = c || []; if (CM.scope && !CM.comms.some(function (x) { return x.id === CM.scope; })) CM.scope = null; }, function () {}); }
@@ -2089,7 +2102,7 @@
       return CLOUD.user();
     }).then(function (u) {
       if (!u) { CM.stage = "signin"; return; }
-      CM.suggest = CLOUD.suggestedName ? CLOUD.suggestedName(u) : "";
+      CM.suggest = CLOUD.suggestedName ? CLOUD.suggestedName(u) : ""; nameFromAccount(u);
       return CLOUD.profile().then(function (p) {
         CM.prof = p; if (!p) { CM.stage = "nick"; return; }
         CM.stage = "main"; cmBackfill(); return cmComms().then(function () { return cmSync(); });

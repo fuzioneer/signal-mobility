@@ -577,3 +577,6 @@ details.rfix[open] > summary::after { transform: rotate(-135deg); }
 .favmark.inline svg { width: 16px; height: 16px; }
 .favlbl svg, .chipfav svg { width: 13px; height: 13px; fill: #e5484d; vertical-align: -1px; margin-right: 5px; }
 .lcard { position: relative; }
+
+/* Today greeting (1.56.0) */
+.greet { font-size: 26px; line-height: 1.2; font-weight: 800; letter-spacing: -.01em; margin: 6px 2px 14px; }

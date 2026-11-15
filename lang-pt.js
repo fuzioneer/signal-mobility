@@ -819,7 +819,16 @@ I18N.add("pt", {
 "Added to favourites": "Adicionado aos favoritos",
 "Removed from favourites": "Removido dos favoritos",
 "Add {name} to favourites": "Adicionar {name} aos favoritos",
-"Remove {name} from favourites": "Remover {name} dos favoritos"
+"Remove {name} from favourites": "Remover {name} dos favoritos",
+"Good morning": "Bom dia",
+"Good afternoon": "Boa tarde",
+"Good evening": "Boa noite",
+"Good morning, {name}": "Bom dia, {name}",
+"Good afternoon, {name}": "Boa tarde, {name}",
+"Good evening, {name}": "Boa noite, {name}",
+"First name": "Nome próprio",
+"Used in your Today greeting": "Usado na sua saudação de Hoje",
+"Shown on the Today page when you're signed in.": "Aparece na página Hoje quando tem sessão iniciada."
 }, {
 "zone": {
 "shoulders": "Ombros",

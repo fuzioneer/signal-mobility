@@ -819,7 +819,16 @@ I18N.add("de", {
 "Added to favourites": "Zu Favoriten hinzugefügt",
 "Removed from favourites": "Aus Favoriten entfernt",
 "Add {name} to favourites": "{name} zu Favoriten hinzufügen",
-"Remove {name} from favourites": "{name} aus Favoriten entfernen"
+"Remove {name} from favourites": "{name} aus Favoriten entfernen",
+"Good morning": "Guten Morgen",
+"Good afternoon": "Guten Tag",
+"Good evening": "Guten Abend",
+"Good morning, {name}": "Guten Morgen, {name}",
+"Good afternoon, {name}": "Guten Tag, {name}",
+"Good evening, {name}": "Guten Abend, {name}",
+"First name": "Vorname",
+"Used in your Today greeting": "Für deine Begrüßung auf Heute",
+"Shown on the Today page when you're signed in.": "Wird auf der Seite Heute angezeigt, wenn du angemeldet bist."
 }, {
 "zone": {
 "shoulders": "Schultern",
