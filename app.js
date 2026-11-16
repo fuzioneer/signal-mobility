@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.65.0", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.65.1", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -1616,13 +1616,22 @@
       function saveImg() { var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500); toast(T("Image saved. Open Instagram and add it to your Story.")); }
     }, "image/png");
   }
+  /* Monday-first day initials for the stretching calendar, in the app's language (M T W T F S S in English). */
+  function dayInitials() {
+    var out = [];
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(2024, 0, 1 + i); /* 1 Jan 2024 was a Monday */
+      try { out.push(d.toLocaleDateString(I18N.locale || "en-GB", { weekday: "narrow" })); } catch (e) { out.push("MTWTFSS"[i]); }
+    }
+    return out;
+  }
   function renderHistory() {
     var tests = S.tests.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
     var pts = tests.slice().reverse().map(function (t) { return { d: t.date, s: score(t.v).overall }; }).filter(function (p) { return isNum(p.s); });
     var h = ('<div class="sec" style="margin-top:6px"><h2>' + T("Mobility score") + '</h2></div><div class="card">') + (pts.length ? lineChart(pts) : ('<div class="empty">' + T("Your score will chart here after your first test.") + '</div>')) + "</div>";
     var m = sessionDays(), cells = "", start = addDays(iso(), -55), dow = (parse(start).getDay() + 6) % 7; start = addDays(start, -dow);
     for (var i = 0; i < 56 + 7; i++) { var d = addDays(start, i); if (d > iso()) break; var v = m[d] || 0; cells += '<i title="' + d + '" class="' + (v >= 480 ? "l2" : v ? "l1" : "") + (d === iso() ? " today" : "") + '"></i>'; }
-    h += ('<div class="sec"><h2>' + T("Stretching") + '</h2><span class="small muted">') + streak() + (" " + T("day streak") + "</span></div><div class=\"card\"><div class=\"calwrap\"><div class=\"dl\"><span>M</span><span></span><span>W</span><span></span><span>F</span><span></span><span>S</span></div><div class=\"cal\">") + cells + ('</div></div><div class="legend"><span>' + T("Last 8 weeks. Light = some stretching, dark = 8 minutes or more.") + '</span></div></div>');
+    h += ('<div class="sec"><h2>' + T("Stretching") + '</h2><span class="small muted">') + streak() + (" " + T("day streak") + "</span></div><div class=\"card\"><div class=\"calwrap\"><div class=\"dl\" aria-hidden=\"true\">") + dayInitials().map(function (l) { return "<span>" + esc(l) + "</span>"; }).join("") + ("</div><div class=\"cal\">") + cells + ('</div></div><div class="legend"><span>' + T("Last 8 weeks. Light = some stretching, dark = 8 minutes or more.") + '</span></div></div>');
     h += chCard();
     h += ('<div class="sec"><h2>' + T("Tests") + '</h2></div><div class="card flush">') + (tests.length ? tests.map(function (t) {
       var sc = score(t.v);

@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.65.1 (16 Nov 2026): The 8-week stretching calendar labels every row (M T W T F S S), in the app's language.
 - 1.65.0 (16 Nov 2026): New "Mobility test warm-up" routine (arm circles, cat-cow, world's greatest stretch, leg swings, knee-to-wall rocks; about 6 minutes, all six zones) with a "Warm up first" button at the top of the mobility test.
 - 1.64.0 (16 Nov 2026): Removed the ankle dorsiflexion (shin lean) test, which measured the same movement as knee-to-wall. The full test is now 11 tests in about 15 minutes; the quick test is unchanged (6 tests, about 8 minutes). Its "Improve your ankle bend" routine is gone, the ankle goal now uses knee-to-wall (10 cm), and saved shin lean goals move across automatically.
 - 1.63.1 (16 Nov 2026): The 90/90 hip rotation test uses the 90/90 stretch demo video (women and men). It plays once and stops on the last frame instead of looping (VIDEO_NOLOOP in videos.js).
