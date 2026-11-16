@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.62.0", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.62.1", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -2127,6 +2127,9 @@
     var o = function (c, n) { return '<option value="' + c + '"' + (c === sel ? " selected" : "") + ">" + esc(n) + "</option>"; };
     return o("", T("Choose your country")) + top.map(function (c) { return o(c, countryName(c)); }).join("") + "<option disabled>──────────</option>" + rest.map(function (x) { return o(x[0], x[1]); }).join("");
   }
+  /* "Continue with Google" on the Community sign-in. Switched off for now (16 Nov 2026): set back to true to bring the
+     button back. People who already joined with Google can still sign in with an email code to the same address. */
+  var GOOGLE_SIGNIN = false;
   /* Optional, private gender on the Community profile (only overall totals are seen by the team). */
   var GENDERS = [["female", "Female"], ["male", "Male"], ["nonbinary", "Non-binary"], ["other", "Other"], ["na", "Prefer not to say"]];
   /* Private profile details live in Settings on the phone and on the Community profile. Fill whichever side is empty
@@ -2214,7 +2217,7 @@
     else if (st === "error") h = '<div class="card"><p>' + esc(CM.err) + '</p><button class="btn block" data-act="cm-retry" style="margin-top:12px">' + T("Try again") + "</button></div>";
     else if (st === "signin") {
       h = intro + '<div class="card"><h3>' + T("Sign in or create an account") + "</h3>" +
-        (CLOUD.signInWithGoogle ? '<button class="btn block gbtn" data-act="cm-google" style="margin-top:12px"' + cmBusy() + '><svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.7 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.3 5.7c4.3-3.9 7-9.7 7-17z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.8-5.8l-7.3-5.7c-2 1.4-4.7 2.3-8.5 2.3-6.2 0-11.5-4.2-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg><span>' + T("Continue with Google") + '</span></button><div class="ordiv"><span>' + T("or use your email") + "</span></div>" : "") +
+        (GOOGLE_SIGNIN && CLOUD.signInWithGoogle ? '<button class="btn block gbtn" data-act="cm-google" style="margin-top:12px"' + cmBusy() + '><svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.7 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.3 5.7c4.3-3.9 7-9.7 7-17z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.8-5.8l-7.3-5.7c-2 1.4-4.7 2.3-8.5 2.3-6.2 0-11.5-4.2-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg><span>' + T("Continue with Google") + '</span></button><div class="ordiv"><span>' + T("or use your email") + "</span></div>" : "") +
         '<p class="small muted" style="margin:4px 0 12px">' + T("We'll email you a 6-digit code. No password needed. Your email is never shown to anyone.") + "</p>" +
         '<input class="inp" id="cm-email" type="email" inputmode="email" autocomplete="email" placeholder="' + esc(T("Your email address")) + '" value="' + esc(CM.email) + '" style="width:100%">' +
         '<button class="btn primary block" data-act="cm-send" style="margin-top:12px"' + cmBusy() + ">" + T("Email me a code") + "</button></div>";
@@ -2291,6 +2294,7 @@
       }
       case "cm-other-email": CM.stage = "signin"; renderCommunity(); break;
       case "cm-google":
+        if (!GOOGLE_SIGNIN) break;
         CM.busy = true; renderCommunity();
         try { if (CM.pendingJoin) sessionStorage.setItem("cm-join", CM.pendingJoin); } catch (e) {}
         CLOUD.signInWithGoogle().then(function () { /* the page now leaves for Google */ }, function (e) { CM.busy = false; toast(cmErr(e)); renderCommunity(); });

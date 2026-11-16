@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.62.1 (16 Nov 2026): Sign-in with Google is switched off for now (GOOGLE_SIGNIN in app.js). Community sign-in is by emailed code only.
 - 1.62.0 (16 Nov 2026): Optional gender on the Community profile (Female, Male, Non-binary, Other or Prefer not to say). Private like name, country and age, and kept in step with the website.
 - 1.61.1 (16 Nov 2026): Tidier Settings. Voice coaching, Beeps, Full screen view and Play over music are now on/off switches, each on its own row with the label beside the switch.
 - 1.61.0 (16 Nov 2026): Private profile details. Settings has Last name and Country next to First name, and setting up a Community profile now asks for first name, last name, country and an optional age. They are stored on your account (never shown to other members) and kept in step between the phone and the website.
