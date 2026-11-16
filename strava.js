@@ -51,7 +51,23 @@
         if (!x.r.ok && x.r.status >= 400 && x.r.status < 500 && x.r.status !== 401 && /tag/i.test(JSON.stringify(x.j || ""))) { log("strava: Recovery tag refused, sent without it"); return post(body); }
         return x;
       });
-    }).then(function (x) { var r = x.r, j = x.j; if (!r.ok) throw new Error((j && j.message) || ("HTTP " + r.status)); return j.id; });
+    }).then(function (x) {
+      var r = x.r, j = x.j; if (!r.ok) throw new Error((j && j.message) || ("HTTP " + r.status));
+      /* Strava's create call can quietly drop the tag, so check what came back and, if Recovery is missing,
+         add it with an update (PUT /activities/{id} {"tags":{"Recovery":true}}), which the same activity:write scope allows. */
+      var tags = (j && j.tags) || [];
+      if (tags.indexOf && tags.indexOf("Recovery") >= 0) return j.id;
+      return tagRecovery(j.id).then(function () { return j.id; }, function (e) { log("strava: couldn't add the Recovery tag (" + e.message + ")"); return j.id; });
+    });
+  }
+  function tagRecovery(id) {
+    return token().then(function (t) {
+      return fetch(API + "/api/v3/activities/" + encodeURIComponent(id), { method: "PUT", headers: { Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: JSON.stringify({ tags: { Recovery: true } }) })
+        .then(function (r) { return r.json().catch(function () { return null; }).then(function (j) {
+          if (!r.ok) throw new Error((j && j.message) || ("HTTP " + r.status));
+          log("strava: Recovery tag " + (j && j.tags && j.tags.indexOf("Recovery") >= 0 ? "added" : "sent, but Strava didn't show it") + " on " + id);
+        }); });
+    });
   }
   /* Queue so a session finished with no signal is sent next time. */
   function logSession(a) {
