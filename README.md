@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.57.8 (16 Nov 2026): Hip internal rotation test video for the female model, with the towel between the knees.
 - 1.57.7 (16 Nov 2026): Hip internal rotation test video for the male model.
 - 1.57.6 (16 Nov 2026): New hip internal rotation photos (female and male) and camera setup diagram, showing one foot out at a time with a towel between the knees.
 - 1.57.5 (16 Nov 2026): Hip internal rotation test is now done one leg at a time (camera voice says "Then do the other leg"), with a tip that a rolled towel or foam roller squeezed between the knees helps keep them still.
