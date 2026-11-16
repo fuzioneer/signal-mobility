@@ -1,6 +1,7 @@
 // Movage website visitor counter. Cookie free: no cookies or local storage on the visitor's device.
 // The raw IP address and browser string are never stored. The database hashes them with a random salt
 // that is replaced every day (site_log), so visits can be counted but nobody can be followed across days.
+// Screen width is only used to tell laptops from large monitors and is never stored.
 import { TZ } from "./tz.ts";
 const ORIGINS = ["https://www.movage.co.uk", "https://movage.co.uk", "http://localhost:8766"];
 const BOTS = /bot|crawl|spider|slurp|preview|facebookexternalhit|headless|lighthouse|pingdom|monitor|curl|wget|python|axios|httpclient|java\/|go-http/i;
@@ -57,7 +58,7 @@ Deno.serve(async (req) => {
     kind: b.k === "time" ? "time" : "view", path, ref,
     src: clean(b.s, 60, /^[\w\-. ]+$/).toLowerCase(),
     country: /^[A-Z]{2}$/.test(country) && country !== "XX" ? country : (TZ[tz] || ""),
-    dev: device(ua), br: browser(ua), os: os(ua),
+    dev: device(ua), w: clean(String(b.w ?? ""), 5, /^\d{3,5}$/), br: browser(ua), os: os(ua),
     secs: b.k === "time" ? Math.max(0, Math.min(3600, Math.round(Number(b.t) || 0))) : null,
   };
   const url = Deno.env.get("SUPABASE_URL")!, key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
