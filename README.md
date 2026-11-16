@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.57.9 (16 Nov 2026): During a routine, a full screen photo or demo video opened mid-stretch now closes itself in the last 3 seconds, so it no longer hides the countdown and the next move.
 - 1.57.8 (16 Nov 2026): Hip internal rotation test video for the female model, with the towel between the knees.
 - 1.57.7 (16 Nov 2026): Hip internal rotation test video for the male model.
 - 1.57.6 (16 Nov 2026): New hip internal rotation photos (female and male) and camera setup diagram, showing one foot out at a time with a towel between the knees.

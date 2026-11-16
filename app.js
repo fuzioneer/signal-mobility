@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.57.8", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.57.9", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -1166,6 +1166,8 @@
     var before = Math.ceil(P.left);
     P.left -= dt; if (P.phase === "work") P.worked += dt;
     var after = Math.ceil(P.left);
+    /* A full screen photo or video opened mid-stretch closes itself in the last 3 seconds, so the next move isn't hidden. */
+    if (P.left <= 3 && ($("#vfull") && !$("#vfull").hidden || !$("#lightbox").hidden)) { closeVideoFull(); closeLightbox(); diag("popup closed for the end of the stretch"); }
     if (after !== before && P.phase === "work") {
       /* 10 seconds to go reminder, then a spoken 3, 2, 1 (beeps instead if the voice is off) */
       if (after === 10 && (P.dur >= 30 || (P.dur > 15 && P.dur < 24))) say((T("10 seconds.")));
