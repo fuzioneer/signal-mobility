@@ -36,13 +36,14 @@ Deno.serve(async (req) => {
   const label = r.kind === "bug" ? "Bug report" : "Feature request";
   const AREAS: Record<string, string> = { today: "Today page", routines: "Routines", test: "Mobility test", history: "History", community: "Community", general: "General" };
   const area = AREAS[r.area] || "General";
+  const link = `${BOARD}?post=${id}`; // opens this post directly on the board
   const when = new Date(r.created_at).toLocaleString("en-GB", { timeZone: "Europe/London", dateStyle: "full", timeStyle: "short" });
   const subject = `${label} (${area}): ${r.title}`;
-  const text = `${label} on the Movage board.\n\nTitle: ${r.title}\nSection: ${area}\nFrom: ${who}\nWhen: ${when}\n${r.device ? `Device: ${r.device}\n` : ""}\n${r.body}\n\nSee it on the board: ${BOARD}\n`;
+  const text = `${label} on the Movage board.\n\nTitle: ${r.title}\nSection: ${area}\nFrom: ${who}\nWhen: ${when}\n${r.device ? `Device: ${r.device}\n` : ""}\n${r.body}\n\nOpen this post: ${link}\n`;
   const row = (k: string, v: string) => `<tr><td style="color:#5d6b66;vertical-align:top">${k}</td><td>${v}</td></tr>`;
   const html = `<div style="font-family:Arial,sans-serif;font-size:15px;color:#14201c"><p><b>${label} on the Movage board.</b></p>` +
     `<table cellpadding="4" style="border-collapse:collapse">${row("Title", `<b>${esc(r.title)}</b>`)}${row("Section", esc(area))}${row("From", esc(who))}${row("When", esc(when))}${r.device ? row("Device", esc(r.device)) : ""}</table>` +
-    `<p style="white-space:pre-wrap;border-left:3px solid #46b39f;padding-left:12px">${esc(r.body)}</p><p><a href="${BOARD}">See it on the board</a></p></div>`;
+    `<p style="white-space:pre-wrap;border-left:3px solid #46b39f;padding-left:12px">${esc(r.body)}</p><p><a href="${link}">Open this post on the board</a></p></div>`;
 
   const res = await fetch("https://api.smtp2go.com/v3/email/send", {
     method: "POST",
