@@ -834,7 +834,8 @@ I18N.add("fr", {
 "Then do the other leg.": "Puis faites l'autre jambe.",
 "Play over music from other apps": "Jouer par-dessus la musique d'autres apps",
 "Keeps Spotify or Apple Music playing under the coach. On iPhone the coach then follows your silent switch, so turn the ringer on to hear it.": "Laisse Spotify ou Apple Music jouer sous le coach. Sur iPhone, le coach suit alors le bouton silencieux : activez la sonnerie pour l'entendre.",
-"Full screen view during each stretch": "Plein écran pendant chaque étirement"
+"Full screen view during each stretch": "Plein écran pendant chaque étirement",
+"No clubs on the board yet. {names} will appear once it has at least 2 members, so tap the club and use Invite.": "Aucun club au classement pour l'instant. {names} apparaîtra dès qu'il aura au moins 2 membres : touchez le club et utilisez Inviter."
 }, {
 "zone": {
 "shoulders": "Épaules",

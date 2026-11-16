@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.60.1 (16 Nov 2026): Community, Top clubs: when your club isn't on the board because it has only 1 member, the empty board now says so and suggests inviting someone.
 - 1.60.0 (16 Nov 2026): When the get-ready countdown ends, each stretch switches to a full screen view: demo video (or photo) at the top, then the move name and side, a large timer, the Easier, +15s and Harder buttons, and previous, pause and next. It closes itself for the last 3 seconds and the gap before the next move. Can be turned off in Settings ("Full screen view during each stretch").
 - 1.59.0 (16 Nov 2026): The coach's voice and beeps now play over music from other apps (Spotify, Apple Music) instead of pausing it (iPhone audio session "ambient"). New Settings option "Play over music from other apps", on by default; turn it off to go back to the old behaviour, which ignores the silent switch but pauses other music.
 - 1.58.1 (16 Nov 2026): During a routine, the full screen demo video or photo now sits at the top of the screen with the routine timer large and centred below it.

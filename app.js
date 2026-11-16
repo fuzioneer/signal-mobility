@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.60.0", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.60.1", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -2209,7 +2209,7 @@
       h += '<div class="card cmboard">';
       if (CM.rows === null) h += '<p class="muted">' + T("Loading…") + "</p>";
       else if (CM.err) h += "<p>" + esc(CM.err) + "</p>";
-      else if (!CM.rows.length) h += '<p class="muted">' + (CM.board === "clubs" ? T("No clubs on the board yet. Start a club, invite a friend and finish a routine to get on it.") : CM.board === "time" ? T("No time logged in this period yet. Finish a guided routine to get on the board.") : (CM.verifiedOnly ? T("No camera-verified scores yet.") : T("No scores shared yet. Save a mobility test to add yours."))) + "</p>";
+      else if (!CM.rows.length) h += '<p class="muted">' + (CM.board === "clubs" ? (function () { var sm = CM.comms.filter(function (c) { return Number(c.members) < 2; }).map(function (c) { return esc(c.name); }); return sm.length ? TF("No clubs on the board yet. {names} will appear once it has at least 2 members, so tap the club and use Invite.", { names: sm.join(", ") }) : T("No clubs on the board yet. Start a club, invite a friend and finish a routine to get on it."); })() : CM.board === "time" ? T("No time logged in this period yet. Finish a guided routine to get on the board.") : (CM.verifiedOnly ? T("No camera-verified scores yet.") : T("No scores shared yet. Save a mobility test to add yours."))) + "</p>";
       else if (CM.board === "clubs") h += CM.rows.map(function (r) {
         var val = CM.clubMetric === "score" ? "<b>" + Math.round(Number(r.value)) + "</b>" : cmHm(Number(r.value));
         var open = r.id ? ' data-act="cm-scope" data-id="' + esc(r.id) + '" role="button" tabindex="0"' : "";
