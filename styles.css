@@ -587,3 +587,9 @@ details.rfix[open] > summary::after { transform: rotate(-135deg); }
 /* Finish screen scrolls when it is taller than the screen (1.57.3) */
 .player.pfin { overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
 .player.pfin > * { flex-shrink: 0; }
+
+/* Routine timer over a full screen demo video (1.58.0) */
+.vfull .vf-ring { position: absolute; left: 14px; top: calc(env(safe-area-inset-top) + 8px); width: 84px; height: 84px; border-radius: 50%; background: rgba(0,0,0,.55); z-index: 2; pointer-events: none; }
+.vfull .vf-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.vfull .vf-ring svg circle:first-child { stroke: rgba(255,255,255,.18); }
+.vfull .vf-ring b { position: absolute; inset: 0; display: grid; place-items: center; font-size: 28px; font-weight: 780; color: #fff; font-variant-numeric: tabular-nums; }
