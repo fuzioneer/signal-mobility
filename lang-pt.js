@@ -829,7 +829,9 @@ I18N.add("pt", {
 "First name": "Nome próprio",
 "Used in your Today greeting": "Usado na sua saudação de Hoje",
 "Shown on the Today page when you're signed in.": "Aparece na página Hoje quando tem sessão iniciada.",
-"Fingertips touch the floor on the standing toe touch (0 cm)": "As pontas dos dedos tocam no chão no teste de tocar nos pés (0 cm)"
+"Fingertips touch the floor on the standing toe touch (0 cm)": "As pontas dos dedos tocam no chão no teste de tocar nos pés (0 cm)",
+"Keep your knees still, and swing one foot outwards as far as it'll go. Hold it there for a couple of seconds.": "Mantenha os joelhos parados e leve um pé para fora o mais que conseguir. Mantenha aí uns segundos.",
+"Then do the other leg.": "Depois faça a outra perna."
 }, {
 "zone": {
 "shoulders": "Ombros",
@@ -1106,7 +1108,7 @@ I18N.add("pt", {
 },
 "hipir": {
 "n": "Rotação interna da anca",
-"how": "Sente-se em algo alto o suficiente para os pés não tocarem no chão (uma mesa, bancada ou banco alto), de frente para a câmara, joelhos a 90° e à largura das ancas. Mantenha os joelhos quietos e leve os dois pés para fora o mais que conseguir. Mantenha 2 segundos. A câmara mede o ângulo de cada canela em relação à vertical."
+"how": "Sente-se em algo alto o suficiente para os pés não tocarem no chão (uma mesa, uma bancada ou um banco alto), de frente para a câmara, joelhos dobrados a 90° e afastados à largura da anca. Mantenha os joelhos parados. Ajuda apertar levemente uma toalha enrolada ou um rolo de espuma entre eles. Teste uma perna de cada vez: leve um pé para fora o mais que conseguir e mantenha 2 segundos, depois faça a outra perna. A câmara mede o ângulo da canela em relação à vertical."
 },
 "thomas": {
 "n": "Teste de Thomas (flexor da anca)",

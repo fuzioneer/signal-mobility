@@ -829,7 +829,9 @@ I18N.add("de", {
 "First name": "Vorname",
 "Used in your Today greeting": "Für deine Begrüßung auf Heute",
 "Shown on the Today page when you're signed in.": "Wird auf der Seite Heute angezeigt, wenn du angemeldet bist.",
-"Fingertips touch the floor on the standing toe touch (0 cm)": "Fingerspitzen berühren den Boden beim Zehenberührungstest (0 cm)"
+"Fingertips touch the floor on the standing toe touch (0 cm)": "Fingerspitzen berühren den Boden beim Zehenberührungstest (0 cm)",
+"Keep your knees still, and swing one foot outwards as far as it'll go. Hold it there for a couple of seconds.": "Halte die Knie still und schwinge einen Fuß so weit wie möglich nach außen. Halte ihn dort ein paar Sekunden.",
+"Then do the other leg.": "Dann das andere Bein."
 }, {
 "zone": {
 "shoulders": "Schultern",
@@ -1106,7 +1108,7 @@ I18N.add("de", {
 },
 "hipir": {
 "n": "Hüft-Innenrotation",
-"how": "Setz dich auf etwas so Hohes, dass deine Füße den Boden nicht berühren (Tisch, Arbeitsplatte oder hohe Bank), frontal zur Kamera, Knie 90° gebeugt und hüftbreit. Knie ruhig halten und beide Füße so weit wie möglich nach außen schwingen. 2 Sekunden halten. Die Kamera misst den Winkel jedes Schienbeins zur Senkrechten."
+"how": "Setz dich auf etwas so Hohes, dass deine Füße den Boden nicht berühren (Tisch, Arbeitsplatte oder hohe Bank), mit Blick zur Kamera, Knie 90° gebeugt und hüftbreit auseinander. Halte die Knie still. Ein gerolltes Handtuch oder eine Faszienrolle leicht zwischen den Knien gedrückt hilft dabei. Teste ein Bein nach dem anderen: Schwinge einen Fuß so weit wie möglich nach außen und halte 2 Sekunden, dann das andere Bein. Die Kamera misst den Winkel des Schienbeins zur Senkrechten."
 },
 "thomas": {
 "n": "Thomas-Test (Hüftbeuger)",

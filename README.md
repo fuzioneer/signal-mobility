@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.57.5 (16 Nov 2026): Hip internal rotation test is now done one leg at a time (camera voice says "Then do the other leg"), with a tip that a rolled towel or foam roller squeezed between the knees helps keep them still.
 - 1.57.4 (16 Nov 2026): Strava sessions now reliably get the Recovery tag: if Strava drops the tag when the activity is created, the app adds it straight after with an activity update.
 - 1.57.3 (15 Nov 2026): Fixed the routine finish screen not scrolling, which hid the feedback and the Finish button on longer routines.
 - 1.57.2 (15 Nov 2026): Demo videos for the standing toe touch test (female and male), on the floor.

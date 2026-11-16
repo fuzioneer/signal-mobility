@@ -26,7 +26,7 @@
       how: "Stand side-on to the camera on a flat floor, feet together and knees straight. Reach down towards the floor as far as you can and hold 2 seconds. Fingertips touching the floor is 0. If you stop short, the gap to the floor is a minus number, for example -10 cm.",
       pose: mk("stand", { t: 285, nk: 272, na: [272, 272], fa: [272, 272] }) },
     { id: "hipir", z: "hips", n: "Hip internal rotation", u: "°", sides: true, lo: 10, hi: 40, cam: "hipir",
-      how: "Sit on something high enough that your feet clear the floor (a table, worktop or high bench), facing the camera, knees bent 90° and hip-width apart. Keep the knees still and swing both feet outwards as far as they'll go. Hold 2 seconds. The camera measures each shin's angle from vertical.",
+      how: "Sit on something high enough that your feet clear the floor (a table, worktop or high bench), facing the camera, knees bent 90° and hip-width apart. Keep your knees still. A rolled towel or foam roller lightly squeezed between them helps. Test one leg at a time: swing one foot outwards as far as it'll go and hold 2 seconds, then do the other leg. The camera measures the shin's angle from vertical.",
       pose: mk("seated", { hip: [70, 146], nl: [0, 270, 0], fl: [0, 245, 0], na: [270, 270], fa: [270, 270], prop: [{ t: "box", x: 30, y: 148, w: 66 }] }) },
     { id: "thomas", z: "hips", n: "Thomas test (hip flexor)", u: "°", sides: true, lo: 30, hi: -10, cam: "thomas",
       how: "Sit on the end of a bench, bed or sturdy table, side-on to the camera. Lie back hugging one knee to your chest and let the other leg hang for 5 seconds. Swap. The angle is the hanging thigh from horizontal: minus is good, plus is tight.",

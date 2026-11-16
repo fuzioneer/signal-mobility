@@ -829,7 +829,9 @@ I18N.add("fr", {
 "First name": "Prénom",
 "Used in your Today greeting": "Utilisé pour vous saluer sur Aujourd'hui",
 "Shown on the Today page when you're signed in.": "Affiché sur la page Aujourd'hui quand vous êtes connecté.",
-"Fingertips touch the floor on the standing toe touch (0 cm)": "Le bout des doigts touche le sol au test de flexion avant debout (0 cm)"
+"Fingertips touch the floor on the standing toe touch (0 cm)": "Le bout des doigts touche le sol au test de flexion avant debout (0 cm)",
+"Keep your knees still, and swing one foot outwards as far as it'll go. Hold it there for a couple of seconds.": "Gardez les genoux immobiles et écartez un pied vers l'extérieur aussi loin que possible. Tenez quelques secondes.",
+"Then do the other leg.": "Puis faites l'autre jambe."
 }, {
 "zone": {
 "shoulders": "Épaules",
@@ -1106,7 +1108,7 @@ I18N.add("fr", {
 },
 "hipir": {
 "n": "Rotation interne de hanche",
-"how": "Asseyez-vous sur quelque chose d'assez haut pour que vos pieds ne touchent pas le sol (une table, un plan de travail ou un banc haut), face à la caméra, genoux à 90° et écartés à la largeur des hanches. Gardez les genoux immobiles et écartez les deux pieds vers l'extérieur aussi loin que possible. Tenez 2 secondes. La caméra mesure l'angle de chaque tibia par rapport à la verticale."
+"how": "Asseyez-vous sur quelque chose d'assez haut pour que vos pieds ne touchent pas le sol (une table, un plan de travail ou un banc haut), face à la caméra, genoux pliés à 90° et écartés de la largeur des hanches. Gardez les genoux immobiles. Serrer légèrement une serviette roulée ou un rouleau de massage entre eux aide. Testez une jambe à la fois : écartez un pied vers l'extérieur aussi loin que possible et tenez 2 secondes, puis faites l'autre jambe. La caméra mesure l'angle du tibia par rapport à la verticale."
 },
 "thomas": {
 "n": "Test de Thomas (fléchisseur de hanche)",

@@ -829,7 +829,9 @@ I18N.add("es", {
 "First name": "Nombre",
 "Used in your Today greeting": "Se usa en tu saludo de Hoy",
 "Shown on the Today page when you're signed in.": "Se muestra en la página Hoy cuando has iniciado sesión.",
-"Fingertips touch the floor on the standing toe touch (0 cm)": "La punta de los dedos toca el suelo en el test de tocar los pies (0 cm)"
+"Fingertips touch the floor on the standing toe touch (0 cm)": "La punta de los dedos toca el suelo en el test de tocar los pies (0 cm)",
+"Keep your knees still, and swing one foot outwards as far as it'll go. Hold it there for a couple of seconds.": "Mantén las rodillas quietas y lleva un pie hacia fuera todo lo que puedas. Mantenlo ahí un par de segundos.",
+"Then do the other leg.": "Luego haz la otra pierna."
 }, {
 "zone": {
 "shoulders": "Hombros",
@@ -1106,7 +1108,7 @@ I18N.add("es", {
 },
 "hipir": {
 "n": "Rotación interna de cadera",
-"how": "Siéntate en algo lo bastante alto para que los pies no toquen el suelo (una mesa, encimera o banco alto), frente a la cámara, rodillas a 90° y separadas a la anchura de la cadera. Mantén las rodillas quietas y lleva los dos pies hacia fuera todo lo que puedas. Mantén 2 segundos. La cámara mide el ángulo de cada tibia respecto a la vertical."
+"how": "Siéntate en algo lo bastante alto para que los pies no toquen el suelo (una mesa, una encimera o un banco alto), frente a la cámara, con las rodillas dobladas a 90° y separadas a la anchura de la cadera. Mantén las rodillas quietas. Ayuda apretar suavemente una toalla enrollada o un rodillo de espuma entre ellas. Prueba una pierna cada vez: lleva un pie hacia fuera todo lo que puedas y mantén 2 segundos, luego haz la otra pierna. La cámara mide el ángulo de la espinilla respecto a la vertical."
 },
 "thomas": {
 "n": "Test de Thomas (flexor de cadera)",

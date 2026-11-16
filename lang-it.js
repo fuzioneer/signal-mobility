@@ -829,7 +829,9 @@ I18N.add("it", {
 "First name": "Nome",
 "Used in your Today greeting": "Usato nel saluto di Oggi",
 "Shown on the Today page when you're signed in.": "Mostrato nella pagina Oggi quando hai effettuato l'accesso.",
-"Fingertips touch the floor on the standing toe touch (0 cm)": "La punta delle dita tocca il pavimento nel test del tocco delle punte (0 cm)"
+"Fingertips touch the floor on the standing toe touch (0 cm)": "La punta delle dita tocca il pavimento nel test del tocco delle punte (0 cm)",
+"Keep your knees still, and swing one foot outwards as far as it'll go. Hold it there for a couple of seconds.": "Tieni le ginocchia ferme e porta un piede verso l'esterno il più possibile. Tienilo lì per un paio di secondi.",
+"Then do the other leg.": "Poi fai l'altra gamba."
 }, {
 "zone": {
 "shoulders": "Spalle",
@@ -1106,7 +1108,7 @@ I18N.add("it", {
 },
 "hipir": {
 "n": "Rotazione interna dell'anca",
-"how": "Siediti su qualcosa di abbastanza alto da non toccare il pavimento con i piedi (un tavolo, un piano di lavoro o una panca alta), di fronte alla fotocamera, ginocchia a 90° e alla larghezza delle anche. Tieni ferme le ginocchia e porta entrambi i piedi verso l'esterno il più possibile. Tieni 2 secondi. La fotocamera misura l'angolo di ogni tibia rispetto alla verticale."
+"how": "Siediti su qualcosa di abbastanza alto da non toccare il pavimento con i piedi (un tavolo, un piano di lavoro o una panca alta), di fronte alla fotocamera, ginocchia piegate a 90° e alla larghezza delle anche. Tieni le ginocchia ferme. Aiuta stringere leggermente tra loro un asciugamano arrotolato o un foam roller. Prova una gamba alla volta: porta un piede verso l'esterno il più possibile e tieni 2 secondi, poi l'altra gamba. La fotocamera misura l'angolo della tibia rispetto alla verticale."
 },
 "thomas": {
 "n": "Test di Thomas (flessore dell'anca)",

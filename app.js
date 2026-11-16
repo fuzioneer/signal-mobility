@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.57.4", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.57.5", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -1351,7 +1351,7 @@
     hipir: (T("Prop your phone at knee height, about two metres away. Sit facing it.")),
     pigeon: (T("Prop your phone at hip height, about two metres away. Sit facing it."))
   };
-  var NEXT = { shflex: (T("Then turn round, and lift the other arm.")), slr: (T("Then lift the other leg.")), thomas: (T("Then swap legs over.")), ankle: (T("Then swap legs over.")), k2w: (T("Then swap legs over.")), er: (T("Then turn round, and do the other arm.")), backscratch: (T("Then swap hands over.")), trot: (T("Now turn the other way.")), hipir: (T("Keep holding that.")), pigeon: (T("Then switch sides.")) };
+  var NEXT = { shflex: (T("Then turn round, and lift the other arm.")), slr: (T("Then lift the other leg.")), thomas: (T("Then swap legs over.")), ankle: (T("Then swap legs over.")), k2w: (T("Then swap legs over.")), er: (T("Then turn round, and do the other arm.")), backscratch: (T("Then swap hands over.")), trot: (T("Now turn the other way.")), hipir: (T("Then do the other leg.")), pigeon: (T("Then switch sides.")) };
   /* What the coach says, written to be heard rather than read. */
   var SPOKEN = {
     shflex: (T("Keep your ribs down, and lift one straight arm up overhead as far as it'll go. Hold it there for a couple of seconds, then we'll do the other side.")),
@@ -1361,7 +1361,7 @@
     trot: (T("Hold a stick across your shoulders. First, face me and keep still for a moment, so I can learn your shoulder width.")),
     slr: (T("Keep both legs straight. Lift one leg as high as you can, without bending the knee, and hold it there for a couple of seconds.")),
     toetouch: (T("Feet together, knees straight. Reach down as far as you can, and hold it at the bottom.")),
-    hipir: (T("Keep your knees still, and swing both feet outwards as far as they'll go. Hold it there for a couple of seconds.")),
+    hipir: (T("Keep your knees still, and swing one foot outwards as far as it'll go. Hold it there for a couple of seconds.")),
     thomas: (T("Lie back on the edge of the bench. Hug one knee to your chest, and let the other leg hang down. Then just relax and hold still.")),
     pigeon: (T("Get into your ninety ninety position, with the front shin across your body. Lean forward with a long back, and let the front knee drop. Hold it there.")),
     ankle: (T("Keep your front heel down, and drive your knee forward over your toes as far as it'll go. Hold it at the furthest point.")),
