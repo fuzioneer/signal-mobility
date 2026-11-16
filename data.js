@@ -34,9 +34,6 @@
     { id: "pigeon", z: "hips", n: "90/90 hip rotation", u: "cm", sides: true, lo: 20, hi: 0, cam: "pigeon",
       how: "Sit in a 90/90 position facing the camera, front shin across your body. Lean forward with a straight back and let the front knee drop. Hold 2 seconds, then switch sides. The camera estimates the gap between the front knee and the floor.",
       pose: mk("seated", { hip: [86, 182], t: 75, nl: [340, 200, 180], fl: [200, 180, 270], na: [300, 300], fa: [300, 300] }) },
-    { id: "cam_shin", z: "ankles", n: "Ankle dorsiflexion (shin lean)", u: "°", sides: true, lo: 20, hi: 45, cam: "ankle",
-      how: "Side-on to the camera in a half-kneeling lunge, front heel down. Drive the knee forward over the toes as far as you can without lifting the heel. Swap sides. 40° or more is good.",
-      pose: mk("halfkneel", { hip: [96, 143], nl: [345, 300, 0] }), pose2: mk("halfkneel", {}) },
     { id: "k2w", z: "ankles", n: "Knee-to-wall", u: "cm", sides: true, lo: 2, hi: 14, cam: "k2w",
       how: "Half-kneel side-on to the camera, whole lower body in view. Keeping the front heel down, drive the knee as far forward over the toes as you can. Hold 2 seconds, then swap legs. The camera estimates the knee-to-wall distance (how far the knee travels past the toes).",
       pose: mk("halfkneel", { hip: [96, 143], nl: [345, 300, 0], prop: [{ t: "wall", x: 166 }] }) },
@@ -413,7 +410,6 @@
     { id: "fix_hipir", test: "hipir", n: "Improve hip internal rotation", sub: "Turn the hips inward with control", items: ["wipers", "ninety", "hipcars", "fig4", "frog", "chairfig4"] },
     { id: "fix_thomas", test: "thomas", n: "Improve your hip flexors", sub: "Open up the front of the hips", items: ["couch", "kneelhf", "edgeflexor", "lizard", "standquad", "sidequad"] },
     { id: "fix_pigeon", test: "pigeon", n: "Improve your 90/90 hip rotation", sub: "Both hip rotations, in and out", items: ["ninety", "pigeon", "wipers", "fig4", "butterfly", "hipcircle"] },
-    { id: "fix_cam_shin", test: "cam_shin", n: "Improve your ankle bend", sub: "Calves and ankles, for a deeper shin lean", items: ["anklerock", "calfwall", "soleus", "shinsit", "stepcalf", "deepsquat"] },
     { id: "fix_k2w", test: "k2w", n: "Improve your knee to wall", sub: "Ankle dorsiflexion, calves and soleus", items: ["anklerock", "calfwall", "soleus", "heelsup", "gobletpry", "tibraise"] },
     { id: "fix_squat", test: "squat", n: "Improve your deep squat", sub: "Hips and ankles for a deeper squat", items: ["deepsquat", "gobletpry", "anklerock", "frog", "cossack", "squatstand"] }
   ];

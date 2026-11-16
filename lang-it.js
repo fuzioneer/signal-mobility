@@ -849,7 +849,9 @@ I18N.add("it", {
 "Non-binary": "Non binario",
 "Other": "Altro",
 "Prefer not to say": "Preferisco non dirlo",
-"Your name, country, age and gender are private. Leaderboards only ever show your nickname.": "Nome, paese, età e genere sono privati. Le classifiche mostrano solo il tuo nickname."
+"Your name, country, age and gender are private. Leaderboards only ever show your nickname.": "Nome, paese, età e genere sono privati. Le classifiche mostrano solo il tuo nickname.",
+"The quick test takes about 8 minutes and scores six zones, so the app can build your daily routine around what's tightest. Every test can use live body tracking.": "Il test rapido dura circa 8 minuti e valuta sei zone, così l'app può costruire la tua routine quotidiana intorno ai punti più rigidi. Ogni test può usare il tracciamento del corpo in tempo reale.",
+"10 cm knee-to-wall on both sides": "10 cm ginocchio-muro su entrambi i lati"
 }, {
 "zone": {
 "shoulders": "Spalle",

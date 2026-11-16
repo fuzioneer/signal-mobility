@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.63.1", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.64.0", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -38,7 +38,11 @@
     return blank();
   }
   /* The wall overhead reach test was dropped in 1.52.0: goals set on it move to shoulder flexion. */
-  function migGoal(g) { if (g && g.key === "wallflex") { g.key = "cam_shflex"; g.target = 170; g.start = null; } return g; }
+  function migGoal(g) {
+    if (g && g.key === "wallflex") { g.key = "cam_shflex"; g.target = 170; g.start = null; }
+    if (g && g.key === "cam_shin") { g.key = "k2w"; g.target = 10; g.start = null; } /* shin lean test removed 16 Nov 2026 */
+    return g;
+  }
   var S = load();
   function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast((T("Couldn't save. Storage may be full."))); } }
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {});
@@ -317,7 +321,7 @@
     { id: "toes", key: "toetouch", target: 0, z: "postchain", n: "Touch your toes", sub: "Fingertips touch the floor on the standing toe touch (0 cm)" },
     { id: "overhead", key: "cam_shflex", target: 170, z: "overhead", n: "Arms fully overhead", sub: "170° shoulder flexion on both sides" },
     { id: "scratch", key: "backscratch", target: 0, z: "shoulders", n: "Fingers meet behind your back", sub: "Back scratch reaches 0 cm on both sides" },
-    { id: "squat", key: "cam_shin", target: 35, z: "ankles", n: "Heels-down deep squat", sub: "35° of ankle bend (shin lean) on both sides" },
+    { id: "squat", key: "k2w", target: 10, z: "ankles", n: "Heels-down deep squat", sub: "10 cm knee-to-wall on both sides" },
     { id: "slr", key: "slr", target: 80, z: "postchain", n: "Looser hamstrings", sub: "80° straight leg raise on both legs" },
     { id: "hipir", key: "hipir", target: 35, z: "hips", n: "Free-turning hips", sub: "35° hip internal rotation on both sides" },
     { id: "thomas", key: "thomas", target: 0, z: "hips", n: "Open hip flexors", sub: "Thigh level or lower on the Thomas test, both sides" },
@@ -434,7 +438,7 @@
     var h = greeting(), due = remDue(), snoozed = false; try { snoozed = !!localStorage.getItem("sm-nudge-" + iso()); } catch (e) {}
     if (due && due.nudge && !snoozed) { var drt = remRoutine(due); h += '<div class="card nudge remnudge"><div class="grow"><h3>' + T("Time for your mobility") + '</h3><p class="muted" style="margin-top:4px">' + esc(drt.n) + " · " + mins(routineSecs(drt.items)) + '</p><div class="row" style="margin-top:12px;gap:8px"><button class="btn primary" data-act="play" data-id="' + esc(drt.id) + '">' + T("Start") + '</button><button class="btn" data-act="rm-later">' + T("Not today") + "</button></div></div></div>"; }
     if (!last) {
-      h += ('<div class="card nudge"><div class="grow"><h3>' + T("Start with a mobility test") + '</h3><p class="muted" style="margin-top:4px">' + T("About 15 minutes. It scores six zones so the app can build your daily routine around what's tightest. Camera tracking works for 5 of the tests.") + '</p><button class="btn primary" style="margin-top:12px" data-act="go-test">' + T("Take the test") + '</button></div></div>');
+      h += ('<div class="card nudge"><div class="grow"><h3>' + T("Start with a mobility test") + '</h3><p class="muted" style="margin-top:4px">' + T("The quick test takes about 8 minutes and scores six zones, so the app can build your daily routine around what's tightest. Every test can use live body tracking.") + '</p><button class="btn primary" style="margin-top:12px" data-act="go-test">' + T("Take the test") + '</button></div></div>');
     } else if (daysBetween(last, iso()) >= 28) {
       h += ('<div class="card nudge"><div class="grow"><h3>' + T("Time to retest") + '</h3><p>' + T("Your last test was") + ' ') + daysBetween(last, iso()) + (' ' + T("days ago. Retesting every 4 weeks shows what's working.") + '</p><button class="btn primary" style="margin-top:12px" data-act="go-test">' + T("Retest now") + '</button></div></div>');
     }

@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.64.0 (16 Nov 2026): Removed the ankle dorsiflexion (shin lean) test, which measured the same movement as knee-to-wall. The full test is now 11 tests in about 15 minutes; the quick test is unchanged (6 tests, about 8 minutes). Its "Improve your ankle bend" routine is gone, the ankle goal now uses knee-to-wall (10 cm), and saved shin lean goals move across automatically.
 - 1.63.1 (16 Nov 2026): The 90/90 hip rotation test uses the 90/90 stretch demo video (women and men). It plays once and stops on the last frame instead of looping (VIDEO_NOLOOP in videos.js).
 - 1.63.0 (16 Nov 2026): Demo videos for the Thomas hip flexor test (women and men): sit on the end of the bench, catch one knee as it comes up and roll back to hug it, other leg relaxed with the foot near the floor.
 - 1.62.1 (16 Nov 2026): Sign-in with Google is switched off for now (GOOGLE_SIGNIN in app.js). Community sign-in is by emailed code only.
