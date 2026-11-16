@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
   const who = p?.nickname ? `${p.nickname} (${email || "no email"})` : (email || "unknown");
 
   const label = r.kind === "bug" ? "Bug report" : "Feature request";
-  const AREAS: Record<string, string> = { today: "Today page", routines: "Routines", test: "Mobility test", history: "History", community: "Community", general: "General" };
+  const AREAS: Record<string, string> = { today: "Today page", routines: "Routines", test: "Mobility test", history: "History", community: "Community", website: "Website", general: "General" };
   const area = AREAS[r.area] || "General";
   const link = `${BOARD}?post=${id}`; // opens this post directly on the board
   const when = new Date(r.created_at).toLocaleString("en-GB", { timeZone: "Europe/London", dateStyle: "full", timeStyle: "short" });

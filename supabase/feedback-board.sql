@@ -193,3 +193,8 @@ alter table public.feedback_items add column if not exists area text not null de
 -- else. No alert email is sent for them, and they don't get an automatic vote.
 alter table public.feedback_items drop constraint if exists feedback_items_kind_check;
 alter table public.feedback_items add constraint feedback_items_kind_check check (kind in ('bug', 'feature', 'test'));
+
+-- Website section (added 16 Nov 2026, migration feedback_area_website).
+alter table public.feedback_items drop constraint if exists feedback_items_area_check;
+alter table public.feedback_items add constraint feedback_items_area_check
+  check (area in ('today', 'routines', 'test', 'history', 'community', 'website', 'general'));
