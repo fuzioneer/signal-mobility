@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.63.0", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.63.1", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -155,11 +155,13 @@
     var v = S.settings.model === "m" ? window.VIDEOS_M : window.VIDEOS;
     return (v && v[key]) || null;
   }
+  /* Most demo clips loop; ones listed in VIDEO_NOLOOP (videos.js) play once and stop on the last frame. */
+  function loopAttr(key) { return window.VIDEO_NOLOOP && window.VIDEO_NOLOOP[key] ? "" : " loop"; }
   function bigPhoto(key, cls, alt) {
     var set = photoSet(key); if (!set.length) return "";
     alt = altFor(key) || alt;
     var vu = vidUrl(key);
-    if (vu) return '<div class="xfade vid" data-key="' + esc(key) + '"><video class="photo ' + cls + ' on" data-vsrc="' + esc(vu) + '" poster="' + esc(set[0]) + '" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc((alt || "") + ", " + T("demo video")) + '"></video></div>';
+    if (vu) return '<div class="xfade vid" data-key="' + esc(key) + '"><video class="photo ' + cls + ' on" data-vsrc="' + esc(vu) + '" poster="' + esc(set[0]) + '" autoplay muted' + loopAttr(key) + ' playsinline preload="auto" disablepictureinpicture aria-label="' + esc((alt || "") + ", " + T("demo video")) + '"></video></div>';
     return '<div class="xfade' + (set.length > 1 ? " multi" : "") + '" data-key="' + esc(key) + '">' + set.map(function (u, i) {
       return '<img class="photo ' + cls + (i === 0 ? " on" : "") + '" data-i="' + i + '" alt="' + esc(alt || "") + (set.length > 1 ? " (" + T("position") + " " + (i + 1) + " " + T("of") + " " + set.length + ")" : "") + '" src="' + esc(u) + '">';
     }).join("") + "</div>";
@@ -222,7 +224,7 @@
     var st = timed ? P.st[P.i] : null, ezy = st && altOf(st.s.id, "easy"), hrd = st && altOf(st.s.id, "hard");
     el.innerHTML = '<button class="icon-btn vf-close" aria-label="' + esc(T("Close")) + '">&#x2715;</button>' +
       (u ? '<div class="vf-box" data-key="' + esc(key) + '">' + (ps.length ? '<img class="vf-poster" alt="" src="' + esc(ps[0]) + '">' : "") + '<span class="vf-spin" aria-hidden="true"></span>' +
-        '<video autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(name + ", " + T("demo video")) + '"></video></div>'
+        '<video autoplay muted' + loopAttr(key) + ' playsinline preload="auto" disablepictureinpicture aria-label="' + esc(name + ", " + T("demo video")) + '"></video></div>'
         : '<div class="vf-box ready"><img class="vf-photo" alt="' + esc(altFor(key)) + '" src="' + esc(photoUrl(key)) + '"></div>') +
       '<p class="vf-cap">' + esc(name) + (st && st.side ? " · " + esc(T(st.side + " side")) : "") + "</p>" +
       (timed ? '<div class="tring vf-ring" id="vf-ring" aria-hidden="true"></div>' +
@@ -656,7 +658,7 @@
         h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + art("t_" + t.id, t.pose, { stroke: 8 }) + '</div><div><h3 role="button" tabindex="0" aria-label="' + esc(TF("Show the {name} picture or video", { name: t.n })) + '">' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? (T("Not scored. A check of your squat position.")) : (t.sides ? (T("Both sides")) : (T("One result"))) + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
         var su = window.SETUP_IMG && window.SETUP_IMG[t.id];
         h += ('<details' + (open ? " open" : "") + '><summary>' + T("How to do it") + '</summary><div class="how"><p>') + esc(t.how) + '</p>' +
-          (su && S.settings.photos !== false ? '<figure class="setupfig"><img class="howsetup" loading="lazy" src="' + esc(su) + '" alt="' + esc(TF("Camera setup for {name}: where to put your phone", { name: t.n })) + '"><figcaption>' + T("Camera setup") + "</figcaption></figure>" : "") +(vidUrl("t_" + t.id) && photoUrl("t_" + t.id) ? '<div class="xfade vid howvid" data-key="t_' + esc(t.id) + '"><video class="photo howphoto on" data-vsrc="' + esc(vidUrl("t_" + t.id)) + '" poster="' + esc(photoUrl("t_" + t.id)) + '" autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(altFor("t_" + t.id) + ", " + T("demo video")) + '"></video></div>' : photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(altFor("t_" + t.id)) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
+          (su && S.settings.photos !== false ? '<figure class="setupfig"><img class="howsetup" loading="lazy" src="' + esc(su) + '" alt="' + esc(TF("Camera setup for {name}: where to put your phone", { name: t.n })) + '"><figcaption>' + T("Camera setup") + "</figcaption></figure>" : "") +(vidUrl("t_" + t.id) && photoUrl("t_" + t.id) ? '<div class="xfade vid howvid" data-key="t_' + esc(t.id) + '"><video class="photo howphoto on" data-vsrc="' + esc(vidUrl("t_" + t.id)) + '" poster="' + esc(photoUrl("t_" + t.id)) + '" autoplay muted' + loopAttr("t_" + t.id) + ' playsinline preload="auto" disablepictureinpicture aria-label="' + esc(altFor("t_" + t.id) + ", " + T("demo video")) + '"></video></div>' : photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(altFor("t_" + t.id)) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
         h += '<div class="inputs">' + fieldsFor(t).map(function (f) { return '<label class="field">' + f[1] + '<input type="number" inputmode="decimal" step="any" data-k="' + f[0] + '" value="' + (isNum(draft.v[f[0]]) ? draft.v[f[0]] : "") + '"></label>'; }).join("");
         if (t.cam) h += '<button class="btn" data-act="cam" data-id="' + t.id + '" style="flex:none" aria-label="' + esc(TF("Do the {name} test with the camera", { name: t.n })) + '">' + ICON.cam.replace("<svg", '<svg width="20" height="20" aria-hidden="true"') + (" " + T("Do Test") + "</button>");
         h += "</div>";
@@ -1412,7 +1414,7 @@
     CAM = { on: true, id: id, k: t.cam, t: t, facing: "user", sess: null, stream: null, file: false, lastSay: 0, seen: false, lostAt: 0, lostSaid: 0, done: {}, trotCued: false };
     var el = $("#cam"); el.hidden = false; document.body.style.overflow = "hidden"; wakeOn(); unlockAudio();
     el.innerHTML = '<div class="ohead"><button class="icon-btn" data-act="c-close" aria-label="' + T("Close") + '">' + ICON.close + "</button><h2>" + esc(t.n) + '</h2><button class="icon-btn" data-act="c-voice" aria-label="' + T("Voice") + '">' + (S.settings.voice ? ICON.sound : ICON.mute) + '</button></div>' +
-      '<div class="stage" id="c-stage"><video id="c-video" playsinline muted></video><canvas id="c-canvas"></canvas><div class="guide" id="c-guide"><div>' + (vidUrl("t_" + id) ? '<div class="xfade vid camvid" data-key="t_' + esc(id) + '"><video class="photo on" data-vsrc="' + esc(vidUrl("t_" + id)) + '"' + (photoUrl("t_" + id) ? ' poster="' + esc(photoUrl("t_" + id)) + '"' : "") + ' autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(altFor("t_" + id) + ", " + T("demo video")) + '"></video></div>' : '<div class="fig" data-anim="t:' + id + '"></div>') + '<p style="max-width:320px">' + esc(CAMHINT[t.cam] || t.how) + '</p><p class="small" style="opacity:.7;margin-top:10px">' + (t.cam === "er" || t.cam === "slr" ? (T("Prop the phone at floor level about 2 to 3 metres away.")) : (T("Prop the phone at hip height about 2 to 3 metres away."))) + (" " + T("Good light, fitted clothes.")) + (t.u === "cm" ? (" " + T("The cm reading is an estimate scaled to your height (")) + (S.settings.height || 178) + " cm)." : "") + '</p></div></div><div class="status" id="c-status" hidden></div></div>' +
+      '<div class="stage" id="c-stage"><video id="c-video" playsinline muted></video><canvas id="c-canvas"></canvas><div class="guide" id="c-guide"><div>' + (vidUrl("t_" + id) ? '<div class="xfade vid camvid" data-key="t_' + esc(id) + '"><video class="photo on" data-vsrc="' + esc(vidUrl("t_" + id)) + '"' + (photoUrl("t_" + id) ? ' poster="' + esc(photoUrl("t_" + id)) + '"' : "") + ' autoplay muted' + loopAttr("t_" + id) + ' playsinline preload="auto" disablepictureinpicture aria-label="' + esc(altFor("t_" + id) + ", " + T("demo video")) + '"></video></div>' : '<div class="fig" data-anim="t:' + id + '"></div>') + '<p style="max-width:320px">' + esc(CAMHINT[t.cam] || t.how) + '</p><p class="small" style="opacity:.7;margin-top:10px">' + (t.cam === "er" || t.cam === "slr" ? (T("Prop the phone at floor level about 2 to 3 metres away.")) : (T("Prop the phone at hip height about 2 to 3 metres away."))) + (" " + T("Good light, fitted clothes.")) + (t.u === "cm" ? (" " + T("The cm reading is an estimate scaled to your height (")) + (S.settings.height || 178) + " cm)." : "") + '</p></div></div><div class="status" id="c-status" hidden></div></div>' +
       '<div class="readout" id="c-read"></div>' +
       '<div class="camctl" id="c-ctl"><button class="btn primary" data-act="c-start">' + ICON.cam.replace("<svg", '<svg width="18" height="18"') + (' ' + T("Start camera") + '</button><label class="btn">' + T("Use a video") + '<input type="file" accept="video/*" id="c-file" hidden></label></div>');
     animateIn(el); readout();
