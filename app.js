@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.58.0", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.58.1", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -221,6 +221,7 @@
       '<video autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(name + ", " + T("demo video")) + '"></video></div>' +
       '<p class="vf-cap">' + esc(name) + "</p>" +
       (P && !$("#player").hidden ? '<div class="tring vf-ring" id="vf-ring" aria-hidden="true"></div>' : "");
+    el.classList.toggle("timed", !!(P && !$("#player").hidden));
     el.hidden = false; document.body.style.overflow = "hidden";
     if (P && !$("#player").hidden) draw();
     var v = el.querySelector("video"), box = el.querySelector(".vf-box");
@@ -1195,7 +1196,9 @@
     $("#p-ring").innerHTML = ringSVG(p, 112, 9, P.phase === "prep" ? "var(--amber)" : "var(--brand)") + '<b aria-hidden="true">' + Math.max(0, Math.ceil(P.left)) + "</b>";
     $("#p-ring").setAttribute("aria-label", TF("{n} seconds left", { n: Math.max(0, Math.ceil(P.left)) }));
     /* The same timer, smaller, over a full screen demo video opened during the routine. */
-    var vr = $("#vf-ring"); if (vr) vr.innerHTML = ringSVG(p, 112, 9, P.phase === "prep" ? "var(--amber)" : "var(--brand)") + '<b aria-hidden="true">' + Math.max(0, Math.ceil(P.left)) + "</b>";
+    var ringHtml = ringSVG(p, 112, 9, P.phase === "prep" ? "var(--amber)" : "var(--brand)") + '<b aria-hidden="true">' + Math.max(0, Math.ceil(P.left)) + "</b>";
+    var vr = $("#vf-ring"); if (vr) vr.innerHTML = ringHtml;
+    var lr = $("#lb-ring"); if (lr && !$("#lightbox").hidden) lr.innerHTML = ringHtml;
     drawTL(); vidKick();
     var ph = $("#p-phase"); ph.textContent = P.paused ? (T("Paused")) : P.phase === "prep" ? (P.st[P.i].first ? (T("Get into position")) : (T("Switch sides"))) : (T("Hold")); ph.className = "phase" + (P.phase === "prep" ? " prep" : "");
   }
@@ -1868,7 +1871,14 @@
     $("#lb-prev").hidden = $("#lb-next").hidden = n < 2;
   }
   function lbStep(d) { if (lbList.length < 2) return; lbIdx = (lbIdx + d + lbList.length) % lbList.length; lbShow(); }
-  function openLightbox(src, cap, list, idx) { lbList = list && list.length ? list : [src]; lbIdx = idx || 0; lbCap = cap || ""; lbShow(); $("#lightbox").hidden = false; }
+  function openLightbox(src, cap, list, idx) {
+    lbList = list && list.length ? list : [src]; lbIdx = idx || 0; lbCap = cap || ""; lbShow();
+    /* During a routine the photo sits at the top with the routine timer, large and centred, below it. */
+    var lb = $("#lightbox"), timed = !!(P && !$("#player").hidden), lr = $("#lb-ring");
+    if (timed && !lr) { lr = document.createElement("div"); lr.id = "lb-ring"; lr.className = "tring vf-ring"; lr.setAttribute("aria-hidden", "true"); lb.insertBefore(lr, $("#lb-cap").nextSibling); }
+    if (lr) lr.hidden = !timed;
+    lb.classList.toggle("timed", timed); lb.hidden = false; if (timed) draw();
+  }
   function closeLightbox() { var lb = $("#lightbox"); lb.hidden = true; $("#lb-img").removeAttribute("src"); lbList = []; }
   $("#lb-prev").addEventListener("click", function (e) { e.stopPropagation(); lbStep(-1); });
   $("#lb-next").addEventListener("click", function (e) { e.stopPropagation(); lbStep(1); });
