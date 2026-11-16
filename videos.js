@@ -30,6 +30,7 @@ window.VIDEOS = {
  "askip": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261113_093902_e741dd33-5a4e-461b-9fd8-ffb93613106b.mp4"
 };
 window.VIDEOS_M = {
+ "t_hipir": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261116_125528_bfa2a0e3-b4a2-4c2c-b71f-13dae43700f0.mp4",
  "t_toetouch": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_221426_466450bd-7e59-4ad5-b225-0babdadcf3f3.mp4",
  "t_slr": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_215020_8a2707f5-d03b-46ed-9693-606b2c934d15.mp4",
  "t_trot": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_212717_13b15ee9-cf29-4b4f-86c7-f887d3c4f483.mp4",
