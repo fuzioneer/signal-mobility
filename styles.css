@@ -550,10 +550,10 @@ details.rfix > summary::after { content: ""; width: 8px; height: 8px; margin-rig
 details.rfix[open] > summary::after { transform: rotate(-135deg); }
 
 /* Quick test button under Start test (1.53.0) */
-.gtintro .gtquick { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
-.gtintro .gtquick span { flex: 1; text-align: left; font-weight: 700; }
-.gtintro .gtquick small { color: var(--muted); font-weight: 600; }
-.gtintro .gtquick svg { color: var(--brand); flex: none; }
+.gtintro .gtquick, .gtintro .gtwarm { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.gtintro .gtquick span, .gtintro .gtwarm span { flex: 1; text-align: left; font-weight: 700; }
+.gtintro .gtquick small, .gtintro .gtwarm small { color: var(--muted); font-weight: 600; }
+.gtintro .gtquick svg, .gtintro .gtwarm svg { color: var(--brand); flex: none; }
 .gtintro .gtqnote { margin: 8px 2px 0; }
 
 /* Share to Strava tick box on the finish screen (1.54.0) */
@@ -622,3 +622,4 @@ details.rfix[open] > summary::after { transform: rotate(-135deg); }
 .tog input:checked { background: var(--brand); }
 .tog input:checked::after { transform: translateX(20px); }
 .tog input:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.gtintro .gtwarm { margin: 4px 0 8px; }

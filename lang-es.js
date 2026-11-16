@@ -851,7 +851,11 @@ I18N.add("es", {
 "Prefer not to say": "Prefiero no decirlo",
 "Your name, country, age and gender are private. Leaderboards only ever show your nickname.": "Tu nombre, país, edad y género son privados. Las clasificaciones solo muestran tu apodo.",
 "The quick test takes about 8 minutes and scores six zones, so the app can build your daily routine around what's tightest. Every test can use live body tracking.": "El test rápido dura unos 8 minutos y puntúa seis zonas, para que la app cree tu rutina diaria según lo que tengas más rígido. Todos los tests pueden usar seguimiento corporal en directo.",
-"10 cm knee-to-wall on both sides": "10 cm de rodilla a la pared en ambos lados"
+"10 cm knee-to-wall on both sides": "10 cm de rodilla a la pared en ambos lados",
+"Warm up first": "Calienta primero",
+"Mobility test warm-up": "Calentamiento para el test de movilidad",
+"for all {n} tests, plus a short warm-up. You can stop part way and save what you've done.": "para los {n} tests, más un calentamiento corto. Puedes parar a mitad y guardar lo que hayas hecho.",
+"Warm up first with the routine above. Tap": "Calienta primero con la rutina de arriba. Toca"
 }, {
 "zone": {
 "shoulders": "Hombros",
@@ -1095,6 +1099,10 @@ I18N.add("es", {
 "fix_squat": {
 "n": "Mejora tu sentadilla profunda",
 "sub": "Caderas y tobillos para una sentadilla más profunda"
+},
+"testwarm": {
+"n": "Calentamiento para el test de movilidad",
+"sub": "Movimientos suaves para las seis zonas, antes del test"
 }
 },
 "test": {

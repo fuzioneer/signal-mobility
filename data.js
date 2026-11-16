@@ -366,6 +366,7 @@
     { id: "squat", lift: "squat", n: "Squat and clean prep", sub: "Hips and ankles", items: ["anklerock", "heelsup", "ninety", "frog", "kneelhf", "deepsquat"] },
     { id: "back", n: "Back care", sub: "Gentle, for a cranky lower back", items: ["catcow", "birddog", "deadbug", "bridge", "kneelhf", "childreach", "breath9090"] },
     { id: "desk", n: "Desk break", sub: "5 minutes, no kit", items: ["doorway", "crossbody", "kneelhf", "foldfwd", "stickrot"] },
+    { id: "testwarm", kind: "activate", n: "Mobility test warm-up", sub: "Gentle moves for all six zones, before you test", items: ["armcircle", "catcow", "wgs", "legswing", "anklerock"] },
     { id: "prerun", sport: "running", kind: "activate", n: "Before a run", sub: "Dynamic warm-up to get you moving", items: ["legswing", "hipcircle", "lungetwist", "wgs", "anklerock", "bridge", "askip", "pogo"] },
     { id: "postrun", sport: "running", kind: "recover", n: "After a run", sub: "Easy cool-down for calves, hips and hamstrings", items: ["calfwall", "soleus", "standquad", "kneelhf", "hamtowel", "fig4", "crossover", "pigeon", "childreach"] },
     { id: "hyroxpre", sport: "hyrox", kind: "activate", n: "Hyrox warm-up", sub: "Race or training day, about 10 minutes", tag: "hyrox", items: ["catcow", "passthru", "legswing", "hipcircle", "wgs", "lungetwist", "anklerock", "deepsquat", "askip", "pogo"] },
