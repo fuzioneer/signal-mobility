@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.59.0 (16 Nov 2026): The coach's voice and beeps now play over music from other apps (Spotify, Apple Music) instead of pausing it (iPhone audio session "ambient"). New Settings option "Play over music from other apps", on by default; turn it off to go back to the old behaviour, which ignores the silent switch but pauses other music.
 - 1.58.1 (16 Nov 2026): During a routine, the full screen demo video or photo now sits at the top of the screen with the routine timer large and centred below it.
 - 1.58.0 (16 Nov 2026): A full screen demo video opened during a routine now shows the routine timer circle in the top left, counting down with the stretch.
 - 1.57.9 (16 Nov 2026): During a routine, a full screen photo or demo video opened mid-stretch now closes itself in the last 3 seconds, so it no longer hides the countdown and the next move.

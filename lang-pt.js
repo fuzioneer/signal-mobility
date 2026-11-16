@@ -831,7 +831,9 @@ I18N.add("pt", {
 "Shown on the Today page when you're signed in.": "Aparece na página Hoje quando tem sessão iniciada.",
 "Fingertips touch the floor on the standing toe touch (0 cm)": "As pontas dos dedos tocam no chão no teste de tocar nos pés (0 cm)",
 "Keep your knees still, and swing one foot outwards as far as it'll go. Hold it there for a couple of seconds.": "Mantenha os joelhos parados e leve um pé para fora o mais que conseguir. Mantenha aí uns segundos.",
-"Then do the other leg.": "Depois faça a outra perna."
+"Then do the other leg.": "Depois faça a outra perna.",
+"Play over music from other apps": "Tocar por cima da música de outras apps",
+"Keeps Spotify or Apple Music playing under the coach. On iPhone the coach then follows your silent switch, so turn the ringer on to hear it.": "Mantém o Spotify ou o Apple Music a tocar por baixo do treinador. No iPhone, o treinador segue então o botão de silêncio, por isso ative o toque para o ouvir."
 }, {
 "zone": {
 "shoulders": "Ombros",

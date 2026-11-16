@@ -831,7 +831,9 @@ I18N.add("de", {
 "Shown on the Today page when you're signed in.": "Wird auf der Seite Heute angezeigt, wenn du angemeldet bist.",
 "Fingertips touch the floor on the standing toe touch (0 cm)": "Fingerspitzen berühren den Boden beim Zehenberührungstest (0 cm)",
 "Keep your knees still, and swing one foot outwards as far as it'll go. Hold it there for a couple of seconds.": "Halte die Knie still und schwinge einen Fuß so weit wie möglich nach außen. Halte ihn dort ein paar Sekunden.",
-"Then do the other leg.": "Dann das andere Bein."
+"Then do the other leg.": "Dann das andere Bein.",
+"Play over music from other apps": "Über Musik aus anderen Apps abspielen",
+"Keeps Spotify or Apple Music playing under the coach. On iPhone the coach then follows your silent switch, so turn the ringer on to hear it.": "Spotify oder Apple Music laufen unter dem Coach weiter. Auf dem iPhone folgt der Coach dann dem Stummschalter, also Klingelton einschalten, um ihn zu hören."
 }, {
 "zone": {
 "shoulders": "Schultern",
