@@ -12,6 +12,14 @@ const FROM = Deno.env.get("NOTIFY_FROM") || "Movage <noreply@movage.co.uk>";
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 const json = (o: unknown, status = 200) => new Response(JSON.stringify(o), { status, headers: { "Content-Type": "application/json" } });
 
+// Standard footer on every Movage email: confidentiality notice, website and social links.
+const SITE = "https://www.movage.co.uk", IG = "https://www.instagram.com/movageapp/", YT = "https://www.youtube.com/@movageapp";
+const DISCLAIMER = "This email and any attachments are confidential and intended only for the person or organisation it is addressed to. If you have received it in error, please let us know by replying and then delete it. Do not copy, forward or rely on its contents. Movage accepts no liability for any loss or damage caused by viruses; please carry out your own checks.";
+const FOOT_TEXT = `\n--\nMovage | ${SITE}\nInstagram: ${IG}\nYouTube: ${YT}\n\n${DISCLAIMER}\n`;
+const FOOT_HTML = `<hr style="border:0;border-top:1px solid #dfe5e2;margin:28px 0 14px">` +
+  `<p style="font-family:Arial,sans-serif;font-size:13px;color:#5d6b66;margin:0 0 8px"><b style="color:#14201c">Movage</b> &middot; <a href="${SITE}" style="color:#0f6b5c">movage.co.uk</a> &middot; <a href="${IG}" style="color:#0f6b5c">Instagram @movageapp</a> &middot; <a href="${YT}" style="color:#0f6b5c">YouTube</a></p>` +
+  `<p style="font-family:Arial,sans-serif;font-size:11px;line-height:1.5;color:#7f8d88;margin:0">${DISCLAIMER}</p>`;
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "POST only" }, 405);
   const key = Deno.env.get("SMTP2GO_API_KEY");
@@ -38,7 +46,7 @@ Deno.serve(async (req) => {
     headers: { "Content-Type": "application/json", "X-Smtp2go-Api-Key": key, "accept": "application/json" },
     // Reply-To is the person who signed up, so hitting Reply goes straight to them.
     // Only set it for a plain, valid address so nothing odd can end up in a mail header.
-    body: JSON.stringify({ sender: FROM, to: [TO], subject, text_body: text, html_body: html,
+    body: JSON.stringify({ sender: FROM, to: [TO], subject, text_body: text + FOOT_TEXT, html_body: html + FOOT_HTML,
       ...(/^[^\s@<>",;:]+@[^\s@<>",;:]+\.[^\s@<>",;:]+$/.test(r.email || "") ? { custom_headers: [{ header: "Reply-To", value: r.email }] } : {}) }),
   });
   const out = await res.json().catch(() => ({}));
