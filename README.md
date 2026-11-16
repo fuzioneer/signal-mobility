@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.61.1 (16 Nov 2026): Tidier Settings. Voice coaching, Beeps, Full screen view and Play over music are now on/off switches, each on its own row with the label beside the switch.
 - 1.61.0 (16 Nov 2026): Private profile details. Settings has Last name and Country next to First name, and setting up a Community profile now asks for first name, last name, country and an optional age. They are stored on your account (never shown to other members) and kept in step between the phone and the website.
 - 1.60.1 (16 Nov 2026): Community, Top clubs: when your club isn't on the board because it has only 1 member, the empty board now says so and suggests inviting someone.
 - 1.60.0 (16 Nov 2026): When the get-ready countdown ends, each stretch switches to a full screen view: demo video (or photo) at the top, then the move name and side, a large timer, the Easier, +15s and Harder buttons, and previous, pause and next. It closes itself for the last 3 seconds and the gap before the next move. Can be turned off in Settings ("Full screen view during each stretch").
