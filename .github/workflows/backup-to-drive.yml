@@ -1,0 +1,85 @@
+# Weekly Movage backup to Google Drive.
+# Saves: the site/app source (zip) + the Supabase database (roles, schema, data), encrypted.
+# Setup steps are in supabase/BACKUPS.md. Needs three repository secrets:
+#   SUPABASE_DB_URL    Session pooler connection string (Supabase > Connect > Session pooler)
+#   BACKUP_PASSPHRASE  Long random passphrase used to encrypt the database dump (keep a copy safe!)
+#   RCLONE_CONFIG      rclone config text for a Google Drive remote named "gdrive"
+name: Backup to Google Drive
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"   # Mondays 03:17 UTC
+  workflow_dispatch: {}      # "Run workflow" button for manual backups
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DRIVE_FOLDER: gdrive:Movage Backups
+      KEEP_DAYS: 120
+    steps:
+      - name: Check secrets are set
+        env:
+          DB: ${{ secrets.SUPABASE_DB_URL }}
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+          RC: ${{ secrets.RCLONE_CONFIG }}
+        run: |
+          missing=0
+          [ -n "$DB" ]   || { echo "::error::SUPABASE_DB_URL secret is missing"; missing=1; }
+          [ -n "$PASS" ] || { echo "::error::BACKUP_PASSPHRASE secret is missing"; missing=1; }
+          [ -n "$RC" ]   || { echo "::error::RCLONE_CONFIG secret is missing"; missing=1; }
+          exit $missing
+
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Dump Supabase database
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          mkdir -p out/db
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f out/db/roles.sql --role-only
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f out/db/schema.sql
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f out/db/data.sql --use-copy --data-only
+          ls -la out/db
+
+      - name: Package and encrypt
+        env:
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          STAMP=$(date -u +%Y-%m-%d)
+          echo "STAMP=$STAMP" >> "$GITHUB_ENV"
+          git archive --format=zip -o "out/movage-site-$STAMP.zip" HEAD
+          tar -czf out/db.tar.gz -C out db
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$BACKUP_PASSPHRASE" \
+              --symmetric --cipher-algo AES256 \
+              -o "out/movage-db-$STAMP.tar.gz.gpg" out/db.tar.gz
+          rm -rf out/db out/db.tar.gz
+          ls -la out
+
+      - name: Install rclone
+        run: curl -fsSL https://rclone.org/install.sh | sudo bash
+
+      - name: Upload to Google Drive
+        env:
+          RCLONE_CONFIG_TEXT: ${{ secrets.RCLONE_CONFIG }}
+        run: |
+          mkdir -p ~/.config/rclone
+          printf '%s\n' "$RCLONE_CONFIG_TEXT" > ~/.config/rclone/rclone.conf
+          chmod 600 ~/.config/rclone/rclone.conf
+          rclone copy out "$DRIVE_FOLDER/$STAMP" --stats-one-line -v
+          # Prune backups older than KEEP_DAYS (files only, then empty folders)
+          rclone delete "$DRIVE_FOLDER" --min-age "${KEEP_DAYS}d" -v
+          rclone rmdirs "$DRIVE_FOLDER" --leave-root -v
+          rm -f ~/.config/rclone/rclone.conf
