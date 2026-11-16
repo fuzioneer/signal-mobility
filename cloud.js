@@ -24,7 +24,7 @@
       return sb;
     });
   }
-  var PCOLS = "nickname, share_time, share_score, first_name, last_name, country, age";
+  var PCOLS = "nickname, share_time, share_score, first_name, last_name, country, age, gender";
   function ok(r) { if (r.error) throw r.error; return r.data; }
   function one(rows) { return Array.isArray(rows) ? rows[0] || null : rows; }
 
@@ -64,7 +64,7 @@
           var u = ok(r).user;
           var row = { id: u.id, nickname: p.nickname, share_time: !!p.share_time, share_score: !!p.share_score };
           /* Private details (16 Nov 2026): only sent when known, so an older save never wipes them. */
-          ["first_name", "last_name", "country", "age"].forEach(function (k) { if (p[k] !== undefined) row[k] = p[k]; });
+          ["first_name", "last_name", "country", "age", "gender"].forEach(function (k) { if (p[k] !== undefined) row[k] = p[k]; });
           return c.from("profiles").upsert(row).select(PCOLS).single();
         });
       }).then(ok);

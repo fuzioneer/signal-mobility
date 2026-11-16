@@ -844,7 +844,12 @@ I18N.add("fr", {
 "Please enter your first name.": "Indiquez votre prénom.",
 "Please enter your last name.": "Indiquez votre nom.",
 "Please choose your country.": "Choisissez votre pays.",
-"Age should be a whole number from 13 to 120, or leave it blank.": "L'âge doit être un nombre entier entre 13 et 120, ou laissez vide."
+"Age should be a whole number from 13 to 120, or leave it blank.": "L'âge doit être un nombre entier entre 13 et 120, ou laissez vide.",
+"Gender (optional)": "Genre (facultatif)",
+"Non-binary": "Non binaire",
+"Other": "Autre",
+"Prefer not to say": "Je préfère ne pas répondre",
+"Your name, country, age and gender are private. Leaderboards only ever show your nickname.": "Vos nom, pays, âge et genre restent privés. Les classements n'affichent que votre pseudo."
 }, {
 "zone": {
 "shoulders": "Épaules",

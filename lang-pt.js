@@ -84,7 +84,7 @@ I18N.add("pt", {
 "Favourite sport (optional)": "Desporto favorito (opcional)",
 "Feet about shoulder width apart. Squat down as deep as you can, chest up, heels down. Pause at the bottom for a couple of seconds.": "Pés à largura dos ombros. Agache o mais fundo que conseguir, peito erguido, calcanhares no chão. Fique em baixo uns segundos.",
 "Feet together, knees straight. Reach down as far as you can, and hold it at the bottom.": "Pés juntos, joelhos esticados. Desça o mais que conseguir e mantenha em baixo.",
-"Female": "Feminino",
+"Female": "Mulher",
 "Final 3, 2, 1 countdown": "Contagem final 3, 2, 1",
 "Finish": "Terminar",
 "Finish a routine and it'll show here.": "Termine uma rotina e ela aparece aqui.",
@@ -159,7 +159,7 @@ I18N.add("pt", {
 "Lovely.": "Muito bem.",
 "Lovely. Switch to the right side.": "Muito bem. Passe para o lado direito.",
 "Lower body": "Parte inferior",
-"Male": "Masculino",
+"Male": "Homem",
 "Match phone": "Igual ao telemóvel",
 "Men": "Homens",
 "Mobility score": "Pontuação de mobilidade",
@@ -844,7 +844,12 @@ I18N.add("pt", {
 "Please enter your first name.": "Escreva o seu nome próprio.",
 "Please enter your last name.": "Escreva o seu apelido.",
 "Please choose your country.": "Escolha o seu país.",
-"Age should be a whole number from 13 to 120, or leave it blank.": "A idade deve ser um número inteiro de 13 a 120, ou deixe em branco."
+"Age should be a whole number from 13 to 120, or leave it blank.": "A idade deve ser um número inteiro de 13 a 120, ou deixe em branco.",
+"Gender (optional)": "Género (opcional)",
+"Non-binary": "Não binário",
+"Other": "Outro",
+"Prefer not to say": "Prefiro não dizer",
+"Your name, country, age and gender are private. Leaderboards only ever show your nickname.": "O teu nome, país, idade e género são privados. As classificações só mostram a tua alcunha."
 }, {
 "zone": {
 "shoulders": "Ombros",
