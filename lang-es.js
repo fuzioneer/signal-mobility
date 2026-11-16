@@ -833,7 +833,8 @@ I18N.add("es", {
 "Keep your knees still, and swing one foot outwards as far as it'll go. Hold it there for a couple of seconds.": "Mantén las rodillas quietas y lleva un pie hacia fuera todo lo que puedas. Mantenlo ahí un par de segundos.",
 "Then do the other leg.": "Luego haz la otra pierna.",
 "Play over music from other apps": "Sonar encima de la música de otras apps",
-"Keeps Spotify or Apple Music playing under the coach. On iPhone the coach then follows your silent switch, so turn the ringer on to hear it.": "Mantiene Spotify o Apple Music sonando bajo el entrenador. En iPhone el entrenador sigue entonces el interruptor de silencio, así que activa el timbre para oírlo."
+"Keeps Spotify or Apple Music playing under the coach. On iPhone the coach then follows your silent switch, so turn the ringer on to hear it.": "Mantiene Spotify o Apple Music sonando bajo el entrenador. En iPhone el entrenador sigue entonces el interruptor de silencio, así que activa el timbre para oírlo.",
+"Full screen view during each stretch": "Vista a pantalla completa en cada estiramiento"
 }, {
 "zone": {
 "shoulders": "Hombros",

@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.59.0", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.60.0", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -204,26 +204,34 @@
   var VBADGE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="M10 8.2v7.6l6-3.8z"/></svg>';
   function vbadge(key) { return vidUrl(key) ? '<span class="vbadge" role="button" tabindex="0" data-key="' + esc(key) + '" aria-label="' + esc(T("Play video full screen")) + '" title="' + esc(T("Play video full screen")) + '">' + VBADGE + "</span>" : ""; }
   /* Full screen demo video: opened from the play badge on a thumbnail, or by tapping a big video. Loops until closed. */
-  function openVideoFull(key) {
-    var u = vidUrl(key); if (!u) return;
+  /* Full screen view of a move. During a routine (focus) it also shows the timer and the routine controls, and falls back
+     to the photo when the move has no video. */
+  function openVideoFull(key, focus) {
+    var u = vidUrl(key), timed = !!(P && !$("#player").hidden);
+    if (!u && !(focus && timed && photoUrl(key))) return;
     var el = $("#vfull");
     if (!el) {
       el = document.createElement("div"); el.id = "vfull"; el.className = "vfull"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true");
       document.body.appendChild(el);
-      el.addEventListener("click", function (e) { if (!e.target.closest("video") || e.target.closest(".vf-close")) closeVideoFull(); });
+      el.addEventListener("click", function (e) { if (e.target.closest(".vf-close") || !(e.target.closest("video") || e.target.closest(".vf-ctl") || e.target.closest(".vf-box img") || e.target.closest(".vf-ring"))) closeVideoFull(); });
       document.addEventListener("keydown", function (e) { if (e.key === "Escape" && $("#vfull") && !$("#vfull").hidden) closeVideoFull(); });
     }
     var ps = photoSet(key), tt = key.indexOf("t_") === 0 ? TESTS.filter(function (x) { return x.id === key.slice(2); })[0] : null;
     var name = (tt ? tt.n : BY[key] && BY[key].n) || T("Demo video");
     el.setAttribute("aria-label", name);
+    var st = timed ? P.st[P.i] : null, ezy = st && altOf(st.s.id, "easy"), hrd = st && altOf(st.s.id, "hard");
     el.innerHTML = '<button class="icon-btn vf-close" aria-label="' + esc(T("Close")) + '">&#x2715;</button>' +
-      '<div class="vf-box" data-key="' + esc(key) + '">' + (ps.length ? '<img class="vf-poster" alt="" src="' + esc(ps[0]) + '">' : "") + '<span class="vf-spin" aria-hidden="true"></span>' +
-      '<video autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(name + ", " + T("demo video")) + '"></video></div>' +
-      '<p class="vf-cap">' + esc(name) + "</p>" +
-      (P && !$("#player").hidden ? '<div class="tring vf-ring" id="vf-ring" aria-hidden="true"></div>' : "");
-    el.classList.toggle("timed", !!(P && !$("#player").hidden));
+      (u ? '<div class="vf-box" data-key="' + esc(key) + '">' + (ps.length ? '<img class="vf-poster" alt="" src="' + esc(ps[0]) + '">' : "") + '<span class="vf-spin" aria-hidden="true"></span>' +
+        '<video autoplay muted loop playsinline preload="auto" disablepictureinpicture aria-label="' + esc(name + ", " + T("demo video")) + '"></video></div>'
+        : '<div class="vf-box ready"><img class="vf-photo" alt="' + esc(altFor(key)) + '" src="' + esc(photoUrl(key)) + '"></div>') +
+      '<p class="vf-cap">' + esc(name) + (st && st.side ? " · " + esc(T(st.side + " side")) : "") + "</p>" +
+      (timed ? '<div class="tring vf-ring" id="vf-ring" aria-hidden="true"></div>' +
+        '<div class="vf-ctl"><div class="padj" role="group" aria-label="' + T("Adjust this move") + '"><button class="chip" data-act="p-easier"' + (ezy ? "" : " disabled") + ">" + T("Easier") + '</button><button class="chip" data-act="p-more" aria-label="' + T("Add 15 seconds") + '">+15s</button><button class="chip" data-act="p-harder"' + (hrd ? "" : " disabled") + ">" + T("Harder") + "</button></div>" +
+        '<div class="ctrls"><button class="icon-btn" data-act="p-prev" aria-label="' + T("Previous") + '">' + ICON.prev + '</button><button class="icon-btn play" data-act="p-pause" id="vf-pp" aria-label="' + (P.paused ? T("Resume") : T("Pause")) + '">' + (P.paused ? ICON.play : ICON.pause) + '</button><button class="icon-btn" data-act="p-next" aria-label="' + T("Next") + '">' + ICON.next + "</button></div></div>" : "");
+    el.classList.toggle("timed", timed);
     el.hidden = false; document.body.style.overflow = "hidden";
-    if (P && !$("#player").hidden) draw();
+    if (timed) draw();
+    if (!u) return;
     var v = el.querySelector("video"), box = el.querySelector(".vf-box");
     /* The photo shows straight away with a spinner, and the clip fades in over it once it is actually playing, so the
        window is never blank. If the same clip is already playing on the page (the movement sheet), reuse what it has
@@ -1123,7 +1131,7 @@
   }
   function enterStep(queue) {
     var st = P.st[P.i]; if (!st) return finish();
-    cdClear(); P.phase = "prep"; P.left = restSecs(st.first); P.dur = P.left; P.spoke = {}; if (window.MUSIC) MUSIC.setQuiet(true);
+    cdClear(); closeVideoFull(); P.phase = "prep"; P.left = restSecs(st.first); P.dur = P.left; P.spoke = {}; if (window.MUSIC) MUSIC.setQuiet(true);
     showFig(st);
     var kit = kitFor(st.s); $("#p-name").textContent = st.s.n; $("#p-cue").textContent = (kit.length ? (T("You'll need") + " ") + listJoin(kit) + ". " : "") + st.s.cues;
     var sd = $("#p-side"); sd.hidden = !st.side; sd.textContent = st.side ? T(st.side + " side") : "";
@@ -1142,7 +1150,7 @@
     toast(TF("Swapped for {name}", { name: BY[alt].n })); enterStep();
   }
   function addTime(sec) { if (!P || !P.st[P.i]) return; if (P.cd) { cdClear(); P.cd = null; } P.left += sec; P.dur += sec; if (P.act && P.act[P.i]) P.act[P.i][P.phase === "prep" ? "p" : "h"] = P.dur; P.spoke.half = P.left <= P.dur / 2 ? 1 : P.spoke.half; draw(); msUpdate(); }
-  function togglePause() { if (!P) return; P.paused = !P.paused; if (P.paused) cdClear(); if (window.MUSIC) { if (P.paused) MUSIC.pause(1500); else MUSIC.resume(2000); } var b = $("#p-pp"); if (b) { b.innerHTML = P.paused ? ICON.play : ICON.pause; b.setAttribute("aria-label", P.paused ? T("Resume") : T("Pause")); } if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} document.querySelectorAll("#p-fig video").forEach(function (v) { if (P.paused) v.pause(); else { var q = v.play(); if (q && q.catch) q.catch(function () {}); } }); draw(); msUpdate(); }
+  function togglePause() { if (!P) return; P.paused = !P.paused; if (P.paused) cdClear(); if (window.MUSIC) { if (P.paused) MUSIC.pause(1500); else MUSIC.resume(2000); } ["#p-pp", "#vf-pp"].forEach(function (sel) { var b = $(sel); if (b) { b.innerHTML = P.paused ? ICON.play : ICON.pause; b.setAttribute("aria-label", P.paused ? T("Resume") : T("Pause")); } }); $$("#vfull video").forEach(function (v) { if (P.paused) v.pause(); else { var q = v.play(); if (q && q.catch) q.catch(function () {}); } }); if (P.paused) try { speechSynthesis.cancel(); } catch (x) {} document.querySelectorAll("#p-fig video").forEach(function (v) { if (P.paused) v.pause(); else { var q = v.play(); if (q && q.catch) q.catch(function () {}); } }); draw(); msUpdate(); }
   /* Lock-screen and Control Centre: current move, time left, and pause, skip and +15s controls. */
   function msUpdate() {
     if (!("mediaSession" in navigator)) return; var ms = navigator.mediaSession;
@@ -1188,7 +1196,9 @@
     /* Halfway call on every hold of 24 seconds or more (shorter holds just get the countdown). */
     if (P.phase === "work" && P.dur >= 24 && !P.spoke.half && P.left <= P.dur / 2) { P.spoke.half = 1; var reps = !!P.st[P.i].s.reps; speak(reps ? pick([(T("Halfway there. Keep it smooth.")), (T("That's halfway. Nice and controlled.")), (T("Halfway. Keep breathing."))]) : pick([(T("Halfway there. Breathe out, and sink a little deeper.")), (T("That's halfway. Keep breathing slowly.")), (T("Halfway. Relax your shoulders, and let it go a bit further."))]), true); }
     if (P.left <= 0) {
-      if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); P.act[P.i].h = P.dur; msUpdate(); diag("hold " + P.st[P.i].s.id + " " + P.dur + "s, countdown " + cdMode()); beep(990, 380, 0.3); if (window.MUSIC) { if (!MUSIC.playing()) startMusic(); MUSIC.setQuiet(false); } }
+      if (P.phase === "prep") { P.phase = "work"; P.left = P.dur = stepDur(P.st[P.i]); P.act[P.i].h = P.dur; msUpdate();
+        /* Once the get-ready countdown ends, the stretch switches to the full screen view (video or photo, timer, controls). */
+        if (S.settings.focusView !== false && P.dur > 6) openVideoFull(P.st[P.i].s.id, true); diag("hold " + P.st[P.i].s.id + " " + P.dur + "s, countdown " + cdMode()); beep(990, 380, 0.3); if (window.MUSIC) { if (!MUSIC.playing()) startMusic(); MUSIC.setQuiet(false); } }
       else { if (!P.cd) beep(520, 300, 0.3); P.i++; return enterStep(true); }
     }
     draw();
@@ -1247,7 +1257,7 @@
     var mdAfter = medalFor(monthCount(ym())), newMedal = mdAfter && (!mdBefore || mdAfter[1] > mdBefore[1]) ? mdAfter : null;
     if (window.MUSIC) setTimeout(function () { if (!P) MUSIC.stop(6000); }, 4000);
     say(secs >= 30 ? pick([(T("And that's it. Great session.")), (T("All done. Nice work today.")), (T("That's the session finished. Well done."))]) : "");
-    tlDone();
+    tlDone(); closeVideoFull();
     $(".player").classList.add("pfin");
     $(".player").innerHTML ='<div style="flex:1;display:grid;place-items:center;text-align:center"><div><div class="ring" style="margin:0 auto 16px">' + ringSVG(100, 128, 12) + '<div class="lbl"><div><b>' + streak() + ('</b><span>' + T("day streak") + '</span></div></div></div><h2>' + T("Done") + '</h2><p class="muted" style="margin-top:6px">') + esc(r.n) + " · " + mmss(secs) + (" " + T("of stretching") + "</p></div></div>") +
       (newMedal ? '<div class="card medalwin">' + medalSVG(newMedal, 56) + '<div class="grow"><b>' + TF("{medal} for {month}!", { medal: T(newMedal[2]), month: monthName(ym()) }) + '</b><div class="small muted">' + TF("{n} sessions this month", { n: monthCount(ym()) }) + (nextMedal(monthCount(ym())) ? " · " + TF("{n} more for {medal}", { n: nextMedal(monthCount(ym()))[1] - monthCount(ym()), medal: T(nextMedal(monthCount(ym()))[2]) }) : "") + "</div></div></div>" : "") +
@@ -1337,7 +1347,7 @@
       '<p class="fbq" style="margin-top:12px">' + T("Did anything hurt? Tap it and I'll swap it for an easier move next time.") + '</p><div class="chips fbhurt">' + moves.filter(function (v, i, a) { return a.indexOf(v) === i; }).map(function (id) { return '<button class="chip' + (hurt[id] ? " on" : "") + '" data-act="fb-hurt" data-id="' + id + '">' + esc(BY[id].n) + "</button>"; }).join("") + "</div></div>";
   }
   function closePlayer() {
-    cdClear(); stravaCommit();
+    cdClear(); stravaCommit(); closeVideoFull();
     if (P) { clearInterval(P.timer); if (P.stop) P.stop(); var secs = Math.round(P.worked); if (secs >= 60) { S.sessions.push({ date: iso(), t: Date.now(), cid: cmUuid(), id: P.r.id, n: P.r.n + " (part)", secs: secs, items: P.i }); save(); stravaLog(P.r.n, secs, P.r.items.slice(0, P.i + 1)); cmSync(); } P = null; }
     try { speechSynthesis.cancel(); } catch (e) {}
     if (window.MUSIC) { MUSIC.stop(1500); MUSIC.setQuiet(false); }
@@ -1829,6 +1839,7 @@
     h += ('<div class="card"><div class="row"><label class="field">' + T("Time between exercises") + '<select id="s-rest">') + [5, 10, 15, 20, 30, 45, 60].map(function (n) { return '<option value="' + n + '"' + ((s.rest == null ? 10 : s.rest) === n ? " selected" : "") + ">" + n + " " + T("seconds") + "</option>"; }).join("") + ('</select></label><label class="field">' + T("Time to switch sides") + '<select id="s-siderest">') + [3, 5, 10, 15].map(function (n) { return '<option value="' + n + '"' + ((s.sideRest == null ? 5 : s.sideRest) === n ? " selected" : "") + ">" + n + " " + T("seconds") + "</option>"; }).join("") + ('</select></label></div><div class="row" style="margin-top:10px"><label class="field">' + T("Final 3, 2, 1 countdown") + '<select id="s-cd">') + (I18N.lang === "en" ? [["m", (T("Voice (male, British)"))], ["f", (T("Voice (female, American)"))]] : [["voice", T("Coach's voice")]]).concat([["beeps", (T("Beeps"))], ["off", (T("Off"))]]).map(function (o) { return '<option value="' + o[0] + '"' + (cdMode() === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + ('</select></label><button class="btn" style="align-self:flex-end" data-act="cd-test">' + T("Hear it") + '</button></div><p class="small muted" style="margin-top:6px">' + T("Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.") + '</p><div class="row" style="margin-top:10px"><label class="field">' + T("Theme") + '<select id="s-theme">') + [["auto", (T("Match phone"))], ["light", (T("Light"))], ["dark", (T("Dark"))]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
       ('<div class="row" style="margin-top:10px"><label class="field">' + T("Favourite sport (optional)") + '<select id="s-sport"><option value="">' + T("None") + '</option>') + SPORTS.map(function (o) { return '<option value="' + o.id + '"' + (s.sport === o.id ? " selected" : "") + ">" + esc(o.n) + "</option>"; }).join("") + ('</select></label></div><p class="small muted" style="margin-top:6px">' + T("Sets the top stretches and routines shown on Today.") + '</p>') +
       '<div class="row" style="margin-top:12px"><label class="row grow"><input type="checkbox" id="s-voice"' + (s.voice ? " checked" : "") + '> ' + T("Voice coaching") + '</label><label class="row grow"><input type="checkbox" id="s-beeps"' + (s.beeps ? " checked" : "") + "> " + T("Beeps") + "</label></div>" +
+      '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-focus"' + (s.focusView === false ? "" : " checked") + "> " + T("Full screen view during each stretch") + "</label>" +
       '<label class="row" style="margin-top:10px"><input type="checkbox" id="s-mix"' + (s.mixAudio === false ? "" : " checked") + "> " + T("Play over music from other apps") + '</label><p class="small muted" style="margin:4px 0 0">' + T("Keeps Spotify or Apple Music playing under the coach. On iPhone the coach then follows your silent switch, so turn the ringer on to hear it.") + "</p>" +
       ('<div class="row" style="margin-top:12px"><label class="field" style="flex:2">' + T("Coach voice") + '<select id="s-vname"><option value="">' + T("Best available") + '</option>') + enVoices().sort(function (x, y) { return voiceScore(y) - voiceScore(x); }).map(function (v) { return '<option value="' + esc(v.name) + '"' + (s.voiceName === v.name ? " selected" : "") + ">" + esc(v.name) + " (" + esc(v.lang) + ")</option>"; }).join("") + ('</select></label><label class="field">' + T("Speed") + '<select id="s-vrate">') + [[0.85, (T("Slower"))], [0.95, (T("Normal"))], [1.05, (T("Quicker"))]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.voiceRate || 0.95) === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + ('</select></label></div><button class="btn" style="margin-top:8px" data-act="voice-test">' + T("Hear the voice") + '</button>') +
       '<p class="small muted" style="margin-top:8px">' + esc(I18N.lang === "en" ? "For the most natural voice, download one on your iPhone: open Settings, search for Voices, then go to English. Pick an Enhanced or Premium voice (Serena, Daniel or Arthur for British), then close and reopen this app and choose it here."
@@ -1851,8 +1862,8 @@
     h += ('<div class="card"><button class="btn danger block" data-act="reset">' + T("Delete all data") + '</button></div><p class="small muted" style="text-align:center"><b>Movage</b> · ' + TAGLINE + '<br>v') + APP_VERSION + ' (' + APP_BUILD + ') · ' + T("body tracking by MediaPipe") + '</p>';
     openSheet(h, function () { if (window.MUSIC && !P && MUSIC.playing()) MUSIC.stop(800); });
     offlineUI();
-    var sync = function () { S.settings.mixAudio = $("#s-mix").checked; try { if (navigator.audioSession) navigator.audioSession.type = audioMode(); } catch (e) {} S.settings.firstName = $("#s-fname").value.replace(/[<>]/g, "").trim().slice(0, 30); S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
-    ["#s-mix", "#s-fname", "#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-sport", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
+    var sync = function () { S.settings.focusView = $("#s-focus").checked; S.settings.mixAudio = $("#s-mix").checked; try { if (navigator.audioSession) navigator.audioSession.type = audioMode(); } catch (e) {} S.settings.firstName = $("#s-fname").value.replace(/[<>]/g, "").trim().slice(0, 30); S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
+    ["#s-focus", "#s-mix", "#s-fname", "#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-sport", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
     stravaWire(); remWire();
     $("#s-model").addEventListener("change", function (e) { S.settings.model = e.target.value; save(); render(); offlineUI(); toast(T("Photos updated. Tap Save all photos for offline to keep this model's photos on your phone.")); });
     $("#s-text").addEventListener("change", function (e) { S.settings.textSize = e.target.value; save(); applyTextSize(); });
