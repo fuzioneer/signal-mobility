@@ -24,6 +24,7 @@
       return sb;
     });
   }
+  var PCOLS = "nickname, share_time, share_score, first_name, last_name, country, age";
   function ok(r) { if (r.error) throw r.error; return r.data; }
   function one(rows) { return Array.isArray(rows) ? rows[0] || null : rows; }
 
@@ -56,12 +57,15 @@
       return client().then(function (c) { return c.auth.exchangeCodeForSession(code); }).then(function (r) { return { user: ok(r).user }; }, function (e) { return { error: (e && e.message) || "exchange failed" }; });
     },
     signOut: function () { return client().then(function (c) { return c.auth.signOut(); }).then(function () {}, function () {}).then(function () { try { localStorage.removeItem(AUTH_KEY); } catch (e) {} }); },
-    profile: function () { return client().then(function (c) { return c.from("profiles").select("nickname, share_time, share_score").maybeSingle(); }).then(ok); },
+    profile: function () { return client().then(function (c) { return c.from("profiles").select(PCOLS).maybeSingle(); }).then(ok); },
     saveProfile: function (p) {
       return client().then(function (c) {
         return c.auth.getUser().then(function (r) {
           var u = ok(r).user;
-          return c.from("profiles").upsert({ id: u.id, nickname: p.nickname, share_time: !!p.share_time, share_score: !!p.share_score }).select("nickname, share_time, share_score").single();
+          var row = { id: u.id, nickname: p.nickname, share_time: !!p.share_time, share_score: !!p.share_score };
+          /* Private details (16 Nov 2026): only sent when known, so an older save never wipes them. */
+          ["first_name", "last_name", "country", "age"].forEach(function (k) { if (p[k] !== undefined) row[k] = p[k]; });
+          return c.from("profiles").upsert(row).select(PCOLS).single();
         });
       }).then(ok);
     },

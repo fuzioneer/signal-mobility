@@ -835,7 +835,16 @@ I18N.add("es", {
 "Play over music from other apps": "Sonar encima de la música de otras apps",
 "Keeps Spotify or Apple Music playing under the coach. On iPhone the coach then follows your silent switch, so turn the ringer on to hear it.": "Mantiene Spotify o Apple Music sonando bajo el entrenador. En iPhone el entrenador sigue entonces el interruptor de silencio, así que activa el timbre para oírlo.",
 "Full screen view during each stretch": "Vista a pantalla completa en cada estiramiento",
-"No clubs on the board yet. {names} will appear once it has at least 2 members, so tap the club and use Invite.": "Aún no hay clubes en la clasificación. {names} aparecerá cuando tenga al menos 2 miembros, así que toca el club y usa Invitar."
+"No clubs on the board yet. {names} will appear once it has at least 2 members, so tap the club and use Invite.": "Aún no hay clubes en la clasificación. {names} aparecerá cuando tenga al menos 2 miembros, así que toca el club y usa Invitar.",
+"Last name": "Apellidos",
+"Country": "País",
+"Choose your country": "Elige tu país",
+"Your name, country and age are private. Leaderboards only ever show your nickname.": "Tu nombre, país y edad son privados. Las clasificaciones solo muestran tu apodo.",
+"Age (optional)": "Edad (opcional)",
+"Please enter your first name.": "Escribe tu nombre.",
+"Please enter your last name.": "Escribe tus apellidos.",
+"Please choose your country.": "Elige tu país.",
+"Age should be a whole number from 13 to 120, or leave it blank.": "La edad debe ser un número entero entre 13 y 120, o déjala en blanco."
 }, {
 "zone": {
 "shoulders": "Hombros",

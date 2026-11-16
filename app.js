@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.60.1", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.61.0", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -1834,7 +1834,9 @@
   function stravaRefresh() { var c = $("#strava-slot"); if (c) { c.innerHTML = stravaCard(); stravaWire(); } }
   function openSettings() {
     var s = S.settings;
-    var h = ('<h2>' + T("Settings") + '</h2>') + '<div class="card" style="margin-top:12px"><label class="field">' + T("Language") + '<select id="s-lang">' + I18N.LANGS.map(function (o) { return '<option value="' + o[0] + '"' + (I18N.lang === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><p class="small muted" style="margin-top:6px">' + T("Changes the app, the coach's voice and all stretch instructions. The app restarts to apply it.") + '</p></div>' + ('<div class="card" style="margin-top:12px"><label class="field">' + T("First name") + '<input type="text" id="s-fname" maxlength="30" autocomplete="given-name" autocapitalize="words" value="' + esc(s.firstName || "") + '" placeholder="' + esc(T("Used in your Today greeting")) + '"></label><p class="small muted" style="margin:4px 0 10px">' + T("Shown on the Today page when you're signed in.") + '</p><div class="row"><label class="field">' + T("Age") + '<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="') + (s.age || "") + '"></label><label class="field">' + T("Height (cm)") + '<input type="number" inputmode="numeric" id="s-height" min="120" max="230" value="' + (s.height || 178) + ('"></label><label class="field">' + T("Sex") + '<select id="s-sex"><option value="m"') + (s.sex === "m" ? " selected" : "") + '>' + T("Male") + '</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">" + T("Female") + "</option></select></label></div>" +
+    var h = ('<h2>' + T("Settings") + '</h2>') + '<div class="card" style="margin-top:12px"><label class="field">' + T("Language") + '<select id="s-lang">' + I18N.LANGS.map(function (o) { return '<option value="' + o[0] + '"' + (I18N.lang === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select></label><p class="small muted" style="margin-top:6px">' + T("Changes the app, the coach's voice and all stretch instructions. The app restarts to apply it.") + '</p></div>' + ('<div class="card" style="margin-top:12px"><label class="field">' + T("First name") + '<input type="text" id="s-fname" maxlength="30" autocomplete="given-name" autocapitalize="words" value="' + esc(s.firstName || "") + '" placeholder="' + esc(T("Used in your Today greeting")) + '"></label><p class="small muted" style="margin:4px 0 10px">' + T("Shown on the Today page when you're signed in.") + '</p>' +
+      '<div class="row"><label class="field">' + T("Last name") + '<input type="text" id="s-lname" maxlength="60" autocomplete="family-name" autocapitalize="words" value="' + esc(s.lastName || "") + '"></label><label class="field">' + T("Country") + '<select id="s-country">' + countryOptions(s.country) + "</select></label></div>" +
+      '<p class="small muted" style="margin:4px 0 10px">' + T("Your name, country and age are private. Leaderboards only ever show your nickname.") + '</p><div class="row"><label class="field">' + T("Age") + '<input type="number" inputmode="numeric" id="s-age" min="14" max="99" value="') + (s.age || "") + '"></label><label class="field">' + T("Height (cm)") + '<input type="number" inputmode="numeric" id="s-height" min="120" max="230" value="' + (s.height || 178) + ('"></label><label class="field">' + T("Sex") + '<select id="s-sex"><option value="m"') + (s.sex === "m" ? " selected" : "") + '>' + T("Male") + '</option><option value="f"' + (s.sex === "f" ? " selected" : "") + ">" + T("Female") + "</option></select></label></div>" +
       ('<p class="small muted" style="margin-top:8px">' + T("Age and sex set the typical-score markers (currently available for men only). Height scales the camera's cm estimates.") + '</p></div>');
     h += ('<div class="card"><div class="row"><label class="field">' + T("Time between exercises") + '<select id="s-rest">') + [5, 10, 15, 20, 30, 45, 60].map(function (n) { return '<option value="' + n + '"' + ((s.rest == null ? 10 : s.rest) === n ? " selected" : "") + ">" + n + " " + T("seconds") + "</option>"; }).join("") + ('</select></label><label class="field">' + T("Time to switch sides") + '<select id="s-siderest">') + [3, 5, 10, 15].map(function (n) { return '<option value="' + n + '"' + ((s.sideRest == null ? 5 : s.sideRest) === n ? " selected" : "") + ">" + n + " " + T("seconds") + "</option>"; }).join("") + ('</select></label></div><div class="row" style="margin-top:10px"><label class="field">' + T("Final 3, 2, 1 countdown") + '<select id="s-cd">') + (I18N.lang === "en" ? [["m", (T("Voice (male, British)"))], ["f", (T("Voice (female, American)"))]] : [["voice", T("Coach's voice")]]).concat([["beeps", (T("Beeps"))], ["off", (T("Off"))]]).map(function (o) { return '<option value="' + o[0] + '"' + (cdMode() === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + ('</select></label><button class="btn" style="align-self:flex-end" data-act="cd-test">' + T("Hear it") + '</button></div><p class="small muted" style="margin-top:6px">' + T("Time to reposition and grab any kit (band, roller, stick) before each move. The next move and its kit are read out at the start.") + '</p><div class="row" style="margin-top:10px"><label class="field">' + T("Theme") + '<select id="s-theme">') + [["auto", (T("Match phone"))], ["light", (T("Light"))], ["dark", (T("Dark"))]].map(function (o) { return '<option value="' + o[0] + '"' + (s.theme === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></label></div>" +
       ('<div class="row" style="margin-top:10px"><label class="field">' + T("Favourite sport (optional)") + '<select id="s-sport"><option value="">' + T("None") + '</option>') + SPORTS.map(function (o) { return '<option value="' + o.id + '"' + (s.sport === o.id ? " selected" : "") + ">" + esc(o.n) + "</option>"; }).join("") + ('</select></label></div><p class="small muted" style="margin-top:6px">' + T("Sets the top stretches and routines shown on Today.") + '</p>') +
@@ -1862,8 +1864,8 @@
     h += ('<div class="card"><button class="btn danger block" data-act="reset">' + T("Delete all data") + '</button></div><p class="small muted" style="text-align:center"><b>Movage</b> · ' + TAGLINE + '<br>v') + APP_VERSION + ' (' + APP_BUILD + ') · ' + T("body tracking by MediaPipe") + '</p>';
     openSheet(h, function () { if (window.MUSIC && !P && MUSIC.playing()) MUSIC.stop(800); });
     offlineUI();
-    var sync = function () { S.settings.focusView = $("#s-focus").checked; S.settings.mixAudio = $("#s-mix").checked; try { if (navigator.audioSession) navigator.audioSession.type = audioMode(); } catch (e) {} S.settings.firstName = $("#s-fname").value.replace(/[<>]/g, "").trim().slice(0, 30); S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
-    ["#s-focus", "#s-mix", "#s-fname", "#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-sport", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
+    var sync = function () { if (CM.prof) setTimeout(cmSync, 600); S.settings.lastName = $("#s-lname").value.replace(/[<>]/g, "").trim().slice(0, 60); S.settings.country = $("#s-country").value; S.settings.focusView = $("#s-focus").checked; S.settings.mixAudio = $("#s-mix").checked; try { if (navigator.audioSession) navigator.audioSession.type = audioMode(); } catch (e) {} S.settings.firstName = $("#s-fname").value.replace(/[<>]/g, "").trim().slice(0, 30); S.settings.age = parseInt($("#s-age").value, 10) || S.settings.age; S.settings.sex = $("#s-sex").value; S.settings.height = parseInt($("#s-height").value, 10) || S.settings.height || 178; S.settings.countdown = $("#s-cd").value; S.settings.rest = parseInt($("#s-rest").value, 10); S.settings.sideRest = parseInt($("#s-siderest").value, 10); S.settings.theme = $("#s-theme").value; S.settings.sport = $("#s-sport").value; S.settings.voice = $("#s-voice").checked; S.settings.beeps = $("#s-beeps").checked; S.settings.savePhotos = $("#s-photos").checked; S.settings.photos = $("#s-showphotos").checked; S.settings.voiceName = $("#s-vname").value; S.settings.music = $("#s-music").value; S.settings.musicVol = parseFloat($("#s-mvol").value); if (window.MUSIC && musicOn()) MUSIC.preload(S.settings.music, S.settings.musicVol); if (window.MUSIC && MUSIC.playing() && !P) { if (musicOn()) MUSIC.start(AC, S.settings.music, S.settings.musicVol); else MUSIC.stop(600); } S.settings.voiceRate = parseFloat($("#s-vrate").value) || 0.95; save(); applyTheme(); render(); };
+    ["#s-lname", "#s-country", "#s-focus", "#s-mix", "#s-fname", "#s-age", "#s-height", "#s-sex", "#s-rest", "#s-siderest", "#s-cd", "#s-theme", "#s-sport", "#s-voice", "#s-beeps", "#s-photos", "#s-showphotos", "#s-vname", "#s-vrate", "#s-music", "#s-mvol"].forEach(function (id) { $(id).addEventListener("change", sync); });
     stravaWire(); remWire();
     $("#s-model").addEventListener("change", function (e) { S.settings.model = e.target.value; save(); render(); offlineUI(); toast(T("Photos updated. Tap Save all photos for offline to keep this model's photos on your phone.")); });
     $("#s-text").addEventListener("change", function (e) { S.settings.textSize = e.target.value; save(); applyTextSize(); });
@@ -2104,7 +2106,7 @@
   function cmSync() {
     if (!cmOn() || CM_SYNCING || !CM.prof || navigator.onLine === false) return Promise.resolve();
     CM_SYNCING = true;
-    var cut = cmDaysAgo(34), job = Promise.resolve();
+    var cut = cmDaysAgo(34), job = cmDetails();
     if (CM.prof.share_time) S.sessions.filter(function (s) { return s.cid && !s.up && s.date >= cut && s.secs >= 30; }).forEach(function (s) {
       job = job.then(function () { return CLOUD.addSession({ id: s.cid, local_date: s.date, secs: Math.min(7200, Math.round(s.secs)) }).then(function () { s.up = 1; }, function (e) { if (e && e.permanent) s.up = -1; else throw e; }); });
     });
@@ -2113,6 +2115,31 @@
       if (sc) { var sig = JSON.stringify([sc.overall, sc.verified, sc.tested_on]); if (!S.cloud || S.cloud.scoreSig !== sig) job = job.then(function () { return CLOUD.setScore(sc).then(function () { S.cloud = Object.assign(S.cloud || {}, { scoreSig: sig }); }); }); }
     }
     return job.catch(function (e) { diag("community sync: " + (e && e.message)); }).then(function () { save(); CM_SYNCING = false; });
+  }
+  /* Countries (ISO 3166 codes) named in the app's language, UK first. Used for the private profile details. */
+  var CODES = "GB IE US CA AU NZ AD AE AF AG AI AL AM AO AR AS AT AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BW BY BZ CD CF CG CH CI CK CL CM CN CO CR CU CV CW CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GD GE GF GG GH GI GL GM GN GP GQ GR GT GU GW GY HK HN HR HT HU ID IL IM IN IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NG NI NL NO NP NR NU OM PA PE PF PG PH PK PL PM PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TG TH TJ TL TM TN TO TR TT TV TW TZ UA UG UY UZ VA VC VE VG VI VN VU WF WS XK YE YT ZA ZM ZW".split(" ");
+  function countryName(c) { try { return new Intl.DisplayNames([I18N.locale || "en-GB"], { type: "region" }).of(c) || c; } catch (e) { return c; } }
+  function countryOptions(sel) {
+    var top = CODES.slice(0, 6), rest = CODES.slice(6).map(function (c) { return [c, countryName(c)]; }).sort(function (a, b) { return a[1].localeCompare(b[1], I18N.lang || "en"); });
+    var o = function (c, n) { return '<option value="' + c + '"' + (c === sel ? " selected" : "") + ">" + esc(n) + "</option>"; };
+    return o("", T("Choose your country")) + top.map(function (c) { return o(c, countryName(c)); }).join("") + "<option disabled>──────────</option>" + rest.map(function (x) { return o(x[0], x[1]); }).join("");
+  }
+  /* Private profile details live in Settings on the phone and on the Community profile. Fill whichever side is empty
+     from the other, then keep the account up to date with what's on the phone. */
+  function cmDetails() {
+    if (!CM.prof) return Promise.resolve();
+    var st = S.settings, p = CM.prof, ch = false;
+    if (!st.firstName && p.first_name) { st.firstName = p.first_name; ch = true; }
+    if (!st.lastName && p.last_name) { st.lastName = p.last_name; ch = true; }
+    if (!st.country && p.country) { st.country = p.country; ch = true; }
+    if (ch) save();
+    var want = { first_name: st.firstName || null, last_name: st.lastName || null, country: /^[A-Z]{2}$/.test(st.country || "") ? st.country : null };
+    /* Age is optional on the account, so it is only sent when typed into the Community profile form, never copied from
+       the Settings default used for the typical-score markers. */
+    var diff = Object.keys(want).some(function (k) { return want[k] !== null && want[k] !== p[k]; });
+    if (!diff) return Promise.resolve();
+    var np = Object.assign({}, p); Object.keys(want).forEach(function (k) { if (want[k] !== null) np[k] = want[k]; });
+    return CLOUD.saveProfile(np).then(function (pr) { CM.prof = pr; }, function (e) { diag("profile details: " + (e && e.message)); });
   }
   /* First name for the Today greeting: taken from a Google account the first time, then editable in Settings. */
   function nameFromAccount(u) {
@@ -2194,6 +2221,9 @@
       var pr = CM.prof || { nickname: CM.suggest || "", share_time: true, share_score: true };
       h = '<div class="card"><h3>' + T("Choose a nickname") + '</h3><p class="small muted" style="margin:4px 0 12px">' + T("This is the only name other people will see on the leaderboards.") + "</p>" +
         '<input class="inp" id="cm-nick" maxlength="20" autocomplete="nickname" placeholder="' + esc(T("Nickname")) + '" value="' + esc(pr.nickname || "") + '" style="width:100%">' +
+        '<div class="row" style="margin-top:10px;gap:8px"><input class="inp grow" id="cm-fn" maxlength="40" autocomplete="given-name" autocapitalize="words" placeholder="' + esc(T("First name")) + '" value="' + esc(pr.first_name || S.settings.firstName || "") + '"><input class="inp grow" id="cm-ln" maxlength="60" autocomplete="family-name" autocapitalize="words" placeholder="' + esc(T("Last name")) + '" value="' + esc(pr.last_name || S.settings.lastName || "") + '"></div>' +
+        '<div class="row" style="margin-top:10px;gap:8px"><select class="inp grow" id="cm-country" aria-label="' + esc(T("Country")) + '">' + countryOptions(pr.country || S.settings.country || "") + '</select><input class="inp" id="cm-age" type="number" inputmode="numeric" min="13" max="120" style="width:110px" placeholder="' + esc(T("Age (optional)")) + '" value="' + esc(pr.age || "") + '"></div>' +
+        '<p class="small muted" style="margin:8px 0 0">' + T("Your name, country and age are private. Leaderboards only ever show your nickname.") + "</p>" +
         '<label class="cmcheck"><input type="checkbox" id="cm-st"' + (pr.share_time !== false ? " checked" : "") + "> " + T("Show my mobility time on leaderboards") + "</label>" +
         '<label class="cmcheck"><input type="checkbox" id="cm-ss"' + (pr.share_score !== false ? " checked" : "") + "> " + T("Show my mobility score on leaderboards") + "</label>" +
         '<button class="btn primary block" data-act="cm-savenick" style="margin-top:12px"' + cmBusy() + ">" + T("Save") + "</button></div>";
@@ -2262,7 +2292,13 @@
       case "cm-savenick": {
         var nk = val("#cm-nick"); if (nk.length < 2 || nk.length > 20) { toast(T("Nicknames are 2 to 20 characters.")); return; }
         if (/[<>]/.test(nk)) { toast(T("Nicknames can't contain < or >.")); return; }
-        var p = { nickname: nk, share_time: $("#cm-st").checked, share_score: $("#cm-ss").checked };
+        var fn = val("#cm-fn"), ln = val("#cm-ln"), co = $("#cm-country").value, ag = val("#cm-age"), age = ag === "" ? null : Number(ag);
+        if (!fn || /[<>]/.test(fn)) { toast(T("Please enter your first name.")); return; }
+        if (!ln || /[<>]/.test(ln)) { toast(T("Please enter your last name.")); return; }
+        if (!/^[A-Z]{2}$/.test(co)) { toast(T("Please choose your country.")); return; }
+        if (age !== null && !(Number.isInteger(age) && age >= 13 && age <= 120)) { toast(T("Age should be a whole number from 13 to 120, or leave it blank.")); return; }
+        S.settings.firstName = fn.slice(0, 40); S.settings.lastName = ln.slice(0, 60); S.settings.country = co; if (age !== null) S.settings.age = age; save();
+        var p = { nickname: nk, share_time: $("#cm-st").checked, share_score: $("#cm-ss").checked, first_name: fn.slice(0, 40), last_name: ln.slice(0, 60), country: co, age: age };
         CM.busy = true; renderCommunity();
         CLOUD.saveProfile(p).then(function (pr) {
           var first = !CM.prof; CM.busy = false; CM.prof = pr; CM.stage = "main";

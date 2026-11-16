@@ -14,3 +14,8 @@ Execute is revoked from anon. The full SQL is in the Supabase migration history.
 `public.admin_top_users(p_days int)` returns the top 10 people by guided time in the period: rank, nickname,
 sessions, active days, time, last active date, latest score (and whether it is camera verified), number of clubs
 and the date they joined. Team only (same fb_is_admin check), nicknames only, never emails.
+
+## Profile details (migration profiles_personal_details, 16 Nov 2026)
+
+profiles gained first_name (1-40), last_name (1-60), country (ISO 3166 alpha-2) and age (13-120, optional).
+All nullable, no < > or control characters. Private: own-row RLS only, and no leaderboard function returns them.
