@@ -51,6 +51,15 @@
       return uploadPlain(a);
     });
   }
+  /* Strava IDs are moving to 64-bit numbers (from 1 June 2027), which JavaScript can't hold exactly. Read replies as text and take
+     IDs from the "<key>_str" field, or straight from the raw text, so they're never rounded. */
+  function readJSON(r) { return r.text().then(function (t) { var j = null; try { j = JSON.parse(t); } catch (e) {} if (j && typeof j === "object") Object.defineProperty(j, "_raw", { value: t }); return j; }); }
+  function safeId(j, key) {
+    if (!j) return null;
+    if (j[key + "_str"]) return String(j[key + "_str"]);
+    var m = j._raw && new RegExp('"' + key + '"\\s*:\\s*"?(\\d+)').exec(j._raw);
+    return m ? m[1] : (j[key] == null ? null : String(j[key]));
+  }
   function title(a) { var type = st.type || "Mobility", label = window.T ? T("Mobility") : "Mobility"; return type === "Mobility" && a.name.indexOf(label) !== 0 ? label + ": " + a.name : a.name; }
   function uploadSets(a) {
     return token().then(function (t) {
@@ -63,12 +72,12 @@
       fd.append("data_type", "json"); fd.append("sport_type", "Workout"); fd.append("name", title(a)); fd.append("description", a.description || "");
       fd.append("external_id", "movage-" + a.startMs);
       return fetch(API + "/api/v3/uploads", { method: "POST", headers: { Authorization: "Bearer " + t }, body: fd })
-        .then(function (r) { return r.json().catch(function () { return null; }).then(function (j) {
+        .then(function (r) { return readJSON(r).then(function (j) {
           if (r.status === 401) { var e = new Error("Strava sign-in expired"); e.auth = true; throw e; }
           if (!r.ok || !j || j.error) throw new Error((j && (j.error || j.message)) || ("HTTP " + r.status));
           /* Once Strava has the upload, a lost connection while checking on it must not fall back to a second, plain
              activity: retry the same upload later instead (Strava recognises it as a duplicate and returns the same activity). */
-          return poll(t, j.id, 0).catch(function (e) { if (!e.processing) e.auth = true; throw e; });
+          return poll(t, safeId(j, "id"), 0).catch(function (e) { if (!e.processing) e.auth = true; throw e; });
         }); });
     }).then(function (id) {
       log("strava: logged as " + a.sets.length + " exercises, so Strava can show the muscles worked");
@@ -78,9 +87,9 @@
   /* Strava processes uploads in the background: check every 2 seconds, for up to 40 seconds. */
   function poll(t, uploadId, n) {
     return new Promise(function (res) { setTimeout(res, 2000); }).then(function () {
-      return fetch(API + "/api/v3/uploads/" + encodeURIComponent(uploadId), { headers: { Authorization: "Bearer " + t } }).then(function (r) { return r.json(); });
+      return fetch(API + "/api/v3/uploads/" + encodeURIComponent(uploadId), { headers: { Authorization: "Bearer " + t } }).then(readJSON);
     }).then(function (j) {
-      if (j && j.activity_id) return j.activity_id;
+      if (j && j.activity_id) return safeId(j, "activity_id");
       var dup = j && j.error && (/duplicate of[^]*?activities\/(\d+)/i.exec(j.error) || /duplicate of (?:activity )?(\d+)/i.exec(j.error)); if (dup) return dup[1];
       if (j && j.error) { var pe = new Error(j.error); pe.processing = true; throw pe; } /* Strava rejected the file: safe to send it plain */
       if (n >= 19) { log("strava: still processing, it'll appear on Strava shortly"); return "upload-" + uploadId; }
@@ -93,7 +102,7 @@
       var type = st.type || "Mobility", mob = type === "Mobility", label = window.T ? T("Mobility") : "Mobility";
       var body = new URLSearchParams({ name: mob && a.name.indexOf(label) !== 0 ? label + ": " + a.name : a.name, sport_type: mob ? "Workout" : type, start_date_local: a.startLocal, elapsed_time: String(Math.max(60, Math.round(a.secs))), description: a.description || "" });
       /* Every Movage session is tagged Recovery on Strava. If Strava ever refuses the tag, post again without it. */
-      var post = function (b) { return fetch(API + "/api/v3/activities", { method: "POST", headers: { Authorization: "Bearer " + t, "Content-Type": "application/x-www-form-urlencoded" }, body: b.toString() }).then(function (r) { return r.json().then(function (j) { return { r: r, j: j }; }, function () { return { r: r, j: null }; }); }); };
+      var post = function (b) { return fetch(API + "/api/v3/activities", { method: "POST", headers: { Authorization: "Bearer " + t, "Content-Type": "application/x-www-form-urlencoded" }, body: b.toString() }).then(function (r) { return readJSON(r).then(function (j) { return { r: r, j: j }; }); }); };
       var tagged = new URLSearchParams(body); tagged.set("tags[Recovery]", "true");
       return post(tagged).then(function (x) {
         if (!x.r.ok && x.r.status >= 400 && x.r.status < 500 && x.r.status !== 401 && /tag/i.test(JSON.stringify(x.j || ""))) { log("strava: Recovery tag refused, sent without it"); return post(body); }
@@ -104,8 +113,9 @@
       /* Strava's create call can quietly drop the tag, so check what came back and, if Recovery is missing,
          add it with an update (PUT /activities/{id} {"tags":{"Recovery":true}}), which the same activity:write scope allows. */
       var tags = (j && j.tags) || [];
-      if (tags.indexOf && tags.indexOf("Recovery") >= 0) return j.id;
-      return tagRecovery(j.id).then(function () { return j.id; }, function (e) { log("strava: couldn't add the Recovery tag (" + e.message + ")"); return j.id; });
+      var id = safeId(j, "id");
+      if (tags.indexOf && tags.indexOf("Recovery") >= 0) return id;
+      return tagRecovery(id).then(function () { return id; }, function (e) { log("strava: couldn't add the Recovery tag (" + e.message + ")"); return id; });
     });
   }
   function tagRecovery(id) {

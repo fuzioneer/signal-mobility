@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.68.3 (17 Nov 2026): Ready for Strava's 64-bit activity IDs (from 1 June 2027): the app reads IDs from Strava's id_str field, or from the raw reply, so they're never rounded and the Recovery tag always goes on the right activity.
 - 1.68.2 (17 Nov 2026): Bigger joint angle numbers on the camera view, and the joints that count for the current test (for example shoulders for shoulder flexion, hips for the straight leg raise, knees and ankles for knee-to-wall) are shown much larger in a highlighted box with a bigger arc.
 - 1.68.1 (17 Nov 2026): Each joint angle on the camera wireframe now has a small shaded arc showing the angle, with the number placed beside it so it doesn't cover the arc or the body lines.
 - 1.68.0 (17 Nov 2026): Knee-to-wall is now done the standard way at a real wall: start with the toe about 5 cm away, touch the wall with the knee, step back 1 cm at a time until the knee only just reaches. The camera treats the furthest point the knee reaches as the wall, only counts touches with the heel down, and records the toe-to-wall distance for the last touch (a tape measurement can still be typed in). The camera view now shows the angle at each main joint (shoulders, elbows, hips, knees, ankles) as a number beside the wireframe.
