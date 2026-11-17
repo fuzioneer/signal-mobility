@@ -1152,7 +1152,7 @@ I18N.add("es", {
 },
 "k2w": {
 "n": "Rodilla a la pared",
-"how": "En semiarrodillado de lado a la cámara, con toda la parte inferior del cuerpo a la vista. Con el talón delantero en el suelo, lleva la rodilla hacia delante por encima de los dedos todo lo que puedas. Mantén 2 segundos y cambia de pierna. La cámara estima la distancia rodilla-pared (cuánto pasa la rodilla por delante de los dedos)."
+"how": "Descalzo, en semiarrodillado frente a una pared, de lado a la cámara con la pared y toda la parte inferior del cuerpo a la vista, y con el móvil quieto. Empieza con el dedo gordo a unos 5 cm de la pared. Con el talón delantero en el suelo y la rodilla sobre el segundo dedo, lleva la rodilla hacia delante hasta tocar la pared. Si la toca, aleja el pie 1 cm y repite, hasta que la rodilla apenas llegue. La cámara registra la distancia del dedo a la pared en el último toque. Luego cambia de pierna. Si lo mides con una cinta, escríbelo."
 },
 "squat": {
 "n": "Revisión de sentadilla profunda",

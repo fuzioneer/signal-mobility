@@ -35,7 +35,7 @@
       how: "Sit in a 90/90 position facing the camera, front shin across your body. Lean forward with a straight back and let the front knee drop. Hold 2 seconds, then switch sides. The camera estimates the gap between the front knee and the floor.",
       pose: mk("seated", { hip: [86, 182], t: 75, nl: [340, 200, 180], fl: [200, 180, 270], na: [300, 300], fa: [300, 300] }) },
     { id: "k2w", z: "ankles", n: "Knee-to-wall", u: "cm", sides: true, lo: 2, hi: 14, cam: "k2w",
-      how: "Half-kneel side-on to the camera, whole lower body in view. Keeping the front heel down, drive the knee as far forward over the toes as you can. Hold 2 seconds, then swap legs. The camera estimates the knee-to-wall distance (how far the knee travels past the toes).",
+      how: "Barefoot, half-kneel facing a wall, side-on to the camera with the wall and your whole lower body in view, and keep the phone still. Start with your big toe about 5 cm from the wall. Keeping the front heel down and the knee over your second toe, drive the knee forward to touch the wall. If it touches, move the foot back about 1 cm and try again, until the knee only just reaches. The camera records the toe-to-wall distance for the last touch. Then swap legs. If you measure with a tape instead, type it in.",
       pose: mk("halfkneel", { hip: [96, 143], nl: [345, 300, 0], prop: [{ t: "wall", x: 166 }] }) },
     { id: "squat", z: null, n: "Deep squat check", u: "°", sides: false, cam: "squat", noScore: true,
       how: "Side-on to the camera, feet shoulder-width. Squat as deep as you can, heels down, chest up. Pause at the bottom, then stand. Records knee angle, shin lean and torso lean.",

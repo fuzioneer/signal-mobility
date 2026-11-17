@@ -99,11 +99,18 @@
         out[sd] = Math.max(0, (floor - Q.k.y) / cmPer(torsoPx, "torso", H) - 5);
       }
       else if (k === "k2w") {
-        /* front leg = the higher knee. Heel must stay down. Reading = how far the front of the knee travels past the toes. */
+        /* Standard knee-to-wall test, filmed side-on with the phone still. Front leg = the higher knee (half-kneeling). Heel must stay down.
+           The camera can't see the wall, but the knee touches it: the furthest forward the knee ever gets (on this side) marks the wall.
+           A frame only counts as a touch when the knee is back at that line (within 1 cm), so as the foot steps away from the wall,
+           the reading follows the last position where the knee still reaches it. Reading = big toe to wall, in cm
+           (knee centre to toe, plus about 5 cm from the knee centre to the front of the kneecap). */
         if (!vis(Q.k, Q.a, Q.t, Q.he) || Q.k.y > P[sd === "l" ? 26 : 25].y) return;
         var cps = cmPer(dist(Q.k, Q.a), "shin", H), dir = Q.t.x > Q.he.x ? 1 : -1;
         if (Math.abs(Q.he.y - Q.t.y) / cps > 3) return;
-        var v = (Q.k.x - Q.t.x) * dir / cps + 5; if (v > -5) out[sd] = Math.max(0, v);
+        var kf = Q.k.x * dir, key = "k2wWall" + sd;
+        if (st[key] == null || kf > st[key]) st[key] = kf;
+        if (st[key] - kf > cps) return; /* knee short of the wall on this attempt */
+        var v = (kf - Q.t.x * dir) / cps + 5; if (v > -5) out[sd] = Math.max(0, v);
       }
     });
     return out;
@@ -127,6 +134,25 @@
       });
       P.forEach(function (p, i) { if (i < 11 || p.v < .4) return; ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(4, w / 200), 0, 7); ctx.fill(); });
     }
+    ctx.restore();
+    if (P) drawAngles(ctx, P, w, mirror);
+  }
+  /* The angle at each main joint, in degrees, as a small label beside it (shoulders, elbows, hips, knees, ankles).
+     Drawn after the mirror transform is undone so the numbers read the right way round. */
+  var JOINTS = [[13, 11, 23], [14, 12, 24], [11, 13, 15], [12, 14, 16], [11, 23, 25], [12, 24, 26], [23, 25, 27], [24, 26, 28], [25, 27, 31], [26, 28, 32]];
+  function drawAngles(ctx, P, w, mirror) {
+    var fs = Math.round(Math.max(13, w / 42)), pad = Math.round(fs * 0.3), off = Math.max(8, w / 70);
+    ctx.save(); ctx.font = "600 " + fs + "px system-ui, -apple-system, sans-serif"; ctx.textBaseline = "middle";
+    JOINTS.forEach(function (j) {
+      var a = P[j[0]], b = P[j[1]], c = P[j[2]]; if (!a || !b || !c || a.v < .5 || b.v < .5 || c.v < .5) return;
+      var deg = Math.round(angAt(a, b, c)), txt = deg + "\u00b0", left = j[1] % 2 === 1;
+      var x = mirror ? w - b.x : b.x, y = b.y, tw = ctx.measureText(txt).width;
+      /* put the label on the outside of the joint, away from the body's centre line */
+      var outward = ((mirror ? -1 : 1) * (left ? 1 : -1)) > 0, lx = outward ? x + off : x - off - tw - pad * 2;
+      ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(lx, y - fs / 2 - pad, tw + pad * 2, fs + pad * 2, fs / 2); else ctx.rect(lx, y - fs / 2 - pad, tw + pad * 2, fs + pad * 2);
+      ctx.fill(); ctx.fillStyle = left ? "#7fd8c6" : "#f2bf7a"; ctx.fillText(txt, lx + pad, y);
+    });
     ctx.restore();
   }
   /* A session: feed frames, get readings and best values. */
@@ -165,5 +191,5 @@
     });
     return { found: !!P, now: now, events: events, P: P };
   };
-  window.POSE = { load: load, Session: Session, label: label, better: better, measure: measure };
+  window.POSE = { load: load, Session: Session, label: label, better: better, measure: measure, drawFrame: draw };
 })();

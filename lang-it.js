@@ -1152,7 +1152,7 @@ I18N.add("it", {
 },
 "k2w": {
 "n": "Ginocchio al muro",
-"how": "In mezza ginocchiata di lato alla fotocamera, con tutta la parte inferiore del corpo inquadrata. Con il tallone anteriore a terra, porta il ginocchio in avanti sopra le dita il più possibile. Tieni 2 secondi, poi cambia gamba. La fotocamera stima la distanza ginocchio-muro (quanto il ginocchio supera le dita)."
+"how": "A piedi nudi, in semi-ginocchio di fronte a un muro, di lato alla fotocamera con il muro e tutta la parte inferiore del corpo visibili, e il telefono fermo. Parti con l'alluce a circa 5 cm dal muro. Con il tallone anteriore a terra e il ginocchio sopra il secondo dito, porta il ginocchio in avanti fino a toccare il muro. Se tocca, sposta il piede indietro di circa 1 cm e riprova, finché il ginocchio arriva appena. La fotocamera registra la distanza alluce-muro all'ultimo contatto. Poi cambia gamba. Se misuri con un metro, inserisci il valore."
 },
 "squat": {
 "n": "Controllo dello squat profondo",

@@ -1152,7 +1152,7 @@ I18N.add("de", {
 },
 "k2w": {
 "n": "Knie zur Wand",
-"how": "Halber Kniestand seitlich zur Kamera, ganzer Unterkörper im Bild. Mit der vorderen Ferse am Boden das Knie so weit wie möglich über die Zehen schieben. 2 Sekunden halten, dann Bein wechseln. Die Kamera schätzt den Knie-Wand-Abstand (wie weit das Knie über die Zehen hinausgeht)."
+"how": "Barfuß im Halbknien vor einer Wand, seitlich zur Kamera, Wand und ganzer Unterkörper im Bild, Handy ruhig hinstellen. Beginne mit dem großen Zeh etwa 5 cm von der Wand entfernt. Vorderferse am Boden, Knie über dem zweiten Zeh: Schiebe das Knie nach vorn, bis es die Wand berührt. Berührt es, rück den Fuß etwa 1 cm zurück und versuch es erneut, bis das Knie die Wand gerade noch erreicht. Die Kamera speichert den Abstand Zeh-Wand bei der letzten Berührung. Dann Seite wechseln. Wenn du mit einem Maßband misst, trag den Wert ein."
 },
 "squat": {
 "n": "Check der tiefen Kniebeuge",

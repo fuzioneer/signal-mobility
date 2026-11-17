@@ -1152,7 +1152,7 @@ I18N.add("fr", {
 },
 "k2w": {
 "n": "Genou au mur",
-"how": "Un genou au sol, de profil par rapport à la caméra, tout le bas du corps visible. Talon avant au sol, poussez le genou au-dessus des orteils aussi loin que possible. Tenez 2 secondes, puis changez de jambe. La caméra estime la distance genou-mur (de combien le genou dépasse les orteils)."
+"how": "Pieds nus, en fente agenouillée face à un mur, de profil par rapport à la caméra avec le mur et tout le bas du corps visibles, et le téléphone immobile. Commencez avec le gros orteil à environ 5 cm du mur. Talon avant au sol et genou au-dessus du deuxième orteil, avancez le genou jusqu'à toucher le mur. S'il touche, reculez le pied d'environ 1 cm et recommencez, jusqu'à ce que le genou touche tout juste. La caméra enregistre la distance orteil-mur au dernier contact. Changez ensuite de jambe. Si vous mesurez avec un mètre ruban, saisissez la valeur."
 },
 "squat": {
 "n": "Vérification du squat profond",

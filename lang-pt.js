@@ -1152,7 +1152,7 @@ I18N.add("pt", {
 },
 "k2w": {
 "n": "Joelho à parede",
-"how": "Meio ajoelhado de lado para a câmara, com toda a parte inferior do corpo visível. Com o calcanhar da frente no chão, leve o joelho para a frente por cima dos dedos o mais que conseguir. Mantenha 2 segundos e troque de perna. A câmara estima a distância joelho-parede (quanto o joelho passa à frente dos dedos)."
+"how": "Descalço, em meio-ajoelhado de frente para uma parede, de lado para a câmara com a parede e toda a parte inferior do corpo à vista, e o telemóvel parado. Começa com o dedo grande a cerca de 5 cm da parede. Com o calcanhar da frente no chão e o joelho por cima do segundo dedo, leva o joelho para a frente até tocar na parede. Se tocar, afasta o pé cerca de 1 cm e repete, até o joelho mal chegar. A câmara regista a distância do dedo à parede no último toque. Depois troca de perna. Se medires com uma fita métrica, escreve o valor."
 },
 "squat": {
 "n": "Verificação do agachamento profundo",
