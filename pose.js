@@ -134,8 +134,24 @@
       });
       P.forEach(function (p, i) { if (i < 11 || p.v < .4) return; ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(4, w / 200), 0, 7); ctx.fill(); });
     }
+    if (P) drawArcs(ctx, P, w);
     ctx.restore();
     if (P) drawAngles(ctx, P, w, mirror);
+  }
+  /* A small arc at each labelled joint, spanning the angle between its two body segments (drawn the short way round,
+     inside the mirror transform so it lines up with the wireframe). */
+  function drawArcs(ctx, P, w) {
+    var r = Math.max(14, w / 26);
+    JOINTS.forEach(function (j) {
+      var a = P[j[0]], b = P[j[1]], c = P[j[2]]; if (!a || !b || !c || a.v < .5 || b.v < .5 || c.v < .5) return;
+      var t1 = Math.atan2(a.y - b.y, a.x - b.x), t2 = Math.atan2(c.y - b.y, c.x - b.x), d = t2 - t1;
+      while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
+      var col = j[1] % 2 === 1 ? "127,216,198" : "242,191,122";
+      ctx.beginPath(); ctx.moveTo(b.x, b.y); ctx.arc(b.x, b.y, r, t1, t1 + d, d < 0); ctx.closePath();
+      ctx.fillStyle = "rgba(" + col + ",0.22)"; ctx.fill();
+      ctx.beginPath(); ctx.arc(b.x, b.y, r, t1, t1 + d, d < 0);
+      ctx.lineWidth = Math.max(2, w / 300); ctx.strokeStyle = "rgba(" + col + ",0.95)"; ctx.stroke();
+    });
   }
   /* The angle at each main joint, in degrees, as a small label beside it (shoulders, elbows, hips, knees, ankles).
      Drawn after the mirror transform is undone so the numbers read the right way round. */
@@ -146,12 +162,18 @@
     JOINTS.forEach(function (j) {
       var a = P[j[0]], b = P[j[1]], c = P[j[2]]; if (!a || !b || !c || a.v < .5 || b.v < .5 || c.v < .5) return;
       var deg = Math.round(angAt(a, b, c)), txt = deg + "\u00b0", left = j[1] % 2 === 1;
-      var x = mirror ? w - b.x : b.x, y = b.y, tw = ctx.measureText(txt).width;
-      /* put the label on the outside of the joint, away from the body's centre line */
-      var outward = ((mirror ? -1 : 1) * (left ? 1 : -1)) > 0, lx = outward ? x + off : x - off - tw - pad * 2;
+      var x = mirror ? w - b.x : b.x, y = b.y, tw = ctx.measureText(txt).width, bw = tw + pad * 2, bh = fs + pad * 2;
+      /* put the label on the opposite side of the joint from its arc, so the arc stays visible */
+      var ua = Math.atan2(a.y - b.y, a.x - b.x), uc = Math.atan2(c.y - b.y, c.x - b.x);
+      var bx = Math.cos(ua) + Math.cos(uc), by = Math.sin(ua) + Math.sin(uc), bl = Math.hypot(bx, by);
+      if (bl < 1e-3) { bx = -Math.sin(ua); by = Math.cos(ua); bl = 1; } /* straight joint: go to one side */
+      bx = -bx / bl; if (mirror) bx = -bx;
+      /* left or right of the joint, level with it: shoulders and hips always on the outside (clear of the torso lines); elbows, knees and ankles away from their arc when it clearly points sideways, otherwise outward */
+      var outward = ((mirror ? -1 : 1) * (left ? 1 : -1)) > 0, torso = j[1] === 11 || j[1] === 12 || j[1] === 23 || j[1] === 24, right = !torso && Math.abs(bx) > 0.35 ? bx > 0 : outward;
+      var lx = right ? x + off : x - off - bw, ly = y - bh / 2, cy = y;
       ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(lx, y - fs / 2 - pad, tw + pad * 2, fs + pad * 2, fs / 2); else ctx.rect(lx, y - fs / 2 - pad, tw + pad * 2, fs + pad * 2);
-      ctx.fill(); ctx.fillStyle = left ? "#7fd8c6" : "#f2bf7a"; ctx.fillText(txt, lx + pad, y);
+      if (ctx.roundRect) ctx.roundRect(lx, ly, bw, bh, fs / 2); else ctx.rect(lx, ly, bw, bh);
+      ctx.fill(); ctx.fillStyle = left ? "#7fd8c6" : "#f2bf7a"; ctx.fillText(txt, lx + pad, cy);
     });
     ctx.restore();
   }
