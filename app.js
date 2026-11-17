@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.66.0", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.67.0", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -1261,7 +1261,7 @@
     var secs = Math.round(P.worked), r = P.r;
     clearInterval(P.timer); if (P.stop) P.stop();
     var mdBefore = medalFor(monthCount(ym()));
-    if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), cid: cmUuid(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); stravaHold(r.n, secs, P.moves && P.moves.length ? P.moves : r.items); cmSync(); }
+    if (secs >= 30) { S.sessions.push({ date: iso(), t: Date.now(), cid: cmUuid(), id: r.id, n: r.n, secs: secs, items: r.items.length }); save(); stravaHold(r.n, secs, P.moves && P.moves.length ? P.moves : r.items, stravaSets(P)); cmSync(); }
     LASTSESS = secs >= 30 ? { n: r.n, secs: secs, moves: (P.moves && P.moves.length ? P.moves : r.items).slice(), t: Date.now() } : null;
     var mdAfter = medalFor(monthCount(ym())), newMedal = mdAfter && (!mdBefore || mdAfter[1] > mdBefore[1]) ? mdAfter : null;
     if (window.MUSIC) setTimeout(function () { if (!P) MUSIC.stop(6000); }, 4000);
@@ -1357,7 +1357,7 @@
   }
   function closePlayer() {
     cdClear(); stravaCommit(); closeVideoFull();
-    if (P) { clearInterval(P.timer); if (P.stop) P.stop(); var secs = Math.round(P.worked); if (secs >= 60) { S.sessions.push({ date: iso(), t: Date.now(), cid: cmUuid(), id: P.r.id, n: P.r.n + " (part)", secs: secs, items: P.i }); save(); stravaLog(P.r.n, secs, P.r.items.slice(0, P.i + 1)); cmSync(); } P = null; }
+    if (P) { clearInterval(P.timer); if (P.stop) P.stop(); var secs = Math.round(P.worked); if (secs >= 60) { S.sessions.push({ date: iso(), t: Date.now(), cid: cmUuid(), id: P.r.id, n: P.r.n + " (part)", secs: secs, items: P.i }); save(); stravaLog(P.r.n, secs, P.r.items.slice(0, P.i + 1), stravaSets(P)); cmSync(); } P = null; }
     try { speechSynthesis.cancel(); } catch (e) {}
     if (window.MUSIC) { MUSIC.stop(1500); MUSIC.setQuiet(false); }
     if (window.MUSIC && MUSIC.keepAlive) MUSIC.keepAlive(false); msHandlers(false); msUpdate();
@@ -1771,6 +1771,40 @@
     (ids || []).forEach(function (x) { var id = x && x.id ? x.id : x, s = BY[id]; if (!s || seen[id]) return; seen[id] = 1; moves.push(s.n); (s.m || []).forEach(function (m) { hits[m] = (hits[m] || 0) + 1; }); });
     return { moves: moves, muscles: MUSCLES.filter(function (m) { return hits[m[0]]; }).sort(function (a, b) { return hits[b[0]] - hits[a[0]]; }).map(function (m) { return m[1]; }) };
   }
+  /* Each Movage move as Strava's nearest exercise type (Strava's upload exercise list, "Warm Up" stretches first).
+     Strava builds the activity's muscle map from these. Muscle groups can't be set directly through Strava's API. */
+  var STRAVA_EX = {
+    sleeper: "SLEEPER_STRETCH", bander: "SHOULDER_ROTATIONS", doorway: "WALL_CHEST_STRETCH", crossbody: "CROSS_BODY_SHOULDER_STRETCH",
+    wallslide: "SHOULDER_STABILITY_GENERIC", latbench: "LAT_STRETCH", childreach: "CHILDS_POSE_LAT_STRETCH", tspineroll: "THORACIC_ROTATION",
+    passthru: "SHOULDER_ROTATIONS", ohshold: "OVERHEAD_SQUAT", openbook: "THORACIC_ROTATION", catcow: "CAT_COW", thread: "THREAD_THE_NEEDLE_STRETCH",
+    quadrot: "QUADRUPED_REACH_THROUGHS", stickrot: "THORACIC_ROTATION", elephant: "HAMSTRING_WALKOUT", hamfloss: "LYING_HAMSTRING_STRETCH",
+    pike: "SEATED_HAMSTRING_STRETCH", pancake: "SEATED_HAMSTRING_STRETCH", downdog: "CALF_BIASED_HAMSTRING_SCOOP", bandham: "LYING_HAMSTRING_STRETCH",
+    couch: "KNEELING_HIP_FLEXOR_STRETCH", kneelhf: "KNEELING_HIP_FLEXOR_STRETCH", ninety: "NINETY_NINETY_HIP_ROLLS", pigeon: "PIGEON_POSE",
+    frog: "QUADRUPED_ROCKING", deepsquat: "SQUAT_GENERIC", cossack: "COSSACK_SQUAT", bridge: "GLUTE_BRIDGE", fig4: "LYING_PIRIFORMIS_STRETCH",
+    anklerock: "TOES_AGAINST_WALL_CALF_STRETCH", calfwall: "TOES_AGAINST_WALL_CALF_STRETCH", soleus: "SOLEUS_STRETCH", heelsup: "HEEL_ELEVATED_SQUAT",
+    deadbug: "DEADBUG", birddog: "BIRD_DOG", breath9090: "CORE_GENERIC", supinetwist: "LYING_SPINAL_TWIST", legswing: "FORWARD_AND_BACKWARD_LEG_SWINGS",
+    hipcircle: "STANDING_HIP_CIRCLES", lungetwist: "WALKING_LUNGE_TWIST", askip: "WALKING_HIGH_KNEES", pogo: "CALF_RAISE_GENERIC",
+    wgs: "WORLDS_GREATEST_STRETCH", standquad: "STANDING_QUAD_STRETCH", crossover: "SIDE_BEND", kneehug: "WALKING_KNEE_HUGS", wipers: "LYING_HIP_ROCKS",
+    happybaby: "LYING_HIP_ROCKS", butterfly: "STRETCH", edgeflexor: "KNEELING_HIP_FLEXOR_STRETCH", sidequad: "SIDE_LYING_QUAD_STRETCH",
+    hamtowel: "LYING_HAMSTRING_STRETCH", clubhinge: "HAMSTRING_SCOOPS", clubrot: "THORACIC_ROTATION", wrists: "WALL_BICEP_STRETCH",
+    foldfwd: "STANDING_HAMSTRING_STRETCH", towelbehind: "WALL_CHEST_STRETCH", wallangel: "SHOULDER_STABILITY_GENERIC", armcircle: "ARM_CIRCLES",
+    neckside: "NECK_TILTS", chintuck: "NECK_TILTS", pronechest: "WALL_CHEST_STRETCH", tricep: "OVERHEAD_TRICEP_STRETCH", puppy: "CHILDS_POSE_LAT_STRETCH",
+    walllat: "LAT_STRETCH", sidereach: "LAT_STRETCH", proney: "FLOOR_Y_RAISE", deadhang: "LAT_STRETCH", cobra: "COBRA", sphinx: "COBRA",
+    seatedside: "SIDE_BEND", chairtwist: "THORACIC_ROTATION", scorpion: "LYING_SPINAL_TWIST", inchworm: "WALKOUT", gate: "SIDE_BEND",
+    stepham: "STANDING_HAMSTRING_STRETCH", headknee: "SEATED_HAMSTRING_STRETCH", jefferson: "STANDING_HAMSTRING_STRETCH", goodmorning: "HAMSTRING_SCOOPS",
+    rdlreach: "HAMSTRING_SCOOPS", legswall: "LYING_HAMSTRING_STRETCH", squatstand: "SQUAT_GENERIC", lizard: "KNEELING_HIP_FLEXOR_STRETCH",
+    seatedbfly: "STRETCH", chairfig4: "PIGEON_POSE", addrock: "QUADRUPED_ROCKING", sidelunge: "SIDE_LUNGE", lungereach: "KNEELING_HIP_FLEXOR_STRETCH",
+    firehydrant: "FIRE_HYDRANTS", clam: "CLAMS", seatedtwist: "LYING_SPINAL_TWIST", wideleg: "STANDING_HAMSTRING_STRETCH", hipcars: "QUADRUPED",
+    gobletpry: "GOBLET_SQUAT", tibraise: "TIBIALIS_RAISE", calfraise: "SINGLE_LEG_STANDING_CALF_RAISE", anklecircle: "ANKLE_CIRCLES", shinsit: "STRETCH",
+    toetuck: "STRETCH", stepcalf: "HEEL_DROP_CALF_STRETCH", towelfoot: "TOES_AGAINST_WALL_CALF_STRETCH"
+  };
+  function stravaEx(id) { return STRAVA_EX[id] || "STRETCH"; }
+  /* The holds actually done in the player (one set per side), for Strava's exercise list. */
+  function stravaSets(p) {
+    var out = []; if (!p || !p.st) return out;
+    p.st.forEach(function (st, i) { var a = p.act && p.act[i]; if (a && a.h && st && st.s) out.push({ e: stravaEx(st.s.id), d: Math.round(a.h) }); });
+    return out;
+  }
   function stravaDesc(ids, count) {
     var mm = movesAndMuscles(ids), moves = mm.moves, mus = mm.muscles;
     var lines = ["Mobility work using Movage App (@movageapp)"];
@@ -1779,9 +1813,9 @@
     if (n) lines.push(n + " " + T("moves") + (moves.length ? ": " + moves.join(", ") : ""));
     return lines.join("\n");
   }
-  function stravaLog(name, secs, ids) {
+  function stravaLog(name, secs, ids, sets) {
     if (!window.STRAVA || !STRAVA.connected() || !STRAVA.get().auto) return;
-    STRAVA.logSession({ name: name, secs: secs, startLocal: STRAVA.localISO(Date.now() - secs * 1000), description: stravaDesc(ids) })
+    STRAVA.logSession({ name: name, secs: secs, startLocal: STRAVA.localISO(Date.now() - secs * 1000), startMs: Date.now() - secs * 1000, description: stravaDesc(ids), sets: sets || [] })
       .then(function (n) { if (n) toast(T("Logged to Strava")); })
       .catch(function () { toast(T("Couldn't reach Strava. It'll be sent next time you're online.")); });
   }
@@ -1789,16 +1823,16 @@
      Settings auto option). The session is sent when the screen is closed, the app goes to the background,
      or after 3 minutes, unless the box was unticked. */
   var SVPEND = null;
-  function stravaHold(name, secs, ids) {
+  function stravaHold(name, secs, ids, sets) {
     SVPEND = null;
     if (!window.STRAVA || !STRAVA.connected()) return;
-    SVPEND = { on: STRAVA.get().auto, name: name, secs: secs, startLocal: STRAVA.localISO(Date.now() - secs * 1000), description: stravaDesc(ids), timer: setTimeout(stravaCommit, 180000) };
+    SVPEND = { on: STRAVA.get().auto, name: name, secs: secs, startLocal: STRAVA.localISO(Date.now() - secs * 1000), startMs: Date.now() - secs * 1000, description: stravaDesc(ids), sets: sets || [], timer: setTimeout(stravaCommit, 180000) };
   }
   function stravaCommit() {
     var p = SVPEND; if (!p) return; SVPEND = null; clearTimeout(p.timer);
     var box = $("#sv-share"); if (box) p.on = box.checked;
     if (!p.on) return;
-    STRAVA.logSession({ name: p.name, secs: p.secs, startLocal: p.startLocal, description: p.description })
+    STRAVA.logSession({ name: p.name, secs: p.secs, startLocal: p.startLocal, startMs: p.startMs, description: p.description, sets: p.sets })
       .then(function (sent) { if (sent) toast(T("Logged to Strava")); })
       .catch(function () { toast(T("Couldn't reach Strava. It'll be sent next time you're online.")); });
   }

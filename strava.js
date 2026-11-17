@@ -39,7 +39,55 @@
     if (!configured()) { st.pendingCode = code; save(); return Promise.resolve({ status: "code-only", code: code }); }
     return exchange(code).then(function () { return { status: "connected" }; });
   }
+  /* Sessions with a list of moves go up as a structured workout (Strava's JSON upload: one set per hold, each with
+     Strava's exercise type), so Strava fills in the activity's muscle map. Strava only accepts this for Workout-type
+     activities, so other activity types, and any refusal, fall back to the plain activity below. */
   function upload(a) {
+    var type = st.type || "Mobility", asWorkout = type === "Mobility" || type === "Workout";
+    if (!(a.sets && a.sets.length && a.startMs && asWorkout && window.FormData && window.Blob)) return uploadPlain(a);
+    return uploadSets(a).catch(function (e) {
+      if (e && e.auth) throw e;
+      log("strava: exercise upload didn't work (" + e.message + "), sending as a plain activity");
+      return uploadPlain(a);
+    });
+  }
+  function title(a) { var type = st.type || "Mobility", label = window.T ? T("Mobility") : "Mobility"; return type === "Mobility" && a.name.indexOf(label) !== 0 ? label + ": " + a.name : a.name; }
+  function uploadSets(a) {
+    return token().then(function (t) {
+      var active = a.sets.reduce(function (s, x) { return s + (x.d || 0); }, 0);
+      var doc = { version: "1.0", start_time: new Date(a.startMs).toISOString(), utc_offset: -new Date(a.startMs).getTimezoneOffset() * 60,
+        elapsed_time: Math.max(60, Math.round(a.secs)), active_time: Math.min(active, Math.max(60, Math.round(a.secs))), creator: { name: "Movage" },
+        sets: a.sets.map(function (x) { return { exercise_type: x.e, duration: Math.max(1, Math.round(x.d || 0)) }; }) };
+      var fd = new FormData();
+      fd.append("file", new Blob([JSON.stringify(doc)], { type: "application/json" }), "movage.json");
+      fd.append("data_type", "json"); fd.append("sport_type", "Workout"); fd.append("name", title(a)); fd.append("description", a.description || "");
+      fd.append("external_id", "movage-" + a.startMs);
+      return fetch(API + "/api/v3/uploads", { method: "POST", headers: { Authorization: "Bearer " + t }, body: fd })
+        .then(function (r) { return r.json().catch(function () { return null; }).then(function (j) {
+          if (r.status === 401) { var e = new Error("Strava sign-in expired"); e.auth = true; throw e; }
+          if (!r.ok || !j || j.error) throw new Error((j && (j.error || j.message)) || ("HTTP " + r.status));
+          /* Once Strava has the upload, a lost connection while checking on it must not fall back to a second, plain
+             activity: retry the same upload later instead (Strava recognises it as a duplicate and returns the same activity). */
+          return poll(t, j.id, 0).catch(function (e) { if (!e.processing) e.auth = true; throw e; });
+        }); });
+    }).then(function (id) {
+      log("strava: logged as " + a.sets.length + " exercises, so Strava can show the muscles worked");
+      return tagRecovery(id).then(function () { return id; }, function (e) { log("strava: couldn't add the Recovery tag (" + e.message + ")"); return id; });
+    });
+  }
+  /* Strava processes uploads in the background: check every 2 seconds, for up to 40 seconds. */
+  function poll(t, uploadId, n) {
+    return new Promise(function (res) { setTimeout(res, 2000); }).then(function () {
+      return fetch(API + "/api/v3/uploads/" + encodeURIComponent(uploadId), { headers: { Authorization: "Bearer " + t } }).then(function (r) { return r.json(); });
+    }).then(function (j) {
+      if (j && j.activity_id) return j.activity_id;
+      var dup = j && j.error && (/duplicate of[^]*?activities\/(\d+)/i.exec(j.error) || /duplicate of (?:activity )?(\d+)/i.exec(j.error)); if (dup) return dup[1];
+      if (j && j.error) { var pe = new Error(j.error); pe.processing = true; throw pe; } /* Strava rejected the file: safe to send it plain */
+      if (n >= 19) { log("strava: still processing, it'll appear on Strava shortly"); return "upload-" + uploadId; }
+      return poll(t, uploadId, n + 1);
+    });
+  }
+  function uploadPlain(a) {
     return token().then(function (t) {
       /* Strava has no Mobility sport type, so Mobility logs as a Workout with "Mobility" in the title. */
       var type = st.type || "Mobility", mob = type === "Mobility", label = window.T ? T("Mobility") : "Mobility";
@@ -61,6 +109,7 @@
     });
   }
   function tagRecovery(id) {
+    if (/^upload-/.test(String(id))) return Promise.resolve();
     return token().then(function (t) {
       return fetch(API + "/api/v3/activities/" + encodeURIComponent(id), { method: "PUT", headers: { Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: JSON.stringify({ tags: { Recovery: true } }) })
         .then(function (r) { return r.json().catch(function () { return null; }).then(function (j) {

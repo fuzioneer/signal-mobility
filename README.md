@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.67.0 (17 Nov 2026): Strava sessions are now sent as a list of exercises (one per hold, each matched to Strava's own exercise type, such as pigeon pose, kneeling hip flexor stretch or 90/90 hip rolls), so Strava fills in the muscle map for the activity. Still tagged Recovery with the same title and description. If Strava won't take the exercise list, or the activity type is set to something other than Mobility or Workout, it is sent the old way.
 - 1.66.0 (17 Nov 2026): New 3, 2, 1 countdown voice: Cori (British female, Piper TTS, trained on public-domain recordings, so cleared for App Store use). She is now the default, and anyone on the old male voice is moved to her once (male can still be picked in Settings). The old American female voice is gone.
 - 1.65.1 (16 Nov 2026): The 8-week stretching calendar labels every row (M T W T F S S), in the app's language.
 - 1.65.0 (16 Nov 2026): New "Mobility test warm-up" routine (arm circles, cat-cow, world's greatest stretch, leg swings, knee-to-wall rocks; about 6 minutes, all six zones) with a "Warm up first" button at the top of the mobility test.
