@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.66.0 (17 Nov 2026): New 3, 2, 1 countdown voice: Cori (British female, Piper TTS, trained on public-domain recordings, so cleared for App Store use). She is now the default, and anyone on the old male voice is moved to her once (male can still be picked in Settings). The old American female voice is gone.
 - 1.65.1 (16 Nov 2026): The 8-week stretching calendar labels every row (M T W T F S S), in the app's language.
 - 1.65.0 (16 Nov 2026): New "Mobility test warm-up" routine (arm circles, cat-cow, world's greatest stretch, leg swings, knee-to-wall rocks; about 6 minutes, all six zones) with a "Warm up first" button at the top of the mobility test.
 - 1.64.0 (16 Nov 2026): Removed the ankle dorsiflexion (shin lean) test, which measured the same movement as knee-to-wall. The full test is now 11 tests in about 15 minutes; the quick test is unchanged (6 tests, about 8 minutes). Its "Improve your ankle bend" routine is gone, the ankle goal now uses knee-to-wall (10 cm), and saved shin lean goals move across automatically.
@@ -188,4 +189,4 @@ The version shows at the bottom of the Today screen and in Settings.
 
 ## Credits
 
-Countdown clips generated with Piper TTS (rhasspy/piper) using the "Alan" (British male) and "Amy" (American female) voices from Mycroft mimic3.
+Countdown clips generated with Piper TTS (rhasspy/piper). Female: "Cori" (en_GB-cori-high, British), trained by Bryce Beattie on public-domain LibriVox recordings, cleared for commercial use; the default since 1.66.0. Male: "Alan" (en_GB-alan, from Mycroft mimic3 apope), licence "All Rights Reserved", so not cleared for the App Store and due to be replaced. The old "Amy" (US female) clips were removed in 1.66.0 for the same reason.
