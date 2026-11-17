@@ -122,7 +122,7 @@
     unit = unit || "°"; var r = Math.round(v);
     return (r > 0 && (k === "thomas" || k === "backscratch") ? "+" : "") + r + (unit === "cm" ? " cm" : "°");
   }
-  function draw(ctx, img, P, w, h, mirror) {
+  function draw(ctx, img, P, w, h, mirror, k) {
     ctx.save(); if (mirror) { ctx.translate(w, 0); ctx.scale(-1, 1); }
     ctx.drawImage(img, 0, 0, w, h);
     if (P) {
@@ -134,33 +134,38 @@
       });
       P.forEach(function (p, i) { if (i < 11 || p.v < .4) return; ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(4, w / 200), 0, 7); ctx.fill(); });
     }
-    if (P) drawArcs(ctx, P, w);
+    var key = KEYJ[k] || [];
+    if (P) drawArcs(ctx, P, w, key);
     ctx.restore();
-    if (P) drawAngles(ctx, P, w, mirror);
+    if (P) drawAngles(ctx, P, w, mirror, key);
   }
   /* A small arc at each labelled joint, spanning the angle between its two body segments (drawn the short way round,
      inside the mirror transform so it lines up with the wireframe). */
-  function drawArcs(ctx, P, w) {
-    var r = Math.max(14, w / 26);
+  function drawArcs(ctx, P, w, key) {
     JOINTS.forEach(function (j) {
       var a = P[j[0]], b = P[j[1]], c = P[j[2]]; if (!a || !b || !c || a.v < .5 || b.v < .5 || c.v < .5) return;
       var t1 = Math.atan2(a.y - b.y, a.x - b.x), t2 = Math.atan2(c.y - b.y, c.x - b.x), d = t2 - t1;
       while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
-      var col = j[1] % 2 === 1 ? "127,216,198" : "242,191,122";
+      var col = j[1] % 2 === 1 ? "127,216,198" : "242,191,122", main = key.indexOf(j[1]) >= 0, r = main ? Math.max(24, w / 15) : Math.max(16, w / 24);
       ctx.beginPath(); ctx.moveTo(b.x, b.y); ctx.arc(b.x, b.y, r, t1, t1 + d, d < 0); ctx.closePath();
-      ctx.fillStyle = "rgba(" + col + ",0.22)"; ctx.fill();
+      ctx.fillStyle = "rgba(" + col + "," + (main ? 0.38 : 0.22) + ")"; ctx.fill();
       ctx.beginPath(); ctx.arc(b.x, b.y, r, t1, t1 + d, d < 0);
-      ctx.lineWidth = Math.max(2, w / 300); ctx.strokeStyle = "rgba(" + col + ",0.95)"; ctx.stroke();
+      ctx.lineWidth = main ? Math.max(3, w / 180) : Math.max(2, w / 300); ctx.strokeStyle = "rgba(" + col + ",0.95)"; ctx.stroke();
     });
   }
   /* The angle at each main joint, in degrees, as a small label beside it (shoulders, elbows, hips, knees, ankles).
      Drawn after the mirror transform is undone so the numbers read the right way round. */
+  /* Joints whose angle matters most for each test (MediaPipe landmark numbers): shown bigger and highlighted. */
+  var KEYJ = { cam_shflex: [11, 12], backscratch: [11, 12, 13, 14], er: [13, 14], trot: [11, 12], slr: [23, 24], toetouch: [23, 24],
+    hipir: [25, 26], thomas: [23, 24], pigeon: [23, 24, 25, 26], k2w: [25, 26, 27, 28], squat: [23, 24, 25, 26, 27, 28] };
   var JOINTS = [[13, 11, 23], [14, 12, 24], [11, 13, 15], [12, 14, 16], [11, 23, 25], [12, 24, 26], [23, 25, 27], [24, 26, 28], [25, 27, 31], [26, 28, 32]];
-  function drawAngles(ctx, P, w, mirror) {
-    var fs = Math.round(Math.max(13, w / 42)), pad = Math.round(fs * 0.3), off = Math.max(8, w / 70);
-    ctx.save(); ctx.font = "600 " + fs + "px system-ui, -apple-system, sans-serif"; ctx.textBaseline = "middle";
+  function drawAngles(ctx, P, w, mirror, key) {
+    ctx.save(); ctx.textBaseline = "middle";
     JOINTS.forEach(function (j) {
       var a = P[j[0]], b = P[j[1]], c = P[j[2]]; if (!a || !b || !c || a.v < .5 || b.v < .5 || c.v < .5) return;
+      /* the joints this test is about get a much bigger, highlighted number */
+      var main = key.indexOf(j[1]) >= 0, fs = Math.round(main ? Math.max(30, w / 14) : Math.max(19, w / 26)), pad = Math.round(fs * 0.3), off = main ? Math.max(18, w / 34) : Math.max(12, w / 48);
+      ctx.font = (main ? "800 " : "700 ") + fs + "px system-ui, -apple-system, sans-serif";
       var deg = Math.round(angAt(a, b, c)), txt = deg + "\u00b0", left = j[1] % 2 === 1;
       var x = mirror ? w - b.x : b.x, y = b.y, tw = ctx.measureText(txt).width, bw = tw + pad * 2, bh = fs + pad * 2;
       /* put the label on the opposite side of the joint from its arc, so the arc stays visible */
@@ -171,9 +176,11 @@
       /* left or right of the joint, level with it: shoulders and hips always on the outside (clear of the torso lines); elbows, knees and ankles away from their arc when it clearly points sideways, otherwise outward */
       var outward = ((mirror ? -1 : 1) * (left ? 1 : -1)) > 0, torso = j[1] === 11 || j[1] === 12 || j[1] === 23 || j[1] === 24, right = !torso && Math.abs(bx) > 0.35 ? bx > 0 : outward;
       var lx = right ? x + off : x - off - bw, ly = y - bh / 2, cy = y;
-      ctx.fillStyle = "rgba(0,0,0,0.6)"; ctx.beginPath();
+      ctx.fillStyle = main ? (left ? "rgba(26,120,104,0.92)" : "rgba(170,100,20,0.92)") : "rgba(0,0,0,0.6)"; ctx.beginPath();
       if (ctx.roundRect) ctx.roundRect(lx, ly, bw, bh, fs / 2); else ctx.rect(lx, ly, bw, bh);
-      ctx.fill(); ctx.fillStyle = left ? "#7fd8c6" : "#f2bf7a"; ctx.fillText(txt, lx + pad, cy);
+      ctx.fill();
+      if (main) { ctx.lineWidth = Math.max(2, w / 260); ctx.strokeStyle = "rgba(255,255,255,0.9)"; ctx.stroke(); }
+      ctx.fillStyle = main ? "#fff" : (left ? "#7fd8c6" : "#f2bf7a"); ctx.fillText(txt, lx + pad, cy);
     });
     ctx.restore();
   }
@@ -197,7 +204,7 @@
     var pose = await load(), self = this;
     var r = await new Promise(function (res) { pose.onResults(res); pose.send({ image: src }).catch(function () { res(null); }); });
     var P = r && r.poseLandmarks ? r.poseLandmarks.map(function (p) { return px(p, w, h); }) : null;
-    draw(this.ctx, src, P, w, h, mirror); this.frames++;
+    draw(this.ctx, src, P, w, h, mirror, this.k); this.frames++;
     var now = P ? measure(this.k, P, this.st, this.H) : {}, events = [];
     ["l", "r", "c"].forEach(function (sd) {
       var v = now[sd]; if (v == null) { self.hold[sd] = null; return; }
