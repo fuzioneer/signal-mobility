@@ -1,5 +1,6 @@
 /* Photo for each stretch (id) and test (t_<id>), generated with Higgsfield (nano banana 2.1). */
 window.PHOTOS = {
+ "t_ohsquat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261118_101148_842ceeab-eff7-4199-86aa-66ba7267152a.png",
  "tspineroll": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_100513_c8e7dde5-57e0-4aeb-a288-c4cd73d30efc.png",
  "pigeon": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_100429_361850f2-552a-4e2d-8bfd-96c51b4f4279.png",
  "sleeper": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_100724_4b97215c-a3db-442e-b46c-4e020cedcf17.png",
@@ -65,7 +66,7 @@ window.PHOTOS = {
  "t_trot": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_195017_6e29fead-ec2f-4f27-8559-e01a171dbb88.png",
  "t_k2w": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261117_213320_e0924bb4-0b04-4807-98e7-c1180678dccf.png",
  "t_cam_shin": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261117_213320_e0924bb4-0b04-4807-98e7-c1180678dccf.png",
- "t_squat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_103431_450504b0-18a5-455f-802d-174ce6ae8946.png",
+ "t_squat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261118_102723_cdfc1c20-7538-4062-ad69-018a121832c5.png",
  "t_pigeon": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_103112_14f806fa-7fa4-4808-8f49-057e334fcc8b.png",
  "clubhinge": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_145443_b359f2b0-5634-4d48-b4d3-d9c759509d4a.png",
  "clubrot": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_145728_32682ba9-a9ca-4419-978d-03cc037666f3.png",
@@ -196,6 +197,7 @@ window.PHOTOEXTRA = {
 };
 /* Male model versions of the same photos (Settings > Mobility model in photos). */
 window.PHOTOS_M = {
+ "t_ohsquat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261118_101147_8b278c2e-91fd-4d1c-aa59-d62f7143a474.png",
  "tspineroll": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_215947_d7bbe7a7-c10a-48c9-adf9-06539e611cb9.png",
  "pigeon": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_220029_b48f7895-9b3d-4daf-b185-e90e52fa6f2e.png",
  "sleeper": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_215859_16b4e72f-de04-4320-a0e3-8b03dc0f9b51.png",
@@ -309,7 +311,7 @@ window.PHOTOS_M = {
  "t_trot": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261115_195145_f4680a77-0a46-4f13-88df-11fbe8ad791d.png",
  "t_k2w": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261117_213320_2349123d-f55e-428b-8581-0f48a27806eb.png",
  "t_cam_shin": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261117_213320_2349123d-f55e-428b-8581-0f48a27806eb.png",
- "t_squat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_221923_73f0a5b3-25f1-4aa0-b7b9-bc3db6793736.png",
+ "t_squat": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261118_102723_f8ea78a8-1c0a-430d-a759-b89284d1f56e.png",
  "t_pigeon": "https://d8j0ntlcm91z4.cloudfront.net/user_3DzJJckrb1TRyuc4L0KTJdcP9MS/hf_20261112_221802_3ed4c125-2681-4f82-9fbe-0bf709e44bc8.png"
 };
 window.PHOTOS2_M = {
