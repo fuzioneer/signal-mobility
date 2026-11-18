@@ -78,7 +78,13 @@
         }
       }
       else if (k === "ankle") { if (Q.k.v > .5 && Q.a.v > .5 && Q.k.y < Q.a.y && Q.k.y < Q.ok.y + 5) out[sd] = fromVert(Q.a, Q.k); }
-      else if (k === "squat") { if (sideOK(P, sd)) out[sd] = { knee: angAt(Q.h, Q.k, Q.a), shin: fromVert(Q.a, Q.k), torso: fromVert(Q.h, Q.s), below: Q.h.y > Q.k.y }; }
+      else if (k === "squat" || k === "ohsquat") {
+        if (!sideOK(P, sd)) return;
+        var sq = { knee: angAt(Q.h, Q.k, Q.a), shin: fromVert(Q.a, Q.k), torso: fromVert(Q.h, Q.s), below: Q.h.y > Q.k.y };
+        /* overhead squat: how far the arm (shoulder to wrist) drifts from straight up; 0 = vertical, 90 = pointing forward */
+        if (k === "ohsquat" && vis(Q.s, Q.w)) sq.arm = Math.atan2(Math.abs(Q.w.x - Q.s.x), Q.s.y - Q.w.y) * 180 / Math.PI;
+        out[sd] = sq;
+      }
       else if (k === "er") {
         /* lying side-on: forearm angle back from vertical, towards the head. Upper arm points at the camera so the elbow sits near the shoulder. */
         if (!vis(Q.s, Q.e, Q.w, P[0], Q.h)) return;
@@ -115,10 +121,10 @@
     });
     return out;
   }
-  function better(k, a, b, dir) { if (b == null) return true; if (k === "squat") return a.knee < b.knee; return dir < 0 ? a < b : a > b; }
+  function better(k, a, b, dir) { if (b == null) return true; if (k === "squat" || k === "ohsquat") return a.knee < b.knee; return dir < 0 ? a < b : a > b; }
   function label(k, v, unit) {
     if (v == null) return "–";
-    if (k === "squat") return "Knee " + Math.round(v.knee) + "°, shin " + Math.round(v.shin) + "°, torso " + Math.round(v.torso) + "°" + (v.below ? (window.T ? T(", hips below knees") : ", hips below knees") : "");
+    if (k === "squat" || k === "ohsquat") return "Knee " + Math.round(v.knee) + "°, " + (k === "squat" ? "shin " + Math.round(v.shin) + "°, " : "") + "torso " + Math.round(v.torso) + "°" + (k === "ohsquat" && v.arm != null ? ", arms " + Math.round(v.arm) + "°" : "") + (v.below ? (window.T ? T(", hips below knees") : ", hips below knees") : "");
     unit = unit || "°"; var r = Math.round(v);
     return (r > 0 && (k === "thomas" || k === "backscratch") ? "+" : "") + r + (unit === "cm" ? " cm" : "°");
   }
@@ -157,7 +163,7 @@
      Drawn after the mirror transform is undone so the numbers read the right way round. */
   /* Joints whose angle matters most for each test (MediaPipe landmark numbers): shown bigger and highlighted. */
   var KEYJ = { cam_shflex: [11, 12], backscratch: [11, 12, 13, 14], er: [13, 14], trot: [11, 12], slr: [23, 24], toetouch: [23, 24],
-    hipir: [25, 26], thomas: [23, 24], pigeon: [23, 24, 25, 26], k2w: [25, 26, 27, 28], squat: [23, 24, 25, 26, 27, 28] };
+    hipir: [25, 26], thomas: [23, 24], pigeon: [23, 24, 25, 26], k2w: [25, 26, 27, 28], squat: [23, 24, 25, 26, 27, 28], ohsquat: [11, 12, 23, 24, 25, 26] };
   var JOINTS = [[13, 11, 23], [14, 12, 24], [11, 13, 15], [12, 14, 16], [11, 23, 25], [12, 24, 26], [23, 25, 27], [24, 26, 28], [25, 27, 31], [26, 28, 32]];
   function drawAngles(ctx, P, w, mirror, key) {
     ctx.save(); ctx.textBaseline = "middle";
@@ -210,11 +216,11 @@
       var v = now[sd]; if (v == null) { self.hold[sd] = null; return; }
       var b = self.best[sd];
       if (better(self.k, v, b ? b.v : null, self.dir)) {
-        var improved = !b || (self.k === "squat" ? b.v.knee - v.knee >= 3 : Math.abs(v - b.v) >= self.thr * 0.75);
+        var improved = !b || ((self.k === "squat" || self.k === "ohsquat") ? b.v.knee - v.knee >= 3 : Math.abs(v - b.v) >= self.thr * 0.75);
         self.best[sd] = { v: v, img: self.snap(sd, v) };
         if (improved && b) events.push({ type: "best", side: sd, v: v });
       }
-      var key = self.k === "squat" ? v.knee : v, hd = self.hold[sd];
+      var key = (self.k === "squat" || self.k === "ohsquat") ? v.knee : v, hd = self.hold[sd];
       if (hd && Math.abs(hd.v - key) < self.thr) { if (!hd.fired && performance.now() - hd.t > 1500) { hd.fired = true; events.push({ type: "held", side: sd, v: v }); } }
       else self.hold[sd] = { v: key, t: performance.now(), fired: false };
     });

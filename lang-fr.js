@@ -855,7 +855,21 @@ I18N.add("fr", {
 "Warm up first": "Échauffez-vous d'abord",
 "Mobility test warm-up": "Échauffement avant le test de mobilité",
 "for all {n} tests, plus a short warm-up. You can stop part way and save what you've done.": "pour les {n} tests, plus un court échauffement. Vous pouvez vous arrêter en cours de route et enregistrer ce que vous avez fait.",
-"Warm up first with the routine above. Tap": "Échauffez-vous d'abord avec la routine ci-dessus. Touchez"
+"Warm up first with the routine above. Tap": "Échauffez-vous d'abord avec la routine ci-dessus. Touchez",
+"Stand side-on, whole body in view, feet shoulder-width, arms reaching forward at shoulder height. Squat as deep as you can, pause 2 seconds at the bottom, stand up.": "De profil, tout le corps visible, pieds à largeur d'épaules, bras tendus devant vous à hauteur d'épaules. Descendez en squat aussi bas que possible, tenez 2 secondes en bas, remontez.",
+"Stand side-on, whole body in view, feet shoulder-width, arms straight up beside your ears (holding a broomstick if you have one). Squat as deep as you can, keeping the arms up, pause 2 seconds at the bottom, stand up.": "De profil, tout le corps visible, pieds à largeur d'épaules, bras tendus vers le haut près des oreilles (avec un manche à balai si vous en avez un). Descendez aussi bas que possible en gardant les bras levés, tenez 2 secondes en bas, remontez.",
+"Feet about shoulder width apart, arms reaching forward. Squat down as deep as you can, chest up, heels down. Pause at the bottom for a couple of seconds.": "Pieds environ à largeur d'épaules, bras tendus devant. Descendez en squat aussi bas que possible, poitrine haute, talons au sol. Marquez une pause de deux secondes en bas.",
+"Same squat, but with your arms straight up beside your ears. Keep them up as you go down, heels down, and pause at the bottom.": "Le même squat, mais bras tendus vers le haut près des oreilles. Gardez-les levés en descendant, talons au sol, et marquez une pause en bas.",
+"Arm drift °": "Dérive des bras °",
+"Not scored. Compares your squat with arms up to arms forward.": "Non noté. Compare votre squat bras levés et bras devant.",
+"your arms drift {n}° forward of straight up": "vos bras partent de {n}° vers l'avant par rapport à la verticale",
+"your torso leans {n}° more with your arms up": "votre buste penche de {n}° de plus bras levés",
+"you don't get as deep with your arms up": "vous descendez moins bas bras levés",
+"Your overhead position is limiting your squat:": "Votre position bras levés limite votre squat :",
+"Work on shoulders and upper back.": "Travaillez les épaules et le haut du dos.",
+"You squat about the same with arms forward or up, so your hips and ankles set the limit rather than your shoulders.": "Votre squat est à peu près le même bras devant ou levés : ce sont donc les hanches et les chevilles qui limitent, pas les épaules.",
+"Your overhead squat matches your normal squat, so your shoulders and upper back aren't holding it back.": "Votre squat bras levés est comparable à votre squat normal : les épaules et le haut du dos ne le limitent pas.",
+"Do the deep squat check as well to compare the two.": "Faites aussi le contrôle du squat profond pour comparer les deux."
 }, {
 "zone": {
 "shoulders": "Épaules",
@@ -1156,7 +1170,11 @@ I18N.add("fr", {
 },
 "squat": {
 "n": "Vérification du squat profond",
-"how": "De profil par rapport à la caméra, pieds à la largeur des épaules. Descendez en squat aussi bas que possible, talons au sol, poitrine haute. Marquez une pause en bas, puis remontez. Enregistre l'angle du genou, l'inclinaison du tibia et celle du buste."
+"how": "De profil par rapport à la caméra, pieds à largeur d'épaules, bras tendus devant à hauteur d'épaules. Descendez aussi bas que possible, talons au sol, poitrine haute. Pause en bas, puis remontez. Mesure l'angle du genou, l'inclinaison du tibia et celle du buste."
+},
+"ohsquat": {
+"n": "Squat bras levés",
+"how": "Le même squat, bras tendus vers le haut près des oreilles (avec un manche à balai si vous en avez un). De profil par rapport à la caméra, pieds à largeur d'épaules, talons au sol. Descendez aussi bas que possible en gardant les bras levés, pause en bas, puis remontez. Mesure l'angle du genou, l'inclinaison du buste et la dérive des bras vers l'avant, puis compare avec votre squat normal pour montrer si ce sont les épaules et le haut du dos ou les hanches et les chevilles qui vous limitent."
 }
 },
 "stretch": {

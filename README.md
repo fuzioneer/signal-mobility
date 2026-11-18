@@ -25,6 +25,7 @@ The first camera test downloads the tracking model (a few MB). After that it wor
 
 The version shows at the bottom of the Today screen and in Settings.
 
+- 1.70.0 (18 Nov 2026): Deep squat check now done with arms reaching forward. New unscored "Overhead squat check" (arms straight up) straight after it: the camera records knee angle, torso lean and how far the arms drift forward, and a comparison line says whether shoulders and upper back or hips and ankles are holding the squat back, with a button to the matching routine. Full test is now 12 tests, about 16 minutes; the quick test is unchanged.
 - 1.69.0 (18 Nov 2026): Knee-to-wall demo videos (women and men) showing the standard wall test: toes 3 to 4 cm from the wall, heel flat, knee rocking forward to touch the wall. New knee-to-wall photos to match, also used for the knee-to-wall rocks stretch.
 - 1.68.3 (17 Nov 2026): Ready for Strava's 64-bit activity IDs (from 1 June 2027): the app reads IDs from Strava's id_str field, or from the raw reply, so they're never rounded and the Recovery tag always goes on the right activity.
 - 1.68.2 (17 Nov 2026): Bigger joint angle numbers on the camera view, and the joints that count for the current test (for example shoulders for shoulder flexion, hips for the straight leg raise, knees and ankles for knee-to-wall) are shown much larger in a highlighted box with a bigger arc.

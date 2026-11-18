@@ -5,7 +5,7 @@
   /* If the chosen language's file didn't load (for example it wasn't uploaded with the app), say so rather than silently staying in English. */
   if (window.I18N && I18N.lang !== "en" && !I18N.dict[I18N.lang]) setTimeout(function () { try { diag("language file lang-" + I18N.lang + ".js missing"); toast("Couldn't load the language file lang-" + I18N.lang + ".js. Check it was uploaded with the app."); } catch (e) {} }, 1200);
   /* Bump on every release, and keep sw.js VER in step. */
-  var APP_VERSION = "1.69.0", APP_BUILD = "15 Nov 2026";
+  var APP_VERSION = "1.70.0", APP_BUILD = "15 Nov 2026";
   var D = window.SMDATA, SPORTS = D.SPORTS, MUSCLES = D.MUSCLES, ZONES = D.ZONES, TESTS = D.TESTS, ST = D.STRETCH, BY = D.BY, PRESETS = D.PRESETS;
   var ZN = {}; ZONES.forEach(function (z) { ZN[z[0]] = z[1]; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -607,6 +607,7 @@
   function draftFor(date) { var t = S.tests.filter(function (x) { return x.date === date; })[0], cam = {}; (t && t.cam || []).forEach(function (k) { cam[k] = 1; }); return { date: date, v: Object.assign({}, t ? t.v : {}), cam: cam }; }
   function fieldsFor(t) {
     if (t.id === "squat") return [["squat_knee", (T("Knee angle °"))], ["squat_shin", (T("Shin lean °"))], ["squat_torso", (T("Torso lean °"))]];
+    if (t.id === "ohsquat") return [["ohsquat_knee", (T("Knee angle °"))], ["ohsquat_torso", (T("Torso lean °"))], ["ohsquat_arm", (T("Arm drift °"))]];
     if (t.sides) return [[t.id + "_l", (T("Left") + " ") + t.u], [t.id + "_r", (T("Right") + " ") + t.u]];
     return [[t.id, (T("Result") + " ") + t.u]];
   }
@@ -657,18 +658,35 @@
   }
   function testWire() {
     $$("#v-test details").forEach(function (d) { d.addEventListener("toggle", function () { if (d.open) { animateIn(d); /* A video hidden in a closed section doesn't autoplay on iPhone, so start it when the section opens. */ $$("video", d).forEach(function (v) { try { v.muted = true; var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} }); } }); });
-    $$("#v-test input[data-k]").forEach(function (inp) { inp.addEventListener("input", function () { var x = parseFloat(inp.value); if (isNum(x)) draft.v[inp.getAttribute("data-k")] = x; else delete draft.v[inp.getAttribute("data-k")]; if (draft.cam) delete draft.cam[inp.getAttribute("data-k")]; liveScore(); if (GT) gtLabel(); }); });
+    $$("#v-test input[data-k]").forEach(function (inp) { inp.addEventListener("input", function () { var x = parseFloat(inp.value); if (isNum(x)) draft.v[inp.getAttribute("data-k")] = x; else delete draft.v[inp.getAttribute("data-k")]; if (draft.cam) delete draft.cam[inp.getAttribute("data-k")]; liveScore(); if (GT) gtLabel(); var sw = $("#sqwrap"); if (sw && /squat_/.test(inp.getAttribute("data-k"))) sw.innerHTML = squatCompare(); }); });
     liveScore();
+  }
+  /* Normal squat (arms forward) vs overhead squat (arms up): which part is holding the squat back. */
+  function squatCompare() {
+    var v = draft ? draft.v : {}, sq = v.squat_torso, oh = v.ohsquat_torso, arm = v.ohsquat_arm, sqk = v.squat_knee, ohk = v.ohsquat_knee;
+    if (!isNum(oh) && !isNum(ohk)) return "";
+    var bits = [];
+    if (isNum(arm) && arm > 25) bits.push(TF("your arms drift {n}° forward of straight up", { n: Math.round(arm) }));
+    if (isNum(sq) && isNum(oh) && oh - sq >= 15) bits.push(TF("your torso leans {n}° more with your arms up", { n: Math.round(oh - sq) }));
+    if (isNum(sqk) && isNum(ohk) && ohk - sqk >= 15) bits.push(T("you don't get as deep with your arms up"));
+    var msg, fix;
+    if (bits.length) { msg = T("Your overhead position is limiting your squat:") + " " + bits.join(", ") + ". " + T("Work on shoulders and upper back."); fix = "fix_cam_shflex"; }
+    else if (isNum(sqk) && sqk > 90) { msg = T("You squat about the same with arms forward or up, so your hips and ankles set the limit rather than your shoulders."); fix = "fix_k2w"; }
+    else if (isNum(sqk)) msg = T("Your overhead squat matches your normal squat, so your shoulders and upper back aren't holding it back.");
+    else msg = T("Do the deep squat check as well to compare the two.");
+    var r = fix && findRoutine(fix);
+    return '<div class="sqcmp"><p class="small">' + esc(msg) + "</p>" + (r ? '<button class="btn" data-act="play" data-id="' + fix + '">' + ICON.play.replace("<svg", '<svg width="16" height="16" aria-hidden="true"') + " " + esc(r.n) + "</button>" : "") + "</div>";
   }
   function testCard(t, open) {
         var h = "";
-        h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + art("t_" + t.id, t.pose, { stroke: 8 }) + '</div><div><h3 role="button" tabindex="0" aria-label="' + esc(TF("Show the {name} picture or video", { name: t.n })) + '">' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? (T("Not scored. A check of your squat position.")) : (t.sides ? (T("Both sides")) : (T("One result"))) + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
+        h += '<div class="card tcard" data-test="' + t.id + '"><div class="thead"><div class="thumb">' + art("t_" + t.id, t.pose, { stroke: 8 }) + '</div><div><h3 role="button" tabindex="0" aria-label="' + esc(TF("Show the {name} picture or video", { name: t.n })) + '">' + esc(t.n) + '</h3><p class="small muted">' + (t.noScore ? (t.id === "ohsquat" ? T("Not scored. Compares your squat with arms up to arms forward.") : T("Not scored. A check of your squat position.")) : (t.sides ? (T("Both sides")) : (T("One result"))) + " · " + t.u + ' · <span data-tp="' + t.id + '"></span>') + "</p></div></div>";
         var su = window.SETUP_IMG && window.SETUP_IMG[t.id];
         h += ('<details' + (open ? " open" : "") + '><summary>' + T("How to do it") + '</summary><div class="how"><p>') + esc(t.how) + '</p>' +
           (su && S.settings.photos !== false ? '<figure class="setupfig"><img class="howsetup" loading="lazy" src="' + esc(su) + '" alt="' + esc(TF("Camera setup for {name}: where to put your phone", { name: t.n })) + '"><figcaption>' + T("Camera setup") + "</figcaption></figure>" : "") +(vidUrl("t_" + t.id) && photoUrl("t_" + t.id) ? '<div class="xfade vid howvid" data-key="t_' + esc(t.id) + '"><video class="photo howphoto on" data-vsrc="' + esc(vidUrl("t_" + t.id)) + '" poster="' + esc(photoUrl("t_" + t.id)) + '" autoplay muted' + loopAttr("t_" + t.id) + ' playsinline preload="auto" disablepictureinpicture aria-label="' + esc(altFor("t_" + t.id) + ", " + T("demo video")) + '"></video></div>' : photoUrl("t_" + t.id) ? '<img class="photo howphoto" loading="lazy" alt="' + esc(altFor("t_" + t.id)) + '" src="' + esc(photoUrl("t_" + t.id)) + '">' : "") + '</div></details>';
         h += '<div class="inputs">' + fieldsFor(t).map(function (f) { return '<label class="field">' + f[1] + '<input type="number" inputmode="decimal" step="any" data-k="' + f[0] + '" value="' + (isNum(draft.v[f[0]]) ? draft.v[f[0]] : "") + '"></label>'; }).join("");
         if (t.cam) h += '<button class="btn" data-act="cam" data-id="' + t.id + '" style="flex:none" aria-label="' + esc(TF("Do the {name} test with the camera", { name: t.n })) + '">' + ICON.cam.replace("<svg", '<svg width="20" height="20" aria-hidden="true"') + (" " + T("Do Test") + "</button>");
         h += "</div>";
+        if (t.id === "ohsquat") h += '<div id="sqwrap">' + squatCompare() + "</div>";
         /* Each test links to a routine that works on the same range of motion. */
         var fix = findRoutine("fix_" + t.id);
         if (fix) h += '<button class="btn tfix" data-act="routine" data-id="' + esc(fix.id) + '" aria-label="' + esc(TF("Open the routine to improve {name}", { name: t.n })) + '">' + ICON.play.replace("<svg", '<svg width="16" height="16" aria-hidden="true"') + '<span>' + T("Routine to improve this") + '</span><small>' + mins(routineSecs(adapt(fix.items).items)) + "</small></button>";
@@ -1371,7 +1389,7 @@
     slr: (T("Lie on your back side-on to the phone, whole body in view. Raise one straight leg as high as you can, hold, lower. Then the other leg.")),
     thomas: (T("Lie back on a bench edge, hug one knee to your chest and let the other leg hang. Side-on to the phone. Hold still for 2 seconds.")),
     ankle: (T("Half-kneel side-on to the phone. Drive the front knee forward over the toes with the heel down. Hold at your furthest point. Swap legs.")),
-    squat: (T("Stand side-on, whole body in view, feet shoulder-width. Squat as deep as you can, pause 2 seconds at the bottom, stand up."))
+    squat: (T("Stand side-on, whole body in view, feet shoulder-width, arms reaching forward at shoulder height. Squat as deep as you can, pause 2 seconds at the bottom, stand up.")), ohsquat: (T("Stand side-on, whole body in view, feet shoulder-width, arms straight up beside your ears (holding a broomstick if you have one). Squat as deep as you can, keeping the arms up, pause 2 seconds at the bottom, stand up."))
   };
   var SETUP = {
     er: (T("Put your phone on the floor, about two metres away, with the screen facing you. Lie down side-on to it.")),
@@ -1397,20 +1415,20 @@
     pigeon: (T("Get into your ninety ninety position, with the front shin across your body. Lean forward with a long back, and let the front knee drop. Hold it there.")),
     ankle: (T("Keep your front heel down, and drive your knee forward over your toes as far as it'll go. Hold it at the furthest point.")),
     k2w: (T("Keep your front heel down, and push your knee forward past your toes as far as it'll go. Hold it at the furthest point.")),
-    squat: (T("Feet about shoulder width apart. Squat down as deep as you can, chest up, heels down. Pause at the bottom for a couple of seconds."))
+    squat: (T("Feet about shoulder width apart, arms reaching forward. Squat down as deep as you can, chest up, heels down. Pause at the bottom for a couple of seconds.")), ohsquat: (T("Same squat, but with your arms straight up beside your ears. Keep them up as you go down, heels down, and pause at the bottom."))
   };
   function coachIntro(t) {
     var setup = SETUP[t.cam] || (T("Prop your phone at hip height, about two metres away, with the screen facing you. Then stand side-on to it."));
     return pick([(T("Okay, let's measure your") + " ") + t.n.toLowerCase() + ".", (T("Right,") + " ") + t.n.toLowerCase() + " next.", (T("Let's do your") + " ") + t.n.toLowerCase() + "."]) + " " + setup + " " + (SPOKEN[t.cam] || "") + (" " + T("I'll let you know when I can see you."));
   }
   function coachHeld(ev) {
-    var t = CAM.t, k = CAM.k, n = Math.round(k === "squat" ? ev.v.knee : ev.v), unit = t.u === "cm" ? (Math.abs(n) === 1 ? " centimetre" : " centimetres") : " degrees";
+    var t = CAM.t, k = CAM.k, n = Math.round(isSq(k) ? ev.v.knee : ev.v), unit = t.u === "cm" ? (Math.abs(n) === 1 ? " centimetre" : " centimetres") : " degrees";
     var num = (n < 0 ? "minus " + Math.abs(n) : String(n)) + unit;
-    var val = k === "squat" ? pick([(T("Nice and deep.") + " "), (T("Good squat.") + " "), (T("Got it.") + " ")]) + (T("Your knee angle is") + " ") + num + (ev.v.below ? (T(", with your hips below your knees.")) : ".")
+    var val = isSq(k) ? pick([(T("Nice and deep.") + " "), (T("Good squat.") + " "), (T("Got it.") + " ")]) + (T("Your knee angle is") + " ") + num + (ev.v.below ? (T(", with your hips below your knees.")) : ".")
       : pick([(T("Great, hold it.") + " "), (T("Lovely.") + " "), (T("Nice one.") + " "), (T("That's it.") + " ")]) + (ev.side === "l" ? (T("Left side,") + " ") : ev.side === "r" ? (T("Right side,") + " ") : (T("That's") + " ")) + num + ".";
     CAM.done[ev.side] = true;
     var next;
-    if (k === "squat" || !t.sides) next = pick([(T("Have another go if you think you can beat it, or tap Use results when you're happy.")), (T("You can go again to beat that, or tap Use results."))]);
+    if (isSq(k) || !t.sides) next = pick([(T("Have another go if you think you can beat it, or tap Use results when you're happy.")), (T("You can go again to beat that, or tap Use results."))]);
     else if (CAM.done.l && CAM.done.r) next = pick([(T("That's both sides done. Go again if you want to beat them, or tap Use results.")), (T("Both sides recorded. Nice work. Tap Use results when you're happy."))]);
     else next = (T("Relax for a second.") + " ") + (NEXT[k] || (T("Now the other side.")));
     sayQ(val + " " + next, true);
@@ -1431,10 +1449,11 @@
   function readout() {
     var r = $("#c-read"); if (!r) return;
     var b = CAM.sess ? CAM.sess.best : {}, k = CAM.k;
-    if (k === "squat") { var bb = bestSquat(); r.innerHTML = ('<div class="wide"><span>' + T("Deepest squat") + '</span><b>') + (bb ? POSE.label(k, bb) : "–") + "</b></div>"; return; }
+    if (isSq(k)) { var bb = bestSquat(); r.innerHTML = ('<div class="wide"><span>' + T("Deepest squat") + '</span><b>') + (bb ? POSE.label(k, bb) : "–") + "</b></div>"; return; }
     if (!CAM.t.sides) { r.innerHTML = ('<div class="wide"><span>' + T("Best") + '</span><b style="font-size:26px">') + (b.c ? POSE.label(k, b.c.v, CAM.t.u) : "–") + "</b></div>"; return; }
     r.innerHTML = ["l", "r"].map(function (sd) { return "<div><span>" + (sd === "l" ? (T("Left")) : (T("Right"))) + " " + T("best") + "</span><b>" + (b[sd] ? POSE.label(k, b[sd].v, CAM.t.u) : "–") + "</b></div>"; }).join("");
   }
+  function isSq(k) { return k === "squat" || k === "ohsquat"; }
   function bestSquat() { var b = CAM.sess ? CAM.sess.best : {}, o = null; ["l", "r"].forEach(function (sd) { if (b[sd] && (!o || b[sd].v.knee < o.knee)) o = b[sd].v; }); return o; }
   function camControls(running) {
     $("#c-ctl").innerHTML = running
@@ -1495,6 +1514,7 @@
     if (!draft) draft = draftFor(iso());
     draft.cam = draft.cam || {};
     if (CAM.k === "squat") { var q = bestSquat(); if (q) { draft.v.squat_knee = Math.round(q.knee); draft.v.squat_shin = Math.round(q.shin); draft.v.squat_torso = Math.round(q.torso); draft.cam.squat_knee = draft.cam.squat_shin = draft.cam.squat_torso = 1; got = 1; } }
+    else if (CAM.k === "ohsquat") { var oq = bestSquat(); if (oq) { draft.v.ohsquat_knee = Math.round(oq.knee); draft.v.ohsquat_torso = Math.round(oq.torso); draft.cam.ohsquat_knee = draft.cam.ohsquat_torso = 1; if (isNum(oq.arm)) { draft.v.ohsquat_arm = Math.round(oq.arm); draft.cam.ohsquat_arm = 1; } got = 1; } }
     else if (!t.sides) { if (b.c) { draft.v[t.id] = Math.round(b.c.v); draft.cam[t.id] = 1; got = 1; } }
     else ["l", "r"].forEach(function (sd) { if (b[sd]) { draft.v[t.id + "_" + sd] = Math.round(b[sd].v); draft.cam[t.id + "_" + sd] = 1; got++; } });
     var snaps = ["l", "r", "c"].filter(function (sd) { return b[sd] && b[sd].img; }).map(function (sd) { return { sd: sd, img: b[sd].img }; });

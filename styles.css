@@ -623,3 +623,7 @@ details.rfix[open] > summary::after { transform: rotate(-135deg); }
 .tog input:checked::after { transform: translateX(20px); }
 .tog input:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 .gtintro .gtwarm { margin: 4px 0 8px; }
+/* Overhead squat vs normal squat comparison */
+.sqcmp { margin-top: 10px; padding: 10px 12px; border-radius: 12px; background: rgba(127,127,127,.1); }
+.sqcmp p { margin: 0 0 8px; color: var(--ink); }
+.sqcmp p:last-child { margin-bottom: 0; }

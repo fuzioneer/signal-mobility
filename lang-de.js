@@ -855,7 +855,21 @@ I18N.add("de", {
 "Warm up first": "Erst aufwärmen",
 "Mobility test warm-up": "Aufwärmen für den Beweglichkeitstest",
 "for all {n} tests, plus a short warm-up. You can stop part way and save what you've done.": "für alle {n} Tests, plus ein kurzes Aufwärmen. Du kannst zwischendurch aufhören und speichern, was du gemacht hast.",
-"Warm up first with the routine above. Tap": "Wärm dich zuerst mit der Routine oben auf. Tippe auf"
+"Warm up first with the routine above. Tap": "Wärm dich zuerst mit der Routine oben auf. Tippe auf",
+"Stand side-on, whole body in view, feet shoulder-width, arms reaching forward at shoulder height. Squat as deep as you can, pause 2 seconds at the bottom, stand up.": "Seitlich zur Kamera, ganzer Körper im Bild, Füße schulterbreit, Arme auf Schulterhöhe nach vorn gestreckt. So tief wie möglich in die Hocke, 2 Sekunden unten halten, aufstehen.",
+"Stand side-on, whole body in view, feet shoulder-width, arms straight up beside your ears (holding a broomstick if you have one). Squat as deep as you can, keeping the arms up, pause 2 seconds at the bottom, stand up.": "Seitlich zur Kamera, ganzer Körper im Bild, Füße schulterbreit, Arme gestreckt nach oben neben den Ohren (mit einem Besenstiel, wenn du einen hast). So tief wie möglich in die Hocke, Arme oben lassen, 2 Sekunden unten halten, aufstehen.",
+"Feet about shoulder width apart, arms reaching forward. Squat down as deep as you can, chest up, heels down. Pause at the bottom for a couple of seconds.": "Füße etwa schulterbreit, Arme nach vorn gestreckt. So tief wie möglich in die Hocke, Brust raus, Fersen am Boden. Unten ein paar Sekunden halten.",
+"Same squat, but with your arms straight up beside your ears. Keep them up as you go down, heels down, and pause at the bottom.": "Dieselbe Kniebeuge, aber mit den Armen gestreckt nach oben neben den Ohren. Lass sie oben, während du runtergehst, Fersen am Boden, und halte unten kurz.",
+"Arm drift °": "Armabweichung °",
+"Not scored. Compares your squat with arms up to arms forward.": "Ohne Wertung. Vergleicht deine Kniebeuge mit Armen oben und Armen vorn.",
+"your arms drift {n}° forward of straight up": "deine Arme weichen {n}° nach vorn von der Senkrechten ab",
+"your torso leans {n}° more with your arms up": "dein Oberkörper neigt sich mit Armen oben {n}° mehr",
+"you don't get as deep with your arms up": "mit Armen oben kommst du nicht so tief",
+"Your overhead position is limiting your squat:": "Deine Überkopfposition begrenzt deine Kniebeuge:",
+"Work on shoulders and upper back.": "Arbeite an Schultern und oberem Rücken.",
+"You squat about the same with arms forward or up, so your hips and ankles set the limit rather than your shoulders.": "Deine Kniebeuge ist mit Armen vorn und oben etwa gleich, also setzen Hüften und Sprunggelenke die Grenze, nicht die Schultern.",
+"Your overhead squat matches your normal squat, so your shoulders and upper back aren't holding it back.": "Deine Überkopf-Kniebeuge entspricht deiner normalen, also bremsen Schultern und oberer Rücken sie nicht.",
+"Do the deep squat check as well to compare the two.": "Mach auch den Tiefe-Kniebeuge-Check, um beide zu vergleichen."
 }, {
 "zone": {
 "shoulders": "Schultern",
@@ -1156,7 +1170,11 @@ I18N.add("de", {
 },
 "squat": {
 "n": "Check der tiefen Kniebeuge",
-"how": "Seitlich zur Kamera, Füße schulterbreit. Geh so tief wie möglich in die Kniebeuge, Fersen unten, Brust hoch. Unten kurz pausieren, dann aufstehen. Misst Kniewinkel, Schienbeinneigung und Oberkörperneigung."
+"how": "Seitlich zur Kamera, Füße schulterbreit, Arme auf Schulterhöhe nach vorn gestreckt. So tief wie möglich in die Hocke, Fersen am Boden, Brust raus. Unten kurz halten, dann aufstehen. Misst Kniewinkel, Schienbein- und Oberkörperneigung."
+},
+"ohsquat": {
+"n": "Überkopf-Kniebeuge-Check",
+"how": "Dieselbe Kniebeuge mit den Armen gestreckt nach oben neben den Ohren (mit einem Besenstiel, wenn du einen hast). Seitlich zur Kamera, Füße schulterbreit, Fersen am Boden. So tief wie möglich, Arme oben lassen, unten kurz halten, dann aufstehen. Misst Kniewinkel, Oberkörperneigung und wie weit die Arme nach vorn wandern, und vergleicht das mit deiner normalen Kniebeuge: So siehst du, ob Schultern und oberer Rücken oder Hüften und Sprunggelenke dich bremsen."
 }
 },
 "stretch": {

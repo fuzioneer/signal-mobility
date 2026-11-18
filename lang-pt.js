@@ -855,7 +855,21 @@ I18N.add("pt", {
 "Warm up first": "Aquece primeiro",
 "Mobility test warm-up": "Aquecimento para o teste de mobilidade",
 "for all {n} tests, plus a short warm-up. You can stop part way and save what you've done.": "para os {n} testes, mais um aquecimento curto. Podes parar a meio e guardar o que fizeste.",
-"Warm up first with the routine above. Tap": "Aquece primeiro com a rotina acima. Toca em"
+"Warm up first with the routine above. Tap": "Aquece primeiro com a rotina acima. Toca em",
+"Stand side-on, whole body in view, feet shoulder-width, arms reaching forward at shoulder height. Squat as deep as you can, pause 2 seconds at the bottom, stand up.": "De lado, com o corpo todo à vista, pés à largura dos ombros e braços esticados à frente à altura dos ombros. Agacha o mais fundo que conseguires, mantém 2 segundos em baixo e sobe.",
+"Stand side-on, whole body in view, feet shoulder-width, arms straight up beside your ears (holding a broomstick if you have one). Squat as deep as you can, keeping the arms up, pause 2 seconds at the bottom, stand up.": "De lado, com o corpo todo à vista, pés à largura dos ombros e braços esticados para cima junto às orelhas (com um cabo de vassoura, se tiveres). Agacha o mais fundo que conseguires sem baixar os braços, mantém 2 segundos em baixo e sobe.",
+"Feet about shoulder width apart, arms reaching forward. Squat down as deep as you can, chest up, heels down. Pause at the bottom for a couple of seconds.": "Pés mais ou menos à largura dos ombros e braços à frente. Agacha o mais fundo que conseguires, peito para cima, calcanhares no chão. Faz uma pausa de dois segundos em baixo.",
+"Same squat, but with your arms straight up beside your ears. Keep them up as you go down, heels down, and pause at the bottom.": "O mesmo agachamento, mas com os braços esticados para cima junto às orelhas. Mantém-nos em cima ao descer, calcanhares no chão, e faz uma pausa em baixo.",
+"Arm drift °": "Desvio dos braços °",
+"Not scored. Compares your squat with arms up to arms forward.": "Sem pontuação. Compara o teu agachamento com os braços em cima e à frente.",
+"your arms drift {n}° forward of straight up": "os teus braços desviam {n}° para a frente da vertical",
+"your torso leans {n}° more with your arms up": "o teu tronco inclina mais {n}° com os braços em cima",
+"you don't get as deep with your arms up": "não desces tanto com os braços em cima",
+"Your overhead position is limiting your squat:": "A tua posição acima da cabeça limita o teu agachamento:",
+"Work on shoulders and upper back.": "Trabalha os ombros e a parte superior das costas.",
+"You squat about the same with arms forward or up, so your hips and ankles set the limit rather than your shoulders.": "Agachas mais ou menos igual com os braços à frente ou em cima, por isso o limite vem das ancas e dos tornozelos, não dos ombros.",
+"Your overhead squat matches your normal squat, so your shoulders and upper back aren't holding it back.": "O teu agachamento acima da cabeça é igual ao normal, por isso os ombros e a parte superior das costas não o limitam.",
+"Do the deep squat check as well to compare the two.": "Faz também o teste do agachamento profundo para comparar os dois."
 }, {
 "zone": {
 "shoulders": "Ombros",
@@ -1156,7 +1170,11 @@ I18N.add("pt", {
 },
 "squat": {
 "n": "Verificação do agachamento profundo",
-"how": "De lado para a câmara, pés à largura dos ombros. Agache o mais fundo que conseguir, calcanhares no chão, peito erguido. Pare em baixo e suba. Regista o ângulo do joelho, a inclinação da canela e a do tronco."
+"how": "De lado para a câmara, pés à largura dos ombros, braços esticados à frente à altura dos ombros. Agacha o mais fundo que conseguires, calcanhares no chão, peito para cima. Pausa em baixo e sobe. Regista o ângulo do joelho, a inclinação da tíbia e a do tronco."
+},
+"ohsquat": {
+"n": "Agachamento acima da cabeça",
+"how": "O mesmo agachamento com os braços esticados para cima junto às orelhas (com um cabo de vassoura, se tiveres). De lado para a câmara, pés à largura dos ombros, calcanhares no chão. Agacha o mais fundo que conseguires sem baixar os braços, pausa em baixo e sobe. Regista o ângulo do joelho, a inclinação do tronco e quanto os braços desviam para a frente, e compara com o teu agachamento normal para mostrar se o limite vem dos ombros e da parte superior das costas ou das ancas e dos tornozelos."
 }
 },
 "stretch": {

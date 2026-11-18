@@ -38,7 +38,10 @@
       how: "Barefoot, half-kneel facing a wall, side-on to the camera with the wall and your whole lower body in view, and keep the phone still. Start with your big toe about 5 cm from the wall. Keeping the front heel down and the knee over your second toe, drive the knee forward to touch the wall. If it touches, move the foot back about 1 cm and try again, until the knee only just reaches. The camera records the toe-to-wall distance for the last touch. Then swap legs. If you measure with a tape instead, type it in.",
       pose: mk("halfkneel", { hip: [96, 143], nl: [345, 300, 0], prop: [{ t: "wall", x: 166 }] }) },
     { id: "squat", z: null, n: "Deep squat check", u: "°", sides: false, cam: "squat", noScore: true,
-      how: "Side-on to the camera, feet shoulder-width. Squat as deep as you can, heels down, chest up. Pause at the bottom, then stand. Records knee angle, shin lean and torso lean.",
+      how: "Side-on to the camera, feet shoulder-width, arms reaching forward at shoulder height. Squat as deep as you can, heels down, chest up. Pause at the bottom, then stand. Records knee angle, shin lean and torso lean.",
+      pose: mk("squat", {}), pose2: mk("stand", {}) },
+    { id: "ohsquat", z: null, n: "Overhead squat check", u: "°", sides: false, cam: "ohsquat", noScore: true,
+      how: "The same squat with your arms straight up beside your ears (hold a broomstick if you have one). Side-on to the camera, feet shoulder-width, heels down. Squat as deep as you can while keeping your arms up, pause at the bottom, then stand. Records knee angle, torso lean and how far your arms drift forward, then compares it with your normal squat to show whether your shoulders and upper back or your hips and ankles are holding you back.",
       pose: mk("squat", {}), pose2: mk("stand", {}) }
   ];
 

@@ -855,7 +855,21 @@ I18N.add("it", {
 "Warm up first": "Prima riscaldati",
 "Mobility test warm-up": "Riscaldamento per il test di mobilità",
 "for all {n} tests, plus a short warm-up. You can stop part way and save what you've done.": "per tutti i {n} test, più un breve riscaldamento. Puoi fermarti a metà e salvare quello che hai fatto.",
-"Warm up first with the routine above. Tap": "Prima riscaldati con la routine qui sopra. Tocca"
+"Warm up first with the routine above. Tap": "Prima riscaldati con la routine qui sopra. Tocca",
+"Stand side-on, whole body in view, feet shoulder-width, arms reaching forward at shoulder height. Squat as deep as you can, pause 2 seconds at the bottom, stand up.": "Di lato, tutto il corpo visibile, piedi alla larghezza delle spalle, braccia tese in avanti all'altezza delle spalle. Scendi in squat più in basso che puoi, tieni 2 secondi in basso, risali.",
+"Stand side-on, whole body in view, feet shoulder-width, arms straight up beside your ears (holding a broomstick if you have one). Squat as deep as you can, keeping the arms up, pause 2 seconds at the bottom, stand up.": "Di lato, tutto il corpo visibile, piedi alla larghezza delle spalle, braccia tese in alto accanto alle orecchie (con un manico di scopa se ce l'hai). Scendi più in basso che puoi tenendo le braccia in alto, tieni 2 secondi in basso, risali.",
+"Feet about shoulder width apart, arms reaching forward. Squat down as deep as you can, chest up, heels down. Pause at the bottom for a couple of seconds.": "Piedi circa alla larghezza delle spalle, braccia in avanti. Scendi in squat più in basso che puoi, petto alto, talloni a terra. Fermati un paio di secondi in basso.",
+"Same squat, but with your arms straight up beside your ears. Keep them up as you go down, heels down, and pause at the bottom.": "Lo stesso squat, ma con le braccia tese in alto accanto alle orecchie. Tienile su mentre scendi, talloni a terra, e fermati in basso.",
+"Arm drift °": "Deriva delle braccia °",
+"Not scored. Compares your squat with arms up to arms forward.": "Senza punteggio. Confronta il tuo squat con le braccia in alto e in avanti.",
+"your arms drift {n}° forward of straight up": "le braccia scivolano di {n}° in avanti rispetto alla verticale",
+"your torso leans {n}° more with your arms up": "il busto si inclina di {n}° in più con le braccia in alto",
+"you don't get as deep with your arms up": "con le braccia in alto non scendi altrettanto",
+"Your overhead position is limiting your squat:": "La tua posizione sopra la testa limita lo squat:",
+"Work on shoulders and upper back.": "Lavora su spalle e parte alta della schiena.",
+"You squat about the same with arms forward or up, so your hips and ankles set the limit rather than your shoulders.": "Fai lo squat più o meno uguale con le braccia in avanti o in alto, quindi il limite è dato da anche e caviglie, non dalle spalle.",
+"Your overhead squat matches your normal squat, so your shoulders and upper back aren't holding it back.": "Il tuo squat sopra la testa è simile a quello normale, quindi spalle e parte alta della schiena non lo limitano.",
+"Do the deep squat check as well to compare the two.": "Fai anche il controllo dello squat profondo per confrontare i due."
 }, {
 "zone": {
 "shoulders": "Spalle",
@@ -1156,7 +1170,11 @@ I18N.add("it", {
 },
 "squat": {
 "n": "Controllo dello squat profondo",
-"how": "Di lato alla fotocamera, piedi alla larghezza delle spalle. Scendi in squat più in basso che puoi, talloni giù, petto alto. Fermati in basso, poi risali. Registra l'angolo del ginocchio, l'inclinazione della tibia e quella del busto."
+"how": "Di lato alla fotocamera, piedi alla larghezza delle spalle, braccia tese in avanti all'altezza delle spalle. Scendi più in basso che puoi, talloni a terra, petto alto. Pausa in basso, poi risali. Registra l'angolo del ginocchio, l'inclinazione della tibia e del busto."
+},
+"ohsquat": {
+"n": "Controllo squat sopra la testa",
+"how": "Lo stesso squat con le braccia tese in alto accanto alle orecchie (con un manico di scopa se ce l'hai). Di lato alla fotocamera, piedi alla larghezza delle spalle, talloni a terra. Scendi più in basso che puoi tenendo le braccia in alto, pausa in basso, poi risali. Registra l'angolo del ginocchio, l'inclinazione del busto e quanto le braccia vanno in avanti, e lo confronta con il tuo squat normale per mostrare se ti limitano spalle e parte alta della schiena o anche e caviglie."
 }
 },
 "stretch": {

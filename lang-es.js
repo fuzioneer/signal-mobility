@@ -855,7 +855,21 @@ I18N.add("es", {
 "Warm up first": "Calienta primero",
 "Mobility test warm-up": "Calentamiento para el test de movilidad",
 "for all {n} tests, plus a short warm-up. You can stop part way and save what you've done.": "para los {n} tests, más un calentamiento corto. Puedes parar a mitad y guardar lo que hayas hecho.",
-"Warm up first with the routine above. Tap": "Calienta primero con la rutina de arriba. Toca"
+"Warm up first with the routine above. Tap": "Calienta primero con la rutina de arriba. Toca",
+"Stand side-on, whole body in view, feet shoulder-width, arms reaching forward at shoulder height. Squat as deep as you can, pause 2 seconds at the bottom, stand up.": "De lado, con todo el cuerpo a la vista, pies a la anchura de los hombros y brazos estirados al frente a la altura de los hombros. Baja en sentadilla lo más profundo que puedas, aguanta 2 segundos abajo y sube.",
+"Stand side-on, whole body in view, feet shoulder-width, arms straight up beside your ears (holding a broomstick if you have one). Squat as deep as you can, keeping the arms up, pause 2 seconds at the bottom, stand up.": "De lado, con todo el cuerpo a la vista, pies a la anchura de los hombros y brazos rectos hacia arriba junto a las orejas (con un palo de escoba si tienes). Baja en sentadilla lo más profundo que puedas sin bajar los brazos, aguanta 2 segundos abajo y sube.",
+"Feet about shoulder width apart, arms reaching forward. Squat down as deep as you can, chest up, heels down. Pause at the bottom for a couple of seconds.": "Pies más o menos a la anchura de los hombros y brazos al frente. Baja en sentadilla todo lo que puedas, pecho arriba y talones en el suelo. Aguanta un par de segundos abajo.",
+"Same squat, but with your arms straight up beside your ears. Keep them up as you go down, heels down, and pause at the bottom.": "La misma sentadilla, pero con los brazos rectos hacia arriba junto a las orejas. Mantenlos arriba al bajar, talones en el suelo, y aguanta abajo.",
+"Arm drift °": "Desvío de brazos °",
+"Not scored. Compares your squat with arms up to arms forward.": "Sin puntuación. Compara tu sentadilla con los brazos arriba y al frente.",
+"your arms drift {n}° forward of straight up": "tus brazos se van {n}° hacia delante de la vertical",
+"your torso leans {n}° more with your arms up": "tu tronco se inclina {n}° más con los brazos arriba",
+"you don't get as deep with your arms up": "no bajas tanto con los brazos arriba",
+"Your overhead position is limiting your squat:": "Tu posición por encima de la cabeza limita tu sentadilla:",
+"Work on shoulders and upper back.": "Trabaja hombros y parte alta de la espalda.",
+"You squat about the same with arms forward or up, so your hips and ankles set the limit rather than your shoulders.": "Haces la sentadilla más o menos igual con los brazos al frente o arriba, así que el límite lo ponen las caderas y los tobillos, no los hombros.",
+"Your overhead squat matches your normal squat, so your shoulders and upper back aren't holding it back.": "Tu sentadilla por encima de la cabeza coincide con la normal, así que los hombros y la parte alta de la espalda no la limitan.",
+"Do the deep squat check as well to compare the two.": "Haz también la prueba de sentadilla profunda para comparar las dos."
 }, {
 "zone": {
 "shoulders": "Hombros",
@@ -1156,7 +1170,11 @@ I18N.add("es", {
 },
 "squat": {
 "n": "Revisión de sentadilla profunda",
-"how": "De lado a la cámara, pies a la anchura de los hombros. Baja en sentadilla tan profundo como puedas, talones en el suelo y pecho arriba. Para abajo y sube. Registra el ángulo de rodilla, la inclinación de la tibia y la del tronco."
+"how": "De lado a la cámara, pies a la anchura de los hombros y brazos al frente a la altura de los hombros. Baja en sentadilla todo lo que puedas, talones en el suelo y pecho arriba. Pausa abajo y sube. Registra el ángulo de rodilla, la inclinación de la tibia y la del tronco."
+},
+"ohsquat": {
+"n": "Sentadilla por encima de la cabeza",
+"how": "La misma sentadilla con los brazos rectos hacia arriba junto a las orejas (con un palo de escoba si tienes). De lado a la cámara, pies a la anchura de los hombros, talones en el suelo. Baja todo lo que puedas sin bajar los brazos, pausa abajo y sube. Registra el ángulo de rodilla, la inclinación del tronco y cuánto se van los brazos hacia delante, y lo compara con tu sentadilla normal para ver si te limitan los hombros y la parte alta de la espalda o las caderas y los tobillos."
 }
 },
 "stretch": {
